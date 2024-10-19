@@ -1,10 +1,11 @@
 {
-	"id": "obsidian-vue-template",
-	"name": "Vue Template",
-	"version": "0.0.1",
-	"minAppVersion": "0.12.0",
-	"description": "for test",
-	"author": "the_tree",
-	"authorUrl": "",
+	"id": "obsidian-node-flow",
+	"name": "NodeFlow",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes. json describes the chart, compared to screenshots, making it easier to modify later. The plugin is also compatible with blogs.",
+	"author": "LincZero",
+	"authorUrl": "https://github.com/LincZero/",
+	"fundingUrl": "https://github.com/LincZero/obsidian-node-flow",
 	"isDesktopOnly": true
 }

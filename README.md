@@ -1,24 +1,71 @@
-## Develop your own plugins with Vue3
+# Obsidian NodeFlow
 
+(in development) 
 
-## Init steps
+Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes.
 
-1. Clone this repository to your `.obsidian\plugins` directory, and move into it.
+Json describes the chart, compared to screenshots, making it easier to modify later. The plugin is also compatible with blogs
 
-2. Run `npm install` to install all the stuff you need, Including: 
-   + vue3 sfc support
-   + vue3 tsx support
-   + typescript
-   + esbuild
+## 创建模板
 
-3. Run `npm run dev` to compile code and generate a `main.js`, which is the final output. Your `main.js` will be updated simultaneously with the change of your source code files.
+1. generated
 
-If above steps work, you can turn on 'Vue Template' plugin in Obsidian. Click the *dice* like button on the left ribbon, a new tab will open on the right and says *"Hello,Developer!"*.
+generated from [guopenghui/obsidian-vue-starter](https://github.com/guopenghui/obsidian-vue-starter)
 
-4. When you get ready to build a release, run `npm run build` to create it. This will remove all codemaps and minify code size.
+但他这个依赖很旧，编译不稳定，我给改了下，见修改历史：22c2a9c2ad9eac8e0ce1abfb0b4484358eb0e28b
 
+然后尝试安装依赖和构建，并在obsidian中查看是否能正常使用
 
+2. vue file
 
-## Notice
+见修改历史：22c2a9c2ad9eac8e0ce1abfb0b4484358eb0e28b 的下一次commit
 
-+ [hot-reload](https://forum.obsidian.md/t/plugin-release-for-developers-hot-reload-the-plugin-s-youre-developing/12185) plugin may be very helpful in your developing. It reloads the plugin whose `main.js` file changes, so you don't need do it yourself every time you make changes to code.
+vue file: VueTest.vue
+
+```vue
+<template>
+  <h2>Hello,Developer!</h2>
+</template>
+
+<script setup lang="ts">
+</script>
+
+<style scoped>
+h2 {
+    color: lightcoral;
+}
+</style>
+```
+
+3. 在主程序中使用 Vue UI
+
+main.ts
+
+```ts
+import type {MarkdownPostProcessorContext} from "obsidian"
+import { factoryVueDom } from './vueAdapt'
+...
+this.registerMarkdownCodeBlockProcessor("vue-test",
+  (
+    src: string,                                // 代码块内容
+    blockEl: HTMLElement,                       // 代码块渲染的元素
+    ctx: MarkdownPostProcessorContext           // 上下文
+  ) => {
+    const root_div = document.createElement("div");  blockEl.appendChild(root_div); root_div.classList.add("vue-shell");
+    factoryVueDom(root_div, "vue-test")
+  }
+)
+```
+
+vueAdapt.ts
+
+```ts
+import { createApp, App as VueApp } from 'vue';
+import VueTest from './component/VueTest.vue';
+
+// 在div内创建指定的 Vue UI
+export function factoryVueDom(div:HTMLElement, vueUI:string = "vue-test"):void {
+  const _app = createApp(VueTest, {});
+  _app.mount(div);
+}
+```
