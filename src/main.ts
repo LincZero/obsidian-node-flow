@@ -16,14 +16,22 @@ export default class MyPlugin extends Plugin {
   async onload() {
     await this.loadSettings();
 
-    this.registerMarkdownCodeBlockProcessor("vue-test",
-      (
-        src: string,                                // 代码块内容
-        blockEl: HTMLElement,                       // 代码块渲染的元素
-        ctx: MarkdownPostProcessorContext           // 上下文
-      ) => {
-        const root_div = document.createElement("div");  blockEl.appendChild(root_div); root_div.classList.add("vue-shell");
-        factoryVueDom(root_div, "vue-test")
+    this.registerMarkdownCodeBlockProcessor("nodeflow-test",
+      (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+        const vueEl = document.createElement("div");  blockEl.appendChild(vueEl); vueEl.classList.add("vue-shell");
+        factoryVueDom(vueEl, "test")
+      }
+    )
+    this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow",
+      (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+        const vueEl = document.createElement("div");  blockEl.appendChild(vueEl); vueEl.classList.add("vue-shell");
+        factoryVueDom(vueEl, "vueflow")
+      }
+    )
+    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui",
+      (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+        const vueEl = document.createElement("div");  blockEl.appendChild(vueEl); vueEl.classList.add("vue-shell");
+        factoryVueDom(vueEl, "comfyui")
       }
     )
   }

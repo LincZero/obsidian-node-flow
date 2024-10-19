@@ -12,21 +12,22 @@
   "author": "LincZero",
   "license": "GPL-3.0-only",
   "dependencies": {
-    "typescript": "^5.6.3",
+    "@vue-flow/core": "^1.41.2",
     "vue": "^3.2.31"
   },
   "devDependencies": {
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
     "@the_tree/esbuild-plugin-vue3": "^0.3.1",
     "@types/node": "^16.11.6",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.10.0",
     "builtin-modules": "^3.2.0",
     "esbuild": "^0.14.49",
+    "eslint": "^9.0.0",
     "hash-sum": "^2.0.0",
     "obsidian": "latest",
     "tslib": "2.3.1",
-    "eslint": "^9.0.0",
-    "@codemirror/state": "^6.0.0",
-    "@codemirror/view": "^6.0.0"
+    "typescript": "^5.6.3"
   }
 }
