@@ -18,20 +18,17 @@ export default class MyPlugin extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor("nodeflow-test",
       (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-        const vueEl = document.createElement("div");  blockEl.appendChild(vueEl); vueEl.classList.add("vue-shell");
-        factoryVueDom(vueEl, "test")
+        factoryVueDom(blockEl, "test")
       }
     )
     this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow",
       (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-        const vueEl = document.createElement("div");  blockEl.appendChild(vueEl); vueEl.classList.add("vue-shell");
-        factoryVueDom(vueEl, "vueflow")
+        factoryVueDom(blockEl, "vueflow")
       }
     )
     this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui",
       (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-        const vueEl = document.createElement("div");  blockEl.appendChild(vueEl); vueEl.classList.add("vue-shell");
-        factoryVueDom(vueEl, "comfyui")
+        factoryVueDom(blockEl, "comfyui")
       }
     )
   }
