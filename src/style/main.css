@@ -8,12 +8,21 @@
 
 @import "../../main.css"; /* 不能删除 */
 
-.nf-shell {
-
+.nf-shell-mini {
+  height: 400px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+}
+.nf-shell-view {
+  height: 100%;
 }
 .nf-toolbar {
-  height: 20px;
+  height: 24px;
 }
 .nf-toolbar>button {
-  height: 20px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  outline: none;
 }

@@ -1,14 +1,16 @@
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 
-export default class NodeFlowView extends ItemView {
+export const  NodeFlowViewFlag = "NodeFlowView"
+
+export class NodeFlowView extends ItemView {
   constructor(leaf: WorkspaceLeaf) {
     super(leaf);
   }
   getViewType(): string {
-    return "NodeFlowView";
+    return NodeFlowViewFlag;
   }
   getDisplayText(): string {
-    return "NodeFlowView";
+    return NodeFlowViewFlag;
   }
   getIcon(): string {
     return "dice";

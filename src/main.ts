@@ -1,6 +1,7 @@
 import { Plugin } from "obsidian";
 import type { MarkdownPostProcessorContext } from "obsidian"
 import { factoryVueDom } from './vueAdapt'
+import { NodeFlowViewFlag, NodeFlowView } from './NodeFlowView'
 
 interface MyPluginSettings {
   mySetting: string;
@@ -16,6 +17,10 @@ export default class MyPlugin extends Plugin {
   async onload() {
     await this.loadSettings();
 
+    // 视图注册部分
+    this.registerView(NodeFlowViewFlag, (leaf) => new NodeFlowView(leaf))
+
+    // 代码块部分
     this.registerMarkdownCodeBlockProcessor("nodeflow-test",
       (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
         factoryVueDom(blockEl, "test")

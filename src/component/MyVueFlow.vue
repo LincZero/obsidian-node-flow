@@ -74,12 +74,8 @@ const edges = ref<Edge[]>([
 /* import the default theme, this is optional but generally recommended */
 @import '@vue-flow/core/dist/theme-default.css';
 
-/* 这是在VueFlow的外壳，外部作用域 */
-.nf-shell {
-  height: 400px;
-  border: 1px solid currentColor;
-  border-radius: 8px;
+.nf-node-flow {
+  min-height: 100px;
+  height: 100%;
 }
-
-.nf-node-flow {}
 </style>
