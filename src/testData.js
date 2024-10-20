@@ -489,7 +489,7 @@ export const testData_vueflow_customNode = {
     },
     {
       id: '2',
-      type: 'output',
+      type: 'color-output',
       position: { x: 350, y: 114 },
       targetPosition: 'left',
     },

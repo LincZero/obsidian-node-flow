@@ -47,6 +47,23 @@ h2[data-v-f066e70f] {
   width: 8px;
   border-radius: 4px;
 }
+.obcanvas-node[data-v-f0cdba49] {
+  display: flex;
+  align-items: center;
+  max-width: 250px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+  gap: 4px;
+  padding: 16px 24px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+}
+.vue-flow__handle[data-v-f0cdba49] {
+  background: none;
+  border: none;
+}
 .vue-flow {
   position: relative;
   width: 100%;

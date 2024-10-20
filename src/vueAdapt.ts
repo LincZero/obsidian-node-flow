@@ -107,7 +107,7 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, data: string} 
       nodes_new.push({
         // 数据转移：
         id: item.id,
-        type: item.type,
+        type: "obcanvas",
         position: { x: item.x, y: item.y },
         data: { label: item.text.trim() }
         // 数据舍弃：
@@ -126,12 +126,12 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, data: string} 
         // 数据转移：
         id: item.id,
         source: item.fromNode,
-        target: item.toNode
-        // 数据舍弃：
-        // fromSide == "right/left/top/bottom"
-        // toSide == "right/left/top/bottom"
+        target: item.toNode,
+        sourceHandle: item.fromSide,
+        targetHandle: item.toSide,
         // 数据新增：
         // type == "default"
+        markerEnd: 'arrowclosed'
       });
     })
 

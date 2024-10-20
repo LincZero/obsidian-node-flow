@@ -1,7 +1,7 @@
 <template>
   <div>Select a color</div>
 
-  <div class="color-selector nodrag nopan">
+  <div class="color-selector">
     <button
       v-for="{ name: colorName, value: color } of colors"
       :key="colorName"

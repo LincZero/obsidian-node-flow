@@ -4,8 +4,11 @@
     <template #node-color-selector="props2">
       <ColorSelectorNode :id="props2.id" :data="props2.data" />
     </template>
-    <template #node-output>
-      <OutputNode />
+    <template #node-color-output>
+      <ColorOutputNode />
+    </template>
+    <template #node-obcanvas="props">
+      <ObcanvasNode :id="props.id" :data="props.data"/>
     </template>
   </VueFlow>
 </template>
@@ -118,8 +121,9 @@ async function ...() {
 }*/
 
 // 自定义节点测试
-import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue'
-import OutputNode from './CustomNode/OutputNode.vue'
+import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue' // 颜色输入
+import ColorOutputNode from './CustomNode/ColorOutputNode.vue'     // 颜色输出
+import ObcanvasNode from './CustomNode/ObcanvasNode.vue'           // ob canvas 节点
 </script>
 
 <style>
