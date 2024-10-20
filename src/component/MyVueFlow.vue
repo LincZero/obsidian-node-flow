@@ -11,8 +11,6 @@ import { VueFlow, Panel } from '@vue-flow/core'
 const props = defineProps<{
   jsonData?: string
 }>()
-// const props = defineProps(['jsonData'])
-console.log("jsonData", props.jsonData)
 
 let nodes = ref<Node[]>([]);
 let edges = ref<Edge[]>([]);

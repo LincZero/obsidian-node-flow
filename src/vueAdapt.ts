@@ -10,7 +10,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
   const el_shell: HTMLElement = document.createElement("div"); div.appendChild(el_shell); el_shell.classList.add("nf-shell-mini");
   const el_toolbar = document.createElement("div"); div.appendChild(el_toolbar); el_toolbar.classList.add("nf-toolbar");
 
-  /// part2. 控件组
+  // part2. 控件组
   const el_btn_newView = document.createElement("button"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView"); el_btn_newView.textContent="OpenInLeafView";
   el_btn_newView.onclick = async (ev: MouseEvent) => {
     // 如果没有该Docker视图则创建一个
@@ -36,41 +36,47 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
   mountVue(el_shell) // 代码块，替换为节点流画布
   
   function mountVue(el_shell: HTMLElement) {
-    if (jsonType == "vueflow") {
-      const _app = createApp(MyVueFlow, {
-        jsonData: (mdStr.trim()=="")?"":factoryUniJson("vueflow", mdStr)
+    // 解析并转化json
+    let result: {code: number, data: string}
+    result = factoryUniJson(jsonType, mdStr)
+    if (result.code != 0) {
+      const _app = createApp(VueTest, {
+        data: result.data
       });
       _app.mount(el_shell);
-    } else if (jsonType == "comfyui") {
-      const _app = createApp(MyVueFlow, {
-        jsonData: (mdStr.trim()=="")?"":factoryUniJson("comfyui", mdStr)
-      });
-      _app.mount(el_shell);
+      return
     }
-    else {
-      const _app = createApp(VueTest);
-      _app.mount(el_shell);
-    }
+
+    // 根据新json生成节点流
+    const _app = createApp(MyVueFlow, {
+      jsonData: result.data
+    });
+    _app.mount(el_shell);
   }
 }
 
-function factoryUniJson(type:string = "vueflow", json:string = "{}"): string {
-  if (type=="cmofyui") {}
-  const jsonData: string = json;
-  return jsonData
-}
+/// 解析并转化json，将各种类型的json转化为统一的vueflow形式
+function factoryUniJson(type:string = "vueflow", json:string = "{}"): {code: number, data: string} {
+  // 统一检查
+  if (json.trim()=="") {
+    return {code: -1, data: "error: json content is empty"}
+  }
+  try {
+    const parsedData = JSON.parse(json)
+    if (!parsedData) { return {code: -1, data: "error: not a legitimate json"} }
+  } catch (error) {
+    return {code: -1, data: "error: not a legitimate json: " + error}
+  }
 
-// 仅测试用json
-const only_test = `{
-  "nodes": [
-    {"id": "1", "type": "input", "position": {"x": 250, "y": 5}, "data": {"label": "Node 11"}},
-    {"id": "2", "position": {"x": 100, "y": 100}, "data": {"label": "Node 12"}},
-    {"id": "3", "type": "output", "position": {"x": 400, "y": 200}, "data": {"label": "Node 13"}},
-    {"id": "4", "type": "special", "position": {"x": 600, "y": 100}, "data": {"label": "Node 14", "hello": "world"}}
-  ],
-  "edges": [
-    {"id": "e1->2", "source": "1", "target": "2"},
-    {"id": "e2->3", "source": "2", "target": "3", "animated": true},
-    {"id": "e3->4", "type": "special", "source": "3", "target": "4", "data": {"hello": "world"}}
-  ]
-}`
+  // 类型分发
+  if (type == "comfyui") {
+    return {code: -1, data: "error: not supported yet: comfyui"}
+  }
+  else if (type=="obcanvas") {
+    return {code: -1, data: "error: not supported yet: obcanvas"}
+  } else if (type == "vueflow") {
+    return {code: 0, data: json}
+  } else {
+    return {code: -1, data: "error: invalid json type: " + type}
+  }
+}
