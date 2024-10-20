@@ -1,71 +1,89 @@
+<template>
+  <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges">
+  </VueFlow>
+</template>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Node, Edge } from '@vue-flow/core' 
 import { VueFlow, Panel } from '@vue-flow/core'
 
-const nodes = ref<Node[]>([
-  // an input node, specified by using `type: 'input'`
-  {
-    id: '1',
-    type: 'input',
-    position: { x: 250, y: 5 },
-    data: { label: 'Node 1' },
-  },
+const props = defineProps<{
+  jsonData?: string
+}>()
+// const props = defineProps(['jsonData'])
+console.log("jsonData", props.jsonData)
 
-  {
-    id: '2',
-    position: { x: 100, y: 100 },
-    data: { label: 'Node 2' },
-  },
+let nodes = ref<Node[]>([]);
+let edges = ref<Edge[]>([]);
 
-  {
-    id: '3',
-    type: 'output',
-    position: { x: 400, y: 200 },
-    data: { label: 'Node 3' },
-  },
+// 解析JSON数据
+let defaultFlag:boolean = true;
+if (props.jsonData) {
+  try {
+    const parsedData = JSON.parse(props.jsonData);
+    nodes = ref(parsedData.nodes);
+    edges = ref(parsedData.edges);
+    defaultFlag = false
+  } catch (error) {
+    console.error('Failed to parse json:', error, "rawJson:", props, props.jsonData);
+  }
+}
 
-  {
-    id: '4',
-    type: 'special', // <-- this is the custom node type name
-    position: { x: 600, y: 100 },
-    data: {
-      label: 'Node 4',
-      hello: 'world',
+// 前面失败就换默认的
+if (defaultFlag) {
+  nodes = ref<Node[]>([
+    {
+      id: '1',
+      type: 'input',
+      position: { x: 250, y: 5 },
+      data: { label: 'Node Default1' },
     },
-  },
-])
-
-const edges = ref<Edge[]>([
-  {
-    id: 'e1->2',
-    source: '1',
-    target: '2',
-  },
-
-  {
-    id: 'e2->3',
-    source: '2',
-    target: '3',
-    animated: true,
-  },
-
-  {
-    id: 'e3->4',
-    type: 'special',
-    source: '3',
-    target: '4',
-    data: {
-      hello: 'world',
-    }
-  },
-])
+    {
+      id: '2',
+      position: { x: 100, y: 100 },
+      data: { label: 'Node Default2' },
+    },
+    {
+      id: '3',
+      type: 'output',
+      position: { x: 400, y: 200 },
+      data: { label: 'Node Default3' },
+    },
+    {
+      id: '4',
+      type: 'special',
+      position: { x: 600, y: 100 },
+      data: {
+        label: 'Node Default4',
+        hello: 'world',
+      },
+    },
+  ])
+  edges = ref<Edge[]>([
+    {
+      id: 'e1->2',
+      source: '1',
+      target: '2',
+    },
+    {
+      id: 'e2->3',
+      source: '2',
+      target: '3',
+      animated: true,
+    },
+    {
+      id: 'e3->4',
+      type: 'special',
+      source: '3',
+      target: '4',
+      data: {
+        hello: 'world',
+      }
+    },
+  ])
+}
 </script>
-
-<template>
-  <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges">
-  </VueFlow>
-</template>
 
 <style>
 /* import the necessary styles for Vue Flow to work */

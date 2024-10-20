@@ -1,5 +1,5 @@
 <template>
-    <h2>Only Test!</h2>
+    <h2>JsonType Is Invalid!</h2>
 </template>
 
 <script setup lang="ts">

@@ -23,17 +23,17 @@ export default class MyPlugin extends Plugin {
     // 代码块部分
     this.registerMarkdownCodeBlockProcessor("nodeflow-test",
       (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-        factoryVueDom(blockEl, "test")
+        factoryVueDom("test", blockEl, src)
       }
     )
     this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow",
       (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-        factoryVueDom(blockEl, "vueflow")
+        factoryVueDom("vueflow", blockEl, src)
       }
     )
     this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui",
       (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-        factoryVueDom(blockEl, "comfyui")
+        factoryVueDom("comfyui", blockEl, src)
       }
     )
   }

@@ -19,7 +19,7 @@ export class NodeFlowView extends ItemView {
     const container = this.containerEl.children[1];
     container.empty();
     let content = container.createEl("div", {
-        cls: "nf-view"
+        cls: "nf-shell-view"
     });
   }
   async onClose() {
