@@ -38,7 +38,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
   function mountVue(el_shell: HTMLElement) {
     // 解析并转化json
     let result: {code: number, data: string}
-    result = factoryUniJson(jsonType, mdStr)
+    result = factoryFlowData(jsonType, mdStr)
     if (result.code != 0) {
       const _app = createApp(VueTest, {
         data: result.data
@@ -55,14 +55,19 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
   }
 }
 
-/// 解析并转化json，将各种类型的json转化为统一的vueflow形式
-function factoryUniJson(type:string = "vueflow", json:string = "{}"): {code: number, data: string} {
+/**
+ * 解析并转化json，将各种类型的json转化为统一的vueflow形式
+ * 
+ * TODO 缺少Schema校验，提高稳定性
+ */
+function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: number, data: string} {
   // 统一检查
   if (json.trim()=="") {
     return {code: -1, data: "error: json content is empty"}
   }
+  let parsedData;
   try {
-    const parsedData = JSON.parse(json)
+    parsedData = JSON.parse(json)
     if (!parsedData) { return {code: -1, data: "error: not a legitimate json"} }
   } catch (error) {
     return {code: -1, data: "error: not a legitimate json: " + error}
@@ -73,10 +78,53 @@ function factoryUniJson(type:string = "vueflow", json:string = "{}"): {code: num
     return {code: -1, data: "error: not supported yet: comfyui"}
   }
   else if (type=="obcanvas") {
-    return {code: -1, data: "error: not supported yet: obcanvas"}
+    return factoryFlowData_obcanvas(parsedData)
   } else if (type == "vueflow") {
     return {code: 0, data: json}
   } else {
     return {code: -1, data: "error: invalid json type: " + type}
+  }
+}
+
+function factoryFlowData_obcanvas(parsedData:any): {code: number, data: string} {
+  try {
+    let nodes_new: object[] = []
+    const nodes = parsedData.nodes;
+
+    nodes.forEach((item:any) => {
+      nodes_new.push({
+        // 数据转移：
+        id: item.id,
+        type: item.type,
+        position: { x: item.x, y: item.y },
+        data: { label: item.text.trim() }
+        // 数据舍弃：
+        // item.width
+        // item.height
+        // item.type == "text"
+        // 数据新增：
+        // type == "default"
+      });
+    })
+
+    let edges_new: object[] = []
+    const edges = parsedData.edges;
+    edges.forEach((item:any) => {
+      edges_new.push({
+        // 数据转移：
+        id: item.id,
+        source: item.fromNode,
+        target: item.toNode
+        // 数据舍弃：
+        // fromSide == "right/left/top/bottom"
+        // toSide == "right/left/top/bottom"
+        // 数据新增：
+        // type == "default"
+      });
+    })
+
+    return { code: 0, data: JSON.stringify({nodes: nodes_new, edges: edges_new})}
+  } catch (error) {
+    return {code: -1, data: "error: obcanvas json parse fail"}
   }
 }

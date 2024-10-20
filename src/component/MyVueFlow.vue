@@ -15,7 +15,7 @@ const props = defineProps<{
 let nodes = ref<Node[]>([]);
 let edges = ref<Edge[]>([]);
 
-// 解析JSON数据
+// 解析JSON数据 (按理说在外面已经校验过一次了，这里大概率不会有问题)
 let defaultFlag:boolean = true;
 if (props.jsonData) {
   try {

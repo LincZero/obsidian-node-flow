@@ -12,5 +12,7 @@ const props = defineProps<{
 <style scoped>
 h2 {
     color: lightcoral;
+    margin: 0;
+    padding: 12px;
 }
 </style>

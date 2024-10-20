@@ -1,6 +1,8 @@
 /* main.css */
 h2[data-v-f066e70f] {
   color: #f08080;
+  margin: 0;
+  padding: 12px;
 }
 .vue-flow {
   position: relative;
