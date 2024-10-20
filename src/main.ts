@@ -2,7 +2,12 @@ import { Plugin } from "obsidian";
 import type { MarkdownPostProcessorContext } from "obsidian"
 import { factoryVueDom } from './vueAdapt'
 import { NodeFlowViewFlag, NodeFlowView } from './NodeFlowView'
-import { testData_vueflow, testData_obcanvas, testData_comfyUI } from "./testData"
+import {
+  testData_vueflow,
+  testData_vueflow_withoutPos,
+  testData_obcanvas,
+  testData_comfyUI
+} from "./testData"
 
 interface MyPluginSettings {
   mySetting: string;
@@ -31,11 +36,8 @@ export default class MyPlugin extends Plugin {
     this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
       factoryVueDom("vueflow", blockEl, JSON.stringify(testData_vueflow))
     })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("comfyui", blockEl, src)
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("comfyui", blockEl, JSON.stringify(testData_comfyUI))
+    this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow-demo2", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+      factoryVueDom("vueflow", blockEl, JSON.stringify(testData_vueflow_withoutPos))
     })
     this.registerMarkdownCodeBlockProcessor("nodeflow-obcanvas", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
       factoryVueDom("obcanvas", blockEl, src)
@@ -43,6 +45,13 @@ export default class MyPlugin extends Plugin {
     this.registerMarkdownCodeBlockProcessor("nodeflow-obcanvas-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
       factoryVueDom("obcanvas", blockEl, JSON.stringify(testData_obcanvas))
     })
+    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+      factoryVueDom("comfyui", blockEl, src)
+    })
+    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+      factoryVueDom("comfyui", blockEl, JSON.stringify(testData_comfyUI))
+    })
+    // TODO "nodeflow-list", 允许使用非json方式声明，再转化为json
   }
 
   onunload() {}

@@ -33,6 +33,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
 
   // part3. 控件组
   const el_btn_newView = document.createElement("button"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView"); el_btn_newView.textContent="OpenInLeafView";
+  // 按钮1，在新叶子视图中显示
   el_btn_newView.onclick = async (ev: MouseEvent) => {
     // 如果没有该Docker视图则创建一个
     if (this.app.workspace.getLeavesOfType(NodeFlowViewFlag).length === 0) {
@@ -52,9 +53,15 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
     const el_shell: HTMLElement = document.createElement("div"); containerEl.appendChild(el_shell); el_shell.classList.add("nf-shell-view");
     mountVue(el_shell) // 自定义叶子视图，替换为节点流画布
   }
+  // 按钮2，调试输出对应的json
   const el_btn_showJson = document.createElement("button"); el_toolbar.appendChild(el_btn_showJson); el_btn_showJson.classList.add("nf-btn-showJson"); el_btn_showJson.textContent="ShowJson";
   el_btn_showJson.onclick = async (ev: MouseEvent) => {
     console.log("showJson debug: ", factoryFlowData(jsonType, mdStr))
+  }
+  // 按钮3，自动重调位置
+  const el_btn_autoPos = document.createElement("button"); el_toolbar.appendChild(el_btn_autoPos); el_btn_autoPos.classList.add("nf-btn-autoPos"); el_btn_autoPos.textContent="AutoPos";
+  el_btn_autoPos.onclick = async (ev: MouseEvent) => {
+    // TODO
   }
 }
 
