@@ -14,11 +14,11 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
   mountVue(el_shell) // 代码块，替换为节点流画布
   function mountVue(el_shell: HTMLElement) {
     // 解析并转化json
-    let result: {code: number, data: string}
+    let result: {code: number, msg: string, data: object}
     result = factoryFlowData(jsonType, mdStr)
     if (result.code != 0) {
       const _app = createApp(VueTest, {
-        data: result.data
+        data: result.msg
       });
       _app.mount(el_shell);
       return
@@ -72,39 +72,40 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
  * 
  * TODO 缺少Schema校验，提高稳定性
  */
-function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: number, data: string} {
+function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: number, msg: string, data: object} {
   // 统一检查
   if (json.trim()=="") {
-    return {code: -1, data: "error: json content is empty"}
+    return {code: -1, msg: "error: json content is empty", data: {}}
   }
   let parsedData;
   try {
     parsedData = JSON.parse(json)
-    if (!parsedData) { return {code: -1, data: "error: not a legitimate json"} }
+    if (!parsedData) { return {code: -1, msg: "error: not a legitimate json", data: {}} }
   } catch (error) {
-    return {code: -1, data: "error: not a legitimate json: " + error}
+    return {code: -1, msg: "error: not a legitimate json: " + error, data: {}}
   }
 
   // 类型分发
-  let result: {code: number, data: string};
+  let result: {code: number, msg: string, data: object}; // TODO：优化，应该减少json的解析次数，很多大json的。应该是code msg data模式
   if (type == "comfyui") {
-    return {code: -1, data: "error: not supported yet: comfyui"}
+    return {code: -1, msg: "error: not supported yet: comfyui", data: {}}
   }
   else if (type=="obcanvas") {
     result = factoryFlowData_obcanvas(parsedData)
   } else if (type == "vueflow") {
-    result = {code: 0, data: json}
+    result = {code: 0, msg: "", data: parsedData}
   } else {
-    return {code: -1, data: "error: invalid json type: " + type}
+    return {code: -1, msg: "error: invalid json type: " + type, data: {}}
   }
 
   // 再次检查
-  if (result.code != -1) return
-  // TODO: 这里应该检查vueflow形式的 schema，特别是检查是否存在nodes和edages字段
+  if (result.code != 0) return result
+  if (!result.data.hasOwnProperty("nodes")) {return {code: -1, msg: "json without nodes attrs", data: {}}}
+  if (!result.data.hasOwnProperty("edges")) {return {code: -1, msg: "json without edges attrs", data: {}}}
   return result
 }
 
-function factoryFlowData_obcanvas(parsedData:any): {code: number, data: string} {
+function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, data: object} {
   try {
     let nodes_new: object[] = []
     const nodes = parsedData.nodes;
@@ -141,8 +142,8 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, data: string} 
       });
     })
 
-    return { code: 0, data: JSON.stringify({nodes: nodes_new, edges: edges_new})}
+    return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
   } catch (error) {
-    return {code: -1, data: "error: obcanvas json parse fail"}
+    return {code: -1, msg: "error: obcanvas json parse fail", data: {}}
   }
 }

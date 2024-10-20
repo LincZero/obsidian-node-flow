@@ -20,7 +20,7 @@ import { VueFlow, Panel } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 
 const props = defineProps<{
-  jsonData?: string
+  jsonData?: object
 }>()
 
 // 解析JSON数据 (按理说在外面已经校验过一次了，这里大概率不会有问题)
@@ -30,12 +30,11 @@ let edges = ref<Edge[]>([]);
   let defaultFlag:boolean = true;
   if (props.jsonData) {
     try {
-      const parsedData = JSON.parse(props.jsonData);
-      nodes = ref(parsedData.nodes);
-      edges = ref(parsedData.edges);
+      nodes = ref(props.jsonData.nodes);
+      edges = ref(props.jsonData.edges);
       defaultFlag = false
     } catch (error) {
-      console.error('Failed to parse json:', error, "rawJson:", props, props.jsonData);
+      console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(props.jsonData));
     }
   }
 }
