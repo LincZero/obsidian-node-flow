@@ -10,7 +10,28 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
   const el_shell: HTMLElement = document.createElement("div"); div.appendChild(el_shell); el_shell.classList.add("nf-shell-mini");
   const el_toolbar = document.createElement("div"); div.appendChild(el_toolbar); el_toolbar.classList.add("nf-toolbar");
 
-  // part2. 控件组
+  // part2. 节点流内容
+  mountVue(el_shell) // 代码块，替换为节点流画布
+  function mountVue(el_shell: HTMLElement) {
+    // 解析并转化json
+    let result: {code: number, data: string}
+    result = factoryFlowData(jsonType, mdStr)
+    if (result.code != 0) {
+      const _app = createApp(VueTest, {
+        data: result.data
+      });
+      _app.mount(el_shell);
+      return
+    }
+
+    // 根据新json生成节点流
+    const _app = createApp(MyVueFlow, {
+      jsonData: result.data
+    });
+    _app.mount(el_shell);
+  }
+
+  // part3. 控件组
   const el_btn_newView = document.createElement("button"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView"); el_btn_newView.textContent="OpenInLeafView";
   el_btn_newView.onclick = async (ev: MouseEvent) => {
     // 如果没有该Docker视图则创建一个
@@ -31,27 +52,9 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
     const el_shell: HTMLElement = document.createElement("div"); containerEl.appendChild(el_shell); el_shell.classList.add("nf-shell-view");
     mountVue(el_shell) // 自定义叶子视图，替换为节点流画布
   }
-
-  // part3. 节点流内容
-  mountVue(el_shell) // 代码块，替换为节点流画布
-  
-  function mountVue(el_shell: HTMLElement) {
-    // 解析并转化json
-    let result: {code: number, data: string}
-    result = factoryFlowData(jsonType, mdStr)
-    if (result.code != 0) {
-      const _app = createApp(VueTest, {
-        data: result.data
-      });
-      _app.mount(el_shell);
-      return
-    }
-
-    // 根据新json生成节点流
-    const _app = createApp(MyVueFlow, {
-      jsonData: result.data
-    });
-    _app.mount(el_shell);
+  const el_btn_showJson = document.createElement("button"); el_toolbar.appendChild(el_btn_showJson); el_btn_showJson.classList.add("nf-btn-showJson"); el_btn_showJson.textContent="ShowJson";
+  el_btn_showJson.onclick = async (ev: MouseEvent) => {
+    console.log("showJson debug: ", factoryFlowData(jsonType, mdStr))
   }
 }
 
