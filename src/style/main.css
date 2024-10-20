@@ -1,0 +1,10 @@
+/*
+ * 自定义样式的位置
+ * 
+ * 你不应该直接编辑style.css文件，而应该编辑该文件，因为style.css文件还需要集成vue组件的css内容
+ * 
+ * 流程：vue组件的样式首先会生成在main.css中，然后src/style/main.css需要合并main.css再一起输出到styles.css中
+ */
+
+ @import "../../main.css"; /* 不能删除 */
+
