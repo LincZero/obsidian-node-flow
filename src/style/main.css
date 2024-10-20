@@ -8,6 +8,9 @@
 
 @import "../../main.css"; /* 不能删除 */
 
+#app {
+  font-family: 'JetBrains Mono', monospace;
+}
 .nf-shell-mini {
   height: 400px;
   border: 1px solid currentColor;

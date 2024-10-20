@@ -1,6 +1,12 @@
 <template>
   <!-- <Background pattern-color="#404040" :gap="16" /> 似乎溢出-->
   <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges">
+    <template #node-color-selector="props2">
+      <ColorSelectorNode :id="props2.id" :data="props2.data" />
+    </template>
+    <template #node-output>
+      <OutputNode />
+    </template>
   </VueFlow>
 </template>
 
@@ -9,7 +15,6 @@ import { ref } from 'vue'
 import type { Node, Edge } from '@vue-flow/core' 
 import { VueFlow, Panel } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
-
 
 const props = defineProps<{
   jsonData?: string
@@ -111,6 +116,10 @@ async function ...() {
   await stop()
   reset(nodes.value)
 }*/
+
+// 自定义节点测试
+import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue'
+import OutputNode from './CustomNode/OutputNode.vue'
 </script>
 
 <style>

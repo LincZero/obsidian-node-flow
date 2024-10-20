@@ -20,8 +20,8 @@ export const testData_vueflow = {
 
 export const testData_obcanvas = {
   "nodes":[
-    {"id":"d1acdb5136ffb1f1","x":-125,"y":-30,"width":250,"height":60,"type":"text","text":"Test1\n"},
-    {"id":"f7dc36d69da1bb36","x":180,"y":-30,"width":250,"height":60,"type":"text","text":"Test2\n"}
+    {"id":"d1acdb5136ffb1f1","x":25,"y":70,"width":250,"height":60,"type":"text","text":"Test1\n"},
+    {"id":"f7dc36d69da1bb36","x":330,"y":70,"width":250,"height":60,"type":"text","text":"Test2\n"}
   ],
   "edges":[
     {"id":"fc3f1bc43902aac9","fromNode":"d1acdb5136ffb1f1","fromSide":"right","toNode":"f7dc36d69da1bb36","toSide":"left"}
@@ -407,78 +407,103 @@ export const testData_comfyUI = {
   "version": 0.4
 }
 
-const position = { x: 0, y: 0 }
-const nodeType = 'process'
-const edgeType = 'animation'
-
 export const testData_vueflow_withoutPos = {
   nodes: [
     {
       id: '1',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '2',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '2a',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '2b',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '2c',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '2d',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '3',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '4',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '5',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '6',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
     {
       id: '7',
-      position,
-      type: nodeType,
+      position: { x: 0, y: 0 },
+      type: 'process',
     },
   ],
   edges: [
-    { id: 'e1-2', source: '1', target: '2', type: edgeType, animated: true },
-    { id: 'e1-3', source: '1', target: '3', type: edgeType, animated: true },
-    { id: 'e2-2a', source: '2', target: '2a', type: edgeType, animated: true },
-    { id: 'e2-2b', source: '2', target: '2b', type: edgeType, animated: true },
-    { id: 'e2-2c', source: '2', target: '2c', type: edgeType, animated: true },
-    { id: 'e2c-2d', source: '2c', target: '2d', type: edgeType, animated: true },
-    { id: 'e3-7', source: '3', target: '4', type: edgeType, animated: true },
-    { id: 'e4-5', source: '4', target: '5', type: edgeType, animated: true },
-    { id: 'e5-6', source: '5', target: '6', type: edgeType, animated: true },
-    { id: 'e5-7', source: '5', target: '7', type: edgeType, animated: true },
+    { id: 'e1-2', source: '1', target: '2', type: 'animation', animated: true },
+    { id: 'e1-3', source: '1', target: '3', type: 'animation', animated: true },
+    { id: 'e2-2a', source: '2', target: '2a', type: 'animation', animated: true },
+    { id: 'e2-2b', source: '2', target: '2b', type: 'animation', animated: true },
+    { id: 'e2-2c', source: '2', target: '2c', type: 'animation', animated: true },
+    { id: 'e2c-2d', source: '2c', target: '2d', type: 'animation', animated: true },
+    { id: 'e3-7', source: '3', target: '4', type: 'animation', animated: true },
+    { id: 'e4-5', source: '4', target: '5', type: 'animation', animated: true },
+    { id: 'e5-6', source: '5', target: '6', type: 'animation', animated: true },
+    { id: 'e5-7', source: '5', target: '7', type: 'animation', animated: true },
+  ]
+}
+
+export const testData_vueflow_customNode = {
+  nodes: [
+    {
+      id: '1',
+      type: 'color-selector',
+      data: { color: '#6F3381' },
+      position: { x: 0, y: 50 },
+    },
+    {
+      id: '2',
+      type: 'output',
+      position: { x: 350, y: 114 },
+      targetPosition: 'left',
+    },
+  ],
+  edges: [
+    {
+      id: 'e1a-2',
+      source: '1',
+      sourceHandle: 'a',
+      target: '2',
+      animated: true,
+      style: {
+        stroke: '#6F3381',
+      },
+    },
   ]
 }
