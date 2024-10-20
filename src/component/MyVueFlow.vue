@@ -63,7 +63,7 @@ const edges = ref<Edge[]>([
 </script>
 
 <template>
-  <VueFlow :nodes="nodes" :edges="edges">
+  <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges">
   </VueFlow>
 </template>
 
@@ -74,9 +74,12 @@ const edges = ref<Edge[]>([
 /* import the default theme, this is optional but generally recommended */
 @import '@vue-flow/core/dist/theme-default.css';
 
-.vue-flow {
+/* 这是在VueFlow的外壳，外部作用域 */
+.nf-shell {
   height: 400px;
   border: 1px solid currentColor;
   border-radius: 8px;
 }
+
+.nf-node-flow {}
 </style>

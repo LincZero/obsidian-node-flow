@@ -10,7 +10,7 @@ export function factoryVueDom(div:HTMLElement, flag:string = "test"):void {
   const el_toolbar = document.createElement("div"); div.appendChild(el_toolbar); el_toolbar.classList.add("nf-toolbar");
 
   /// part2. 控件组
-  const el_btn_newView = document.createElement("div"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView");
+  const el_btn_newView = document.createElement("button"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView"); el_toolbar.textContent="Separate View";
   el_btn_newView.onclick = async (ev: MouseEvent) => {
     if (this.app.workspace.getLeavesOfType("NodeFlowView").length === 0) {
       await this.app.workspace.getRightLeaf(false).setViewState({
