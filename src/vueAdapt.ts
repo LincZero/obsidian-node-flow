@@ -86,16 +86,22 @@ function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: nu
   }
 
   // 类型分发
+  let result: {code: number, data: string};
   if (type == "comfyui") {
     return {code: -1, data: "error: not supported yet: comfyui"}
   }
   else if (type=="obcanvas") {
-    return factoryFlowData_obcanvas(parsedData)
+    result = factoryFlowData_obcanvas(parsedData)
   } else if (type == "vueflow") {
-    return {code: 0, data: json}
+    result = {code: 0, data: json}
   } else {
     return {code: -1, data: "error: invalid json type: " + type}
   }
+
+  // 再次检查
+  if (result.code != -1) return
+  // TODO: 这里应该检查vueflow形式的 schema，特别是检查是否存在nodes和edages字段
+  return result
 }
 
 function factoryFlowData_obcanvas(parsedData:any): {code: number, data: string} {

@@ -38,59 +38,6 @@ let edges = ref<Edge[]>([]);
       console.error('Failed to parse json:', error, "rawJson:", props, props.jsonData);
     }
   }
-  // 前面失败就换默认的
-  if (defaultFlag) {
-    nodes = ref<Node[]>([
-      {
-        id: '1',
-        type: 'input',
-        position: { x: 250, y: 5 },
-        data: { label: 'Node Default1' },
-      },
-      {
-        id: '2',
-        position: { x: 100, y: 100 },
-        data: { label: 'Node Default2' },
-      },
-      {
-        id: '3',
-        type: 'output',
-        position: { x: 400, y: 200 },
-        data: { label: 'Node Default3' },
-      },
-      {
-        id: '4',
-        type: 'special',
-        position: { x: 600, y: 100 },
-        data: {
-          label: 'Node Default4',
-          hello: 'world',
-        },
-      },
-    ])
-    edges = ref<Edge[]>([
-      {
-        id: 'e1->2',
-        source: '1',
-        target: '2',
-      },
-      {
-        id: 'e2->3',
-        source: '2',
-        target: '3',
-        animated: true,
-      },
-      {
-        id: 'e3->4',
-        type: 'special',
-        source: '3',
-        target: '4',
-        data: {
-          hello: 'world',
-        }
-      },
-    ])
-  }
 }
 
 // 自动顺序模块
