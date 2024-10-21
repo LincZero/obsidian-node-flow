@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang="ts">
+// 自身属性
 import { ref } from 'vue'
 const props = defineProps<{
   jsonData?: object
@@ -49,13 +50,12 @@ let edges = ref<Edge[]>([]);
   }
 }
 
-// 自动顺序模块
+// 功能 - 自动顺序模块
 import { nextTick } from 'vue'
-import { useVueFlow, Position } from '@vue-flow/core'
+import { useVueFlow } from '@vue-flow/core'
 import { useLayout } from './utils/useLayout'
 /// 自动调整节点顺序
-async function layoutGraph(direction: Position) {
-  console.log("direction:", direction)
+async function layoutGraph(direction: string) {
   const { layout } = useLayout()
   const { fitView } = useVueFlow()
   nodes.value = layout(nodes.value, edges.value, direction)
@@ -67,13 +67,13 @@ if (nodes.value.length>1 && // 个别情况自动调用
   nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
   nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
 ) {
-  layoutGraph(Position.Right)
+  layoutGraph('LR')
 }
 defineExpose({
   layoutGraph
 })
 
-// 模拟运行流程树
+// 功能 - 模拟运行流程树
 /*import { useRunProcess } from './useRunProcess'
 const { run, stop, reset, isRunning } = useRunProcess({ graph })
 async function ...() {

@@ -17,7 +17,7 @@ export function useLayout() {
   const previousDirection = ref('LR')
 
   function layout(nodes, edges, direction) {
-    // we create a new graph instance, in case some nodes/edges were removed, otherwise dagre would act as if they were still there
+    // 我们创建一个新的图实例，以防一些节点/边被删除，否则dagre会表现得好像它们还在那里
     const dagreGraph = new dagre.graphlib.Graph()
 
     graph.value = dagreGraph
@@ -30,7 +30,7 @@ export function useLayout() {
     previousDirection.value = direction
 
     for (const node of nodes) {
-      // if you need width+height of nodes for your layout, you can use the dimensions property of the internal node (`GraphNode` type)
+      // 如果你的布局需要节点的宽度和高度，你可以使用内部节点的dimensions属性 (`GraphNode` type)
       const graphNode = findNode(node.id)
 
       dagreGraph.setNode(node.id, { width: (graphNode?.dimensions?.width??100) || 150, height: (graphNode?.dimensions?.height??100) || 50 }) // [!code] 临时修复，不知道有没有其他问题
@@ -42,7 +42,7 @@ export function useLayout() {
 
     dagre.layout(dagreGraph)
 
-    // set nodes with updated positions
+    // 用更新后的位置设置节点
     return nodes.map((node) => {
       const nodeWithPosition = dagreGraph.node(node.id)
 
