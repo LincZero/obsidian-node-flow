@@ -12,16 +12,18 @@
     <template #node-obcanvas="props">
       <ObcanvasNode :id="props.id" :data="props.data"/>
     </template>
-    <InteractionControls />
+    <InteractionControls v-if="!props.isMini"/>
   </VueFlow>
 </template>
 
 <script setup lang="ts">
-// 自身属性
-import { ref } from 'vue'
+// 自身属性、通用导入
 const props = defineProps<{
-  jsonData?: object
+  jsonData?: object,
+  isMini: boolean, // true为局部渲染，尽可能简化；false为在更大的独立视图中渲染，可以显示更多东西
 }>()
+import { ref } from 'vue'
+import { useVueFlow } from '@vue-flow/core'
 
 // 组件 - 自定义节点
 import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue'  // 颜色输入
@@ -49,10 +51,17 @@ let edges = ref<Edge[]>([]);
     }
   }
 }
+if (props.isMini) {
+  const {
+    zoomOnScroll,
+    zoomOnDoubleClick,
+  } = useVueFlow();
+  zoomOnScroll.value = false;
+  zoomOnDoubleClick.value = false;
+}
 
 // 功能 - 自动顺序模块
 import { nextTick } from 'vue'
-import { useVueFlow } from '@vue-flow/core'
 import { useLayout } from './utils/useLayout'
 /// 自动调整节点顺序
 async function layoutGraph(direction: string) {

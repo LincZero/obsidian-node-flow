@@ -2,7 +2,7 @@
 
 <template>
   <div class="nf-shell-mini">
-    <NodeFlow ref="RefChild" :jsonData="jsonData" />
+    <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="true"/>
   </div>
   <div class="nf-toolbar">
     <button class="nf-btn-newView" @click="props.fn_newView">newView</button>
@@ -14,17 +14,17 @@
 </template>
 
 <script setup lang="ts">
-// 自身属性
+// 自身属性、通用导入
 const props = defineProps<{
   jsonData?: object,
   fn_newView?: () => Promise<void>;
 }>()
+import { ref } from 'vue'
 
 // 组件 - 节点画布
 import NodeFlow from './NodeFlow.vue'
-import { ref } from 'vue'
 const RefChild = ref<{
-  layoutGraph: (direction: string)=>void
+  layoutGraph: (direction: string)=>void,
 }>();
 
 // 按钮 - 展示json数据

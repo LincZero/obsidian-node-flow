@@ -100,8 +100,6 @@ const {
   addEdges,
 } = useVueFlow()
 
-zoomOnScroll.value = false;
-
 const captureZoomClick = ref(false)
 const captureZoomScroll = ref(false)
 
