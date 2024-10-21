@@ -16,6 +16,10 @@ h2[data-v-f066e70f] {
   gap: 10px;
   max-width: 250px;
 }
+.color-selector {
+  width: 250px;
+  height: 100px;
+}
 .vue-flow__node-color-selector .color-selector {
   display: flex;
   flex-direction: row;

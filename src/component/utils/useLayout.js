@@ -33,7 +33,7 @@ export function useLayout() {
       // 如果你的布局需要节点的宽度和高度，你可以使用内部节点的dimensions属性 (`GraphNode` type)
       const graphNode = findNode(node.id)
 
-      dagreGraph.setNode(node.id, { width: (graphNode?.dimensions?.width??100) || 150, height: (graphNode?.dimensions?.height??100) || 50 }) // [!code] 临时修复，不知道有没有其他问题
+      dagreGraph.setNode(node.id, { width: graphNode?.dimensions?.width??150, height: graphNode?.dimensions?.height??50 }) // [!code] 临时修复，不知道有没有其他问题
     }
 
     for (const edge of edges) {

@@ -86,7 +86,13 @@ function onSelect(color) {
   justify-content:space-between;
   align-items:center;
   gap:10px;
-  max-width:250px
+  max-width:250px;
+}
+
+.color-selector {
+  /* 测试自动布局的尺寸获取 */
+  width: 250px;
+  height: 100px;
 }
 
 .vue-flow__node-color-selector .color-selector {
