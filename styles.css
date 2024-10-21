@@ -68,6 +68,91 @@ h2[data-v-f066e70f] {
   background: none;
   border: none;
 }
+.comfyui-node[data-v-fa3da5bb] {
+  height: auto;
+  min-height: 200px;
+  width: auto;
+  min-width: 400px;
+  max-width: 450px;
+  border-radius: 8px;
+  box-shadow: 3px 3px 10px 2px #111;
+}
+.comfyui-node .comfyui-node-title[data-v-fa3da5bb] {
+  height: 30px;
+  padding: 0 12px;
+  line-height: 30px;
+  border-radius: 8px 8px 0 0;
+  color: #999;
+  background-color: #2e4656;
+}
+.comfyui-node .comfyui-node-content[data-v-fa3da5bb] {
+  height: 100%;
+  min-height: 170px;
+  padding: 0 24px 16px;
+  border-radius: 0 0 8px 8px;
+  color: #aaa;
+  background-color: #353535;
+}
+.comfyui-node .comfyui-node-content .item[data-v-fa3da5bb] {
+  height: 30px;
+  line-height: 30px;
+}
+.comfyui-node .comfyui-node-content .item-c[data-v-fa3da5bb] {
+  height: 32px;
+  padding: 1px 34px;
+  margin-bottom: 4px;
+  background-color: #222;
+  border-radius: 16px;
+}
+.comfyui-node .comfyui-node-content .comfyui-node-handle-name[data-v-fa3da5bb] {
+  display: flex;
+  justify-content: space-between;
+}
+.comfyui-node .comfyui-node-content .comfyui-node-handle-name > .left[data-v-fa3da5bb] {
+  text-align: left;
+}
+.comfyui-node .comfyui-node-content .comfyui-node-handle-name > .right[data-v-fa3da5bb] {
+  text-align: right;
+}
+.vue-flow__handle[data-v-fa3da5bb] {
+  background-color: #a598dd;
+  border: none;
+  width: 10px;
+  height: 10px;
+}
+.vue-flow__handle.source[data-v-fa3da5bb] {
+  left: 12px;
+}
+.vue-flow__handle.target[data-v-fa3da5bb] {
+  right: 12px;
+}
+.vue-flow__handle[indexAttr="0"][data-v-fa3da5bb] {
+  top: 46px;
+}
+.vue-flow__handle[indexAttr="1"][data-v-fa3da5bb] {
+  top: 76px;
+}
+.vue-flow__handle[indexAttr="2"][data-v-fa3da5bb] {
+  top: 106px;
+}
+.vue-flow__handle[indexAttr="3"][data-v-fa3da5bb] {
+  top: 136px;
+}
+.vue-flow__handle[indexAttr="4"][data-v-fa3da5bb] {
+  top: 166px;
+}
+.vue-flow__handle[indexAttr="5"][data-v-fa3da5bb] {
+  top: 196px;
+}
+.vue-flow__handle[indexAttr="6"][data-v-fa3da5bb] {
+  top: 226px;
+}
+.vue-flow__handle[indexAttr="7"][data-v-fa3da5bb] {
+  top: 256px;
+}
+vue-flow__edges[data-v-fa3da5bb] {
+  stroke-width: 80;
+}
 .vue-flow__panel[data-v-f48cfb61] {
   background-color: #2d3748;
   padding: 10px;
@@ -429,9 +514,11 @@ h2[data-v-f066e70f] {
   height: 400px;
   border: 1px solid currentColor;
   border-radius: 8px;
+  overflow: hidden;
 }
 .nf-shell-view[data-v-b2ec3a09] {
   height: 100%;
+  overflow: hidden;
 }
 
 /* src/style/main.css */

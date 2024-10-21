@@ -39,5 +39,6 @@ function fn_autoPos(position: string) { RefChild.value.layoutGraph(position) }
 <style scoped>
 .nf-shell-view {
   height: 100%;
+  overflow: hidden;
 }
 </style>

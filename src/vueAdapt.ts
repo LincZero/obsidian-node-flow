@@ -101,20 +101,18 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, d
   try {
     let nodes_new: object[] = []
     const nodes = parsedData.nodes;
-
     nodes.forEach((item:any) => {
       nodes_new.push({
         // 数据转移：
         id: item.id,
-        type: "obcanvas",
         position: { x: item.x, y: item.y },
-        data: { label: item.text.trim() }
+        data: { label: item.text.trim() },
         // 数据舍弃：
         // item.width
         // item.height
         // item.type == "text"
         // 数据新增：
-        // type == "default"
+        type: "obcanvas",
       });
     })
 
@@ -130,7 +128,7 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, d
         targetHandle: item.toSide,
         // 数据新增：
         // type == "default"
-        markerEnd: 'arrowclosed'
+        markerEnd: 'arrowclosed',
       });
     })
 
@@ -141,5 +139,34 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, d
 }
 
 function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, data: object} {
-  return {code: -1, msg: "error: not supported yet: comfyui", data: {}}
+  try {
+    let nodes_new: object[] = []
+    const nodes = parsedData.nodes;
+    nodes.forEach((item:any) => {
+      nodes_new.push({
+        // 数据转移：
+        id: item.id,
+        position: { x: item.pos["0"], y: item.pos["1"] },
+        data: {
+          label: item.type,
+          inputs: item.inputs,
+          outputs: item.outputs,
+          widgets_values: item.widgets_values,
+        },
+        // 数据舍弃：
+        // item.size
+        // item.properties["Node name for S&R"]
+        // item.widgets_values
+        // 数据新增：
+        type: "comfyui",
+      });
+    })
+
+    let edges_new: object[] = []
+    const edges = parsedData.edges;
+
+    return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
+  } catch (error) {
+    return {code: -1, msg: "error: comfyui json parse fail", data: {}}
+  }
 }

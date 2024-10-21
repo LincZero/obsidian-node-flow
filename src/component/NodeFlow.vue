@@ -2,7 +2,7 @@
 
 <template>
   <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges">
-    <Background pattern-color="#404040" :gap="16" />
+    <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
     <template #node-color-selector="props">
       <ColorSelectorNode :id="props.id" :data="props.data" />
     </template>
@@ -11,6 +11,9 @@
     </template>
     <template #node-obcanvas="props">
       <ObcanvasNode :id="props.id" :data="props.data"/>
+    </template>
+    <template #node-comfyui="props">
+      <ComfyUINode :id="props.id" :data="props.data"/>
     </template>
     <InteractionControls v-if="!props.isMini"/>
   </VueFlow>
@@ -29,6 +32,7 @@ import { useVueFlow } from '@vue-flow/core'
 import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue'  // 颜色输入
 import ColorOutputNode from './CustomNode/ColorOutputNode.vue'      // 颜色输出
 import ObcanvasNode from './CustomNode/ObcanvasNode.vue'            // ob canvas 节点
+import ComfyUINode from './CustomNode/ComfyUINode.vue'              // comfyui 节点
 
 // 组件 - 其他
 import InteractionControls from './utils/InteractionControls.vue'   // 控制画布控制的操作开关
