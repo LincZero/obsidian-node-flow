@@ -1,3 +1,5 @@
+<!-- 颜色选择的输入节点 -->
+
 <template>
   <div>Select a color</div>
 

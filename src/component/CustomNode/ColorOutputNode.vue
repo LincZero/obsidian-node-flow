@@ -1,3 +1,5 @@
+<!-- 颜色输出节点 -->
+
 <template>
   <Handle
     type="target"

@@ -33,7 +33,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
 
   // part3. 控件组
   {
-    const el_btn_newView = document.createElement("button"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView"); el_btn_newView.textContent="OpenInLeafView";
+    const el_btn_newView = document.createElement("button"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView"); el_btn_newView.textContent="newView";
     // 按钮1，在新叶子视图中显示
     el_btn_newView.onclick = async (ev: MouseEvent) => {
       // 如果没有该Docker视图则创建一个
@@ -55,13 +55,18 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
       mountVue(el_shell) // 自定义叶子视图，替换为节点流画布
     }
     // 按钮2，调试输出对应的json
-    const el_btn_showJson = document.createElement("button"); el_toolbar.appendChild(el_btn_showJson); el_btn_showJson.classList.add("nf-btn-showJson"); el_btn_showJson.textContent="ShowJson";
+    const el_btn_showJson = document.createElement("button"); el_toolbar.appendChild(el_btn_showJson); el_btn_showJson.classList.add("nf-btn-showJson"); el_btn_showJson.textContent="showJson";
     el_btn_showJson.onclick = async (ev: MouseEvent) => {
       console.log("showJson debug: ", factoryFlowData(jsonType, mdStr))
     }
     // 按钮3，自动重调位置
-    const el_btn_autoPos = document.createElement("button"); el_toolbar.appendChild(el_btn_autoPos); el_btn_autoPos.classList.add("nf-btn-autoPos"); el_btn_autoPos.textContent="AutoPos";
+    const el_btn_autoPos = document.createElement("button"); el_toolbar.appendChild(el_btn_autoPos); el_btn_autoPos.classList.add("nf-btn-autoPos"); el_btn_autoPos.textContent="autoPos";
     el_btn_autoPos.onclick = async (ev: MouseEvent) => {
+      // TODO
+    }
+    // 按钮4，显示画布操控开关
+    const el_btn_lock = document.createElement("button"); el_toolbar.appendChild(el_btn_lock); el_btn_lock.classList.add("nf-btn-lock"); el_btn_lock.textContent="lock";
+    el_btn_lock.onclick = async (ev: MouseEvent) => {
       // TODO
     }
   }
@@ -88,7 +93,7 @@ function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: nu
   // 类型分发
   let result: {code: number, msg: string, data: object}; // TODO：优化，应该减少json的解析次数，很多大json的。应该是code msg data模式
   if (type == "comfyui") {
-    return {code: -1, msg: "error: not supported yet: comfyui", data: {}}
+    result = factoryFlowData_comfyui(parsedData)
   }
   else if (type=="obcanvas") {
     result = factoryFlowData_obcanvas(parsedData)
@@ -146,4 +151,8 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, d
   } catch (error) {
     return {code: -1, msg: "error: obcanvas json parse fail", data: {}}
   }
+}
+
+function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, data: object} {
+  return {code: -1, msg: "error: not supported yet: comfyui", data: {}}
 }

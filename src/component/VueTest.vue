@@ -1,3 +1,5 @@
+<!-- 仅用于文本显示信息 -->
+
 <template>
     <h2>{{ props.data }}</h2>
 </template>

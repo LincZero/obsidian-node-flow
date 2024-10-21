@@ -5,8 +5,9 @@ import { Position, useVueFlow } from '@vue-flow/core'
 import { ref } from 'vue'
 
 /**
- * 可组合以在图上运行布局算法。
- * 它使用 `dagre` 库来计算节点和边的布局。
+ * 可组合以在图上运行布局算法
+ * 
+ * 它使用 `dagre` 库来计算节点和边的布局
  */
 export function useLayout() {
   const { findNode } = useVueFlow()

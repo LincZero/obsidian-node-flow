@@ -64,6 +64,25 @@ h2[data-v-f066e70f] {
   background: none;
   border: none;
 }
+.vue-flow__panel[data-v-f48cfb61] {
+  background-color: #2d3748;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00000080;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.vue-flow__panel .label[data-v-f48cfb61] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
 .vue-flow {
   position: relative;
   width: 100%;

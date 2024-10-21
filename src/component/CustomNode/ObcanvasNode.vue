@@ -1,3 +1,5 @@
+<!-- Obsidian专用的节点 -->
+
 <template>
   <div class="obcanvas-node">
     {{ data.label }}
