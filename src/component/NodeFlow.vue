@@ -22,6 +22,15 @@ const props = defineProps<{
   jsonData?: object
 }>()
 
+// 组件 - 自定义节点
+import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue'  // 颜色输入
+import ColorOutputNode from './CustomNode/ColorOutputNode.vue'      // 颜色输出
+import ObcanvasNode from './CustomNode/ObcanvasNode.vue'            // ob canvas 节点
+
+// 组件 - 其他
+import InteractionControls from './utils/InteractionControls.vue'   // 控制画布控制的操作开关
+import { Background } from '@vue-flow/background'                   // 背景控制
+
 // 组件 - VueFlow，并准备节点数据 (解析JSON数据，在外面已经校验过一次了，这里大概率不会有问题)
 import { VueFlow } from '@vue-flow/core'
 import type { Node, Edge } from '@vue-flow/core' 
@@ -44,13 +53,9 @@ let edges = ref<Edge[]>([]);
 import { nextTick } from 'vue'
 import { useVueFlow, Position } from '@vue-flow/core'
 import { useLayout } from './utils/useLayout'
-if (nodes.value.length>1 &&
-  nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
-  nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
-) {
-  layoutGraph(Position.Right)
-}
+/// 自动调整节点顺序
 async function layoutGraph(direction: Position) {
+  console.log("direction:", direction)
   const { layout } = useLayout()
   const { fitView } = useVueFlow()
   nodes.value = layout(nodes.value, edges.value, direction)
@@ -58,6 +63,15 @@ async function layoutGraph(direction: Position) {
     fitView()
   })
 }
+if (nodes.value.length>1 && // 个别情况自动调用
+  nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
+  nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
+) {
+  layoutGraph(Position.Right)
+}
+defineExpose({
+  layoutGraph
+})
 
 // 模拟运行流程树
 /*import { useRunProcess } from './useRunProcess'
@@ -66,15 +80,6 @@ async function ...() {
   await stop()
   reset(nodes.value)
 }*/
-
-// 组件 - 自定义节点
-import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue'  // 颜色输入
-import ColorOutputNode from './CustomNode/ColorOutputNode.vue'      // 颜色输出
-import ObcanvasNode from './CustomNode/ObcanvasNode.vue'            // ob canvas 节点
-
-// 组件 - 其他
-import InteractionControls from './utils/InteractionControls.vue'   // 控制画布控制的操作开关
-import { Background } from '@vue-flow/background'                   // 背景控制
 </script>
 
 <style>
@@ -82,7 +87,7 @@ import { Background } from '@vue-flow/background'                   // 背景控
 @import '@vue-flow/core/dist/theme-default.css';  /* 导入默认主题，这是可选的，但通常推荐 */
 
 .nf-node-flow {
-  min-height: 100px;
+  min-height: 200px;
   height: 100%;
 }
 </style>
