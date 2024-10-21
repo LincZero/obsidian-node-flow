@@ -8,7 +8,10 @@ import {
   testData_vueflow_customNode,
   testData_obcanvas,
   testData_comfyUI
-} from "./testData"
+} from "./test/testData"
+import {
+  testData2
+} from "./test/testData2"
 
 interface MyPluginSettings {
   mySetting: string;
@@ -54,6 +57,9 @@ export default class MyPlugin extends Plugin {
     })
     this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
       factoryVueDom("comfyui", blockEl, JSON.stringify(testData_comfyUI))
+    })
+    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui-demo2", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+      factoryVueDom("comfyui", blockEl, JSON.stringify(testData2))
     })
     // TODO "nodeflow-list", 允许使用非json方式声明，再转化为json
   }

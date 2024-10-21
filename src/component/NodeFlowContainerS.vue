@@ -38,6 +38,7 @@ function fn_autoPos(position: string) { RefChild.value.layoutGraph(position) }
 
 <style scoped>
 .nf-shell-mini {
+  width: 100%;
   height: 400px;
   border: 1px solid currentColor;
   border-radius: 8px;
