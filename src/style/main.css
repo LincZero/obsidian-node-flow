@@ -11,14 +11,6 @@
 #app {
   font-family: 'JetBrains Mono', monospace;
 }
-.nf-shell-mini {
-  height: 400px;
-  border: 1px solid currentColor;
-  border-radius: 8px;
-}
-.nf-shell-view {
-  height: 100%;
-}
 .nf-toolbar {
   height: 24px;
 }

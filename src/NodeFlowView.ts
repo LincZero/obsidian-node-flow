@@ -2,6 +2,9 @@ import { ItemView, WorkspaceLeaf } from 'obsidian';
 
 export const  NodeFlowViewFlag = "NodeFlowView"
 
+/**
+ * 用于在Obsidian中打开新的叶子视图，并显示节点流
+ */
 export class NodeFlowView extends ItemView {
   constructor(leaf: WorkspaceLeaf) {
     super(leaf);

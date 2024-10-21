@@ -1,18 +1,19 @@
 import { createApp, App as VueApp } from 'vue';
 import VueTest from './component/VueTest.vue';
-import MyVueFlow from './component/MyVueFlow.vue';
+import NodeFlowContainerS from './component/NodeFlowContainerS.vue';
+import NodeFlowContainerL from './component/NodeFlowContainerL.vue';
 import { NodeFlowViewFlag } from './NodeFlowView'
 import { WorkspaceLeaf } from 'obsidian';
 
-// 在div内创建指定的 Vue UI
+/// 在div内创建指定的 Vue UI
 export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:string = ""):void {
-  // part1. 外壳部分
-  const el_shell: HTMLElement = document.createElement("div"); div.appendChild(el_shell); el_shell.classList.add("nf-shell-mini");
-  const el_toolbar = document.createElement("div"); div.appendChild(el_toolbar); el_toolbar.classList.add("nf-toolbar");
-
-  // part2. 节点流内容
-  mountVue(el_shell) // 代码块，替换为节点流画布
-  function mountVue(el_shell: HTMLElement) {
+  // 代码块，替换为节点流画布
+  const targetEl = div
+  const targetVue = NodeFlowContainerS
+  mountVue(targetEl, targetVue)
+  
+  /// 将targetVue挂载到targetEl上
+  function mountVue (targetEl:HTMLElement, targetVue:any) {
     // 解析并转化json
     let result: {code: number, msg: string, data: object}
     result = factoryFlowData(jsonType, mdStr)
@@ -20,55 +21,41 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
       const _app = createApp(VueTest, {
         data: result.msg
       });
-      _app.mount(el_shell);
+      _app.mount(targetEl);
       return
     }
 
     // 根据新json生成节点流
-    const _app = createApp(MyVueFlow, {
-      jsonData: result.data
+    const _app = createApp(targetVue, {
+      jsonData: result.data,
+      fn_newView: fn_newView
     });
-    _app.mount(el_shell);
+    _app.mount(targetEl);
   }
 
-  // part3. 控件组
-  {
-    const el_btn_newView = document.createElement("button"); el_toolbar.appendChild(el_btn_newView); el_btn_newView.classList.add("nf-btn-newView"); el_btn_newView.textContent="newView";
-    // 按钮1，在新叶子视图中显示
-    el_btn_newView.onclick = async (ev: MouseEvent) => {
-      // 如果没有该Docker视图则创建一个
-      if (this.app.workspace.getLeavesOfType(NodeFlowViewFlag).length === 0) {
-        await this.app.workspace.getRightLeaf(false).setViewState({
-          type: NodeFlowViewFlag,
-          active: true,
-        })
-      }
-      const NodeFlowLeaf: WorkspaceLeaf = this.app.workspace.getLeavesOfType(NodeFlowViewFlag)[0]
+  const cahce_workspace = this.app.workspace // 防止在Vue的上下文中，不存在workspace
+  /// 在Obsidian的新视图中显示节点画布
+  async function fn_newView() {
+    // 如果没有该Docker视图则创建一个
+    if (cahce_workspace.getLeavesOfType(NodeFlowViewFlag).length === 0) {
+      await cahce_workspace.getRightLeaf(false).setViewState({
+        type: NodeFlowViewFlag,
+        active: true,
+      })
+    }
+    const NodeFlowLeaf: WorkspaceLeaf = cahce_workspace.getLeavesOfType(NodeFlowViewFlag)[0]
 
-      // 前置/展开该Docker视图
-      this.app.workspace.revealLeaf(NodeFlowLeaf)
+    // 前置/展开该Docker视图
+    cahce_workspace.revealLeaf(NodeFlowLeaf)
 
-      // 更新该视图中的内容
-      const containerEl: HTMLElement = NodeFlowLeaf.view.containerEl;
-      containerEl.innerHTML = ""
-      const el_shell: HTMLElement = document.createElement("div"); containerEl.appendChild(el_shell); el_shell.classList.add("nf-shell-view");
-      mountVue(el_shell) // 自定义叶子视图，替换为节点流画布
-    }
-    // 按钮2，调试输出对应的json
-    const el_btn_showJson = document.createElement("button"); el_toolbar.appendChild(el_btn_showJson); el_btn_showJson.classList.add("nf-btn-showJson"); el_btn_showJson.textContent="showJson";
-    el_btn_showJson.onclick = async (ev: MouseEvent) => {
-      console.log("showJson debug: ", factoryFlowData(jsonType, mdStr))
-    }
-    // 按钮3，自动重调位置
-    const el_btn_autoPos = document.createElement("button"); el_toolbar.appendChild(el_btn_autoPos); el_btn_autoPos.classList.add("nf-btn-autoPos"); el_btn_autoPos.textContent="autoPos";
-    el_btn_autoPos.onclick = async (ev: MouseEvent) => {
-      // TODO
-    }
-    // 按钮4，显示画布操控开关
-    const el_btn_lock = document.createElement("button"); el_toolbar.appendChild(el_btn_lock); el_btn_lock.classList.add("nf-btn-lock"); el_btn_lock.textContent="lock";
-    el_btn_lock.onclick = async (ev: MouseEvent) => {
-      // TODO
-    }
+    // 更新该视图中的内容
+    const containerEl: HTMLElement = NodeFlowLeaf.view.containerEl;
+    containerEl.innerHTML = ""   
+
+    // 新的叶子视图，替换为节点流画布
+    const targetEl = containerEl
+    const targetVue = NodeFlowContainerL
+    mountVue(targetEl, targetVue)
   }
 }
 

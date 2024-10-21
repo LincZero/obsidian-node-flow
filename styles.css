@@ -421,18 +421,18 @@ h2[data-v-f066e70f] {
   min-height: 100px;
   height: 100%;
 }
-
-/* src/style/main.css */
-#app {
-  font-family: "JetBrains Mono", monospace;
-}
-.nf-shell-mini {
+.nf-shell-mini[data-v-1808d23a] {
   height: 400px;
   border: 1px solid currentColor;
   border-radius: 8px;
 }
-.nf-shell-view {
+.nf-shell-view[data-v-b2ec3a09] {
   height: 100%;
+}
+
+/* src/style/main.css */
+#app {
+  font-family: "JetBrains Mono", monospace;
 }
 .nf-toolbar {
   height: 24px;

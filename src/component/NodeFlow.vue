@@ -1,8 +1,8 @@
 <!-- 主画布 -->
 
 <template>
-  <!-- <Background pattern-color="#404040" :gap="16" /> 似乎溢出-->
   <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges">
+    <Background pattern-color="#404040" :gap="16" />
     <template #node-color-selector="props">
       <ColorSelectorNode :id="props.id" :data="props.data" />
     </template>
@@ -48,15 +48,15 @@ if (nodes.value.length>1 &&
   nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
   nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
 ) {
+  layoutGraph(Position.Right)
+}
+async function layoutGraph(direction: Position) {
   const { layout } = useLayout()
   const { fitView } = useVueFlow()
-  async function layoutGraph(direction: Position) {
-    nodes.value = layout(nodes.value, edges.value, direction)
-    nextTick(() => {
-      fitView()
-    })
-  }
-  layoutGraph(Position.Right)
+  nodes.value = layout(nodes.value, edges.value, direction)
+  nextTick(() => {
+    fitView()
+  })
 }
 
 // 模拟运行流程树
@@ -78,8 +78,8 @@ import { Background } from '@vue-flow/background'                   // 背景控
 </script>
 
 <style>
-@import '@vue-flow/core/dist/style.css'; /* 导入Vue Flow工作所需的样式 */
-@import '@vue-flow/core/dist/theme-default.css'; /* 导入默认主题，这是可选的，但通常推荐 */
+@import '@vue-flow/core/dist/style.css';          /* 导入Vue Flow工作所需的样式 */
+@import '@vue-flow/core/dist/theme-default.css';  /* 导入默认主题，这是可选的，但通常推荐 */
 
 .nf-node-flow {
   min-height: 100px;
