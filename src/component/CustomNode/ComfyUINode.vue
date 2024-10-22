@@ -154,13 +154,15 @@ const props = defineProps({
 }
 
 .comfyui-node .comfyui-node-content .item {
-  height: 24px;
   line-height: 24px;
+  min-height: 24px;
+  height: auto;
   font-size: 12px;
 }
 .comfyui-node .comfyui-node-content .item-c {
   box-sizing: border-box;
-  height: 24px;
+  min-height: 24px;
+  height: auto;
   margin-bottom: 4px;
 
   padding: 1px 28px;
@@ -169,8 +171,9 @@ const props = defineProps({
   border-radius: 13px;
 }
 .comfyui-node .comfyui-node-content .item-c .item {
-  height: 20px;
   line-height: 20px;
+  min-height: 20px;
+  height: auto;
   font-size: 12px;
 }
 

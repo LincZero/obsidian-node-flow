@@ -119,13 +119,15 @@ h2[data-v-f066e70f] {
   background-color: #353535;
 }
 .comfyui-node .comfyui-node-content .item[data-v-fa3da5bb] {
-  height: 24px;
   line-height: 24px;
+  min-height: 24px;
+  height: auto;
   font-size: 12px;
 }
 .comfyui-node .comfyui-node-content .item-c[data-v-fa3da5bb] {
   box-sizing: border-box;
-  height: 24px;
+  min-height: 24px;
+  height: auto;
   margin-bottom: 4px;
   padding: 1px 28px;
   border: solid 1px #616161;
@@ -133,8 +135,9 @@ h2[data-v-f066e70f] {
   border-radius: 13px;
 }
 .comfyui-node .comfyui-node-content .item-c .item[data-v-fa3da5bb] {
-  height: 20px;
   line-height: 20px;
+  min-height: 20px;
+  height: auto;
   font-size: 12px;
 }
 .comfyui-node .comfyui-node-content .comfyui-node-handle-name[data-v-fa3da5bb] {
