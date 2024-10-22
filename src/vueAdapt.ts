@@ -148,7 +148,8 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
         id: ""+item.id,
         position: { x: item.pos["0"], y: item.pos["1"] },
         data: {
-          label: item.type,
+          label: item.hasOwnProperty("title")?item.title:item.type,
+          type: item.type,
           inputs: item.inputs,
           outputs: item.outputs,
           widgets_values: item.widgets_values,
@@ -157,8 +158,7 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
         // item.size
         // item.properties["Node name for S&R"]
         // item.widgets_values
-        // 数据新增：
-        type: "comfyui",
+        type: "comfyui",    // 数据新增
       });
     })
 

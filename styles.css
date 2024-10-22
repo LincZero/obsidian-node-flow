@@ -68,41 +68,74 @@ h2[data-v-f066e70f] {
   background: none;
   border: none;
 }
+.vue-flow__node-comfyui.selected .comfyui-node {
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+.vue-flow__edge .vue-flow__edge-path {
+  stroke-width: 2;
+}
+.vue-flow__edge.selected .vue-flow__edge-path {
+  stroke: #ec4899 !important;
+}
+.comfyui-id[data-v-fa3da5bb] {
+  height: 22px;
+  padding: 0 4px 2px;
+  line-height: 20px;
+  font-size: 12px;
+  width: auto;
+}
+.comfyui-id > div[data-v-fa3da5bb] {
+  height: 20px;
+  line-height: 20px;
+  float: right;
+  padding: 0 6px;
+  background-color: #0f1f0f;
+  border-radius: 6px;
+}
 .comfyui-node[data-v-fa3da5bb] {
   height: auto;
-  min-height: 200px;
+  min-height: 90px;
   width: auto;
-  min-width: 400px;
+  min-width: 350px;
   max-width: 450px;
   border-radius: 8px;
   box-shadow: 3px 3px 10px 2px #111;
 }
 .comfyui-node .comfyui-node-title[data-v-fa3da5bb] {
   height: 30px;
-  padding: 0 12px;
   line-height: 30px;
+  font-size: 14px;
+  padding: 0 12px;
   border-radius: 8px 8px 0 0;
   color: #999;
   background-color: #2e4656;
 }
 .comfyui-node .comfyui-node-content[data-v-fa3da5bb] {
   height: 100%;
-  min-height: 170px;
+  min-height: 60px;
   padding: 0 24px 16px;
   border-radius: 0 0 8px 8px;
   color: #aaa;
   background-color: #353535;
 }
 .comfyui-node .comfyui-node-content .item[data-v-fa3da5bb] {
-  height: 30px;
-  line-height: 30px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
 }
 .comfyui-node .comfyui-node-content .item-c[data-v-fa3da5bb] {
-  height: 32px;
-  padding: 1px 34px;
+  box-sizing: border-box;
+  height: 24px;
   margin-bottom: 4px;
+  padding: 1px 28px;
+  border: solid 1px #616161;
   background-color: #222;
-  border-radius: 16px;
+  border-radius: 13px;
+}
+.comfyui-node .comfyui-node-content .item-c .item[data-v-fa3da5bb] {
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
 }
 .comfyui-node .comfyui-node-content .comfyui-node-handle-name[data-v-fa3da5bb] {
   display: flex;
@@ -117,6 +150,7 @@ h2[data-v-f066e70f] {
 .vue-flow__handle[data-v-fa3da5bb] {
   background-color: #a598dd;
   border: none;
+  box-sizing: border-box;
   width: 10px;
   height: 10px;
 }
@@ -125,33 +159,31 @@ h2[data-v-f066e70f] {
 }
 .vue-flow__handle.source[data-v-fa3da5bb] {
   right: 12px;
+  border: solid 2px #211820;
 }
 .vue-flow__handle[indexAttr="0"][data-v-fa3da5bb] {
-  top: 46px;
+  top: 64px;
 }
 .vue-flow__handle[indexAttr="1"][data-v-fa3da5bb] {
-  top: 76px;
+  top: 88px;
 }
 .vue-flow__handle[indexAttr="2"][data-v-fa3da5bb] {
-  top: 106px;
+  top: 112px;
 }
 .vue-flow__handle[indexAttr="3"][data-v-fa3da5bb] {
   top: 136px;
 }
 .vue-flow__handle[indexAttr="4"][data-v-fa3da5bb] {
-  top: 166px;
+  top: 160px;
 }
 .vue-flow__handle[indexAttr="5"][data-v-fa3da5bb] {
-  top: 196px;
+  top: 184px;
 }
 .vue-flow__handle[indexAttr="6"][data-v-fa3da5bb] {
-  top: 226px;
+  top: 208px;
 }
 .vue-flow__handle[indexAttr="7"][data-v-fa3da5bb] {
-  top: 256px;
-}
-vue-flow__edges[data-v-fa3da5bb] {
-  stroke-width: 80;
+  top: 232px;
 }
 .vue-flow__panel[data-v-f48cfb61] {
   background-color: #2d3748;
