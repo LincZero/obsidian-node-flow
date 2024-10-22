@@ -145,7 +145,7 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
     nodes.forEach((item:any) => {
       nodes_new.push({
         // 数据转移：
-        id: item.id,
+        id: ""+item.id,
         position: { x: item.pos["0"], y: item.pos["1"] },
         data: {
           label: item.type,
@@ -162,8 +162,55 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
       });
     })
 
+    /**
+     * comfyui的edges规则比较特殊
+     * 
+     * 以 testData_comfyUI 数据为例： (注意id是从3~9共7个节点)
+     * - nodes
+     *   该部分存储了一部分和线有关的数据，我之前写nodeeditor也有过经验，是为了方便数据传递减少调用次数的优化
+     *   按信息量来说是冗余信息
+     *   
+     *   node_id| inputs_link| outputs_link
+     *   3      | 1,4,6,2    | [7]
+     *   4      |            | [1][3,5][8]
+     *   5      |            | [2]
+     *   6      | 3          | [4]
+     *   7      | 5          | [6]
+     *   8      | 7,8        | [9]
+     *   9      | 9          | 
+     * 
+     * - links
+     *   信息应该是：[线的id, fromNode, fromIndex, toNode, toIndex, 线段类型]
+     *   "links": [
+     *     [1,4,0,3,0,"MODEL"],
+     *     [2,5,0,3,3,"LATENT"],
+     *     [3,4,1,6,0,"CLIP"],
+     *     [4,6,0,3,1,"CONDITIONING"],
+     *     [5,4,1,7,0,"CLIP"],
+     *     [6,7,0,3,2,"CONDITIONING"],
+     *     [7,3,0,8,0,"LATENT"],
+     *     [8,4,2,8,1,"VAE"],
+     *     [9,8,0,9,0,"IMAGE"]
+     *   ],
+     * 
+     * 然后特别需要注意：handle的from/to或source/target的标注是相对于线而言的，不是相对于节点而言的!
+     */
     let edges_new: object[] = []
-    const edges = parsedData.edges;
+    const edges = parsedData.links;
+    edges.forEach((item:any) => {
+      edges_new.push({
+        // 数据转移：
+        id: ""+item[0],
+        source: ""+item[1],
+        sourceHandle: "source-"+item[2],
+        target: ""+item[3],
+        targetHandle: "target-"+item[4],
+        // 数据舍弃：
+        // 线类型
+        // 数据新增：
+        // type: "default",
+      });
+    })
 
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
   } catch (error) {

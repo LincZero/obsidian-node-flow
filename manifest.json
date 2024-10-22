@@ -6,6 +6,7 @@
 	"description": "Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes. json describes the chart, compared to screenshots, making it easier to modify later. The plugin is also compatible with blogs.",
 	"author": "LincZero",
 	"authorUrl": "https://github.com/LincZero/",
-	"fundingUrl": "TODO https://github.com/LincZero/obsidian-node-flow",
+	"repo": "https://github.com/LincZero/obsidian-node-flow",
+	"fundingUrl": "https://github.com/LincZero#thank-you-very-much-for-your-support",
 	"isDesktopOnly": true
 }

@@ -26,16 +26,16 @@
     <Handle
       v-for="(item,index) in data.inputs"
       :key="index"
-      :id="'source-'+index"
+      :id="'target-'+index"
       :indexAttr="index"
-      type="source"
+      type="target"
       :position="Position.Left" />
     <Handle
       v-for="(item,index) in props.data.outputs"
       :key="index"
-      :id="'target-'+index"
+      :id="'source-'+index"
       :indexAttr="index"
-      type="target"
+      type="source"
       :position="Position.Right" />
   </div>
 </template>
@@ -129,8 +129,8 @@ const props = defineProps({
   width: 10px;
   height: 10px;
 }
-.vue-flow__handle.source { left: 12px }
-.vue-flow__handle.target { right: 12px }
+.vue-flow__handle.target { left: 12px }
+.vue-flow__handle.source { right: 12px }
 .vue-flow__handle[indexAttr="0"] { top:calc(46px + 0 * 30px) }
 .vue-flow__handle[indexAttr="1"] { top:calc(46px + 1 * 30px) }
 .vue-flow__handle[indexAttr="2"] { top:calc(46px + 2 * 30px) }

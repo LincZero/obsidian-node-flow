@@ -120,10 +120,10 @@ h2[data-v-f066e70f] {
   width: 10px;
   height: 10px;
 }
-.vue-flow__handle.source[data-v-fa3da5bb] {
+.vue-flow__handle.target[data-v-fa3da5bb] {
   left: 12px;
 }
-.vue-flow__handle.target[data-v-fa3da5bb] {
+.vue-flow__handle.source[data-v-fa3da5bb] {
   right: 12px;
 }
 .vue-flow__handle[indexAttr="0"][data-v-fa3da5bb] {
