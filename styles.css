@@ -78,13 +78,16 @@ h2[data-v-8021e7da] {
   stroke: #ec4899 !important;
 }
 .comfyui-id[data-v-95296bb4] {
-  height: 22px;
-  padding: 0 4px;
+  position: absolute;
+  height: 0;
   line-height: 20px;
   font-size: 12px;
-  width: auto;
+  width: 100%;
 }
 .comfyui-id > div[data-v-95296bb4] {
+  position: relative;
+  bottom: 22px;
+  right: 4px;
   height: 20px;
   line-height: 20px;
   float: right;

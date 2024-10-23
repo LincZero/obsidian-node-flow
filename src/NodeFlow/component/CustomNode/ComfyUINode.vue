@@ -68,7 +68,6 @@ const props = defineProps({
   },
 })
 
-import { NodeToolbar } from '@vue-flow/node-toolbar'
 </script>
 
 <style>
@@ -112,13 +111,16 @@ import { NodeToolbar } from '@vue-flow/node-toolbar'
  */
 
 .comfyui-id {
-  height: 22px;
-  padding: 0 4px 0px 4px;
+  position: absolute;
+  height: 0;
   line-height: 20px;
   font-size: 12px;
-  width: auto;
+  width: 100%;
 }
 .comfyui-id>div {
+  position: relative;
+  bottom: 22px;
+  right: 4px;
   height: 20px;
   line-height: 20px;
   float: right;
