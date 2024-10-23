@@ -109,7 +109,6 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
         // 数据转移：
         id: ""+item.id,
         position: { x: item.pos["0"], y: item.pos["1"] },
-        ...(item.hasOwnProperty("size") ? {width: item.size["0"], height: item.size["1"]} : {}), // 扩展运算符灵活简化
         data: {
           label: item.hasOwnProperty("title")?item.title:item.type,
           type: item.type,
@@ -117,6 +116,7 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
           outputs: item.outputs,
           widgets_values: item.widgets_values,
         },
+        ...(item.hasOwnProperty("size") ? {width: item.size["0"], height: item.size["1"]} : {}), // 扩展运算符灵活简化
         // 数据舍弃：
         // item.size
         // item.properties["Node name for S&R"]
@@ -175,8 +175,30 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
       });
     })
 
+    const groups = parsedData.groups;
+    let index:number = 0
+    groups.forEach((item:any) => {
+      nodes_new.push({
+        // 数据转移：
+        id: "group-"+index++,
+        position: { x: item.bounding[0], y: item.bounding[1] },
+        width: item.bounding[2],
+        height: item.bounding[3],
+        data: { label: item.title },
+        ...(item.hasOwnProperty("color") ?
+          { style: {
+            backgroundColor: item.color+"44", // 1/4透明
+            width: item.bounding[2]+"px",
+            height: item.bounding[3]+"px",
+            zIndex: -1,
+          }} :
+          {}
+        ),
+        type: "comfyui",    // 数据新增 // TODO 应为comfyui_group类型
+      });
+    })
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
   } catch (error) {
-    return {code: -1, msg: "error: comfyui json parse fail", data: {}}
+    return {code: -1, msg: "error: comfyui json parse fail: "+error, data: {}}
   }
 }
