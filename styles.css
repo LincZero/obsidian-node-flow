@@ -79,7 +79,7 @@ h2[data-v-8021e7da] {
 }
 .comfyui-id[data-v-95296bb4] {
   height: 22px;
-  padding: 0 4px 2px;
+  padding: 0 4px;
   line-height: 20px;
   font-size: 12px;
   width: auto;
@@ -93,8 +93,8 @@ h2[data-v-8021e7da] {
   border-radius: 6px;
 }
 .comfyui-node[data-v-95296bb4] {
-  height: auto;
-  width: auto;
+  height: 100%;
+  width: 100%;
   border-radius: 8px;
   box-shadow: 3px 3px 10px 2px #111;
 }
@@ -108,7 +108,7 @@ h2[data-v-8021e7da] {
   background-color: #2e4656;
 }
 .comfyui-node .comfyui-node-content[data-v-95296bb4] {
-  height: 100%;
+  height: calc(100% - 30px);
   padding: 0 24px 16px;
   border-radius: 0 0 8px 8px;
   color: #aaa;
@@ -161,35 +161,35 @@ h2[data-v-8021e7da] {
   border: solid 2px #211820;
 }
 .vue-flow__handle[indexAttr="0"][data-v-95296bb4] {
-  top: 64px;
+  top: 42px;
 }
 .vue-flow__handle[indexAttr="1"][data-v-95296bb4] {
-  top: 88px;
+  top: 66px;
 }
 .vue-flow__handle[indexAttr="2"][data-v-95296bb4] {
-  top: 112px;
+  top: 90px;
 }
 .vue-flow__handle[indexAttr="3"][data-v-95296bb4] {
-  top: 136px;
+  top: 114px;
 }
 .vue-flow__handle[indexAttr="4"][data-v-95296bb4] {
-  top: 160px;
+  top: 138px;
 }
 .vue-flow__handle[indexAttr="5"][data-v-95296bb4] {
-  top: 184px;
+  top: 162px;
 }
 .vue-flow__handle[indexAttr="6"][data-v-95296bb4] {
-  top: 208px;
+  top: 186px;
 }
 .vue-flow__handle[indexAttr="7"][data-v-95296bb4] {
-  top: 232px;
+  top: 210px;
 }
 .comfyui-group[data-v-e30ebec0] {
   z-index: -2;
 }
 .comfyui-node[data-v-e30ebec0] {
-  height: auto;
-  width: auto;
+  height: 100%;
+  width: 100%;
   border-radius: 8px;
 }
 .comfyui-node .comfyui-node-title[data-v-e30ebec0] {

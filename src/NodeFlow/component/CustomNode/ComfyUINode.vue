@@ -6,6 +6,11 @@
       #{{ id }}
     </div>
   </div>
+  <!-- <NodeToolbar :is-visible="true" :position="Position.Top" class="comfyui-id">
+    <div>
+      #{{ id }}
+    </div>
+  </NodeToolbar> -->
   <div class="comfyui-node">
     <div class="comfyui-node-title">
       <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
@@ -63,6 +68,7 @@ const props = defineProps({
   },
 })
 
+import { NodeToolbar } from '@vue-flow/node-toolbar'
 </script>
 
 <style>
@@ -107,7 +113,7 @@ const props = defineProps({
 
 .comfyui-id {
   height: 22px;
-  padding: 0 4px 2px 4px;
+  padding: 0 4px 0px 4px;
   line-height: 20px;
   font-size: 12px;
   width: auto;
@@ -122,8 +128,8 @@ const props = defineProps({
 }
 
 .comfyui-node {
-  height: auto;
-  width: auto;
+  height: 100%;
+  width: 100%;
   border-radius:8px;
   box-shadow: 3px 3px 10px 2px #111;
 }
@@ -140,7 +146,7 @@ const props = defineProps({
 }
 
 .comfyui-node .comfyui-node-content {
-  height: 100%;
+  height: calc(100% - 30px);
   padding: 0 24px;
   padding-bottom: 16px;
 
@@ -198,12 +204,12 @@ const props = defineProps({
   right: 12px;
   border: solid 2px #211820;
 }
-.vue-flow__handle[indexAttr="0"] { top:calc(22px + 30px + 0.5 * 24px) }
-.vue-flow__handle[indexAttr="1"] { top:calc(22px + 30px + 1.5 * 24px) }
-.vue-flow__handle[indexAttr="2"] { top:calc(22px + 30px + 2.5 * 24px) }
-.vue-flow__handle[indexAttr="3"] { top:calc(22px + 30px + 3.5 * 24px) }
-.vue-flow__handle[indexAttr="4"] { top:calc(22px + 30px + 4.5 * 24px) }
-.vue-flow__handle[indexAttr="5"] { top:calc(22px + 30px + 5.5 * 24px) }
-.vue-flow__handle[indexAttr="6"] { top:calc(22px + 30px + 6.5 * 24px) }
-.vue-flow__handle[indexAttr="7"] { top:calc(22px + 30px + 7.5 * 24px) }
+.vue-flow__handle[indexAttr="0"] { top:calc(30px + 0.5 * 24px) }
+.vue-flow__handle[indexAttr="1"] { top:calc(30px + 1.5 * 24px) }
+.vue-flow__handle[indexAttr="2"] { top:calc(30px + 2.5 * 24px) }
+.vue-flow__handle[indexAttr="3"] { top:calc(30px + 3.5 * 24px) }
+.vue-flow__handle[indexAttr="4"] { top:calc(30px + 4.5 * 24px) }
+.vue-flow__handle[indexAttr="5"] { top:calc(30px + 5.5 * 24px) }
+.vue-flow__handle[indexAttr="6"] { top:calc(30px + 6.5 * 24px) }
+.vue-flow__handle[indexAttr="7"] { top:calc(30px + 7.5 * 24px) }
 </style>

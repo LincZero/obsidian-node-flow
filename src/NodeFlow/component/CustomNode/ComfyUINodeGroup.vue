@@ -31,8 +31,8 @@ const props = defineProps({
 
 /* 下面的同ComfyUINode的样式 */
 .comfyui-node {
-  height: auto;
-  width: auto;
+  height: 100%;
+  width: 100%;
   border-radius:8px;
 }
 

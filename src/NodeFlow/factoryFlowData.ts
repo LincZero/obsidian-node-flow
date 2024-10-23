@@ -100,6 +100,7 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, d
   }
 }
 
+// TODO 需要注意，普通节点和群组，节点id和标题都是不在宽高尺寸里面的！当前是高度+30，y-30，的方式临时解决
 function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, data: object} {
   try {
     let nodes_new: object[] = []
@@ -108,7 +109,7 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
       nodes_new.push({
         // 数据转移：
         id: ""+item.id,
-        position: { x: item.pos["0"], y: item.pos["1"] },
+        position: { x: item.pos["0"], y: item.pos["1"]-30 },
         data: {
           label: item.hasOwnProperty("title")?item.title:item.type,
           type: item.type,
@@ -116,7 +117,10 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
           outputs: item.outputs,
           widgets_values: item.widgets_values,
         },
-        ...(item.hasOwnProperty("size") ? {width: item.size["0"], height: item.size["1"]} : {}), // 扩展运算符灵活简化
+        ...(item.hasOwnProperty("size") ?  // 使用 `扩展运算符` 灵活简化
+          { width: item.size["0"]+"px", height: item.size["1"]+30+"px" }
+          : {}
+        ),
         // 数据舍弃：
         // item.size
         // item.properties["Node name for S&R"]
@@ -181,15 +185,13 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
       nodes_new.push({
         // 数据转移：
         id: "group-"+index++,
-        position: { x: item.bounding[0], y: item.bounding[1]+30+22 }, // TODO 临时下降高度，id显示那个应该让工具栏来做，不应该占用node宽高
+        position: { x: item.bounding[0], y: item.bounding[1] },
         width: item.bounding[2]+"px",
-        height: item.bounding[3]+30+"px", // TODO 临时+30，因为comfyui的标题不算在这个尺寸中
+        height: item.bounding[3]+30+"px",
         data: { label: item.title },
         ...(item.hasOwnProperty("color") ?
           { style: {
             backgroundColor: item.color+"44", // 1/4透明
-            width: item.bounding[2]+"px",
-            height: item.bounding[3]+30+"px",
             zIndex: -1,
           }} :
           {}
