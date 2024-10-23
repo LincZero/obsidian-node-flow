@@ -47,7 +47,21 @@ function fn_autoPos(position: string) { RefChild.value.layoutGraph(position) }
 }
 
 .nf-shell-view {
-  height: 100%;
+  height: calc(100% - 24px);
   overflow: hidden;
+}
+
+.nf-toolbar {
+  height: 24px;
+}
+.nf-toolbar>button {
+  height: 24px;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 4px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 1px solid transparent;
+  outline: none;
 }
 </style>
