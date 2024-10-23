@@ -125,8 +125,6 @@ const props = defineProps({
   height: auto;
   min-height: 90px;
   width: auto;
-  min-width: 350px;
-  max-width: 450px;
   border-radius:8px;
   box-shadow: 3px 3px 10px 2px #111;
 }

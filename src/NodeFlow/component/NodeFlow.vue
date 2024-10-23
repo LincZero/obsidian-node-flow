@@ -55,13 +55,23 @@ let edges = ref<Edge[]>([]);
     }
   }
 }
-if (props.isMini) {
+
+// 全局设置
+{
+  if (props.isMini) {
+    const {
+      zoomOnScroll,       // default true
+      zoomOnDoubleClick,  // default true
+    } = useVueFlow();
+    zoomOnScroll.value = false;
+    zoomOnDoubleClick.value = false;
+  }
   const {
-    zoomOnScroll,
-    zoomOnDoubleClick,
+    minZoom, // default 0.5
+    maxZoom, // default 2
   } = useVueFlow();
-  zoomOnScroll.value = false;
-  zoomOnDoubleClick.value = false;
+  minZoom.value = 0.1;
+  maxZoom.value = 4;
 }
 
 // 功能 - 自动顺序模块

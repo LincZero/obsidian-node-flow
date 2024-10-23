@@ -1,8 +1,8 @@
 <!-- 显示容器 -->
 
 <template>
-  <div class="nf-shell-mini">
-    <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="true"/>
+  <div :class="isMini?'nf-shell-mini':'nf-shell-view'">
+    <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="isMini"/>
   </div>
   <div class="nf-toolbar">
     <button class="nf-btn-newView" @click="props.fn_newView">newView</button>
@@ -17,7 +17,8 @@
 // 自身属性、通用导入
 const props = defineProps<{
   jsonData?: object,
-  fn_newView?: () => Promise<void>;
+  fn_newView?: () => Promise<void>,
+  isMini: boolean
 }>()
 import { ref } from 'vue'
 
@@ -42,6 +43,11 @@ function fn_autoPos(position: string) { RefChild.value.layoutGraph(position) }
   height: 400px;
   border: 1px solid currentColor;
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.nf-shell-view {
+  height: 100%;
   overflow: hidden;
 }
 </style>

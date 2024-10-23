@@ -109,6 +109,7 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
         // 数据转移：
         id: ""+item.id,
         position: { x: item.pos["0"], y: item.pos["1"] },
+        ...(item.hasOwnProperty("size") ? {width: item.size["0"], height: item.size["1"]} : {}), // 扩展运算符灵活简化
         data: {
           label: item.hasOwnProperty("title")?item.title:item.type,
           type: item.type,
