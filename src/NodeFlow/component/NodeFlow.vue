@@ -66,12 +66,16 @@ let edges = ref<Edge[]>([]);
     zoomOnScroll.value = false;
     zoomOnDoubleClick.value = false;
   }
-  const {
-    minZoom, // default 0.5
-    maxZoom, // default 2
+  const { 
+    minZoom,
+    maxZoom,
+    setMinZoom, // default 0.5
+    setMaxZoom, // default 2
   } = useVueFlow();
-  minZoom.value = 0.1;
-  maxZoom.value = 4;
+  minZoom.value = 0.2
+  maxZoom.value = 4
+  setMinZoom(0.2)
+  setMaxZoom(4)
 }
 
 // 功能 - 自动顺序模块
