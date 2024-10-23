@@ -1,17 +1,8 @@
 import { Plugin } from "obsidian";
 import type { MarkdownPostProcessorContext } from "obsidian"
-import { factoryVueDom } from './vueAdapt'
+import { factoryVueDom } from './NodeFlow/factoryVueDom'
 import { NodeFlowViewFlag, NodeFlowView } from './NodeFlowView'
-import {
-  testData_vueflow,
-  testData_vueflow_withoutPos,
-  testData_vueflow_customNode,
-  testData_obcanvas,
-  testData_comfyUI
-} from "./test/testData"
-import {
-  testData2
-} from "./test/testData2"
+import { setting } from "./NodeFlow/setting";
 
 interface MyPluginSettings {
   mySetting: string;
@@ -29,39 +20,21 @@ export default class MyPlugin extends Plugin {
 
     // 视图注册部分
     this.registerView(NodeFlowViewFlag, (leaf) => new NodeFlowView(leaf))
+    setting.cahce_workspace = this.app.workspace // 防止在Vue的上下文中，不存在workspace
 
     // 代码块部分
-    this.registerMarkdownCodeBlockProcessor("nodeflow-test", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-    factoryVueDom("test", blockEl, src)
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("vueflow", blockEl, src)
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("vueflow", blockEl, JSON.stringify(testData_vueflow))
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow-demo2", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("vueflow", blockEl, JSON.stringify(testData_vueflow_withoutPos))
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-vueflow-demo3", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("vueflow", blockEl, JSON.stringify(testData_vueflow_customNode))
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-obcanvas", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("obcanvas", blockEl, src)
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-obcanvas-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("obcanvas", blockEl, JSON.stringify(testData_obcanvas))
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("comfyui", blockEl, src)
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui-demo", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("comfyui", blockEl, JSON.stringify(testData_comfyUI))
-    })
-    this.registerMarkdownCodeBlockProcessor("nodeflow-comfyui-demo2", (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-      factoryVueDom("comfyui", blockEl, JSON.stringify(testData2))
-    })
-    // TODO "nodeflow-list", 允许使用非json方式声明，再转化为json
+    const code_type_list = [
+      "nodeflow-test",
+      "nodeflow-vueflow", "nodeflow-vueflow-demo", "nodeflow-vueflow-demo2", "nodeflow-vueflow-demo3",
+      "nodeflow-obcanvas", "nodeflow-obcanvas-demo",
+      "nodeflow-comfyui", "nodeflow-comfyui-demo", "nodeflow-comfyui-demo2",
+      // TODO "nodeflow-list", 允许使用非json方式声明，再转化为json
+    ]
+    for (let item of code_type_list) {
+      this.registerMarkdownCodeBlockProcessor(item, (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+        factoryVueDom(item, blockEl, src)
+      })
+    }
   }
 
   onunload() {}

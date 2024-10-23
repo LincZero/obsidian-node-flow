@@ -57,7 +57,7 @@ await esbuild.build({
 }).catch(() => process.exit(1));
 
 await esbuild.build({
-    entryPoints: ["./src/style/main.css"],
+    entryPoints: ["./src/main.css"],
     outfile: "styles.css",
     watch: !prod,
     bundle: true,

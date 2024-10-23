@@ -1,70 +1,32 @@
-import { createApp, App as VueApp } from 'vue';
-import VueTest from './component/VueTest.vue';
-import NodeFlowContainerS from './component/NodeFlowContainerS.vue';
-import NodeFlowContainerL from './component/NodeFlowContainerL.vue';
-import { NodeFlowViewFlag } from './NodeFlowView'
-import { WorkspaceLeaf } from 'obsidian';
-
-/// 在div内创建指定的 Vue UI
-export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:string = ""):void {
-  // 代码块，替换为节点流画布
-  const targetEl = div
-  const targetVue = NodeFlowContainerS
-  mountVue(targetEl, targetVue)
-  
-  /// 将targetVue挂载到targetEl上
-  function mountVue (targetEl:HTMLElement, targetVue:any) {
-    // 解析并转化json
-    let result: {code: number, msg: string, data: object}
-    result = factoryFlowData(jsonType, mdStr)
-    if (result.code != 0) {
-      const _app = createApp(VueTest, {
-        data: result.msg
-      });
-      _app.mount(targetEl);
-      return
-    }
-
-    // 根据新json生成节点流
-    const _app = createApp(targetVue, {
-      jsonData: result.data,
-      fn_newView: fn_newView
-    });
-    _app.mount(targetEl);
-  }
-
-  const cahce_workspace = this.app.workspace // 防止在Vue的上下文中，不存在workspace
-  /// 在Obsidian的新视图中显示节点画布
-  async function fn_newView() {
-    // 如果没有该Docker视图则创建一个
-    if (cahce_workspace.getLeavesOfType(NodeFlowViewFlag).length === 0) {
-      await cahce_workspace.getRightLeaf(false).setViewState({
-        type: NodeFlowViewFlag,
-        active: true,
-      })
-    }
-    const NodeFlowLeaf: WorkspaceLeaf = cahce_workspace.getLeavesOfType(NodeFlowViewFlag)[0]
-
-    // 前置/展开该Docker视图
-    cahce_workspace.revealLeaf(NodeFlowLeaf)
-
-    // 更新该视图中的内容
-    const containerEl: HTMLElement = NodeFlowLeaf.view.containerEl;
-    containerEl.innerHTML = ""   
-
-    // 新的叶子视图，替换为节点流画布
-    const targetEl = containerEl
-    const targetVue = NodeFlowContainerL
-    mountVue(targetEl, targetVue)
-  }
-}
+import {
+  testData_vueflow,
+  testData_vueflow_withoutPos,
+  testData_vueflow_customNode,
+  testData_obcanvas,
+  testData_comfyUI
+} from "./test/testData"
+import {
+  testData2
+} from "./test/testData2"
 
 /**
  * 解析并转化json，将各种类型的json转化为统一的vueflow形式
  * 
  * TODO 缺少Schema校验，提高稳定性
  */
-function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: number, msg: string, data: object} {
+export function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: number, msg: string, data: object} {
+  // demo时，使用默认数据源
+  if (type == "nodeflow-test") { return {code: -2, msg: "msg: " + json, data: {}} }
+  else if (type == "nodeflow-vueflow") { type = "vueflow"; }
+  else if (type == "nodeflow-vueflow-demo") { type = "vueflow"; json = JSON.stringify(testData_vueflow) }
+  else if (type == "nodeflow-vueflow-demo2") { type = "vueflow"; json = JSON.stringify(testData_vueflow_withoutPos) }
+  else if (type == "nodeflow-vueflow-demo3") { type = "vueflow"; json = JSON.stringify(testData_vueflow_customNode) }
+  else if (type == "nodeflow-obcanvas") { type = "obcanvas"; }
+  else if (type == "nodeflow-obcanvas-demo") { type = "obcanvas"; json = JSON.stringify(testData_obcanvas) }
+  else if (type == "nodeflow-comfyui") { type = "comfyui"; }
+  else if (type == "nodeflow-comfyui-demo") { type = "comfyui"; json = JSON.stringify(testData_comfyUI) }
+  else if (type == "nodeflow-comfyui-demo2") { type = "comfyui"; json = JSON.stringify(testData2) }
+
   // 统一检查
   if (json.trim()=="") {
     return {code: -1, msg: "error: json content is empty", data: {}}
