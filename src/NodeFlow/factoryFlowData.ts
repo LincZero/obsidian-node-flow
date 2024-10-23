@@ -14,7 +14,7 @@ import {
  * 
  * TODO 缺少Schema校验，提高稳定性
  */
-export function factoryFlowData(type:string = "vueflow", json:string = "{}"): {code: number, msg: string, data: object} {
+export function factoryFlowData(type:string = "vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: object} {
   // demo时，使用默认数据源
   if (type == "nodeflow-test") { return {code: -2, msg: "msg: " + json, data: {}} }
   else if (type == "nodeflow-vueflow") { type = "vueflow"; }

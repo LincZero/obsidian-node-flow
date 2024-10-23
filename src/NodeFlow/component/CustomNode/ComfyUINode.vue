@@ -79,8 +79,19 @@ const props = defineProps({
   stroke-width: 2;
 }
 .vue-flow__edge.selected .vue-flow__edge-path{
-  stroke: #ec4899 !important;
+  stroke: #ec4899 !important; /* 应该改成流动样式 */
+  stroke-width: 4;
 }
+.vue-flow__edge[data-id$="0"] .vue-flow__edge-path{ stroke: red !important; }
+.vue-flow__edge[data-id$="1"] .vue-flow__edge-path{ stroke: orange !important; }
+.vue-flow__edge[data-id$="2"] .vue-flow__edge-path{ stroke: yellow !important; }
+.vue-flow__edge[data-id$="3"] .vue-flow__edge-path{ stroke: green !important; }
+.vue-flow__edge[data-id$="4"] .vue-flow__edge-path{ stroke: cyan !important; }
+.vue-flow__edge[data-id$="5"] .vue-flow__edge-path{ stroke: blue !important; }
+.vue-flow__edge[data-id$="6"] .vue-flow__edge-path{ stroke: purple !important; }
+.vue-flow__edge[data-id$="7"] .vue-flow__edge-path{ stroke: gold !important; }
+.vue-flow__edge[data-id$="8"] .vue-flow__edge-path{ stroke: silver !important; }
+.vue-flow__edge[data-id$="9"] .vue-flow__edge-path{ stroke: white !important; }
 </style>
 
 <style scoped>
@@ -214,4 +225,16 @@ const props = defineProps({
 .vue-flow__handle[indexAttr="5"] { top:calc(30px + 5.5 * 24px) }
 .vue-flow__handle[indexAttr="6"] { top:calc(30px + 6.5 * 24px) }
 .vue-flow__handle[indexAttr="7"] { top:calc(30px + 7.5 * 24px) }
+.vue-flow__handle[indexAttr="8"] { top:calc(30px + 8.5 * 24px) }
+.vue-flow__handle[indexAttr="9"] { top:calc(30px + 9.5 * 24px) }
+.vue-flow__handle[indexAttr="10"] { top:calc(30px + 10.5 * 24px) }
+.vue-flow__handle[indexAttr="11"] { top:calc(30px + 11.5 * 24px) }
+.vue-flow__handle[indexAttr="12"] { top:calc(30px + 12.5 * 24px) }
+.vue-flow__handle[indexAttr="13"] { top:calc(30px + 13.5 * 24px) }
+.vue-flow__handle[indexAttr="14"] { top:calc(30px + 14.5 * 24px) }
+.vue-flow__handle[indexAttr="15"] { top:calc(30px + 15.5 * 24px) }
+.vue-flow__handle[indexAttr="16"] { top:calc(30px + 16.5 * 24px) }
+.vue-flow__handle[indexAttr="17"] { top:calc(30px + 17.5 * 24px) }
+.vue-flow__handle[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
+.vue-flow__handle[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
 </style>
