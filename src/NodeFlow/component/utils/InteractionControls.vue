@@ -72,6 +72,18 @@
         <input id="capturezoompanescroll" v-model="captureZoomScroll" type="checkbox" class="vue-flow__capturezoompanescroll" />
       </label>
     </div>
+    <div>
+      <label class="label">
+        zoom in
+        <button id="zoomin" :onclick="onZoomIn" class="vue-flow__capturezoompanescroll">+</button>
+      </label>
+    </div>
+    <div>
+      <label class="label">
+        zoom out
+        <button id="zoomout" :onclick="onZoomOut" class="vue-flow__capturezoompanescroll">-</button>
+      </label>
+    </div>
   </Panel>
 </template>
 
@@ -98,7 +110,14 @@ const {
   onNodeDragStart,
   onMoveEnd,
   addEdges,
+  zoomIn,
+  zoomOut,
+  setMinZoom,
+  setMaxZoom,
 } = useVueFlow()
+
+const onZoomIn = ()=>{setMaxZoom(4); zoomIn();}
+const onZoomOut = ()=>{setMinZoom(0.1); zoomOut();}
 
 const captureZoomClick = ref(false)
 const captureZoomScroll = ref(false)

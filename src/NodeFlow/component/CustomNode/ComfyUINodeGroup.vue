@@ -33,7 +33,7 @@ const props = defineProps({
 .comfyui-node {
   height: 100%;
   width: 100%;
-  border-radius:8px;
+  border-radius: 8px;
 }
 
 .comfyui-node .comfyui-node-title {
