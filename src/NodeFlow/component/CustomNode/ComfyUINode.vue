@@ -123,7 +123,6 @@ const props = defineProps({
 
 .comfyui-node {
   height: auto;
-  min-height: 90px;
   width: auto;
   border-radius:8px;
   box-shadow: 3px 3px 10px 2px #111;
@@ -142,7 +141,6 @@ const props = defineProps({
 
 .comfyui-node .comfyui-node-content {
   height: 100%;
-  min-height: calc(90px - 30px);
   padding: 0 24px;
   padding-bottom: 16px;
 

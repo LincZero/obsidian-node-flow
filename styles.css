@@ -94,7 +94,6 @@ h2[data-v-8021e7da] {
 }
 .comfyui-node[data-v-95296bb4] {
   height: auto;
-  min-height: 90px;
   width: auto;
   border-radius: 8px;
   box-shadow: 3px 3px 10px 2px #111;
@@ -110,7 +109,6 @@ h2[data-v-8021e7da] {
 }
 .comfyui-node .comfyui-node-content[data-v-95296bb4] {
   height: 100%;
-  min-height: 60px;
   padding: 0 24px 16px;
   border-radius: 0 0 8px 8px;
   color: #aaa;
@@ -185,6 +183,23 @@ h2[data-v-8021e7da] {
 }
 .vue-flow__handle[indexAttr="7"][data-v-95296bb4] {
   top: 232px;
+}
+.comfyui-group[data-v-e30ebec0] {
+  z-index: -2;
+}
+.comfyui-node[data-v-e30ebec0] {
+  height: auto;
+  width: auto;
+  border-radius: 8px;
+}
+.comfyui-node .comfyui-node-title[data-v-e30ebec0] {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  color: #999;
+  background-color: #2e4656;
 }
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;

@@ -181,20 +181,20 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
       nodes_new.push({
         // 数据转移：
         id: "group-"+index++,
-        position: { x: item.bounding[0], y: item.bounding[1] },
-        width: item.bounding[2],
-        height: item.bounding[3],
+        position: { x: item.bounding[0], y: item.bounding[1]+30+22 }, // TODO 临时下降高度，id显示那个应该让工具栏来做，不应该占用node宽高
+        width: item.bounding[2]+"px",
+        height: item.bounding[3]+30+"px", // TODO 临时+30，因为comfyui的标题不算在这个尺寸中
         data: { label: item.title },
         ...(item.hasOwnProperty("color") ?
           { style: {
             backgroundColor: item.color+"44", // 1/4透明
             width: item.bounding[2]+"px",
-            height: item.bounding[3]+"px",
+            height: item.bounding[3]+30+"px",
             zIndex: -1,
           }} :
           {}
         ),
-        type: "comfyui",    // 数据新增 // TODO 应为comfyui_group类型
+        type: "comfyui-group", // 数据新增
       });
     })
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}

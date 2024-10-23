@@ -15,6 +15,9 @@
     <template #node-comfyui="props">
       <ComfyUINode :id="props.id" :data="props.data"/>
     </template>
+    <template #node-comfyui-group="props">
+      <ComfyUINodeGroup :id="props.id" :data="props.data"/>
+    </template>
     <InteractionControls v-if="!props.isMini"/>
   </VueFlow>
 </template>
@@ -33,6 +36,7 @@ import ColorSelectorNode from './CustomNode/ColorSelectorNode.vue'  // 颜色输
 import ColorOutputNode from './CustomNode/ColorOutputNode.vue'      // 颜色输出
 import ObcanvasNode from './CustomNode/ObcanvasNode.vue'            // ob canvas 节点
 import ComfyUINode from './CustomNode/ComfyUINode.vue'              // comfyui 节点
+import ComfyUINodeGroup from './CustomNode/ComfyUINodeGroup.vue'    // 
 
 // 组件 - 其他
 import InteractionControls from './utils/InteractionControls.vue'   // 控制画布控制的操作开关
