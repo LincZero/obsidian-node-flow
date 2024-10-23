@@ -70,12 +70,6 @@ let edges = ref<Edge[]>([]);
     zoomOnScroll.value = false;
     zoomOnDoubleClick.value = false;
   }
-  // const { // 不知道为什么，在这里设置无效，必须在面板中设置
-  //   setMinZoom, // default 0.5
-  //   setMaxZoom, // default 2
-  // } = useVueFlow();
-  // setMinZoom(0.2)
-  // setMaxZoom(4)
 }
 
 // 功能 - 自动顺序模块
