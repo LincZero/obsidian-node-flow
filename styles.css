@@ -302,6 +302,13 @@ h2[data-v-8021e7da] {
   gap: 5px;
   cursor: pointer;
 }
+.vue-flow__panel .fold-title[data-v-5f38abf1] {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.vue-flow__panel .fold-title button[data-v-5f38abf1] {
+  width: 100%;
+}
 .vue-flow {
   position: relative;
   width: 100%;

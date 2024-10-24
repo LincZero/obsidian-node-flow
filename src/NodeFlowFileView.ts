@@ -27,7 +27,7 @@ export class NodeFlowFileView extends TextFileView {
     
     this.contentEl.empty();
     const div_child = this.contentEl.createEl("div"); div_child.classList.add("nf-autoDie"); div_child.setAttribute("style", "height: 100%");
-    factoryVueDom(jsonType, div_child, this.data, false); // (需要挂载一个会死亡的div)
+    factoryVueDom(jsonType, div_child, this.data, false); // (需要挂载到一个会死亡的div)
   }
 
   clear() {

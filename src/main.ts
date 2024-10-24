@@ -64,7 +64,6 @@ export default class MyPlugin extends Plugin {
         // 视图处理
         if (jsonType != "") {
           const value:string = await this.app.vault.cachedRead(file)
-          // fn_newView().then(div => {})
           // 参考excalidraw中的做法：
           // .view-content
           //   .markdown-source-view (-)
@@ -74,7 +73,7 @@ export default class MyPlugin extends Plugin {
           div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.style.display = "none";
           div_child = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) }                  // 删除nf视图
           div_child = div_view.createEl("div"); div_child.classList.add("nf-autoDie"); div_child.setAttribute("style", "height: 100%"); // 创建nf视图
-          factoryVueDom(jsonType, div_child, value, false)                                                                              //     并挂载 (需要挂载一个会死亡的div)
+          factoryVueDom(jsonType, div_child, value, false)                                                                              //     并挂载 (需要挂载到一个会死亡的div)
         } else {
           div_child = div_view.querySelector(":scope>.markdown-source-view"); if (div_child) div_child.style.display = "flex";
           div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.style.display = "flex";
