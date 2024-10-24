@@ -21,9 +21,13 @@ export class NodeFlowFileView extends TextFileView {
     let jsonType:string = "nodeflow-comfyui"
     if (this.file.name.endsWith("workflow_json")) jsonType = "nodeflow-comfyui"
     else if (this.file.name.endsWith("canvas_json")) jsonType = "nodeflow-canvas"
+    else if (this.file.name.endsWith(".workflow.json")) jsonType = "nodeflow-comfyui"
+    else if (this.file.name.endsWith(".canvas.json")) jsonType = "nodeflow-canvas"
+    // TODO 通过json内容来判断json类型
     
     this.contentEl.empty();
-    factoryVueDom(jsonType, this.containerEl, this.data, false);
+    const div_child = this.contentEl.createEl("div"); div_child.classList.add("nf-autoDie"); div_child.setAttribute("style", "height: 100%");
+    factoryVueDom(jsonType, div_child, this.data, false); // (需要挂载一个会死亡的div)
   }
 
   clear() {

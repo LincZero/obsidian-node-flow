@@ -42,6 +42,7 @@ export default class MyPlugin extends Plugin {
     // 注册 - 文件类型扩展 (新格式一)
     this.registerExtensions(["workflow_json"], NodeFlowFileViewFlag);
     this.registerExtensions(["canvas_json"], NodeFlowFileViewFlag);
+    this.registerExtensions(["json"], NodeFlowFileViewFlag);
 
     // 注册 - 事件 (新格式二)
     this.registerEvent(
@@ -49,8 +50,10 @@ export default class MyPlugin extends Plugin {
         // 通用检查
         if (!file) return
         // @ts-ignore
-        let div: HTMLElement = this.app.workspace.activeLeaf.containerEl
-        if (!div) return
+        const div_leaf: HTMLElement = this.app.workspace.activeLeaf.containerEl
+        if (!div_leaf) return
+        let div_view: HTMLElement = div_leaf.querySelector(".view-content")
+        if (!div_view) return
 
         // 从文件格式到json格式的映射
         let jsonType:string = ""
@@ -66,17 +69,15 @@ export default class MyPlugin extends Plugin {
           //   .markdown-source-view (-)
           //   .markdown-reading-view (-)
           //   .markdown-excalidraw-wrapper (+)
-          div = div.querySelector(".view-content")
-          div.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:none")
-          div.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:none")
-          const div_child = div.querySelector(":scope>.nf-autoDie"); if (div_child) { div.removeChild(div_child) } // 删除nf视图
-          div = div.createEl("div"); div.classList.add("nf-autoDie"); div.setAttribute("style", "height: 100%");   // 创建nf视图
-          factoryVueDom(jsonType, div, value, false)                                                     //     并挂载
+          div_view.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:none")
+          div_view.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:none")
+          let div_child: HTMLElement = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) } // 删除nf视图
+          div_child = div_view.createEl("div"); div_child.classList.add("nf-autoDie"); div_child.setAttribute("style", "height: 100%"); // 创建nf视图
+          factoryVueDom(jsonType, div_child, value, false)                                                                              //     并挂载 (需要挂载一个会死亡的div)
         } else {
-          div = div.querySelector(".view-content")
-          div.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:flex")
-          div.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:flex")
-          const div_child = div.querySelector(":scope>.nf-autoDie"); if (div_child) { div.removeChild(div_child) } // 删除nf视图
+          div_view.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:flex")
+          div_view.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:flex")
+          let div_child: HTMLElement = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) } // 删除nf视图
         }
       })
     )
