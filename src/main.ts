@@ -54,6 +54,7 @@ export default class MyPlugin extends Plugin {
         if (!div_leaf) return
         let div_view: HTMLElement = div_leaf.querySelector(".view-content")
         if (!div_view) return
+        let div_child: HTMLElement;
 
         // 从文件格式到json格式的映射
         let jsonType:string = ""
@@ -69,15 +70,15 @@ export default class MyPlugin extends Plugin {
           //   .markdown-source-view (-)
           //   .markdown-reading-view (-)
           //   .markdown-excalidraw-wrapper (+)
-          div_view.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:none")
-          div_view.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:none")
-          let div_child: HTMLElement = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) } // 删除nf视图
+          div_child = div_view.querySelector(":scope>.markdown-source-view"); if (div_child) div_child.style.display = "none";
+          div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.style.display = "none";
+          div_child = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) }                  // 删除nf视图
           div_child = div_view.createEl("div"); div_child.classList.add("nf-autoDie"); div_child.setAttribute("style", "height: 100%"); // 创建nf视图
           factoryVueDom(jsonType, div_child, value, false)                                                                              //     并挂载 (需要挂载一个会死亡的div)
         } else {
-          div_view.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:flex")
-          div_view.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:flex")
-          let div_child: HTMLElement = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) } // 删除nf视图
+          div_child = div_view.querySelector(":scope>.markdown-source-view"); if (div_child) div_child.style.display = "flex";
+          div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.style.display = "flex";
+          div_child = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) }                  // 删除nf视图
         }
       })
     )
