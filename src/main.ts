@@ -45,11 +45,19 @@ export default class MyPlugin extends Plugin {
     // 注册 - 事件 (新格式二)
     this.registerEvent(
       this.app.workspace.on('file-open', async (file: TFile) => {
+        // 通用检查
         if (!file) return
         // @ts-ignore
         let div: HTMLElement = this.app.workspace.activeLeaf.containerEl
         if (!div) return
-        if (file.name.endsWith("workflow.json.md")) {
+
+        // 从文件格式到json格式的映射
+        let jsonType:string = ""
+        if (file.name.endsWith("workflow.json.md")) jsonType = "nodeflow-comfyui";
+        else if (file.name.endsWith(".canvas.md")) jsonType = "nodeflow-obcanvas";
+
+        // 视图处理
+        if (jsonType != "") {
           const value:string = await this.app.vault.cachedRead(file)
           // fn_newView().then(div => {})
           // 参考excalidraw中的做法：
@@ -62,7 +70,7 @@ export default class MyPlugin extends Plugin {
           div.querySelector(":scope>.markdown-reading-view").setAttribute("style", "display:none")
           const div_child = div.querySelector(":scope>.nf-autoDie"); if (div_child) { div.removeChild(div_child) } // 删除nf视图
           div = div.createEl("div"); div.classList.add("nf-autoDie"); div.setAttribute("style", "height: 100%");   // 创建nf视图
-          factoryVueDom("nodeflow-comfyui", div, value, false)                                                     //     并挂载
+          factoryVueDom(jsonType, div, value, false)                                                     //     并挂载
         } else {
           div = div.querySelector(".view-content")
           div.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:flex")

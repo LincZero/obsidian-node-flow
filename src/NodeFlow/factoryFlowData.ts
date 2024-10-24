@@ -96,7 +96,7 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, d
 
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
   } catch (error) {
-    return {code: -1, msg: "error: obcanvas json parse fail", data: {}}
+    return {code: -1, msg: "error: obcanvas json parse fail: "+error, data: {}}
   }
 }
 
