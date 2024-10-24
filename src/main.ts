@@ -41,6 +41,7 @@ export default class MyPlugin extends Plugin {
 
     // 注册 - 文件类型扩展 (新格式一)
     this.registerExtensions(["workflow_json"], NodeFlowFileViewFlag);
+    this.registerExtensions(["canvas_json"], NodeFlowFileViewFlag);
 
     // 注册 - 事件 (新格式二)
     this.registerEvent(
@@ -66,8 +67,8 @@ export default class MyPlugin extends Plugin {
           //   .markdown-reading-view (-)
           //   .markdown-excalidraw-wrapper (+)
           div = div.querySelector(".view-content")
-          div.querySelector(":scope>.markdown-source-view").setAttribute("style", "display:none")
-          div.querySelector(":scope>.markdown-reading-view").setAttribute("style", "display:none")
+          div.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:none")
+          div.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:none")
           const div_child = div.querySelector(":scope>.nf-autoDie"); if (div_child) { div.removeChild(div_child) } // 删除nf视图
           div = div.createEl("div"); div.classList.add("nf-autoDie"); div.setAttribute("style", "height: 100%");   // 创建nf视图
           factoryVueDom(jsonType, div, value, false)                                                     //     并挂载

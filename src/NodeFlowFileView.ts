@@ -17,8 +17,13 @@ export class NodeFlowFileView extends TextFileView {
 
   setViewData(data: string, clear: boolean) {
     this.data = data;
+
+    let jsonType:string = "nodeflow-comfyui"
+    if (this.file.name.endsWith("workflow_json")) jsonType = "nodeflow-comfyui"
+    else if (this.file.name.endsWith("canvas_json")) jsonType = "nodeflow-canvas"
+    
     this.contentEl.empty();
-    factoryVueDom("nodeflow-comfyui", this.containerEl, this.data, false);
+    factoryVueDom(jsonType, this.containerEl, this.data, false);
   }
 
   clear() {
