@@ -8,20 +8,20 @@ import { factoryFlowData } from './factoryFlowData'
 import { fn_newView } from '../NodeFlowView'
 
 /// 在div内创建指定的 Vue UI
-export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:string = ""):void {
+export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:string = "", isMini:boolean = true):void {
   // 代码块，替换为节点流画布
   const targetEl = div
-  mountVue(targetEl, true)
+  mountVue(targetEl, isMini)
 
   /// 将targetVue挂载到targetEl上
-  function mountVue (targetEl:HTMLElement, isMini:boolean) {
+  function mountVue (targetEl:HTMLElement, _isMini:boolean) {
     // 解析并转化json
     let result: {code: number, msg: string, data: object}
     result = factoryFlowData(jsonType, mdStr)
     if (result.code != 0) {
       const _app = createApp(VueTest, {
         data: result.msg,
-        isMini: isMini,
+        isMini: _isMini,
       });
       _app.mount(targetEl);
       return
@@ -34,7 +34,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
         const targetEl: HTMLElement = await fn_newView()
         mountVue(targetEl, false)
       },
-      isMini: isMini
+      isMini: _isMini
     });
     _app.mount(targetEl);
   }

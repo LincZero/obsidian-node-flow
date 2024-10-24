@@ -16,3 +16,9 @@ X [ERROR] [plugin vue] Fail to resolve script type in H:\Git\Private\Group_Front
 意思是无法解析到vue文件里的script标签
 
 或者修改tsconfig.json文件，中添加js支持应该也行，但我现在想强制整个项目都要使用ts，就没这样做
+
+## Obsidian使用方式
+
+1. 代码块，类型为 `nodeflow-xxx`
+2. 文件后缀，类型为 `workflow_json` (对应 `nodeflow-comfyui`)
+3. 元数据，`tag`/`type` 为 `comfyui-json`

@@ -47,6 +47,6 @@ export async function fn_newView(): Promise<HTMLElement> {
 
   // 更新该视图中的内容
   const containerEl: HTMLElement = NodeFlowLeaf.view.containerEl;
-  containerEl.innerHTML = ""
+  containerEl.empty();
   return containerEl
 }
