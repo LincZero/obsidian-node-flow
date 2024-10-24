@@ -3,7 +3,7 @@ import { MarkdownPostProcessorContext, WorkspaceLeaf } from "obsidian"
 import { factoryVueDom } from './NodeFlow/factoryVueDom'
 import { setting } from "./NodeFlow/setting";
 
-import { NodeFlowViewFlag, NodeFlowView } from './NodeFlowView'
+import { NodeFlowViewFlag, NodeFlowView, fn_newView } from './NodeFlowView'
 import { NodeFlowFileViewFlag, NodeFlowFileView } from './NodeFlowFileView'
 
 interface MyPluginSettings {
@@ -39,14 +39,35 @@ export default class MyPlugin extends Plugin {
     this.registerView(NodeFlowViewFlag, (leaf) => new NodeFlowView(leaf))
     this.registerView(NodeFlowFileViewFlag, (leaf: WorkspaceLeaf) => new NodeFlowFileView(leaf));
 
-    // 注册 - 文件类型扩展
+    // 注册 - 文件类型扩展 (新格式一)
     this.registerExtensions(["workflow_json"], NodeFlowFileViewFlag);
 
-    // 注册 - 事件
+    // 注册 - 事件 (新格式二)
     this.registerEvent(
-      this.app.workspace.on('file-open', (file: TFile) => {
+      this.app.workspace.on('file-open', async (file: TFile) => {
+        if (!file) return
+        // @ts-ignore
+        let div: HTMLElement = this.app.workspace.activeLeaf.containerEl
+        if (!div) return
         if (file.name.endsWith("workflow.json.md")) {
-          console.log("目标类型 comfyui")
+          const value:string = await this.app.vault.cachedRead(file)
+          // fn_newView().then(div => {})
+          // 参考excalidraw中的做法：
+          // .view-content
+          //   .markdown-source-view (-)
+          //   .markdown-reading-view (-)
+          //   .markdown-excalidraw-wrapper (+)
+          div = div.querySelector(".view-content")
+          div.querySelector(":scope>.markdown-source-view").setAttribute("style", "display:none")
+          div.querySelector(":scope>.markdown-reading-view").setAttribute("style", "display:none")
+          const div_child = div.querySelector(":scope>.nf-autoDie"); if (div_child) { div.removeChild(div_child) } // 删除nf视图
+          div = div.createEl("div"); div.classList.add("nf-autoDie"); div.setAttribute("style", "height: 100%");   // 创建nf视图
+          factoryVueDom("nodeflow-comfyui", div, value, false)                                                     //     并挂载
+        } else {
+          div = div.querySelector(".view-content")
+          div.querySelector(":scope>.markdown-source-view")?.setAttribute("style", "display:flex")
+          div.querySelector(":scope>.markdown-reading-view")?.setAttribute("style", "display:flex")
+          const div_child = div.querySelector(":scope>.nf-autoDie"); if (div_child) { div.removeChild(div_child) } // 删除nf视图
         }
       })
     )
