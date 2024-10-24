@@ -11,7 +11,7 @@
       #{{ id }}
     </div>
   </NodeToolbar> -->
-  <div class="comfyui-node">
+  <div class="comfyui-node" :aria-label="data.label">
     <div class="comfyui-node-title">
       <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
       <span style="display: inline-block; margin-left: 10px;">{{ data.label }}</span>
@@ -237,4 +237,9 @@ const props = defineProps({
 .vue-flow__handle[indexAttr="17"] { top:calc(30px + 17.5 * 24px) }
 .vue-flow__handle[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
 .vue-flow__handle[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
+
+.comfyui-node[aria-label="Note"] .comfyui-node-title { background-color: #443322; }
+.comfyui-node[aria-label="Note"] .comfyui-node-content { background-color: #665533; }
+.comfyui-node[aria-label*="Sampler"] .comfyui-node-title { background-color: #223333; }
+.comfyui-node[aria-label*="Sampler"] .comfyui-node-content { background-color: #335555; }
 </style>

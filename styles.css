@@ -254,6 +254,18 @@ h2[data-v-8021e7da] {
 .vue-flow__handle[indexAttr="19"][data-v-95296bb4] {
   top: 498px;
 }
+.comfyui-node[aria-label=Note] .comfyui-node-title[data-v-95296bb4] {
+  background-color: #432;
+}
+.comfyui-node[aria-label=Note] .comfyui-node-content[data-v-95296bb4] {
+  background-color: #653;
+}
+.comfyui-node[aria-label*=Sampler] .comfyui-node-title[data-v-95296bb4] {
+  background-color: #233;
+}
+.comfyui-node[aria-label*=Sampler] .comfyui-node-content[data-v-95296bb4] {
+  background-color: #355;
+}
 .comfyui-group[data-v-e30ebec0] {
   z-index: -2;
 }
@@ -636,18 +648,13 @@ h2[data-v-8021e7da] {
   overflow: hidden;
 }
 .nf-shell-view[data-v-472359ef] {
-  height: 100%;
+  height: calc(100% - 24px);
   overflow: hidden;
 }
-
-/* src/NodeFlow/style/main.css */
-#app {
-  font-family: "JetBrains Mono", monospace;
-}
-.nf-toolbar {
+.nf-toolbar[data-v-472359ef] {
   height: 24px;
 }
-.nf-toolbar > button {
+.nf-toolbar > button[data-v-472359ef] {
   height: 24px;
   margin-top: 0;
   margin-bottom: 0;
@@ -656,6 +663,11 @@ h2[data-v-8021e7da] {
   padding-bottom: 0;
   border: 1px solid transparent;
   outline: none;
+}
+
+/* src/NodeFlow/style/main.css */
+#app {
+  font-family: "JetBrains Mono", monospace;
 }
 
 /* src/main.css */

@@ -1,5 +1,14 @@
 # README
 
+## Obsidian与VuePress插件共用部分
+
+整个NodeFlow文件夹是共用的，没有任何差异。该文件夹外的部分是不公用的
+
+- obsidian
+  - 入口：使用共用模块里的factoryVueDom
+- vuepress
+  - 入口：直接使用一个vue组件作为入口
+
 ## Obsidian安装插件
 
 (留空)

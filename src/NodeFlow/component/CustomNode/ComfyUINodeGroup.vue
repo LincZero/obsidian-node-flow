@@ -1,7 +1,7 @@
 <!-- ComfyUI专用的节点 -->
 
 <template>
-  <div class="comfyui-node comfyui-group">
+  <div class="comfyui-node comfyui-group" :aria-label="data.label">
     <div class="comfyui-node-title">
       <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
       <span style="display: inline-block; margin-left: 10px;">{{ data.label }}</span>
