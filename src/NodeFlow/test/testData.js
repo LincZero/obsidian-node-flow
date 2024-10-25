@@ -378,3 +378,22 @@ export const testData_vueflow_customNode = {
     },
   ]
 }
+
+export const testData_list = `
+- nodes
+  - 1, name1
+    - s11, name, input
+    - s12, name, output
+    - s13, name, value
+  - 2, name2
+    - s21, name, input
+    - s22, name, output
+    - s23, name, value
+  - 3, name3
+    - s31, name, input
+    - s32, name, output
+    - s33, name, value
+- edges
+  - 1, s12, 2, s21
+  - 2, s22, 3, s31
+`

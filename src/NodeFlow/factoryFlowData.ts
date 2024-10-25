@@ -3,7 +3,8 @@ import {
   testData_vueflow_withoutPos,
   testData_vueflow_customNode,
   testData_obcanvas,
-  testData_comfyUI
+  testData_comfyUI,
+  testData_list
 } from "./test/testData"
 import {
   testData2
@@ -29,6 +30,7 @@ export function factoryFlowData(type:string = "vueflow", json:string = "{nodes:[
   else if (type == "nodeflow-comfyui-demo") { type = "comfyui"; json = JSON.stringify(testData_comfyUI) }
   else if (type == "nodeflow-comfyui-demo2") { type = "comfyui"; json = JSON.stringify(testData2) }
   else if (type == "nodeflow-list") { type = "list" }
+  else if (type == "nodeflow-list-demo") { type = "list", json = testData_list }
 
   // 统一检查
   let parsedData;
@@ -66,6 +68,9 @@ export function factoryFlowData(type:string = "vueflow", json:string = "{nodes:[
   return result
 }
 
+/**
+ * obsidian canvas数据转通用节点流数据
+ */
 function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, data: object} {
   try {
     let nodes_new: object[] = []
@@ -110,7 +115,11 @@ function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, d
   }
 }
 
-// TODO 需要注意，普通节点和群组，节点id和标题都是不在宽高尺寸里面的！当前是高度+30，y-30，的方式临时解决
+/**
+ * comfyui数据转通用节点流数据
+ * 
+ * TODO 需要注意，普通节点和群组，节点id和标题都是不在宽高尺寸里面的！当前是高度+30，y-30，的方式临时解决
+ */
 function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, data: object} {
   try {
     let nodes_new: object[] = []
@@ -233,7 +242,27 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
  */
 function factoryFlowData_list(md:string): {code: number, msg: string, data: object} {
   // step1. 先转 self-children json
-  type type_selfChildren = {self: string, children: type_selfChildren[]}
+  // 其中self-children是基本的所有数据集，而self_data数据是重复冗余、用来缓存的工具
+  type type_selfChildren = {
+    self: string,
+    self_data: {
+      // 仅node+socket用
+      id: string,
+      parentId: string,
+      type?: string,
+      // 仅noode用
+      name: string,
+      inputs?: object[],
+      outputs?: object[],
+      widgets_values?: string[],
+      // 仅edge用
+      from_node?: string,
+      from_socket?: string,
+      to_node?: string,
+      to_socket?: string,
+    }
+    children: type_selfChildren[],
+  }
   let result_items:type_selfChildren[] = []       // 最终构建成果
   try {
     let map_indent: number[] = []                 // 缓存当前每个缩进等级对应的空格数 (注意一致性v) (其中下标0对应level0对应0缩进/0空格)
@@ -249,7 +278,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       const result_exp = current_line.match(/(^\s*)(- )?(.*)/);
       if (!result_exp) continue
       if (!result_exp[2]) {
-        if (map_indent.length>0) map_item[map_item.length-1].self += result_exp[3] // 暂不支持换行+空格
+        if (map_indent.length>0) map_item[map_item.length-1].self += result_exp[3] // TODO 暂不支持换行+空格
         continue
       }
 
@@ -271,7 +300,24 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       }
 
       // change: current_item & map_item
-      current_item = {self: result_exp[3], children: []}
+      const contents = result_exp[3].split(", ") // TODO 暂不支持内容有逗号
+      current_item = {
+        self: result_exp[3],
+        children: [],
+        self_data: {
+          // 节点用
+          id: contents[0],
+          parentId: "",
+          name: (contents.length<1)?contents[0]:contents[1],
+          inputs: [],
+          outputs: [],
+          widgets_values: [],
+          // socket用
+          ...(contents.length<3)?{type: "node"}:{type: contents[2]},
+          // 线用
+          ...(contents.length<4)?{}:{from_node: contents[0], from_socket: contents[1], to_node: contents[2], to_socket: contents[3]}
+        }
+      }
       map_item = map_item.slice(0, map_indent.length)
       map_item[current_level] = current_item
 
@@ -280,6 +326,11 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
         result_items.push(current_item)
       } else {
         map_item[current_level-1].children.push(current_item)
+        current_item.self_data.parentId = map_item[current_level-1].self_data.id
+        if (current_item.self_data.type == "input") map_item[current_level-1].self_data.inputs.push({name: current_item.self_data.id})
+        else if (current_item.self_data.type == "output") map_item[current_level-1].self_data.outputs.push({name: current_item.self_data.id})
+        else if (current_item.self_data.type == "value") map_item[current_level-1].self_data.widgets_values.push(current_item.self_data.id)
+        else if (current_item.self_data.type == "node") {} // 表示前一个是节点组
       }
     }
   } catch (error) {
@@ -287,9 +338,50 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
   }
 
   // step2. self&children json 再转 nodes&edges array
-  let result_data:{nodes:{}, edges:{}}[] = []
+  // TODO 先假设不支持节点组，先假设不支持隐藏nodes和edges根节点
   {
-    console.log("debug:", JSON.stringify(result_items, null ,2))
-    return {code: 2, msg: "成功:\n"+JSON.stringify(result_items, null ,2), data: {}}
+    if (result_items.length != 2) return {code: -1, msg: "error: without rootNode: edges and edges", data: {}}
+
+    // 遍历 - 节点
+    let nodes_new:object[] = []
+    recursion_node(result_items[0].children)
+    function recursion_node(items: type_selfChildren[]) {
+      for (let item of items) {
+        if (item.self_data.type != "node") continue // socket不处理
+        nodes_new.push({
+          id: item.self_data.id,
+          data: {
+            label: item.self_data.name,
+            inputs: item.self_data.inputs,
+            outputs: item.self_data.outputs,
+            weigets_values: item.self_data.widgets_values,
+          },
+          position: { x: 0, y: 0 },
+          ...(item.self_data.parentId==""||item.self_data.parentId=="nodes")?{}:{parentNode: item.self_data.parentId},
+          type: "comfyui",
+        })
+        recursion_node(item.children)
+      }
+    }
+
+    // 遍历 - 线
+    let edges_new:object[] = []
+    let edge_id = 0
+    recursion_edge(result_items[1].children)
+    function recursion_edge(items: type_selfChildren[]) {
+      for (let item of items) {
+        edges_new.push({
+          id: edge_id++,
+          source: item.self_data.from_node,
+          sourceHandle: item.self_data.from_socket,
+          target: item.self_data.to_node,
+          targetHandle: item.self_data.to_socket,
+        })
+        recursion_edge(item.children)
+      }
+    }
+
+    // 处理完成
+    return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
   }
 }

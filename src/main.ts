@@ -26,8 +26,7 @@ export default class MyPlugin extends Plugin {
       "nodeflow-vueflow", "nodeflow-vueflow-demo", "nodeflow-vueflow-demo2", "nodeflow-vueflow-demo3",
       "nodeflow-obcanvas", "nodeflow-obcanvas-demo",
       "nodeflow-comfyui", "nodeflow-comfyui-demo", "nodeflow-comfyui-demo2",
-      "nodeflow-list",
-      // TODO "nodeflow-list", 允许使用非json方式声明，再转化为json
+      "nodeflow-list", "nodeflow-list-demo"
     ]
     for (let item of code_type_list) {
       this.registerMarkdownCodeBlockProcessor(item, (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
