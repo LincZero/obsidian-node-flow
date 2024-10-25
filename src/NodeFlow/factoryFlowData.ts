@@ -243,7 +243,7 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
  */
 function factoryFlowData_list(md:string): {code: number, msg: string, data: object} {
   // step1. 先转 self-children json
-  // 其中self-children是基本的所有数据集，而self_data数据是重复冗余、用来缓存的工具
+  // 其中self-children是基本的所有数据集，是通用的结构。而self_data数据是重复冗余、用来缓存的工具，是非通用的结构
   type type_selfChildren = {
     self: string,
     self_data: {
@@ -286,7 +286,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       // change: current_indent
       current_indent = result_exp[1].length
 
-      // change: current_level & map_indent
+      // change: current_level & map_indent (小心一致性v)
       current_level = -1
       for (let i=0; i<map_indent.length; i++) {
         if (map_indent[i] >= current_indent) { // eg. [0, 2, 4] & indent 1/2 -> [0, 2] & level 1
@@ -301,22 +301,31 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       }
 
       // change: current_item & map_item
-      const contents = result_exp[3].split(", ") // TODO 暂不支持内容有逗号
+      // 解析 k(:v)? 串
+      // TODO 暂不支持内容有逗号和冒号
+      let ll_content = []
+      ;{
+        const content = result_exp[3]
+        const l_content = content.split(", ")
+        for (let item of l_content) {
+          ll_content.push(item.split(":"))
+        }
+      }
       current_item = {
         self: result_exp[3],
         children: [],
         self_data: {
           // 节点用
-          id: contents[0],
+          id: ll_content[0][0],
           parentId: "",
-          name: (contents.length<1)?contents[0]:contents[1],
+          name: ll_content[0][1]??ll_content[0][0],
           inputs: [],
           outputs: [],
           widgets_values: [],
           // socket用
-          ...(contents.length<3)?{type: "node"}:{type: contents[2]},
+          ...(!ll_content[1]||!ll_content[1][0])?{type: "node"}:{type: ll_content[1][0]},
           // 线用
-          ...(contents.length<4)?{}:{from_node: contents[0], from_socket: contents[1], to_node: contents[2], to_socket: contents[3]}
+          ...(!ll_content[3])?{}:{from_node: ll_content[0][0], from_socket: ll_content[1][0], to_node: ll_content[2][0], to_socket: ll_content[3][0]}
         }
       }
       map_item = map_item.slice(0, map_indent.length)
@@ -328,9 +337,9 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       } else {
         map_item[current_level-1].children.push(current_item)
         current_item.self_data.parentId = map_item[current_level-1].self_data.id
-        if (current_item.self_data.type == "input") map_item[current_level-1].self_data.inputs.push({name: current_item.self_data.id})
-        else if (current_item.self_data.type == "output") map_item[current_level-1].self_data.outputs.push({name: current_item.self_data.id})
-        else if (current_item.self_data.type == "value") map_item[current_level-1].self_data.widgets_values.push(current_item.self_data.id)
+        if (current_item.self_data.type == "input") map_item[current_level-1].self_data.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+        else if (current_item.self_data.type == "output") map_item[current_level-1].self_data.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+        else if (current_item.self_data.type == "value") map_item[current_level-1].self_data.widgets_values.push(current_item.self_data.name)
         else if (current_item.self_data.type == "node") {} // 表示前一个是节点组
       }
     }
@@ -355,7 +364,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
             label: item.self_data.name,
             inputs: item.self_data.inputs,
             outputs: item.self_data.outputs,
-            weigets_values: item.self_data.widgets_values,
+            widgets_values: item.self_data.widgets_values,
           },
           position: { x: 0, y: 0 },
           ...(item.self_data.parentId==""||item.self_data.parentId=="nodes")?{}:{parentNode: item.self_data.parentId},

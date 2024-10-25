@@ -41,14 +41,14 @@
     <Handle
       v-for="(item,index) in data.inputs"
       :key="index"
-      :id="'target-'+index"
+      :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
       :indexAttr="index"
       type="target"
       :position="Position.Left" />
     <Handle
       v-for="(item,index) in props.data.outputs"
       :key="index"
-      :id="'source-'+index"
+      :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
       :indexAttr="index"
       type="source"
       :position="Position.Right" />
