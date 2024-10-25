@@ -15,26 +15,27 @@ import {
  * 
  * TODO 缺少Schema校验，提高稳定性
  * 
+ * @param jsonType 说明了第二个参数的结构类型
  * @param json 不一定是json，list版本的语法是纯文本
  */
-export function factoryFlowData(type:string = "vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: object} {
+export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: object} {
   // demo时，使用默认数据源
-  if (type == "nodeflow-test") { return {code: -2, msg: "msg: " + json, data: {}} }
-  else if (type == "nodeflow-vueflow") { type = "vueflow"; }
-  else if (type == "nodeflow-vueflow-demo") { type = "vueflow"; json = JSON.stringify(testData_vueflow) }
-  else if (type == "nodeflow-vueflow-demo2") { type = "vueflow"; json = JSON.stringify(testData_vueflow_withoutPos) }
-  else if (type == "nodeflow-vueflow-demo3") { type = "vueflow"; json = JSON.stringify(testData_vueflow_customNode) }
-  else if (type == "nodeflow-obcanvas") { type = "obcanvas"; }
-  else if (type == "nodeflow-obcanvas-demo") { type = "obcanvas"; json = JSON.stringify(testData_obcanvas) }
-  else if (type == "nodeflow-comfyui") { type = "comfyui"; }
-  else if (type == "nodeflow-comfyui-demo") { type = "comfyui"; json = JSON.stringify(testData_comfyUI) }
-  else if (type == "nodeflow-comfyui-demo2") { type = "comfyui"; json = JSON.stringify(testData2) }
-  else if (type == "nodeflow-list") { type = "list" }
-  else if (type == "nodeflow-list-demo") { type = "list", json = testData_list }
+  if (jsonType == "nodeflow-test") { return {code: -2, msg: "msg: " + json, data: {}} }
+  else if (jsonType == "nodeflow-vueflow") { jsonType = "vueflow"; }
+  else if (jsonType == "nodeflow-vueflow-demo") { jsonType = "vueflow"; json = JSON.stringify(testData_vueflow) }
+  else if (jsonType == "nodeflow-vueflow-demo2") { jsonType = "vueflow"; json = JSON.stringify(testData_vueflow_withoutPos) }
+  else if (jsonType == "nodeflow-vueflow-demo3") { jsonType = "vueflow"; json = JSON.stringify(testData_vueflow_customNode) }
+  else if (jsonType == "nodeflow-obcanvas") { jsonType = "obcanvas"; }
+  else if (jsonType == "nodeflow-obcanvas-demo") { jsonType = "obcanvas"; json = JSON.stringify(testData_obcanvas) }
+  else if (jsonType == "nodeflow-comfyui") { jsonType = "comfyui"; }
+  else if (jsonType == "nodeflow-comfyui-demo") { jsonType = "comfyui"; json = JSON.stringify(testData_comfyUI) }
+  else if (jsonType == "nodeflow-comfyui-demo2") { jsonType = "comfyui"; json = JSON.stringify(testData2) }
+  else if (jsonType == "nodeflow-list") { jsonType = "list" }
+  else if (jsonType == "nodeflow-list-demo") { jsonType = "list", json = testData_list }
 
   // 统一检查
   let parsedData;
-  if (type != "list") {
+  if (jsonType != "list") {
     if (json.trim()=="") {
       return {code: -1, msg: "error: json content is empty", data: {}}
     }
@@ -48,17 +49,17 @@ export function factoryFlowData(type:string = "vueflow", json:string = "{nodes:[
 
   // 类型分发
   let result: {code: number, msg: string, data: object}; // TODO：优化，应该减少json的解析次数，很多大json的。应该是code msg data模式
-  if (type == "comfyui") {
+  if (jsonType == "comfyui") {
     result = factoryFlowData_comfyui(parsedData)
   }
-  else if (type=="obcanvas") {
+  else if (jsonType=="obcanvas") {
     result = factoryFlowData_obcanvas(parsedData)
-  } else if (type == "vueflow") {
+  } else if (jsonType == "vueflow") {
     result = {code: 0, msg: "", data: parsedData}
-  } else if (type == "list") {
+  } else if (jsonType == "list") {
     result = factoryFlowData_list(json)
   } else {
-    return {code: -1, msg: "error: invalid json type: " + type, data: {}}
+    return {code: -1, msg: "error: invalid json type: " + jsonType, data: {}}
   }
 
   // 再次检查

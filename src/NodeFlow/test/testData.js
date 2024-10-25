@@ -394,6 +394,6 @@ export const testData_list = `
     - s32, name, output
     - s33, name, value
 - edges
-  - 1, s12, 2, s21
-  - 2, s22, 3, s31
+  - 1, source-0, 2, target-0
+  - 2, source-0, 3, target-0
 `
