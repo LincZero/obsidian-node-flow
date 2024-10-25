@@ -121,7 +121,7 @@ const {
   setMaxZoom,
 } = useVueFlow()
 
-let isFold = ref(false);
+let isFold = ref(true);
 
 const onZoomIn = ()=>{setMaxZoom(3); zoomIn();}; onZoomIn();
 const onZoomOut = ()=>{setMinZoom(0.1); zoomOut();}; onZoomOut();
