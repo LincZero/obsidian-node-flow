@@ -52,6 +52,8 @@ export function useLayout() {
 
     // 1. 同步节点和线数据到dagre库
     for (const node of nodes) {
+      if (node.data.type == "group") continue // 跳过节点组
+
       // 如果你的布局需要节点的宽度和高度，你可以使用内部节点的dimensions属性 (`GraphNode` type)
       const graphNode = findNode(node.id)
       dagreGraph.setNode(node.id, { width: graphNode?.dimensions?.width??150, height: graphNode?.dimensions?.height??50 })
@@ -68,6 +70,8 @@ export function useLayout() {
 
     // step3. 同步dagre库位置数据回来
     return nodes.map((node) => {
+      if (node.data.type == "group") return node // 跳过节点组
+      
       const nodeWithPosition = dagreGraph.node(node.id)
       return {
         ...node,
@@ -78,5 +82,46 @@ export function useLayout() {
     })
   }
 
-  return { graph, layout, previousDirection }
+  return { layout }
+}
+
+/**
+ * 用于对节点组的排序进行补强
+ */
+function layout2(nodes, edges, direction) {
+  // 更新闭包缓存
+  // 我们创建一个新的图实例，以防一些节点/边被删除，否则dagre会表现得好像它们还在那里
+  const dagreGraph = new dagre.graphlib.Graph()
+  dagreGraph.setDefaultEdgeLabel(() => ({}))
+  dagreGraph.setGraph({ rankdir: direction })
+  graph.value = dagreGraph
+  previousDirection.value = direction
+
+
+  // 1. 同步节点和线数据到dagre库
+  for (const node of nodes) {
+    // 如果你的布局需要节点的宽度和高度，你可以使用内部节点的dimensions属性 (`GraphNode` type)
+    const graphNode = findNode(node.id)
+    dagreGraph.setNode(node.id, { width: graphNode?.dimensions?.width??150, height: graphNode?.dimensions?.height??50 })
+
+    // if (!graphNode) { console.warn("cannot find node by id: ", node.id) }
+    // else { console.log("success find node by id: ", node.id, "w/h: ", graphNode?.dimensions?.width, graphNode?.dimensions?.height) }
+  }
+  for (const edge of edges) {
+    dagreGraph.setEdge(edge.source, edge.target)
+  }
+
+  // step2. dagre库自动布局
+  dagre.layout(dagreGraph)
+
+  // step3. 同步dagre库位置数据回来
+  return nodes.map((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id)
+    return {
+      ...node,
+      targetPosition: (direction === 'LR') ? Position.Left : Position.Top,
+      sourcePosition: (direction === 'LR') ? Position.Right : Position.Bottom,
+      position: { x: nodeWithPosition.x, y: nodeWithPosition.y },
+    }
+  })
 }

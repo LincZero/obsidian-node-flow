@@ -250,7 +250,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       // 仅node+socket用
       id: string,
       parentId: string,
-      type?: string,
+      type: string, // "n"|"node"|"i"|"input"|"o"|"output"|"v"|"value"|"g"|"group"|"e"|"edge",
       // 仅noode用
       name: string,
       inputs?: object[],
@@ -322,8 +322,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
           inputs: [],
           outputs: [],
           widgets_values: [],
-          // socket用
-          ...(!ll_content[1]||!ll_content[1][0])?{type: "node"}:{type: ll_content[1][0]},
+          type: ll_content[3]?"edge":(!ll_content[1]||!ll_content[1][0])?"node":ll_content[1][0],
           // 线用
           ...(!ll_content[3])?{}:{from_node: ll_content[0][0], from_socket: ll_content[1][0], to_node: ll_content[2][0], to_socket: ll_content[3][0]}
         }
@@ -336,11 +335,24 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
         result_items.push(current_item)
       } else {
         map_item[current_level-1].children.push(current_item)
-        current_item.self_data.parentId = map_item[current_level-1].self_data.id
-        if (current_item.self_data.type == "input" || current_item.self_data.type == "i") map_item[current_level-1].self_data.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
-        else if (current_item.self_data.type == "output" || current_item.self_data.type == "o") map_item[current_level-1].self_data.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
-        else if (current_item.self_data.type == "value" || current_item.self_data.type == "v") map_item[current_level-1].self_data.widgets_values.push(current_item.self_data.name)
-        else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {} // 表示前一个是节点组
+        // 更新与父亲有关数据
+        const parent = map_item[current_level-1].self_data
+        current_item.self_data.parentId = parent.id
+        if (current_item.self_data.type == "input" || current_item.self_data.type == "i") { 
+          parent.type = "node"
+          parent.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+        }
+        else if (current_item.self_data.type == "output" || current_item.self_data.type == "o") {
+          parent.type = "node"
+          parent.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+        }
+        else if (current_item.self_data.type == "value" || current_item.self_data.type == "v") {
+          parent.type = "node"
+          parent.widgets_values.push(current_item.self_data.name)
+        }
+        else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
+          parent.type = "group"
+        }
       }
     }
   } catch (error) {
@@ -357,10 +369,11 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
     recursion_node(result_items[0].children)
     function recursion_node(items: type_selfChildren[]) {
       for (let item of items) {
-        if (item.self_data.type != "node") continue // socket不处理
+        if (item.self_data.type != "node" && item.self_data.type != "group") continue // socket不处理
         nodes_new.push({
           id: item.self_data.id,
           data: {
+            type: item.self_data.type,
             label: item.self_data.name,
             inputs: item.self_data.inputs,
             outputs: item.self_data.outputs,
