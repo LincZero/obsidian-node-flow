@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from '@vue-flow/core'
-import { ref } from '@vue/runtime-dom';
+import { ref } from 'vue';
 const props = defineProps({
   id: {
     type: String,
