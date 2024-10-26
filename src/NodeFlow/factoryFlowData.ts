@@ -303,12 +303,12 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       // change: current_item & map_item
       // 解析 k(:v)? 串
       // TODO 暂不支持内容有逗号和冒号
-      let ll_content = []
+      let ll_content:string[][] = []
       ;{
         const content = result_exp[3]
-        const l_content = content.split(", ")
+        const l_content = content.split(",")
         for (let item of l_content) {
-          ll_content.push(item.split(":"))
+          ll_content.push(item.trim().split(":"))
         }
       }
       current_item = {
