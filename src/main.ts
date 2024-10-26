@@ -81,6 +81,15 @@ export default class MyPlugin extends Plugin {
         }
       })
     )
+
+    // 监听 - 禁用滚轮点击/长按
+    // 无法监听在节点画布中的滚轮点击事件
+    // document.addEventListener('mousedown', (event: MouseEvent) => {
+    //   if (event.button === 1) { // 检查是否为滚轮点击（中间键）
+    //       event.preventDefault(); // 阻止默认行为
+    //       console.log('滚轮被点击');
+    //   }
+    // });
   }
 
   onunload() {}

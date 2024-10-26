@@ -9,7 +9,7 @@
     <button class="nf-btn-showJson" @click="fn_showJson">showJson</button>
     <button class="nf-btn-autoPos" @click="fn_autoPos('LR')">autoPosLR</button>
     <button class="nf-btn-autoPos" @click="fn_autoPos('TB')">autoPosTB</button>
-    <button class="nf-btn-lock">lock</button>
+    <button class="nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
   </div>
 </template>
 
@@ -35,6 +35,20 @@ function fn_showJson() {
 
 // 按钮 - 自动调整顺序
 function fn_autoPos(position: string) { RefChild.value.layoutGraph(position) }
+
+// 按钮 - 是否禁用滚动
+const isAllowScroll = ref(true);
+function fn_switchAllowScroll() {
+  if (isAllowScroll.value) {
+    isAllowScroll.value = false
+    document.body.style.overflow = 'hidden';
+    (document.querySelector('.markdown-source-view .cm-scroller') as HTMLElement).style.overflow = 'hidden'
+  } else {
+    isAllowScroll.value = true
+    document.body.style.overflow = '';
+    (document.querySelector('.markdown-source-view .cm-scroller') as HTMLElement).style.overflow = ''
+  }
+}
 </script>
 
 <style scoped>

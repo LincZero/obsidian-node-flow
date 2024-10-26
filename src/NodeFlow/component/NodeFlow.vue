@@ -1,7 +1,12 @@
 <!-- 主画布 -->
 
 <template>
-  <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges" @nodes-initialized="isNodeInitialized=true">
+  <VueFlow
+    class="nf-node-flow" 
+    :nodes="nodes" :edges="edges"
+    :prevent-scrolling="true"
+    @nodes-initialized="isNodeInitialized=true">
+    <!-- :pan-on-drag="[0,2]" -->
     <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
     <template #node-color-selector="props">
       <ColorSelectorNode :id="props.id" :data="props.data" />
