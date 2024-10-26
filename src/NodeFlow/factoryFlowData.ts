@@ -337,10 +337,10 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       } else {
         map_item[current_level-1].children.push(current_item)
         current_item.self_data.parentId = map_item[current_level-1].self_data.id
-        if (current_item.self_data.type == "input") map_item[current_level-1].self_data.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
-        else if (current_item.self_data.type == "output") map_item[current_level-1].self_data.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
-        else if (current_item.self_data.type == "value") map_item[current_level-1].self_data.widgets_values.push(current_item.self_data.name)
-        else if (current_item.self_data.type == "node") {} // 表示前一个是节点组
+        if (current_item.self_data.type == "input" || current_item.self_data.type == "i") map_item[current_level-1].self_data.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+        else if (current_item.self_data.type == "output" || current_item.self_data.type == "o") map_item[current_level-1].self_data.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+        else if (current_item.self_data.type == "value" || current_item.self_data.type == "v") map_item[current_level-1].self_data.widgets_values.push(current_item.self_data.name)
+        else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {} // 表示前一个是节点组
       }
     }
   } catch (error) {
