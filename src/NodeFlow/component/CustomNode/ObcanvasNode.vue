@@ -13,17 +13,21 @@
 
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-  data: {
-    type: Object,
-    required: true,
-  },
-})
-
+// const props = defineProps({
+//   id: {
+//     type: String,
+//     required: true,
+//   },
+//   data: {
+//     type: Object,
+//     required: true,
+//   },
+// })
+const props = defineProps<{
+  id: string,
+  data: any,
+  md_render?: (markdown: string, el: HTMLElement)=>void, // 暂不支持
+}>()
 </script>
 
 <style scoped>

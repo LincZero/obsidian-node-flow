@@ -1,7 +1,7 @@
 <!-- 主画布 -->
 
 <template>
-  <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges">
+  <VueFlow class="nf-node-flow" :nodes="nodes" :edges="edges" @nodes-initialized="isNodeInitialized=true">
     <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
     <template #node-color-selector="props">
       <ColorSelectorNode :id="props.id" :data="props.data" />
@@ -28,7 +28,7 @@ const props = defineProps<{
   jsonData?: object,
   isMini: boolean, // true为局部渲染，尽可能简化；false为在更大的独立视图中渲染，可以显示更多东西
 }>()
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 
 // 组件 - 自定义节点
@@ -75,21 +75,26 @@ let edges = ref<Edge[]>([]);
 // 功能 - 自动顺序模块
 import { nextTick } from 'vue'
 import { useLayout } from './utils/useLayout'
-/// 自动调整节点顺序
+const { layout } = useLayout()
+/// 封装: 调整节点位置 + 刷新视图
+/// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
 async function layoutGraph(direction: string) {
-  const { layout } = useLayout()
-  const { fitView } = useVueFlow()
   nodes.value = layout(nodes.value, edges.value, direction)
-  nextTick(() => {
-    fitView()
-  })
+  const { fitView } = useVueFlow()
+  nextTick(() => { fitView() })
 }
-if (nodes.value.length>1 && // 个别情况自动调用
-  nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
-  nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
-) {
-  layoutGraph('LR')
-}
+// 个别情况自动调用
+const isNodeInitialized = ref(false)
+watch(isNodeInitialized, (newValue, oldValue) => {
+  if (oldValue==false && newValue==true) {
+    if (nodes.value.length>1 &&
+      nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
+      nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
+    ) {
+      layoutGraph('LR')
+    }
+  }
+});
 defineExpose({
   layoutGraph
 })
@@ -101,6 +106,25 @@ async function ...() {
   await stop()
   reset(nodes.value)
 }*/
+
+// 功能 - md渲染模块 (仅obsidian)
+// import { MarkdownRenderChild, MarkdownRenderer } from 'obsidian'
+// function md_render(markdown: string, el: HTMLElement) {
+//   const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
+//   // if (ctx) ctx.addChild(mdrc);
+//   // else if (ABCSetting.global_ctx) ABCSetting.global_ctx.addChild(mdrc);
+//   /**
+//    * Renders markdown string to an HTML element.
+//    * @param app - A reference to the app object
+//    * @param markdown - The markdown source code
+//    * @param el - The element to append to
+//    * @param sourcePath - The normalized path of this markdown file, used to resolve relative internal links
+//    * @param component - A parent component to manage the lifecycle of the rendered child components.
+//    * @public
+//    */
+//   // @ts-ignore 新接口，但旧接口似乎不支持
+//   MarkdownRenderer.render(app, markdown, el, app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
+// }
 </script>
 
 <style>
