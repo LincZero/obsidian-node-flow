@@ -1,71 +1,43 @@
 # Obsidian NodeFlow
 
-(in development) 
+Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes.<br>渲染节点流，像 `ComfyUi`, `UE`, `Houdini`, `Blender` 等，使其易于编写相关笔记。
 
-Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes.
+The plugin allows diagrams to be described using lightweight syntax or Json, and is available in both Obsidian and VuePress blogs<br>允许使用轻量语法或Json描述了图表，该插件在Obsidian与VuePress博客中均可使用
 
-Json describes the chart, compared to screenshots, making it easier to modify later. The plugin is also compatible with blogs
+## Docs
 
-## 创建模板
+Tutorials, online effects, use cases, and more (教程、在线效果、用例等)
 
-1. generated
+- [Online effects (在线效果)](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html)
 
-generated from [guopenghui/obsidian-vue-starter](https://github.com/guopenghui/obsidian-vue-starter)
+## Usage
 
-但他这个依赖很旧，编译不稳定，我给改了下，见修改历史：22c2a9c2ad9eac8e0ce1abfb0b4484358eb0e28b
+### 方式一：使用代码块
 
-然后尝试安装依赖和构建，并在obsidian中查看是否能正常使用
-
-2. vue file
-
-见修改历史：22c2a9c2ad9eac8e0ce1abfb0b4484358eb0e28b 的下一次commit
-
-vue file: VueTest.vue
-
-```vue
-<template>
-  <h2>Hello,Developer!</h2>
-</template>
-
-<script setup lang="ts">
-</script>
-
-<style scoped>
-h2 {
-    color: lightcoral;
-}
-</style>
+```json
+[
+  "nodeflow-test",
+  "nodeflow-vueflow", "nodeflow-vueflow-demo", "nodeflow-vueflow-demo2", "nodeflow-vueflow-demo3",
+  "nodeflow-obcanvas", "nodeflow-obcanvas-demo",
+  "nodeflow-comfyui", "nodeflow-comfyui-demo", "nodeflow-comfyui-demo2",
+  "nodeflow-list", "nodeflow-list-demo"
+]
 ```
 
-3. 在主程序中使用 Vue UI
+这些代码块的类型都不太一样
 
-main.ts
+1. nodeflow-comfyui 前缀的，使用comfyui软件导出的工作流json作为内容
+2. nodeflow-obcanvas 前缀的，使用obsidian canvas文件的内容 (用记事本打开，会发现里面是一个json格式)
+3. nodeflow-list 前缀的，表示这是一个对标mermaid/plantuml的，用轻文字描述图表的格式。具体语法参考 [NodeFlow List Grammer](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/NodeFlow%20List%20Grammer.html)
 
-```ts
-import type {MarkdownPostProcessorContext} from "obsidian"
-import { factoryVueDom } from './vueAdapt'
-...
-this.registerMarkdownCodeBlockProcessor("vue-test",
-  (
-    src: string,                                // 代码块内容
-    blockEl: HTMLElement,                       // 代码块渲染的元素
-    ctx: MarkdownPostProcessorContext           // 上下文
-  ) => {
-    const root_div = document.createElement("div");  blockEl.appendChild(root_div); root_div.classList.add("vue-shell");
-    factoryVueDom(root_div, "vue-test")
-  }
-)
-```
+### 方式二
 
-vueAdapt.ts
+直接将comfyui的导出workflow.json文件放在库里，会自动识别json后缀的
 
-```ts
-import { createApp, App as VueApp } from 'vue';
-import VueTest from './component/VueTest.vue';
+### 方式三
 
-// 在div内创建指定的 Vue UI
-export function factoryVueDom(div:HTMLElement, vueUI:string = "vue-test"):void {
-  const _app = createApp(VueTest, {});
-  _app.mount(div);
-}
-```
+直接将comfyui的导出workflow.json文件扩展名修改成`.workflow_json`，也能正确识别
+
+## Effect display (Partial) (效果展示 - 部分)
+
+![](./docs/image.png)
