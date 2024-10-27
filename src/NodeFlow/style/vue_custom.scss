@@ -1,0 +1,222 @@
+/**
+ * 仅用于利用vscode的转化插件功能，然后再复制到Vue组件中
+ *
+ * 因为 esbuild-plugin-vue 有一个问题: https://github.com/pipe01/esbuild-plugin-vue3/issues/30
+ */
+
+#app {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+// 注意好隔离性，伪scoped
+
+/**
+ * CommonNode.vue
+ * 
+ * 结构一：scoped外的部分
+ *
+ * .vue-flow.nf-node-flow
+ *   .vue-flow__viewport vue-flow__container
+ *     .vue-flow__pane vue-flow__container draggable
+ *       .vue-flow__transformationpane.vue-flow__container
+ *         svg
+ *         svg
+ *         .vue-flow__edge-labels               线所在区域
+ *         .vue-flow__nodes.vue-flow__container 节点所在区域
+ * 
+ * 结构二：scoped内的部分
+ *
+ * .vue-flow__nodes vue-flow__container
+ *   .vue-flow__node.vue-flow__node-common  // 这里还没进入scrop选择范围，往下就进入了
+ *     div.common-node-id
+ *     div.common-node                         
+ *       div.node-title   h:30
+ *       div.node-content
+ *         .node-content-handle
+ *         .node-content-self
+ *       div.vue-flow__handle
+ *     ...
+ */
+.common-id {
+  position: absolute;
+  height: 0;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100%;
+  div {
+    position: relative;
+    bottom: 22px;
+    right: 4px;
+    height: 20px;
+    line-height: 20px;
+    float: right;
+    padding: 0 6px;
+    background-color: #0f1f0f;
+    border-radius: 6px;
+  }
+}
+.common-node {
+  height: 100%;
+  width: 100%;
+  border-radius:8px;
+  box-shadow: 3px 3px 10px 2px #111;
+
+  >.node-title {
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    padding: 0 12px;
+
+    border-radius: 8px 8px 0 0;
+    color: #999999;
+    background-color: #2e4656;
+  }
+
+  >.node-content {
+    height: calc(100% - 30px);
+    padding: 0 24px;
+    padding-bottom: 16px;
+
+    border-radius: 0 0 8px 8px;
+    color: #aaaaaa;
+    background-color: #353535;
+
+    >.node-content-handle {
+      display: flex;
+      justify-content: space-between;
+      .line { // h:24
+        line-height: 24px;
+        min-height: 24px;
+        height: auto;
+        font-size: 12px;
+        >.item-sub { min-height: 16px; }
+        >.item-name {}
+        >.item-value { // h: 20
+          line-height: 20px;
+          height: auto;
+          margin: 1px 8px 1px;
+
+          border-radius: 10px;
+          padding: 0px 8px;
+          border: solid 1px #616161;
+          background-color: #222222;
+        }
+      }
+
+      >.left { text-align: left; padding-right: 4px; }
+      >.right { text-align: right; padding-left: 4px; }
+      >.left>.line>.item-sub { float: left; }
+      >.right>.line>.item-sub { float: right; }
+    }
+
+    >.node-content-self {
+      >.line { // h:24+4
+        box-sizing: border-box;
+        min-height: 24px;
+        height: auto;
+        margin-bottom: 4px;
+  
+        padding: 1px 28px;
+        border: solid 1px #616161;
+        background-color: #222222;
+        border-radius: 13px;
+  
+        >.item-sub {
+          line-height: 20px;
+          min-height: 20px;
+          height: auto;
+          font-size: 12px;
+
+          >.item-name { float: left; padding-right: 4px; }
+          >.item-value { float: right; padding-left: 4px; }
+        }
+      }
+    }    
+  
+    // .item {
+    //   line-height: 24px;
+    //   min-height: 24px;
+    //   height: auto;
+    //   font-size: 12px;
+    // }
+    // .item-c {
+    //   box-sizing: border-box;
+    //   min-height: 24px;
+    //   height: auto;
+    //   margin-bottom: 4px;
+
+    //   padding: 1px 28px;
+    //   border: solid 1px #616161;
+    //   background-color: #222222;
+    //   border-radius: 13px;
+
+    //   >.item {
+    //     line-height: 20px;
+    //     min-height: 20px;
+    //     height: auto;
+    //     font-size: 12px;
+    //   }
+
+    //   & >.left { float: left; padding-right: 4px; }
+    //   & >.right { float: right; padding-left: 4px; }
+    // }
+  }
+  
+  &[aria-label="Note"] .node-title { background-color: #443322; }
+  &[aria-label="Note"] .node-content { background-color: #665533; }
+  &[aria-label*="Sampler"] .node-title { background-color: #223333; }
+  &[aria-label*="Sampler"] .node-content { background-color: #335555; }
+  &[aria-label^="Group"] {
+    min-width: 200px;
+    height: 200px;
+    z-index: -1,
+  }
+  &[aria-label^="Group"] .node-content {
+    background-color: #2e4656; // 44;
+  }
+}
+
+.vue-flow__handle {
+  &.custom {
+    background-color: #a598dd;
+    border: none;
+    box-sizing: border-box;
+    width: 10px;
+    height: 10px;
+  
+    &.target {
+      left: 12px;
+    }
+    &.source {
+      right: 12px;
+      border: solid 2px #211820;
+    }
+
+    &[indexAttr="0"] { top:calc(30px + 0.5 * 24px) }
+    &[indexAttr="1"] { top:calc(30px + 1.5 * 24px) }
+    &[indexAttr="2"] { top:calc(30px + 2.5 * 24px) }
+    &[indexAttr="3"] { top:calc(30px + 3.5 * 24px) }
+    &[indexAttr="4"] { top:calc(30px + 4.5 * 24px) }
+    &[indexAttr="5"] { top:calc(30px + 5.5 * 24px) }
+    &[indexAttr="6"] { top:calc(30px + 6.5 * 24px) }
+    &[indexAttr="7"] { top:calc(30px + 7.5 * 24px) }
+    &[indexAttr="8"] { top:calc(30px + 8.5 * 24px) }
+    &[indexAttr="9"] { top:calc(30px + 9.5 * 24px) }
+    &[indexAttr="10"] { top:calc(30px + 10.5 * 24px) }
+    &[indexAttr="11"] { top:calc(30px + 11.5 * 24px) }
+    &[indexAttr="12"] { top:calc(30px + 12.5 * 24px) }
+    &[indexAttr="13"] { top:calc(30px + 13.5 * 24px) }
+    &[indexAttr="14"] { top:calc(30px + 14.5 * 24px) }
+    &[indexAttr="15"] { top:calc(30px + 15.5 * 24px) }
+    &[indexAttr="16"] { top:calc(30px + 16.5 * 24px) }
+    &[indexAttr="17"] { top:calc(30px + 17.5 * 24px) }
+    &[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
+    &[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
+  }
+
+  &.default {
+    /* background-color: red !important; */
+    background: none;
+    border: none;
+  }
+}

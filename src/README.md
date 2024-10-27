@@ -64,6 +64,20 @@ export function factoryVueDom(div:HTMLElement, vueUI:string = "vue-test"):void {
 }
 ```
 
+4. ~~原模版不支持sass，需要额外安装点东西~~
+
+- 这里我们使用的是esbuild (webpack或其他打包器的的做法有所不同，具体自己查)
+  - esbuild-sass-plugin 是对的，esbuild-plugin-sass 是错的，注意区分。见 https://www.npmjs.com/package/esbuild-sass-plugin，里面有写具体用法
+- `npm i sass sass-loader -D` 是对的，`sass` 换成 `node-sass` 是错的（旧版）
+- 坑：我重新安装所有依赖发现的：
+  ```bash
+  peerDependencies WARNING esbuild-sass-plugin@^3.3.1 requires a peer of esbuild@>=0.20.1 but H:\Git\Private\Group_FrontEnd\obsidian-node-flow\node_modules\esbuild was installed at esbuild@0.14.54, packageDir: H:\Git\Private\Group_FrontEnd\obsidian-node-flow\node_modules\.store\esbuild-sass-plugin@3.3.1\node_modules\esbuild-sass-plugin
+peerDependencies WARNING esbuild-sass-plugin@^3.3.1 requires a peer of sass-embedded@^1.71.1 but none was installed, packageDir: H:\Git\Private\Group_FrontEnd\obsidian-node-flow\node_modules\.store\esbuild-sass-plugin@3.3.1\node_modules\esbuild-sass-plugin
+  ```
+  升级一个包，然后安装一个包
+- 最后我还是没有成功，似乎是esbuild-plugin-vue3的问题，见：https://github.com/pipe01/esbuild-plugin-vue3/issues/30
+  最后我选择了使用VSCode插件进行编译，并且不在vue内使用scss
+
 ## 注意要项
 
 注意：VueFlow官网的Examples中的Vue代码，都需要在script标签中标注 `lang="ts"`

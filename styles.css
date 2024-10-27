@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* main.css */
 h2[data-v-8021e7da] {
   color: #f08080;
@@ -70,43 +72,6 @@ h2[data-v-8021e7da] {
 }
 .vue-flow__node-comfyui.selected .comfyui-node {
   box-shadow: 0 0 8px 3px #ec4899;
-}
-.vue-flow__edge .vue-flow__edge-path {
-  stroke-width: 2;
-}
-.vue-flow__edge.selected .vue-flow__edge-path {
-  stroke: #ec4899 !important;
-  stroke-width: 4;
-}
-.vue-flow__edge[data-id$="0"] .vue-flow__edge-path {
-  stroke: red !important;
-}
-.vue-flow__edge[data-id$="1"] .vue-flow__edge-path {
-  stroke: orange !important;
-}
-.vue-flow__edge[data-id$="2"] .vue-flow__edge-path {
-  stroke: #ff0 !important;
-}
-.vue-flow__edge[data-id$="3"] .vue-flow__edge-path {
-  stroke: green !important;
-}
-.vue-flow__edge[data-id$="4"] .vue-flow__edge-path {
-  stroke: #0ff !important;
-}
-.vue-flow__edge[data-id$="5"] .vue-flow__edge-path {
-  stroke: #00f !important;
-}
-.vue-flow__edge[data-id$="6"] .vue-flow__edge-path {
-  stroke: purple !important;
-}
-.vue-flow__edge[data-id$="7"] .vue-flow__edge-path {
-  stroke: gold !important;
-}
-.vue-flow__edge[data-id$="8"] .vue-flow__edge-path {
-  stroke: silver !important;
-}
-.vue-flow__edge[data-id$="9"] .vue-flow__edge-path {
-  stroke: #fff !important;
 }
 .comfyui-id[data-v-95296bb4] {
   position: absolute;
@@ -254,10 +219,6 @@ h2[data-v-8021e7da] {
 .vue-flow__handle.custom[indexAttr="19"][data-v-95296bb4] {
   top: 498px;
 }
-.vue-flow__handle.default[data-v-95296bb4] {
-  background: none;
-  border: none;
-}
 .comfyui-node[aria-label=Note] .comfyui-node-title[data-v-95296bb4] {
   background-color: #432;
 }
@@ -294,6 +255,46 @@ h2[data-v-8021e7da] {
   border-radius: 8px 8px 0 0;
   color: #999;
   background-color: #2e4656;
+}
+.vue-flow__node-common.selected .common-node {
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+.vue-flow__edge .vue-flow__edge-path {
+  stroke-width: 2;
+}
+.vue-flow__edge.selected .vue-flow__edge-path {
+  stroke: #ec4899 !important;
+  stroke-width: 4;
+}
+.vue-flow__edge[data-id$="0"] .vue-flow__edge-path {
+  stroke: red !important;
+}
+.vue-flow__edge[data-id$="1"] .vue-flow__edge-path {
+  stroke: orange !important;
+}
+.vue-flow__edge[data-id$="2"] .vue-flow__edge-path {
+  stroke: #ff0 !important;
+}
+.vue-flow__edge[data-id$="3"] .vue-flow__edge-path {
+  stroke: green !important;
+}
+.vue-flow__edge[data-id$="4"] .vue-flow__edge-path {
+  stroke: #0ff !important;
+}
+.vue-flow__edge[data-id$="5"] .vue-flow__edge-path {
+  stroke: #00f !important;
+}
+.vue-flow__edge[data-id$="6"] .vue-flow__edge-path {
+  stroke: purple !important;
+}
+.vue-flow__edge[data-id$="7"] .vue-flow__edge-path {
+  stroke: gold !important;
+}
+.vue-flow__edge[data-id$="8"] .vue-flow__edge-path {
+  stroke: silver !important;
+}
+.vue-flow__edge[data-id$="9"] .vue-flow__edge-path {
+  stroke: #fff !important;
 }
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;
@@ -410,9 +411,6 @@ h2[data-v-8021e7da] {
 }
 .vue-flow__edge-textwrapper {
   pointer-events: all;
-}
-.vue-flow__edge-textbg {
-  fill: #fff;
 }
 .vue-flow__edge-text {
   pointer-events: none;
@@ -639,7 +637,7 @@ h2[data-v-8021e7da] {
 }
 .vue-flow__nodesselection-rect,
 .vue-flow__selection {
-  background: rgba(0, 89, 220, .08);
+  background: #0059dc14;
   border: 1px dotted rgba(0, 89, 220, .8);
 }
 .vue-flow__nodesselection-rect:focus,
@@ -684,9 +682,208 @@ h2[data-v-8021e7da] {
   outline: none;
 }
 
-/* src/NodeFlow/style/main.css */
+/* src/NodeFlow/style/vue_custom.css */
 #app {
   font-family: "JetBrains Mono", monospace;
+}
+.common-id {
+  position: absolute;
+  height: 0;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100%;
+}
+.common-id div {
+  position: relative;
+  bottom: 22px;
+  right: 4px;
+  height: 20px;
+  line-height: 20px;
+  float: right;
+  padding: 0 6px;
+  background-color: #0f1f0f;
+  border-radius: 6px;
+}
+.common-node {
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 3px 3px 10px 2px #111;
+}
+.common-node > .node-title {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  color: #999999;
+  background-color: #2e4656;
+}
+.common-node > .node-content {
+  height: calc(100% - 30px);
+  padding: 0 24px;
+  padding-bottom: 16px;
+  border-radius: 0 0 8px 8px;
+  color: #aaaaaa;
+  background-color: #353535;
+}
+.common-node > .node-content > .node-content-handle {
+  display: flex;
+  justify-content: space-between;
+}
+.common-node > .node-content > .node-content-handle .line {
+  line-height: 24px;
+  min-height: 24px;
+  height: auto;
+  font-size: 12px;
+}
+.common-node > .node-content > .node-content-handle .line > .item-sub {
+  min-height: 16px;
+}
+.common-node > .node-content > .node-content-handle .line > .item-value {
+  line-height: 20px;
+  height: auto;
+  margin: 1px 8px 1px;
+  border-radius: 10px;
+  padding: 0px 8px;
+  border: solid 1px #616161;
+  background-color: #222222;
+}
+.common-node > .node-content > .node-content-handle > .left {
+  text-align: left;
+  padding-right: 4px;
+}
+.common-node > .node-content > .node-content-handle > .right {
+  text-align: right;
+  padding-left: 4px;
+}
+.common-node > .node-content > .node-content-handle > .left > .line > .item-sub {
+  float: left;
+}
+.common-node > .node-content > .node-content-handle > .right > .line > .item-sub {
+  float: right;
+}
+.common-node > .node-content > .node-content-self > .line {
+  box-sizing: border-box;
+  min-height: 24px;
+  height: auto;
+  margin-bottom: 4px;
+  padding: 1px 28px;
+  border: solid 1px #616161;
+  background-color: #222222;
+  border-radius: 13px;
+}
+.common-node > .node-content > .node-content-self > .line > .item-sub {
+  line-height: 20px;
+  min-height: 20px;
+  height: auto;
+  font-size: 12px;
+}
+.common-node > .node-content > .node-content-self > .line > .item-sub > .item-name {
+  float: left;
+  padding-right: 4px;
+}
+.common-node > .node-content > .node-content-self > .line > .item-sub > .item-value {
+  float: right;
+  padding-left: 4px;
+}
+.common-node[aria-label=Note] .node-title {
+  background-color: #443322;
+}
+.common-node[aria-label=Note] .node-content {
+  background-color: #665533;
+}
+.common-node[aria-label*=Sampler] .node-title {
+  background-color: #223333;
+}
+.common-node[aria-label*=Sampler] .node-content {
+  background-color: #335555;
+}
+.common-node[aria-label^=Group] {
+  min-width: 200px;
+  height: 200px;
+  z-index: -1;
+}
+.common-node[aria-label^=Group] .node-content {
+  background-color: #2e4656;
+}
+.vue-flow__handle.custom {
+  background-color: #a598dd;
+  border: none;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+}
+.vue-flow__handle.custom.target {
+  left: 12px;
+}
+.vue-flow__handle.custom.source {
+  right: 12px;
+  border: solid 2px #211820;
+}
+.vue-flow__handle.custom[indexAttr="0"] {
+  top: calc(30px + 0.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="1"] {
+  top: calc(30px + 1.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="2"] {
+  top: calc(30px + 2.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="3"] {
+  top: calc(30px + 3.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="4"] {
+  top: calc(30px + 4.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="5"] {
+  top: calc(30px + 5.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="6"] {
+  top: calc(30px + 6.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="7"] {
+  top: calc(30px + 7.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="8"] {
+  top: calc(30px + 8.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="9"] {
+  top: calc(30px + 9.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="10"] {
+  top: calc(30px + 10.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="11"] {
+  top: calc(30px + 11.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="12"] {
+  top: calc(30px + 12.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="13"] {
+  top: calc(30px + 13.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="14"] {
+  top: calc(30px + 14.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="15"] {
+  top: calc(30px + 15.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="16"] {
+  top: calc(30px + 16.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="17"] {
+  top: calc(30px + 17.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="18"] {
+  top: calc(30px + 18.5 * 24px);
+}
+.vue-flow__handle.custom[indexAttr="19"] {
+  top: calc(30px + 19.5 * 24px);
+}
+.vue-flow__handle.default {
+  background: none;
+  border: none;
 }
 
 /* src/main.css */

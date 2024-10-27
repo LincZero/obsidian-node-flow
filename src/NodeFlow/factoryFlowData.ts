@@ -247,16 +247,20 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
   type type_selfChildren = {
     self: string,
     self_data: {
-      // 仅node+socket用
-      id: string,
-      parentId: string,
-      type: string, // "n"|"node"|"i"|"input"|"o"|"output"|"v"|"value"|"g"|"group"|"e"|"edge",
-      // 仅noode用
-      name: string,
-      inputs?: object[],
+      // 仅node+socket用，edge不使用这些属性
+      id: string,           // 节点id
+      parentId: string,     // 父节点id，根节点没有，为 ""
+      name: string,         // 节点名/socket名
+      type: string,         // 类型："n"|"node"|"i"|"input"|"o"|"output"|"v"|"value"|"g"|"group"|"e"|"edge",
+
+      // 仅socket用
+      value?: string,       // value类型的socket使用
+      // 仅noode用，socket与edge不使用这些属性
+      inputs?: object[],    // 节点内的
       outputs?: object[],
-      widgets_values?: string[],
-      // 仅edge用
+      values?: object[],
+
+      // 仅edge用，node与socket不使用这些属性
       from_node?: string,
       from_socket?: string,
       to_node?: string,
@@ -319,10 +323,13 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
           id: ll_content[0][0],
           parentId: "",
           name: ll_content[0][1]??ll_content[0][0],
+          type: ll_content[3]?"edge":(!ll_content[1]||!ll_content[1][0])?"node":ll_content[1][1]?ll_content[1][1]:ll_content[1][0],
+
+          ...(!ll_content[1])?{}:(!ll_content[1][1])?{value: ""}:{value: ll_content[1][0]},
           inputs: [],
           outputs: [],
-          widgets_values: [],
-          type: ll_content[3]?"edge":(!ll_content[1]||!ll_content[1][0])?"node":ll_content[1][0],
+          values: [],
+          
           // 线用
           ...(!ll_content[3])?{}:{from_node: ll_content[0][0], from_socket: ll_content[1][0], to_node: ll_content[2][0], to_socket: ll_content[3][0]}
         }
@@ -340,15 +347,15 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
         current_item.self_data.parentId = parent.id
         if (current_item.self_data.type == "input" || current_item.self_data.type == "i") { 
           parent.type = "node"
-          parent.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+          parent.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
         }
         else if (current_item.self_data.type == "output" || current_item.self_data.type == "o") {
           parent.type = "node"
-          parent.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name})
+          parent.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
         }
         else if (current_item.self_data.type == "value" || current_item.self_data.type == "v") {
           parent.type = "node"
-          parent.widgets_values.push(current_item.self_data.name)
+          parent.values.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
         }
         else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
           parent.type = "group"
@@ -377,11 +384,11 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
             label: item.self_data.name,
             inputs: item.self_data.inputs,
             outputs: item.self_data.outputs,
-            widgets_values: item.self_data.widgets_values,
+            values: item.self_data.values,
           },
           position: { x: 0, y: 0 },
           ...(item.self_data.parentId==""||item.self_data.parentId=="nodes")?{}:{parentNode: item.self_data.parentId},
-          type: "comfyui",
+          type: "common",
         })
         recursion_node(item.children)
       }
