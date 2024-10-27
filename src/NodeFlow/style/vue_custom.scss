@@ -69,7 +69,7 @@
 
     border-radius: 8px 8px 0 0;
     color: #999999;
-    background-color: #2e4656;
+    background-color: rgba($color: #2e4656, $alpha: 0.875);
   }
 
   >.node-content {
@@ -79,7 +79,7 @@
 
     border-radius: 0 0 8px 8px;
     color: #aaaaaa;
-    background-color: #353535;
+    background-color: rgba($color: #353535, $alpha: 0.875);
 
     >.node-content-handle {
       display: flex;
@@ -172,7 +172,7 @@
     z-index: -1,
   }
   &[aria-label^="Group"] .node-content {
-    background-color: #2e4656; // 44;
+    background-color: #2e4656; // 40;
   }
 }
 

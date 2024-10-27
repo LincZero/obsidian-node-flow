@@ -244,7 +244,7 @@ h2[data-v-8021e7da] {
   z-index: -1, ;
 }
 .comfyui-node[aria-label^=Group] .comfyui-node-content[data-v-95296bb4] {
-  background-color: #2e465644;
+  background-color: #2e465640;
 }
 .comfyui-group[data-v-e30ebec0] {
   z-index: -2;
@@ -697,7 +697,7 @@ h2[data-v-8021e7da] {
   padding: 0 12px;
   border-radius: 8px 8px 0 0;
   color: #999999;
-  background-color: #2e4656;
+  background-color: rgba(46, 70, 86, 0.75);
 }
 .common-node > .node-content {
   height: calc(100% - 30px);
@@ -705,7 +705,7 @@ h2[data-v-8021e7da] {
   padding-bottom: 16px;
   border-radius: 0 0 8px 8px;
   color: #aaaaaa;
-  background-color: #353535;
+  background-color: rgba(53, 53, 53, 0.75);
 }
 .common-node > .node-content > .node-content-handle {
   display: flex;

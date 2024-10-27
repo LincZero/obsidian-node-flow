@@ -248,6 +248,6 @@ hasCustomHandle.value = props.data?.inputs?.length!=0 || props.data?.outputs?.le
   z-index: -1,
 }
 .comfyui-node[aria-label^="Group"] .comfyui-node-content {
-  background-color: #2e465644;
+  background-color: #2e465640;
 }
 </style>

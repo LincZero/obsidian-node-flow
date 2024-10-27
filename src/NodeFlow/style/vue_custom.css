@@ -69,7 +69,7 @@
   padding: 0 12px;
   border-radius: 8px 8px 0 0;
   color: #999999;
-  background-color: #2e4656;
+  background-color: rgba(46, 70, 86, 0.875);
 }
 
 .common-node > .node-content {
@@ -78,7 +78,7 @@
   padding-bottom: 16px;
   border-radius: 0 0 8px 8px;
   color: #aaaaaa;
-  background-color: #353535;
+  background-color: rgba(53, 53, 53, 0.875);
 }
 
 .common-node > .node-content > .node-content-handle {
