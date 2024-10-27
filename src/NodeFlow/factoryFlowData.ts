@@ -184,10 +184,15 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
      */
     let edges_new: object[] = []
     const edges = parsedData.links;
+    const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
     edges.forEach((item:any) => {
+      const nameMapAttr = item[5].toLowerCase().charCodeAt(0)%10;
       edges_new.push({
         // 数据转移：
         id: ""+item[0],
+        style: {
+          stroke: colors[nameMapAttr]
+        },
         source: ""+item[1],
         sourceHandle: "source-"+item[2],
         target: ""+item[3],
@@ -397,11 +402,16 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
     // 遍历 - 线
     let edges_new:object[] = []
     let edge_id = 0
+    const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
     recursion_edge(result_items[1].children)
     function recursion_edge(items: type_selfChildren[]) {
       for (let item of items) {
+        const nameMapAttr = item.self_data.from_node.toLowerCase().charCodeAt(0)%10;
         edges_new.push({
           id: edge_id++,
+          style: { // 这里实际用的id而不是name做映射，可能存在问题
+            stroke: colors[nameMapAttr]
+          },
           source: item.self_data.from_node,
           sourceHandle: item.self_data.from_socket,
           target: item.self_data.to_node,

@@ -266,36 +266,6 @@ h2[data-v-8021e7da] {
   stroke: #ec4899 !important;
   stroke-width: 4;
 }
-.vue-flow__edge[data-id$="0"] .vue-flow__edge-path {
-  stroke: red !important;
-}
-.vue-flow__edge[data-id$="1"] .vue-flow__edge-path {
-  stroke: orange !important;
-}
-.vue-flow__edge[data-id$="2"] .vue-flow__edge-path {
-  stroke: #ff0 !important;
-}
-.vue-flow__edge[data-id$="3"] .vue-flow__edge-path {
-  stroke: green !important;
-}
-.vue-flow__edge[data-id$="4"] .vue-flow__edge-path {
-  stroke: #0ff !important;
-}
-.vue-flow__edge[data-id$="5"] .vue-flow__edge-path {
-  stroke: #00f !important;
-}
-.vue-flow__edge[data-id$="6"] .vue-flow__edge-path {
-  stroke: purple !important;
-}
-.vue-flow__edge[data-id$="7"] .vue-flow__edge-path {
-  stroke: gold !important;
-}
-.vue-flow__edge[data-id$="8"] .vue-flow__edge-path {
-  stroke: silver !important;
-}
-.vue-flow__edge[data-id$="9"] .vue-flow__edge-path {
-  stroke: #fff !important;
-}
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;
   padding: 10px;
@@ -808,11 +778,11 @@ h2[data-v-8021e7da] {
   background-color: #2e4656;
 }
 .vue-flow__handle.custom {
-  background-color: #a598dd;
   border: none;
   box-sizing: border-box;
   width: 10px;
   height: 10px;
+  background-color: #a598dd;
 }
 .vue-flow__handle.custom.target {
   left: 12px;
@@ -880,6 +850,36 @@ h2[data-v-8021e7da] {
 }
 .vue-flow__handle.custom[indexAttr="19"] {
   top: calc(30px + 19.5 * 24px);
+}
+.vue-flow__handle.custom[nameMapAttr="0"] {
+  background-color: white;
+}
+.vue-flow__handle.custom[nameMapAttr="1"] {
+  background-color: red;
+}
+.vue-flow__handle.custom[nameMapAttr="2"] {
+  background-color: orange;
+}
+.vue-flow__handle.custom[nameMapAttr="3"] {
+  background-color: yellow;
+}
+.vue-flow__handle.custom[nameMapAttr="4"] {
+  background-color: green;
+}
+.vue-flow__handle.custom[nameMapAttr="5"] {
+  background-color: cyan;
+}
+.vue-flow__handle.custom[nameMapAttr="6"] {
+  background-color: blue;
+}
+.vue-flow__handle.custom[nameMapAttr="7"] {
+  background-color: purple;
+}
+.vue-flow__handle.custom[nameMapAttr="8"] {
+  background-color: gold;
+}
+.vue-flow__handle.custom[nameMapAttr="9"] {
+  background-color: silver;
 }
 .vue-flow__handle.default {
   background: none;

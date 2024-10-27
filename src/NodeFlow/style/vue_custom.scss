@@ -178,7 +178,6 @@
 
 .vue-flow__handle {
   &.custom {
-    background-color: #a598dd;
     border: none;
     box-sizing: border-box;
     width: 10px;
@@ -192,6 +191,7 @@
       border: solid 2px #211820;
     }
 
+    // 定位
     &[indexAttr="0"] { top:calc(30px + 0.5 * 24px) }
     &[indexAttr="1"] { top:calc(30px + 1.5 * 24px) }
     &[indexAttr="2"] { top:calc(30px + 2.5 * 24px) }
@@ -212,6 +212,19 @@
     &[indexAttr="17"] { top:calc(30px + 17.5 * 24px) }
     &[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
     &[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
+
+    // 着色 (按首字母映射)
+    background-color: #a598dd;
+    &[nameMapAttr="0"] { background-color: white; }
+    &[nameMapAttr="1"] { background-color: red; }
+    &[nameMapAttr="2"] { background-color: orange; }
+    &[nameMapAttr="3"] { background-color: yellow; }
+    &[nameMapAttr="4"] { background-color: green; }
+    &[nameMapAttr="5"] { background-color: cyan; }
+    &[nameMapAttr="6"] { background-color: blue; }
+    &[nameMapAttr="7"] { background-color: purple; }
+    &[nameMapAttr="8"] { background-color: gold; }
+    &[nameMapAttr="9"] { background-color: silver; }
   }
 
   &.default {

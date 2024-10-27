@@ -180,11 +180,11 @@
 }
 
 .vue-flow__handle.custom {
-  background-color: #a598dd;
   border: none;
   box-sizing: border-box;
   width: 10px;
   height: 10px;
+  background-color: #a598dd;
 }
 
 .vue-flow__handle.custom.target {
@@ -274,6 +274,46 @@
 
 .vue-flow__handle.custom[indexAttr="19"] {
   top: calc(30px + 19.5 * 24px);
+}
+
+.vue-flow__handle.custom[nameMapAttr="0"] {
+  background-color: white;
+}
+
+.vue-flow__handle.custom[nameMapAttr="1"] {
+  background-color: red;
+}
+
+.vue-flow__handle.custom[nameMapAttr="2"] {
+  background-color: orange;
+}
+
+.vue-flow__handle.custom[nameMapAttr="3"] {
+  background-color: yellow;
+}
+
+.vue-flow__handle.custom[nameMapAttr="4"] {
+  background-color: green;
+}
+
+.vue-flow__handle.custom[nameMapAttr="5"] {
+  background-color: cyan;
+}
+
+.vue-flow__handle.custom[nameMapAttr="6"] {
+  background-color: blue;
+}
+
+.vue-flow__handle.custom[nameMapAttr="7"] {
+  background-color: purple;
+}
+
+.vue-flow__handle.custom[nameMapAttr="8"] {
+  background-color: gold;
+}
+
+.vue-flow__handle.custom[nameMapAttr="9"] {
+  background-color: silver;
 }
 
 .vue-flow__handle.default {
