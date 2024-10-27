@@ -1,7 +1,8 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from 'builtin-modules';
-import Vue from "@the_tree/esbuild-plugin-vue3";
+import Vue from "@the_tree/esbuild-plugin-vue3";  // esbuild编译vue文件
+                                                  // 说是直接支持sass，但是我vue用sass报错: Cannot read properties of undefined (reading 'replace') [plugin vue]
 
 const banner =
     `/*
@@ -17,7 +18,7 @@ await esbuild.build({
         js: banner,
     },
     plugins: [
-        Vue({ isProd: true })
+        Vue({ isProd: true }),
     ],
     entryPoints: ['./src/main.ts'],
     bundle: true,
@@ -47,7 +48,7 @@ await esbuild.build({
         '@codemirror/view',
         ...builtins],
     format: 'cjs',
-    watch: !prod,
+    watch: !prod, // 似乎若升级esbuild后不再支持
     target: 'es2016',
     logLevel: "info",
     sourcemap: prod ? false : 'inline',
@@ -59,7 +60,7 @@ await esbuild.build({
 await esbuild.build({
     entryPoints: ["./src/main.css"],
     outfile: "styles.css",
-    watch: !prod,
+    watch: !prod, // 似乎若升级esbuild后不再支持
     bundle: true,
     allowOverwrite: true,
     minify: false,

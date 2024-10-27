@@ -73,6 +73,13 @@ h2[data-v-8021e7da] {
 .vue-flow__node-comfyui.selected .comfyui-node {
   box-shadow: 0 0 8px 3px #ec4899;
 }
+.vue-flow__edge .vue-flow__edge-path {
+  stroke-width: 2;
+}
+.vue-flow__edge.selected .vue-flow__edge-path {
+  stroke: #ec4899 !important;
+  stroke-width: 4;
+}
 .comfyui-id[data-v-95296bb4] {
   position: absolute;
   height: 0;
@@ -382,6 +389,9 @@ h2[data-v-8021e7da] {
 .vue-flow__edge-textwrapper {
   pointer-events: all;
 }
+.vue-flow__edge-textbg {
+  fill: #fff;
+}
 .vue-flow__edge-text {
   pointer-events: none;
   -webkit-user-select: none;
@@ -607,7 +617,7 @@ h2[data-v-8021e7da] {
 }
 .vue-flow__nodesselection-rect,
 .vue-flow__selection {
-  background: #0059dc14;
+  background: rgba(0, 89, 220, .08);
   border: 1px dotted rgba(0, 89, 220, .8);
 }
 .vue-flow__nodesselection-rect:focus,
