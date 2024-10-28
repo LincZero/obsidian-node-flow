@@ -14,7 +14,7 @@ Tutorials, online effects, use cases, and more (教程、在线效果、用例�
 
 ### Method 1: Use code blocks (方式一: 使用代码块)
 
-支持代码块类型：
+Supported code block types (支持的代码块类型)：
 
 ```json
 [
@@ -26,13 +26,22 @@ Tutorials, online effects, use cases, and more (教程、在线效果、用例�
 ]
 ```
 
-这些代码块的类型都不太一样
+- en
+  These code blocks are of different types.
+  1. `nodeflow-comfyui` prefix, using the workflow json exported by comfyui software as content
+  2. `nodeflow-obcanvas` prefix, using the content of the obsidian canvas file (open with Notepad, you will find that it is a json format)
+  3. `nodeflow-list` prefix, indicating that this is a reference mermaid/plantuml, using light text to describe the chart format.
+    See [NodeFlow List Grammer](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/NodeFlow%20List%20Grammer.html) for details
+  4. See the [documentation](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html) for specific uses of these types
+- zh
+  这些代码块的类型都不太一样
+  1. `nodeflow-comfyui` 前缀的，使用comfyui软件导出的工作流json作为内容
+  2. `nodeflow-obcanvas` 前缀的，使用obsidian canvas文件的内容 (用记事本打开，会发现里面是一个json格式)
+  3. `nodeflow-list` 前缀的，表示这是一个对标mermaid/plantuml的，用轻文字描述图表的格式。
+    具体语法参考 [NodeFlow List Grammer](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/NodeFlow%20List%20Grammer.html)
+  4. 这些类型更具体的用法见[文档](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.htm)
 
-1. nodeflow-comfyui 前缀的，使用comfyui软件导出的工作流json作为内容
-2. nodeflow-obcanvas 前缀的，使用obsidian canvas文件的内容 (用记事本打开，会发现里面是一个json格式)
-3. nodeflow-list 前缀的，表示这是一个对标mermaid/plantuml的，用轻文字描述图表的格式。具体语法参考 [NodeFlow List Grammer](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/NodeFlow%20List%20Grammer.html)
-
-举例：
+Example - List Grammer (举例 - 列表语法)：
 
 ````md
 ```nodeflow-list
