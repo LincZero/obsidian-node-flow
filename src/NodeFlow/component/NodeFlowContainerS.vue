@@ -14,7 +14,7 @@
       <button class="nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
       <button class="nf-btn-printJson" @click="fn_printJson">printJson</button>
       <!-- <button class="nf-btn-copyMd" @click="fn_copyRaw(true)">fn_copyMd</button> -->
-      <button class="nf-btn-copyJson" @click="fn_copyRaw(false)">fn_copyJson</button>
+      <button class="nf-btn-copyJson" @click="fn_copyRaw(false)">copyJson</button>
     </div>
   </div>
 </template>
@@ -49,14 +49,16 @@ function fn_autoPos(position: string) { RefChild.value?.layoutGraph(position) }
 // 按钮 - 是否禁用滚动
 const isAllowScroll = ref(true);
 function fn_switchAllowScroll() {
+  const exDiv1: HTMLElement|null = document.body // vuepress等使用
+  const exDiv2: HTMLElement|null = document.querySelector('.markdown-source-view .cm-scroller') // obsidian使用
   if (isAllowScroll.value) {
     isAllowScroll.value = false
-    document.body.style.overflow = 'hidden';
-    (document.querySelector('.markdown-source-view .cm-scroller') as HTMLElement).style.overflow = 'hidden'
+    if (exDiv1) exDiv1.style.overflow = 'hidden';
+    if (exDiv2) exDiv2.style.overflow = 'hidden'
   } else {
     isAllowScroll.value = true
-    document.body.style.overflow = '';
-    (document.querySelector('.markdown-source-view .cm-scroller') as HTMLElement).style.overflow = ''
+    if (exDiv1) exDiv1.style.overflow = '';
+    if (exDiv2) exDiv2.style.overflow = ''
   }
 }
 

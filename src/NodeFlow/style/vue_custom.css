@@ -4,10 +4,6 @@
  *
  * 因为 esbuild-plugin-vue 有一个问题: https://github.com/pipe01/esbuild-plugin-vue3/issues/30
  */
-#app {
-  font-family: 'JetBrains Mono', monospace;
-}
-
 /**
  * CommonNode.vue
  * 
