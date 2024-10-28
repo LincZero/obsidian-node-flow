@@ -1,9 +1,16 @@
 # Obsidian NodeFlow
 
-Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes.<br>渲染节点流，像 `ComfyUi`, `UE`, `Houdini`, `Blender` 等，使其易于编写相关笔记。
+- en
 
-The plugin allows diagrams to be described using lightweight syntax or Json, and is available in both Obsidian and VuePress blogs<br>允许使用轻量语法或从上述软件导出的Json描述了图表，该插件在Obsidian与VuePress博客中均可使用
+  Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes.
 
+  The plugin allows diagrams to be described using lightweight syntax or Json, and is available in both Obsidian and VuePress blogs
+- zh
+  
+  渲染节点流，像 `ComfyUi`, `UE`, `Houdini`, `Blender` 等，使其易于编写相关笔记。
+
+  允许使用轻量语法或从上述软件导出的Json描述了图表，该插件在Obsidian与VuePress博客中均可使用
+  
 ## Docs
 
 Tutorials, online effects, use cases, and more (教程、在线效果、用例等)
@@ -85,9 +92,16 @@ Example - List Grammer (举例 - 列表语法)：
 
 ### Method 2: Independent file (方式二: 独立文件)
 
-Directly put comfyui's exported `workflow.json` file in the library, will automatically identify the json suffix<br>直接将comfyui的导出 `workflow.json` 文件放在库里，会自动识别json后缀的
+- en
+  
+  Directly put comfyui's exported `workflow.json` file in the library, will automatically identify the json suffix
 
-Directly modify the extension of comfyui's exported workflow.json file to `.workflow_json`, which can also be correctly identified<br>直接将comfyui的导出workflow.json文件扩展名修改成`.workflow_json`，也能正确识别
+  Directly modify the extension of comfyui's exported workflow.json file to `.workflow_json`, which can also be correctly identified
+- zh
+  
+  直接将comfyui的导出 `workflow.json` 文件放在库里，会自动识别json后缀的
+  
+  直接将comfyui的导出workflow.json文件扩展名修改成`.workflow_json`，也能正确识别
 
 ## Effect display (Partial) (效果展示 - 部分)
 
