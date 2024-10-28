@@ -791,7 +791,7 @@ h2[data-v-8021e7da] {
   z-index: -1;
 }
 .common-node[aria-label^=Group] .node-content {
-  background-color: #2e4656;
+  background-color: rgba(46, 70, 86, 0.25);
 }
 .vue-flow__handle.custom {
   border: none;

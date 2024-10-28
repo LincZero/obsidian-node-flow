@@ -172,7 +172,7 @@
     z-index: -1,
   }
   &[aria-label^="Group"] .node-content {
-    background-color: #2e4656; // 40;
+    background-color: rgba($color: #2e4656, $alpha: 0.25);
   }
 }
 

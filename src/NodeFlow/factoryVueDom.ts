@@ -30,6 +30,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
     // 根据新json生成节点流
     const _app = createApp(NodeFlowContainerS, {
       jsonData: result.data,
+      rawData: mdStr,
       fn_newView: async ()=>{ // 闭包
         const targetEl: HTMLElement = await fn_newView()
         mountVue(targetEl, false)

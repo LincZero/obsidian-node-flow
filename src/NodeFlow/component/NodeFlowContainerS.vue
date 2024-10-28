@@ -9,10 +9,12 @@
     <div class="nf-toolbar">
       <button class="nf-btn-fullScreen" @click="fn_fullScreen()">fullScreen</button>
       <button class="nf-btn-newView" @click="_fn_newView()">newView</button>
-      <button class="nf-btn-printJson" @click="fn_printJson">printJson</button>
       <button class="nf-btn-autoPos" @click="fn_autoPos('LR')">autoPosLR</button>
       <button class="nf-btn-autoPos" @click="fn_autoPos('TB')">autoPosTB</button>
       <button class="nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
+      <button class="nf-btn-printJson" @click="fn_printJson">printJson</button>
+      <!-- <button class="nf-btn-copyMd" @click="fn_copyRaw(true)">fn_copyMd</button> -->
+      <button class="nf-btn-copyJson" @click="fn_copyRaw(false)">fn_copyJson</button>
     </div>
   </div>
 </template>
@@ -20,12 +22,14 @@
 <script setup lang="ts">
 // 自身属性、通用导入
 const props = defineProps<{
-  jsonData?: object,
+  jsonData: object,
+  isMini: boolean,
+  rawData?: string,
   fn_newView?: () => Promise<void>,
-  isMini: boolean
 }>()
 import { computed, ref } from 'vue'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
+const _rawData = computed(() => props.rawData || "error: get raw data error");
 const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
 
 // 组件 - 节点画布
@@ -61,6 +65,16 @@ const CanFullScreen = ref()
 import { switchFullScreen } from "./utils/fullScreen"
 function fn_fullScreen() {
   switchFullScreen(CanFullScreen.value, _isMini)
+}
+
+// 按钮 - 拷贝到黏贴版
+function fn_copyRaw (isWithCodeBlock: boolean) {
+  // const str = _rawData.value
+  navigator.clipboard.writeText(_rawData.value).then(() => {
+    console.log('info: 已复制文本');
+  }, () => {
+    console.error('error: 无法复制文本');
+  });
 }
 </script>
 
