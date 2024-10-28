@@ -1,15 +1,19 @@
 <!-- 显示容器 -->
 
 <template>
-  <div :class="isMini?'nf-shell-mini':'nf-shell-view'">
-    <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="isMini"/>
-  </div>
-  <div class="nf-toolbar">
-    <button class="nf-btn-newView" @click="props.fn_newView">newView</button>
-    <button class="nf-btn-showJson" @click="fn_showJson">showJson</button>
-    <button class="nf-btn-autoPos" @click="fn_autoPos('LR')">autoPosLR</button>
-    <button class="nf-btn-autoPos" @click="fn_autoPos('TB')">autoPosTB</button>
-    <button class="nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
+  <div ref="CanFullScreen" :class="_isMini?'normal-size':'full-size'">
+    <!-- TODO 有空捋一下这里，全屏这块有些代码应该抽离复用 -->
+    <div :class="_isMini?'nf-shell-mini':'nf-shell-view'">
+      <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="_isMini"/>
+    </div>
+    <div class="nf-toolbar">
+      <button class="nf-btn-fullScreen" @click="fn_fullScreen()">fullScreen</button>
+      <button class="nf-btn-newView" @click="props.fn_newView">newView</button>
+      <button class="nf-btn-printJson" @click="fn_printJson">printJson</button>
+      <button class="nf-btn-autoPos" @click="fn_autoPos('LR')">autoPosLR</button>
+      <button class="nf-btn-autoPos" @click="fn_autoPos('TB')">autoPosTB</button>
+      <button class="nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
+    </div>
   </div>
 </template>
 
@@ -21,6 +25,7 @@ const props = defineProps<{
   isMini: boolean
 }>()
 import { ref } from 'vue'
+const _isMini = ref(props.isMini)
 
 // 组件 - 节点画布
 import NodeFlow from './NodeFlow.vue'
@@ -29,7 +34,7 @@ const RefChild = ref<{
 }>();
 
 // 按钮 - 展示json数据
-function fn_showJson() {
+function fn_printJson() {
   console.log("debug json: ", props.jsonData)
 }
 
@@ -49,9 +54,23 @@ function fn_switchAllowScroll() {
     (document.querySelector('.markdown-source-view .cm-scroller') as HTMLElement).style.overflow = ''
   }
 }
+
+// 按钮 - 全屏
+const CanFullScreen = ref()
+import { switchFullScreen } from "./utils/fullScreen"
+function fn_fullScreen() {
+  switchFullScreen(CanFullScreen.value, _isMini)
+}
 </script>
 
 <style scoped>
+.full-size {
+  height: 100%;
+}
+.normal-size {
+  margin-bottom: 22px;
+}
+
 .nf-shell-mini {
   width: 100%;
   height: 500px;

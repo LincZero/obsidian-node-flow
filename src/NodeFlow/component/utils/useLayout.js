@@ -17,7 +17,7 @@ import { ref } from 'vue'
  * nextTick(() => { fitView() })
  * ```
  * 
- * 原理：
+ * dagreGroup原理：
  * dagreGroup会独立存储一份节点位置模型 (这里面可能有内存一致性问题)
  * 为方便起见接下来我会称该项目的图数据为 "原节点数据"，dagreGroup的图数据为 "dagre库节点数据"
  * 1. `原节点数据` --同步节点大小与线数据--> `dagre库节点数据`
@@ -25,11 +25,12 @@ import { ref } from 'vue'
  * 3. `dagre库节点数据` --同步位置数据--> `原节点数据`
  * 
  * @return
- *   踩坑：layout函数必须返回的形式使用！并且layout的首次使用应当在节点初始化后！否则 `findNode` 获取节点失败
- *   如果遇到bug，很大概率需要检查findNode函数是否能获取成功
+ * layout函数必须返回的形式使用！并且layout的首次使用应当在节点初始化后！否则 `findNode` 获取节点失败
+ * 如果遇到bug，很大概率需要检查findNode函数是否能获取成功
+ * 这里为什么要返回函数而不直接使用？因为这里使用了闭包
  */
 export function useLayout() {
-  // 利用闭包缓存一些东西
+  // 闭包环境 (这些变量会在每个返回的layout闭包实体中单独存一份，且因为layout闭包实体而延长生命周期)
   const { findNode } = useVueFlow()
   const graph = ref(new dagre.graphlib.Graph())
   const previousDirection = ref('LR')
