@@ -8,7 +8,7 @@
     </div>
     <div class="nf-toolbar">
       <button class="nf-btn-fullScreen" @click="fn_fullScreen()">fullScreen</button>
-      <button class="nf-btn-newView" @click="props.fn_newView">newView</button>
+      <button class="nf-btn-newView" @click="_fn_newView()">newView</button>
       <button class="nf-btn-printJson" @click="fn_printJson">printJson</button>
       <button class="nf-btn-autoPos" @click="fn_autoPos('LR')">autoPosLR</button>
       <button class="nf-btn-autoPos" @click="fn_autoPos('TB')">autoPosTB</button>
@@ -24,8 +24,9 @@ const props = defineProps<{
   fn_newView?: () => Promise<void>,
   isMini: boolean
 }>()
-import { ref } from 'vue'
-const _isMini = ref(props.isMini)
+import { computed, ref } from 'vue'
+const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
+const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
 
 // 组件 - 节点画布
 import NodeFlow from './NodeFlow.vue'
@@ -39,7 +40,7 @@ function fn_printJson() {
 }
 
 // 按钮 - 自动调整顺序
-function fn_autoPos(position: string) { RefChild.value.layoutGraph(position) }
+function fn_autoPos(position: string) { RefChild.value?.layoutGraph(position) }
 
 // 按钮 - 是否禁用滚动
 const isAllowScroll = ref(true);

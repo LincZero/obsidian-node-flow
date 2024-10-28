@@ -639,14 +639,19 @@ h2[data-v-8021e7da] {
 }
 .full-size[data-v-472359ef] {
   height: 100%;
-  overflow: hidden;
 }
 .normal-size[data-v-472359ef] {
   margin-bottom: 22px;
+}
+.nf-shell-mini[data-v-472359ef] {
   width: 100%;
   height: 500px;
   border: 1px solid currentColor;
   border-radius: 8px;
+  overflow: hidden;
+}
+.nf-shell-view[data-v-472359ef] {
+  height: calc(100% - 24px);
   overflow: hidden;
 }
 .nf-toolbar[data-v-472359ef] {
