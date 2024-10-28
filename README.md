@@ -8,11 +8,13 @@ The plugin allows diagrams to be described using lightweight syntax or Json, and
 
 Tutorials, online effects, use cases, and more (教程、在线效果、用例等)
 
-- [Online effects (在线效果)](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html)
+- [Online effects (在线效果)、demo](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html)
 
 ## Usage
 
 ### Method 1: Use code blocks (方式一: 使用代码块)
+
+支持代码块类型：
 
 ```json
 [
@@ -29,6 +31,48 @@ Tutorials, online effects, use cases, and more (教程、在线效果、用例�
 1. nodeflow-comfyui 前缀的，使用comfyui软件导出的工作流json作为内容
 2. nodeflow-obcanvas 前缀的，使用obsidian canvas文件的内容 (用记事本打开，会发现里面是一个json格式)
 3. nodeflow-list 前缀的，表示这是一个对标mermaid/plantuml的，用轻文字描述图表的格式。具体语法参考 [NodeFlow List Grammer](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/NodeFlow%20List%20Grammer.html)
+
+举例：
+
+````md
+```nodeflow-list
+- nodes
+  - node1: KSample
+    - Latent, o
+    - model, i
+    - positive, i
+    - negative, i
+    - Latent, i
+    - seed, v
+    - control_after_generate, randomize:v
+    - steps , 20:v
+    - CFG, 8.0:v
+    - sampler_name, euler:v
+    - scheduler, normal:v
+    - denoise, 1.00:v
+    - io defaultTest, test:i
+    - io defaultTest, test:o
+    - t1:noValueTest, v
+    - t2: , noKeyTest:v
+  - node2: KSample
+    - 潜空间, 0
+    - 模型, i
+    - 正面条件, i
+    - 负面条件, i
+    - 潜空间, i
+    - 种子, v
+    - 运行后操作, v
+    - 步数, v
+    - CFG, v
+    - 采样器/采样方法, v
+    - 调度器, v
+    - 降噪, v
+  - translate
+- edges
+  - node1,Latent, translate,l
+  - translate,r, node2,模型
+```
+````
 
 ### Method 2: Independent file (方式二: 独立文件)
 
