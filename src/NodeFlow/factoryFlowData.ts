@@ -184,9 +184,15 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
      */
     let edges_new: object[] = []
     const edges = parsedData.links;
-    const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
+    // const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
+    const colors = [
+      "#ff0000", "#ff4d00", "#ff9900", "#ffe600", "#ccff00",
+      "#80ff00", "#33ff00", "#00ff1a", "#00ff66", "#00ffb3",
+      "#00ffff", "#00b3ff", "#0066ff", "#001aff", "#3300ff",
+      "#8000ff", "#cc00ff", "#ff00e6", "#ff0099", "#ff004c"
+    ]
     edges.forEach((item:any) => {
-      const nameMapAttr = item[5].toLowerCase().charCodeAt(0)%10;
+      const nameMapAttr = item[5].toLowerCase().charCodeAt(0)%20;
       edges_new.push({
         // 数据转移：
         id: ""+item[0],
@@ -497,15 +503,21 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
     // 遍历 - 线
     let edges_new:object[] = []
     {
-      const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
+      // const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
+      const colors = [
+        "#ff0000", "#ff4d00", "#ff9900", "#ffe600", "#ccff00",
+        "#80ff00", "#33ff00", "#00ff1a", "#00ff66", "#00ffb3",
+        "#00ffff", "#00b3ff", "#0066ff", "#001aff", "#3300ff",
+        "#8000ff", "#cc00ff", "#ff00e6", "#ff0099", "#ff004c"
+      ]
       recursion_edge(result_items[1].children)
       function recursion_edge(items: type_selfChildren[]) {
         for (let item of items) {
           if (item.self_data.type != "e" && item.self_data.type != "edge") continue
-          const nameMapAttr = item.self_data.from_socket.toLowerCase().charCodeAt(0)%10;
+          const nameMapAttr = item.self_data.from_socket.toLowerCase().charCodeAt(0)%20; // 注意这里实际用的socket id而不是name做映射
           edges_new.push({
             id: item.self_data.id,
-            style: { // 这里实际用的id而不是name做映射，可能存在问题
+            style: {
               stroke: colors[nameMapAttr]
             },
             source: item.self_data.from_node,

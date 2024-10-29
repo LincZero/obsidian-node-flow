@@ -872,34 +872,64 @@ h2[data-v-8021e7da] {
   top: calc(30px + 19.5 * 24px);
 }
 .vue-flow__handle.custom[nameMapAttr="0"] {
-  background-color: white;
-}
-.vue-flow__handle.custom[nameMapAttr="1"] {
   background-color: red;
 }
+.vue-flow__handle.custom[nameMapAttr="1"] {
+  background-color: #ff4d00;
+}
 .vue-flow__handle.custom[nameMapAttr="2"] {
-  background-color: orange;
+  background-color: #ff9900;
 }
 .vue-flow__handle.custom[nameMapAttr="3"] {
-  background-color: yellow;
+  background-color: #ffe600;
 }
 .vue-flow__handle.custom[nameMapAttr="4"] {
-  background-color: green;
+  background-color: #ccff00;
 }
 .vue-flow__handle.custom[nameMapAttr="5"] {
-  background-color: cyan;
+  background-color: #80ff00;
 }
 .vue-flow__handle.custom[nameMapAttr="6"] {
-  background-color: blue;
+  background-color: #33ff00;
 }
 .vue-flow__handle.custom[nameMapAttr="7"] {
-  background-color: purple;
+  background-color: #00ff1a;
 }
 .vue-flow__handle.custom[nameMapAttr="8"] {
-  background-color: gold;
+  background-color: #00ff66;
 }
 .vue-flow__handle.custom[nameMapAttr="9"] {
-  background-color: silver;
+  background-color: #00ffb3;
+}
+.vue-flow__handle.custom[nameMapAttr="10"] {
+  background-color: cyan;
+}
+.vue-flow__handle.custom[nameMapAttr="11"] {
+  background-color: #00b3ff;
+}
+.vue-flow__handle.custom[nameMapAttr="12"] {
+  background-color: #0066ff;
+}
+.vue-flow__handle.custom[nameMapAttr="13"] {
+  background-color: #001aff;
+}
+.vue-flow__handle.custom[nameMapAttr="14"] {
+  background-color: #3300ff;
+}
+.vue-flow__handle.custom[nameMapAttr="15"] {
+  background-color: #8000ff;
+}
+.vue-flow__handle.custom[nameMapAttr="16"] {
+  background-color: #cc00ff;
+}
+.vue-flow__handle.custom[nameMapAttr="17"] {
+  background-color: #ff00e6;
+}
+.vue-flow__handle.custom[nameMapAttr="18"] {
+  background-color: #ff0099;
+}
+.vue-flow__handle.custom[nameMapAttr="19"] {
+  background-color: #ff004d;
 }
 .vue-flow__handle.default {
   background: none;

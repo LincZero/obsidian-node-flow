@@ -46,7 +46,7 @@
       class="custom"
       :indexAttr="index"
       :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-      :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%10'
+      :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%20'
       type="target"
       :position="Position.Left" />
     <Handle
@@ -56,7 +56,7 @@
       class="custom"
       :indexAttr="index"
       :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-      :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%10'
+      :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%20'
       type="source"
       :position="Position.Right" />
   </div>

@@ -48,6 +48,7 @@
       </div>
     </div>
     <!-- Handle - 根据数据自动生成 -->
+    <!-- 注意这里的MapAttr暂时用的id，而comfyui那边用的type -->
     <Handle
       v-for="(item,index) in data.inputs"
       :key="index"
@@ -55,7 +56,7 @@
       class="custom"
       :indexAttr="index"
       :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-      :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%10'
+      :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
       type="target"
       :position="Position.Left" />
     <Handle
@@ -65,7 +66,7 @@
       class="custom"
       :indexAttr="index"
       :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-      :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%10'
+      :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
       type="source"
       :position="Position.Right" />
     <!-- Handle - 默认隐藏 -->

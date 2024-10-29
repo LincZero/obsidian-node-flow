@@ -1,14 +1,14 @@
 /**
- * 仅用于利用vscode的转化插件功能，然后再复制到Vue组件中
- *
+ * 仅用于利用vscode的转化插件功能，
+ * 
+ * 仅用于模拟Vue组件中的script scope
  * 因为 esbuild-plugin-vue 有一个问题: https://github.com/pipe01/esbuild-plugin-vue3/issues/30
+ * 作为伪scoped，需要注意好隔离性
  */
 
 // #app {
 //   font-family: 'JetBrains Mono', monospace;
 // }
-
-// 注意好隔离性，伪scoped
 
 /**
  * CommonNode.vue
@@ -220,18 +220,63 @@
     &[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
     &[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
 
-    // Handle着色 (按首字母映射)
+    /**
+     * Handle着色 (按首字母映射，且习惯将白色填第一)
+     * 
+     * 颜色来源：HSL(0步进18~360, 100%, 50%), 共得到20种颜色
+     * 16进制根据在vscode环境下css文件打hsl，然后屏幕取色得到
+     * hsl(0, 100, 50)     #ff0000
+     * hsl(18, 100, 50)    #ff4d00
+     * hsl(36, 100, 50)    #ff9900
+     * hsl(54, 100, 50)    #ffe600
+     * hsl(72, 100, 50)    #ccff00
+     * hsl(90, 100, 50)    #80ff00
+     * hsl(108, 100, 50)   #33ff00
+     * hsl(126, 100, 50)   #00ff1a
+     * hsl(144, 100, 50)   #00ff66
+     * hsl(162, 100, 50)   #00ffb3
+     * hsl(180, 100, 50)   #00ffff
+     * hsl(198, 100, 50)   #00b3ff
+     * hsl(216, 100, 50)   #0066ff
+     * hsl(234, 100, 50)   #001aff
+     * hsl(252, 100, 50)   #3300ff
+     * hsl(270, 100, 50)   #8000ff
+     * hsl(288, 100, 50)   #cc00ff
+     * hsl(306, 100, 50)   #ff00e6
+     * hsl(324, 100, 50)   #ff0099
+     * hsl(342, 100, 50)   #ff004c
+     * 
+     * 可选 - 使用颜色优化排序 (使必要时能指定颜色)
+     * 0            8
+     * red          14
+     * orange       11
+     * yellow       1
+     * green        3
+     * cyam         19
+     * blue         18
+     * purple/pink  12
+     */
     background-color: #a598dd;
-    &[nameMapAttr="0"] { background-color: white; }
-    &[nameMapAttr="1"] { background-color: red; }
-    &[nameMapAttr="2"] { background-color: orange; }
-    &[nameMapAttr="3"] { background-color: yellow; }
-    &[nameMapAttr="4"] { background-color: green; }
-    &[nameMapAttr="5"] { background-color: cyan; }
-    &[nameMapAttr="6"] { background-color: blue; }
-    &[nameMapAttr="7"] { background-color: purple; }
-    &[nameMapAttr="8"] { background-color: gold; }
-    &[nameMapAttr="9"] { background-color: silver; }
+    &[nameMapAttr="0"]  { background-color: hsl(0, 100, 50); }
+    &[nameMapAttr="1"]  { background-color: hsl(18, 100, 50); }
+    &[nameMapAttr="2"]  { background-color: hsl(36, 100, 50); }
+    &[nameMapAttr="3"]  { background-color: hsl(54, 100, 50); }
+    &[nameMapAttr="4"]  { background-color: hsl(72, 100, 50); }
+    &[nameMapAttr="5"]  { background-color: hsl(90, 100, 50); }
+    &[nameMapAttr="6"]  { background-color: hsl(108, 100, 50); }
+    &[nameMapAttr="7"]  { background-color: hsl(126, 100, 50); }
+    &[nameMapAttr="8"]  { background-color: hsl(144, 100, 50); }
+    &[nameMapAttr="9"]  { background-color: hsl(162, 100, 50); }
+    &[nameMapAttr="10"] { background-color: hsl(180, 100, 50); }
+    &[nameMapAttr="11"] { background-color: hsl(198, 100, 50); }
+    &[nameMapAttr="12"] { background-color: hsl(216, 100, 50); }
+    &[nameMapAttr="13"] { background-color: hsl(234, 100, 50); }
+    &[nameMapAttr="14"] { background-color: hsl(252, 100, 50); }
+    &[nameMapAttr="15"] { background-color: hsl(270, 100, 50); }
+    &[nameMapAttr="16"] { background-color: hsl(288, 100, 50); }
+    &[nameMapAttr="17"] { background-color: hsl(306, 100, 50); }
+    &[nameMapAttr="18"] { background-color: hsl(324, 100, 50); }
+    &[nameMapAttr="19"] { background-color: hsl(342, 100, 50); }
   }
 
   &.default {
