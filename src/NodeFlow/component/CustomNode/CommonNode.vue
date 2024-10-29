@@ -42,6 +42,7 @@
           <div class="item-sub">
             <span class="item-name">{{ item.name }}</span>
             <span class="item-value">{{ item.value }}</span>
+            <div style="height:0; clear: both;"></div>
           </div>
         </div>
       </div>

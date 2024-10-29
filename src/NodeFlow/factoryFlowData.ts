@@ -249,55 +249,67 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
  *   通常简化为 `result_` 前缀
  */
 function factoryFlowData_list(md:string): {code: number, msg: string, data: object} {
-  // step1. 先转 self-children-object,
   /**
    * self-children-object
    * 
    * 特点: 该结构不应依赖于底层(即不依赖于vueflow)! 好处：存在更换底层库的变化、以及复用该描述语法
+   * 功能、职责：除解析self-children外，负责解析一些内联语法，例如id、name、value等，**避免把这一步留到下步进行**
    * 
    * 字段内容
    * - 其中 self、children 特征：通用结构、有效信息量、嵌套结构
    * - 其中 self_data 特征：冗余的 (去除不减少信息量的)、可用于缓存、便于下一步进行嵌套转扁平化的
    */
-  type type_selfChildren = {
-    self_data:
-      // type: string,                            // 类型："n"|"node"|"i"|"input"|"o"|"output"|"v"|"value"|"g"|"group"|"e"|"edge" TODO v和i/o类型应该可以共存
-      {                                           // node
-        type: "n"|"node"|"g"|"group",
-        id: string,                               // 节点id (会显示)
-        name: string,                             // 节点名 (会显示)
-        parentId: string,                         // 父节点id，根节点没有，为 ""
-        children: {                               // 缓存节点内部数据，并根据类型区分好
-          inputs: {id:string, name:string, value:string}[],
-          outputs: {id:string, name:string, value:string}[],
-          values: {id:string, name:string, value:string}[],
-        }
-      }|{                                         // socket，在nodes-edges-array中将会被废弃掉
-        type: "i"|"input"|"o"|"output"|"v"|"value",
-        id: string,                               // socketId
-        name: string,                             // socket名 (会显示)
-        parentId: string,                         // 父节点id，根节点没有，为 ""
-        value: string,                            // value类型的socket使用 (会显示，可多行)
-      }|{                                         // edge
-        type: "e"|"edge",
-        id: string,                               // 线Id, 暂时没啥用, 会自动填充的
-        name: string,                             // 线名, 暂时没啥用，可能后续可以填label
-        parentId: "",                             // 父节点id，暂时没啥用，暂时不存在局部声明线的情况
-        from_node?: string,
-        from_socket?: string,
-        to_node?: string,
-        to_socket?: string,
-      }
+  type type_selfChildren = type_selfChildren_node|type_selfChildren_socket|type_selfChildren_edge
+  type type_selfChildren_base = {
     self: string,
     children: type_selfChildren[],
   }
+  interface type_selfChildren_node extends type_selfChildren_base {
+    self_data: {                                  // node
+      type: "n"|"node"|"g"|"group",
+      id: string,                                 // 节点id (会显示)
+      name: string,                               // 节点名 (会显示)
+      parentId: string,                           // 父节点id，根节点没有，为 ""
+      parent: type_selfChildren|null,
+      children: {                                 // 缓存节点内部数据，并根据类型区分好
+        inputs: type_selfChildren_socket[],
+        outputs: type_selfChildren_socket[],
+        values: type_selfChildren_socket[],
+      }
+    }
+  }
+  interface type_selfChildren_socket extends type_selfChildren_base {
+    self_data: {                                  // socket，在nodes-edges-array中将会被废弃掉
+      type: "i"|"input"|"o"|"output"|"v"|"value",
+      id: string,                                 // socketId
+      name: string,                               // socket名 (会显示)
+      parentId: string,                           // 父节点id，根节点没有，为 ""
+      parent: type_selfChildren|null,
+      value: string,                              // value类型的socket使用 (会显示，可多行)
+    }
+  }
+  interface type_selfChildren_edge extends type_selfChildren_base {
+    self_data: {                                  // edge
+      type: "e"|"edge",
+      id: string,                                 // 线Id, 暂时没啥用, 会自动填充的
+      name: string,                               // 线名, 暂时没啥用，可能后续可以填label
+      parentId: "",                               // 父节点id，暂时没啥用，暂时不存在局部声明线的情况
+      parent: type_selfChildren|null,
+      from_node: string,
+      from_socket: string,
+      to_node: string,
+      to_socket: string,
+    }
+  }
+
+  // step1. 先转 self-children-object,
   let edge_id = 0;
   let result_items:type_selfChildren[] = []       // 最终构建成果
   try {
     let map_indent: number[] = []                 // 缓存当前每个缩进等级对应的空格数 (注意一致性v) (其中下标0对应level0对应0缩进/0空格)
     let map_item: type_selfChildren[] = []        // 缓存当前每个缩进等级对应的最新项 (注意一致性^)
-    // let last_indent;                           // 上次缩进空格，等同 cache_list_indent[cache_list_indent.length-1]
-    // let last_item;                             // 上次项，等同 cache_list_item[cache_list_item.length-1]
+    // let last_indent;                           // 上次缩进空格，等同 map_indent[map_indent.length-1]
+    // let last_item;                             // 上次项，等同 map_item[map_item.length-1]
     let current_line:string                       // 当前行
     let current_indent;                           // 当前缩进空格 (从0开始)
     let current_level:number                      // 当前级别。level表示位于第几层中嵌套中 (最外层是0)
@@ -307,13 +319,16 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       if (!result_exp) continue
 
       // 仅追加
-      // 有两种做法。一是先将换行转项，再解析一个项。二是不是先解析项，发现非项再追加到项。前者简单些，但读项次数会x2，这个环节性能低一倍
+      // 有两种做法，选用后者
+      // - 一是先将换行转项，再解析一个项。优点是简单些，但读项次数会x2，后期需要再遍历一遍
+      // - 二是不是先解析项，发现非项再追加到项。优点是语法的内联分析完全在第一步
       if (!result_exp[2]) {
         if (map_indent.length==0) { console.warn("追加换行内容失败: 首行非列表"); continue; }
-        map_item[map_item.length-1].self += "\n"+result_exp[3] // TODO 暂不支持带空格前缀的换行空格
-        if (!map_item[map_item.length-1].self_data.hasOwnProperty("value")) { console.warn("追加换行内容失败: 父节点无vlaue属性"); continue; }
+        const last_item = map_item[map_item.length-1]
+        last_item.self += "\n"+result_exp[3] // TODO 暂不支持带空格前缀的换行空格
+        if (!last_item.self_data.hasOwnProperty("value")) { console.warn("追加换行内容失败: 追加节点无vlaue属性"); continue; }
         // @ts-ignore ...上不存在属性“value”
-        map_item[map_item.length-1].self_data.value += "\n"+result_exp[3]
+        last_item.self_data.value += "\n"+result_exp[3]
         continue
       }
 
@@ -346,8 +361,8 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
          *   单行value不支持内容有逗号和冒号，多行才支持
          * self格式
          *   节点 `id(:name)?`
-         *   接口 `id(:name)?, (i|o|v?)(|type?), (value)?`
-         *   线条 `from, from socket, to, to socket, name?`
+         *   接口 `id(:name), (i|o|v|""), (value)=""`
+         *   线条 `from, from socket, to, to socket, (name)?`
          */
         let ll_content:string[][] = []
         const content = result_exp[3]
@@ -363,7 +378,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
             self_data: {
               type: "edge",
               id: ""+edge_id++,
-              parentId: "",
+              parentId: "", parent: null,
               from_node: ll_content[0][0],
               from_socket: ll_content[1][0],
               to_node: ll_content[2][0],
@@ -382,7 +397,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
               type: (ll_content[1]&&["i","input","o","output","v","value"].includes(ll_content[1][0]))?ll_content[1][0]:"value",
               id: ll_content[0][0],
               name: ll_content[0][1]??ll_content[0][0],
-              parentId: "",
+              parentId: "", parent: null,
               value: ll_content[2]?ll_content[2][0]:"",
             }
           }
@@ -396,11 +411,11 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
               type: "node",
               id: ll_content[0][0],
               name: ll_content[0][1]??ll_content[0][0],
-              parentId: "",
+              parentId: "", parent: null,
               children: {
                 inputs: [],
                 outputs: [],
-                values: [],
+                values: []
               }
             }
           }
@@ -409,34 +424,36 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
         map_item[current_level] = current_item
       }
 
-      // change4: result_items
+      // change4: result_items、(parent's item)
       {
         // 根项
         if (current_level == 0) {
           result_items.push(current_item)
-          current_item.self_data.parentId = ""
+          // current_item.self_data.parentId = "" // default
+          // current_item.self_data.parent = null // default
         }
         // 非根项，更新与父亲有关数据
         else {
-          const parent = map_item[current_level-1]
+          const parent_item = map_item[current_level-1]
+          // 修正父节点类型，父节点不能为socket或线、且socket的父节点强制为node，node的父节点强制为group
           // 无法使用 (!["n", "node", "g", "group"].includes(parent.self_data.type)) 简化……否则飘红，代码编辑器没那么智能……
-          if (parent.self_data.type!= "n" && parent.self_data.type!= "node" && parent.self_data.type!= "g" && parent.self_data.type!= "group") continue
-          parent.children.push(current_item)
-          current_item.self_data.parentId = parent.self_data.id
+          if (parent_item.self_data.type!= "n" && parent_item.self_data.type!= "node" && parent_item.self_data.type!= "g" && parent_item.self_data.type!= "group") continue
+          parent_item.children.push(current_item)
+          current_item.self_data.parentId = parent_item.self_data.id; current_item.self_data.parent = parent_item;
           if (current_item.self_data.type == "input" || current_item.self_data.type == "i") { 
-            parent.self_data.type = "node"
-            parent.self_data.children.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
+            parent_item.self_data.type = "node"
+            parent_item.self_data.children.inputs.push(current_item as type_selfChildren_socket)
           }
           else if (current_item.self_data.type == "output" || current_item.self_data.type == "o") {
-            parent.self_data.type = "node"
-            parent.self_data.children.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
+            parent_item.self_data.type = "node"
+            parent_item.self_data.children.outputs.push(current_item as type_selfChildren_socket)
           }
           else if (current_item.self_data.type == "value" || current_item.self_data.type == "v") {
-            parent.self_data.type = "node"
-            parent.self_data.children.values.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
+            parent_item.self_data.type = "node"
+            parent_item.self_data.children.values.push(current_item as type_selfChildren_socket)
           }
           else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
-            parent.self_data.type = "group"
+            parent_item.self_data.type = "group"
           }
         }
       }
@@ -444,8 +461,6 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
   } catch (error) {
     return {code: -1, msg: "error: list parse fail: "+error, data: {}}
   }
-
-  console.log("result_items", result_items)
 
   // step2. self-children-object 再转 nodes-edges-array
   // TODO 先假设不支持节点组，先假设不支持隐藏nodes和edges根节点
@@ -459,19 +474,20 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       function recursion_node(items: type_selfChildren[]) {
         for (let item of items) {
           if (item.self_data.type != "n" && item.self_data.type != "node" && item.self_data.type != "g" && item.self_data.type != "group") continue
-          nodes_new.push({
+          const current_node:any = {
             id: item.self_data.id,
             data: {
               type: item.self_data.type,
               label: item.self_data.name,
-              inputs: item.self_data.children.inputs,
-              outputs: item.self_data.children.outputs,
-              values: item.self_data.children.values,
+              inputs: item.self_data.children.inputs.map((i:type_selfChildren_socket)=>{return {id:i.self_data.id, name:i.self_data.name, value: i.self_data.value}}),
+              outputs: item.self_data.children.outputs.map((i:type_selfChildren_socket)=>{return {id:i.self_data.id, name:i.self_data.name, value: i.self_data.value}}),
+              values: item.self_data.children.values.map((i:type_selfChildren_socket)=>{return {id:i.self_data.id, name:i.self_data.name, value: i.self_data.value}}),
             },
             position: { x: 0, y: 0 },
             ...(item.self_data.parentId==""||item.self_data.parentId=="nodes")?{}:{parentNode: item.self_data.parentId},
             type: "common",
-          })
+          }
+          nodes_new.push(current_node)
           recursion_node(item.children)
         }
       }
@@ -500,8 +516,6 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
         }
       }
     }
-
-    console.log("nodes_new", nodes_new)
 
     // 处理完成
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}

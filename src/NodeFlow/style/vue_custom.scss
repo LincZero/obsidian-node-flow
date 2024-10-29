@@ -61,6 +61,13 @@
   border-radius:8px;
   box-shadow: 3px 3px 10px 2px #111;
 
+  // 自动换行
+  span {
+    white-space: break-spaces; // 自动换行
+    overflow-wrap: break-word; // 单词中换行
+    code {white-space: pre;}   // 一个用于手动控制不换行的方式
+  }
+
   >.node-title {
     height: 30px;
     line-height: 30px;

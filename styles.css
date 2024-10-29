@@ -693,6 +693,13 @@ h2[data-v-8021e7da] {
   border-radius: 8px;
   box-shadow: 3px 3px 10px 2px #111;
 }
+.common-node span {
+  white-space: break-spaces;
+  overflow-wrap: break-word;
+}
+.common-node span code {
+  white-space: pre;
+}
 .common-node > .node-title {
   height: 30px;
   line-height: 30px;
