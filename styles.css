@@ -669,9 +669,6 @@ h2[data-v-8021e7da] {
 }
 
 /* src/NodeFlow/style/vue_custom.css */
-#app {
-  font-family: "JetBrains Mono", monospace;
-}
 .common-id {
   position: absolute;
   height: 0;
