@@ -328,7 +328,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
         last_item.self += "\n"+result_exp[3] // TODO 暂不支持带空格前缀的换行空格
         if (!last_item.self_data.hasOwnProperty("value")) { console.warn("追加换行内容失败: 追加节点无vlaue属性"); continue; }
         // @ts-ignore ...上不存在属性“value”
-        last_item.self_data.value += "\n"+result_exp[3]
+        last_item.self_data.value += (last_item.self_data.value==""?"":"\n")+result_exp[3]
         continue
       }
 
