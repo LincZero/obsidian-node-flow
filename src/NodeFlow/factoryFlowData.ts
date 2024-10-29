@@ -230,6 +230,8 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
   }
 }
 
+
+
 /**
  * 将md list文本转化为对应json
  * 
@@ -247,32 +249,49 @@ function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, da
  *   通常简化为 `result_` 前缀
  */
 function factoryFlowData_list(md:string): {code: number, msg: string, data: object} {
-  // step1. 先转 self-children json
-  // 其中self-children是基本的所有数据集，是通用的结构。而self_data数据是重复冗余、用来缓存的工具，是非通用的结构
+  // step1. 先转 self-children-object,
+  /**
+   * self-children-object
+   * 
+   * 特点: 该结构不应依赖于底层(即不依赖于vueflow)! 好处：存在更换底层库的变化、以及复用该描述语法
+   * 
+   * 字段内容
+   * - 其中 self、children 特征：通用结构、有效信息量、嵌套结构
+   * - 其中 self_data 特征：冗余的 (去除不减少信息量的)、可用于缓存、便于下一步进行嵌套转扁平化的
+   */
   type type_selfChildren = {
+    self_data:
+      // type: string,                            // 类型："n"|"node"|"i"|"input"|"o"|"output"|"v"|"value"|"g"|"group"|"e"|"edge" TODO v和i/o类型应该可以共存
+      {                                           // node
+        type: "n"|"node"|"g"|"group",
+        id: string,                               // 节点id (会显示)
+        name: string,                             // 节点名 (会显示)
+        parentId: string,                         // 父节点id，根节点没有，为 ""
+        children: {                               // 缓存节点内部数据，并根据类型区分好
+          inputs: {id:string, name:string, value:string}[],
+          outputs: {id:string, name:string, value:string}[],
+          values: {id:string, name:string, value:string}[],
+        }
+      }|{                                         // socket，在nodes-edges-array中将会被废弃掉
+        type: "i"|"input"|"o"|"output"|"v"|"value",
+        id: string,                               // socketId
+        name: string,                             // socket名 (会显示)
+        parentId: string,                         // 父节点id，根节点没有，为 ""
+        value: string,                            // value类型的socket使用 (会显示，可多行)
+      }|{                                         // edge
+        type: "e"|"edge",
+        id: string,                               // 线Id, 暂时没啥用, 会自动填充的
+        name: string,                             // 线名, 暂时没啥用，可能后续可以填label
+        parentId: "",                             // 父节点id，暂时没啥用，暂时不存在局部声明线的情况
+        from_node?: string,
+        from_socket?: string,
+        to_node?: string,
+        to_socket?: string,
+      }
     self: string,
-    self_data: {
-      // 仅node+socket用，edge不使用这些属性
-      id: string,           // 节点id
-      parentId: string,     // 父节点id，根节点没有，为 ""
-      name: string,         // 节点名/socket名
-      type: string,         // 类型："n"|"node"|"i"|"input"|"o"|"output"|"v"|"value"|"g"|"group"|"e"|"edge",
-
-      // 仅socket用
-      value?: string,       // value类型的socket使用
-      // 仅noode用，socket与edge不使用这些属性
-      inputs?: object[],    // 节点内的
-      outputs?: object[],
-      values?: object[],
-
-      // 仅edge用，node与socket不使用这些属性
-      from_node?: string,
-      from_socket?: string,
-      to_node?: string,
-      to_socket?: string,
-    }
     children: type_selfChildren[],
   }
+  let edge_id = 0;
   let result_items:type_selfChildren[] = []       // 最终构建成果
   try {
     let map_indent: number[] = []                 // 缓存当前每个缩进等级对应的空格数 (注意一致性v) (其中下标0对应level0对应0缩进/0空格)
@@ -284,86 +303,141 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
     let current_level:number                      // 当前级别。level表示位于第几层中嵌套中 (最外层是0)
     let current_item:type_selfChildren            // 当前项
     for (current_line of md.split("\n")) {
-      // 仅追加
       const result_exp = current_line.match(/(^\s*)(- )?(.*)/);
       if (!result_exp) continue
+
+      // 仅追加
+      // 有两种做法。一是先将换行转项，再解析一个项。二是不是先解析项，发现非项再追加到项。前者简单些，但读项次数会x2，这个环节性能低一倍
       if (!result_exp[2]) {
-        if (map_indent.length>0) map_item[map_item.length-1].self += result_exp[3] // TODO 暂不支持换行+空格
+        if (map_indent.length==0) { console.warn("追加换行内容失败: 首行非列表"); continue; }
+        map_item[map_item.length-1].self += "\n"+result_exp[3] // TODO 暂不支持带空格前缀的换行空格
+        if (!map_item[map_item.length-1].self_data.hasOwnProperty("value")) { console.warn("追加换行内容失败: 父节点无vlaue属性"); continue; }
+        // @ts-ignore ...上不存在属性“value”
+        map_item[map_item.length-1].self_data.value += "\n"+result_exp[3]
         continue
       }
 
-      // change: current_indent
+      // change1: current_indent，缩进数
       current_indent = result_exp[1].length
 
-      // change: current_level & map_indent (小心一致性v)
-      current_level = -1
-      for (let i=0; i<map_indent.length; i++) {
-        if (map_indent[i] >= current_indent) { // eg. [0, 2, 4] & indent 1/2 -> [0, 2] & level 1
-          map_indent = map_indent.slice(0, i+1)
-          current_level = i
-          break;
+      // change2: current_level & map_indent，缩进等级 (小心一致性v)
+      {
+        current_level = -1
+        for (let i=0; i<map_indent.length; i++) {
+          if (map_indent[i] >= current_indent) { // eg. [0, 2, 4] & indent 1/2 -> [0, 2] & level 1
+            map_indent = map_indent.slice(0, i+1)
+            current_level = i
+            break;
+          }
+        }
+        if (current_level == -1) { // eg. [0, 2, 4] & indent 6 -> [0, 2, 4, 6] & level 3
+          map_indent.push(current_indent)
+          current_level = map_indent.length-1
         }
       }
-      if (current_level == -1) { // eg. [0, 2, 4] & indent 6 -> [0, 2, 4, 6] & level 3
-        map_indent.push(current_indent)
-        current_level = map_indent.length-1
-      }
 
-      // change: current_item & map_item
-      // 解析 k(:v)? 串
-      // TODO 暂不支持内容有逗号和冒号
-      let ll_content:string[][] = []
-      ;{
+      // change3: current_item & map_item，当前内容
+      {
+        /**
+         * 先解析
+         * 
+         * 解析规则
+         *   解析 `k(:v)?` 串，可以构成一个二维数组。相较于一维数组，可以对语法进行精简
+         *   单行value不支持内容有逗号和冒号，多行才支持
+         * self格式
+         *   节点 `id(:name)?`
+         *   接口 `id(:name)?, (i|o|v?)(|type?), (value)?`
+         *   线条 `from, from socket, to, to socket, name?`
+         */
+        let ll_content:string[][] = []
         const content = result_exp[3]
         const l_content = content.split(",")
         for (let item of l_content) {
           ll_content.push(item.trim().split(":"))
         }
+        // 线
+        if (ll_content[3]) {
+          current_item = {
+            self: result_exp[3],
+            children: [],
+            self_data: {
+              type: "edge",
+              id: ""+edge_id++,
+              parentId: "",
+              from_node: ll_content[0][0],
+              from_socket: ll_content[1][0],
+              to_node: ll_content[2][0],
+              to_socket: ll_content[3][0],
+              name: ll_content[4]?ll_content[4][0]:"", // TODO 思考后续要不要为了语法统一性放最前面
+            }
+          }
+        }
+        // socket
+        else if (ll_content[1]) {
+          current_item = {
+            self: result_exp[3],
+            children: [],
+            self_data: {
+              // @ts-ignore type类型不对
+              type: (ll_content[1]&&["i","input","o","output","v","value"].includes(ll_content[1][0]))?ll_content[1][0]:"value",
+              id: ll_content[0][0],
+              name: ll_content[0][1]??ll_content[0][0],
+              parentId: "",
+              value: ll_content[2]?ll_content[2][0]:"",
+            }
+          }
+        }
+        // node
+        else {
+          current_item = {
+            self: result_exp[3],
+            children: [],
+            self_data: {
+              type: "node",
+              id: ll_content[0][0],
+              name: ll_content[0][1]??ll_content[0][0],
+              parentId: "",
+              children: {
+                inputs: [],
+                outputs: [],
+                values: [],
+              }
+            }
+          }
+        }
+        map_item = map_item.slice(0, map_indent.length)
+        map_item[current_level] = current_item
       }
-      current_item = {
-        self: result_exp[3],
-        children: [],
-        self_data: {
-          // 节点用
-          id: ll_content[0][0],
-          parentId: "",
-          name: ll_content[0][1]??ll_content[0][0],
-          type: ll_content[3]?"edge":(!ll_content[1]||!ll_content[1][0])?"node":ll_content[1][1]?ll_content[1][1]:ll_content[1][0],
 
-          ...(!ll_content[1])?{}:(!ll_content[1][1])?{value: ""}:{value: ll_content[1][0]},
-          inputs: [],
-          outputs: [],
-          values: [],
-          
-          // 线用
-          ...(!ll_content[3])?{}:{from_node: ll_content[0][0], from_socket: ll_content[1][0], to_node: ll_content[2][0], to_socket: ll_content[3][0]}
+      // change4: result_items
+      {
+        // 根项
+        if (current_level == 0) {
+          result_items.push(current_item)
+          current_item.self_data.parentId = ""
         }
-      }
-      map_item = map_item.slice(0, map_indent.length)
-      map_item[current_level] = current_item
-
-      // change: result_items
-      if (current_level == 0) {
-        result_items.push(current_item)
-      } else {
-        map_item[current_level-1].children.push(current_item)
-        // 更新与父亲有关数据
-        const parent = map_item[current_level-1].self_data
-        current_item.self_data.parentId = parent.id
-        if (current_item.self_data.type == "input" || current_item.self_data.type == "i") { 
-          parent.type = "node"
-          parent.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
-        }
-        else if (current_item.self_data.type == "output" || current_item.self_data.type == "o") {
-          parent.type = "node"
-          parent.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
-        }
-        else if (current_item.self_data.type == "value" || current_item.self_data.type == "v") {
-          parent.type = "node"
-          parent.values.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
-        }
-        else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
-          parent.type = "group"
+        // 非根项，更新与父亲有关数据
+        else {
+          const parent = map_item[current_level-1]
+          // 无法使用 (!["n", "node", "g", "group"].includes(parent.self_data.type)) 简化……否则飘红，代码编辑器没那么智能……
+          if (parent.self_data.type!= "n" && parent.self_data.type!= "node" && parent.self_data.type!= "g" && parent.self_data.type!= "group") continue
+          parent.children.push(current_item)
+          current_item.self_data.parentId = parent.self_data.id
+          if (current_item.self_data.type == "input" || current_item.self_data.type == "i") { 
+            parent.self_data.type = "node"
+            parent.self_data.children.inputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
+          }
+          else if (current_item.self_data.type == "output" || current_item.self_data.type == "o") {
+            parent.self_data.type = "node"
+            parent.self_data.children.outputs.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
+          }
+          else if (current_item.self_data.type == "value" || current_item.self_data.type == "v") {
+            parent.self_data.type = "node"
+            parent.self_data.children.values.push({id: current_item.self_data.id, name: current_item.self_data.name, value: current_item.self_data.value})
+          }
+          else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
+            parent.self_data.type = "group"
+          }
         }
       }
     }
@@ -371,55 +445,63 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
     return {code: -1, msg: "error: list parse fail: "+error, data: {}}
   }
 
-  // step2. self&children json 再转 nodes&edges array
+  console.log("result_items", result_items)
+
+  // step2. self-children-object 再转 nodes-edges-array
   // TODO 先假设不支持节点组，先假设不支持隐藏nodes和edges根节点
   {
     if (result_items.length != 2) return {code: -1, msg: "error: without rootNode: edges and edges", data: {}}
 
     // 遍历 - 节点
     let nodes_new:object[] = []
-    recursion_node(result_items[0].children)
-    function recursion_node(items: type_selfChildren[]) {
-      for (let item of items) {
-        if (item.self_data.type != "node" && item.self_data.type != "group") continue // socket不处理
-        nodes_new.push({
-          id: item.self_data.id,
-          data: {
-            type: item.self_data.type,
-            label: item.self_data.name,
-            inputs: item.self_data.inputs,
-            outputs: item.self_data.outputs,
-            values: item.self_data.values,
-          },
-          position: { x: 0, y: 0 },
-          ...(item.self_data.parentId==""||item.self_data.parentId=="nodes")?{}:{parentNode: item.self_data.parentId},
-          type: "common",
-        })
-        recursion_node(item.children)
+    {
+      recursion_node(result_items[0].children)
+      function recursion_node(items: type_selfChildren[]) {
+        for (let item of items) {
+          if (item.self_data.type != "n" && item.self_data.type != "node" && item.self_data.type != "g" && item.self_data.type != "group") continue
+          nodes_new.push({
+            id: item.self_data.id,
+            data: {
+              type: item.self_data.type,
+              label: item.self_data.name,
+              inputs: item.self_data.children.inputs,
+              outputs: item.self_data.children.outputs,
+              values: item.self_data.children.values,
+            },
+            position: { x: 0, y: 0 },
+            ...(item.self_data.parentId==""||item.self_data.parentId=="nodes")?{}:{parentNode: item.self_data.parentId},
+            type: "common",
+          })
+          recursion_node(item.children)
+        }
       }
     }
 
     // 遍历 - 线
     let edges_new:object[] = []
-    let edge_id = 0
-    const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
-    recursion_edge(result_items[1].children)
-    function recursion_edge(items: type_selfChildren[]) {
-      for (let item of items) {
-        const nameMapAttr = item.self_data.from_node.toLowerCase().charCodeAt(0)%10;
-        edges_new.push({
-          id: edge_id++,
-          style: { // 这里实际用的id而不是name做映射，可能存在问题
-            stroke: colors[nameMapAttr]
-          },
-          source: item.self_data.from_node,
-          sourceHandle: item.self_data.from_socket,
-          target: item.self_data.to_node,
-          targetHandle: item.self_data.to_socket,
-        })
-        recursion_edge(item.children)
+    {
+      const colors = ["white", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "gold", "silver"]
+      recursion_edge(result_items[1].children)
+      function recursion_edge(items: type_selfChildren[]) {
+        for (let item of items) {
+          if (item.self_data.type != "e" && item.self_data.type != "edge") continue
+          const nameMapAttr = item.self_data.from_node.toLowerCase().charCodeAt(0)%10;
+          edges_new.push({
+            id: item.self_data.id,
+            style: { // 这里实际用的id而不是name做映射，可能存在问题
+              stroke: colors[nameMapAttr]
+            },
+            source: item.self_data.from_node,
+            sourceHandle: item.self_data.from_socket,
+            target: item.self_data.to_node,
+            targetHandle: item.self_data.to_socket,
+          })
+          recursion_edge(item.children)
+        }
       }
     }
+
+    console.log("nodes_new", nodes_new)
 
     // 处理完成
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
