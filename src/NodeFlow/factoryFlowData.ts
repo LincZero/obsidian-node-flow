@@ -292,9 +292,10 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
     self_data: {                                  // edge
       type: "e"|"edge",
       id: string,                                 // 线Id, 暂时没啥用, 会自动填充的
-      name: string,                               // 线名, 暂时没啥用，可能后续可以填label
+      name: string,                               // 线名, 暂时没啥用，可能后续用来填label (不过应该用value来填会好一些吧)
       parentId: "",                               // 父节点id，暂时没啥用，暂时不存在局部声明线的情况
       parent: type_selfChildren|null,
+      // value: string,                           // 线值，暂时没嗄用，可能后续可以填label
       from_node: string,
       from_socket: string,
       to_node: string,
@@ -501,7 +502,7 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       function recursion_edge(items: type_selfChildren[]) {
         for (let item of items) {
           if (item.self_data.type != "e" && item.self_data.type != "edge") continue
-          const nameMapAttr = item.self_data.from_node.toLowerCase().charCodeAt(0)%10;
+          const nameMapAttr = item.self_data.from_socket.toLowerCase().charCodeAt(0)%10;
           edges_new.push({
             id: item.self_data.id,
             style: { // 这里实际用的id而不是name做映射，可能存在问题

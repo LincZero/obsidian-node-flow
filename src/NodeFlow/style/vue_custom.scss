@@ -220,7 +220,7 @@
     &[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
     &[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
 
-    // 着色 (按首字母映射)
+    // Handle着色 (按首字母映射)
     background-color: #a598dd;
     &[nameMapAttr="0"] { background-color: white; }
     &[nameMapAttr="1"] { background-color: red; }
