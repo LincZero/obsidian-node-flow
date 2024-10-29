@@ -6,16 +6,16 @@ import { setting } from "./NodeFlow/setting";
 import { NodeFlowViewFlag, NodeFlowView, fn_newView } from './NodeFlowView'
 import { NodeFlowFileViewFlag, NodeFlowFileView } from './NodeFlowFileView'
 
-interface MyPluginSettings {
+interface NodeFlowPluginSettings {
   mySetting: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: NodeFlowPluginSettings = {
   mySetting: 'default'
 }
 
-export default class MyPlugin extends Plugin {
-  settings: MyPluginSettings;
+export default class NodeFlowPlugin extends Plugin {
+  settings: NodeFlowPluginSettings;
 
   async onload() {
     await this.loadSettings();
@@ -69,14 +69,14 @@ export default class MyPlugin extends Plugin {
           //   .markdown-source-view (-)
           //   .markdown-reading-view (-)
           //   .markdown-excalidraw-wrapper (+)
-          div_child = div_view.querySelector(":scope>.markdown-source-view"); if (div_child) div_child.style.display = "none";
-          div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.style.display = "none";
+          div_child = div_view.querySelector(":scope>.markdown-source-view"); if (div_child) div_child.classList.add("nf-style-display-none");
+          div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.classList.add("nf-style-display-none");
           div_child = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) }                  // 删除nf视图
-          div_child = div_view.createEl("div"); div_child.classList.add("nf-autoDie"); div_child.setAttribute("style", "height: 100%"); // 创建nf视图
+          div_child = div_view.createEl("div"); div_child.classList.add("nf-autoDie");                                                  // 创建nf视图
           factoryVueDom(jsonType, div_child, value, false)                                                                              //     并挂载 (需要挂载到一个会死亡的div)
         } else {
-          div_child = div_view.querySelector(":scope>.markdown-source-view"); if (div_child) div_child.style.display = "flex";
-          div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.style.display = "flex";
+          div_child = div_view.querySelector(":scope>.markdown-source-view"); if (div_child) div_child.classList.remove("nf-style-display-none");
+          div_child = div_view.querySelector(":scope>.markdown-reading-view"); if (div_child) div_child.classList.remove("nf-style-display-none");
           div_child = div_view.querySelector(":scope>.nf-autoDie"); if (div_child) { div_view.removeChild(div_child) }                  // 删除nf视图
         }
       })

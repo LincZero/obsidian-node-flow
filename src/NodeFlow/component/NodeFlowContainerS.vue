@@ -53,12 +53,12 @@ function fn_switchAllowScroll() {
   const exDiv2: HTMLElement|null = document.querySelector('.markdown-source-view .cm-scroller') // obsidian使用
   if (isAllowScroll.value) {
     isAllowScroll.value = false
-    if (exDiv1) exDiv1.style.overflow = 'hidden';
-    if (exDiv2) exDiv2.style.overflow = 'hidden'
+    if (exDiv1) exDiv1.classList.add("nf-style-overflow-hidden")
+    if (exDiv2) exDiv2.classList.add("nf-style-overflow-hidden")
   } else {
     isAllowScroll.value = true
-    if (exDiv1) exDiv1.style.overflow = '';
-    if (exDiv2) exDiv2.style.overflow = ''
+    if (exDiv1) exDiv1.classList.remove("nf-style-overflow-hidden")
+    if (exDiv2) exDiv2.classList.remove("nf-style-overflow-hidden")
   }
 }
 

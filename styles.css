@@ -898,5 +898,14 @@ h2[data-v-8021e7da] {
   background: none;
   border: none;
 }
+.nf-style-overflow-hidden {
+  overflow: hidden !important;
+}
+.nf-style-display-none {
+  display: none !important;
+}
 
 /* src/main.css */
+.nf-autoDie {
+  height: 100%;
+}

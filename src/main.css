@@ -8,3 +8,7 @@
 
 @import "../main.css";                      /* Vue文件中的style会自动转化为该文件，在Vue构建时自动生成 */
 @import "./NodeFlow/style/vue_custom.css";  /* NodeFlow组件的样式 */
+
+.nf-autoDie {
+  height: 100%;
+}
