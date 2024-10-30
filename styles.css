@@ -872,7 +872,7 @@ h2[data-v-8021e7da] {
   top: calc(30px + 19.5 * 24px);
 }
 .vue-flow__handle.custom[nameMapAttr="0"] {
-  background-color: red;
+  background-color: #ff0000;
 }
 .vue-flow__handle.custom[nameMapAttr="1"] {
   background-color: #ff4d00;
@@ -902,7 +902,7 @@ h2[data-v-8021e7da] {
   background-color: #00ffb3;
 }
 .vue-flow__handle.custom[nameMapAttr="10"] {
-  background-color: cyan;
+  background-color: #00ffff;
 }
 .vue-flow__handle.custom[nameMapAttr="11"] {
   background-color: #00b3ff;
@@ -929,7 +929,7 @@ h2[data-v-8021e7da] {
   background-color: #ff0099;
 }
 .vue-flow__handle.custom[nameMapAttr="19"] {
-  background-color: #ff004d;
+  background-color: #ff004c;
 }
 .vue-flow__handle.default {
   background: none;
@@ -940,6 +940,9 @@ h2[data-v-8021e7da] {
 }
 .nf-style-display-none {
   display: none !important;
+}
+.theme-hope-content > div:first-child > .normal-size:first-child > .nf-shell-mini {
+  height: 900px;
 }
 
 /* src/main.css */

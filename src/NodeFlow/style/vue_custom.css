@@ -320,7 +320,7 @@
 }
 
 .vue-flow__handle.custom[nameMapAttr="0"] {
-  background-color: red;
+  background-color: #ff0000;
 }
 
 .vue-flow__handle.custom[nameMapAttr="1"] {
@@ -360,7 +360,7 @@
 }
 
 .vue-flow__handle.custom[nameMapAttr="10"] {
-  background-color: cyan;
+  background-color: #00ffff;
 }
 
 .vue-flow__handle.custom[nameMapAttr="11"] {
@@ -396,7 +396,7 @@
 }
 
 .vue-flow__handle.custom[nameMapAttr="19"] {
-  background-color: #ff004d;
+  background-color: #ff004c;
 }
 
 .vue-flow__handle.default {
@@ -411,4 +411,8 @@
 
 .nf-style-display-none {
   display: none !important;
+}
+
+.theme-hope-content > div:first-child > .normal-size:first-child > .nf-shell-mini {
+  height: 900px;
 }

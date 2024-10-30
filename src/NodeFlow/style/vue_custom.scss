@@ -257,26 +257,26 @@
      * purple/pink  12
      */
     background-color: #a598dd;
-    &[nameMapAttr="0"]  { background-color: hsl(0, 100, 50); }
-    &[nameMapAttr="1"]  { background-color: hsl(18, 100, 50); }
-    &[nameMapAttr="2"]  { background-color: hsl(36, 100, 50); }
-    &[nameMapAttr="3"]  { background-color: hsl(54, 100, 50); }
-    &[nameMapAttr="4"]  { background-color: hsl(72, 100, 50); }
-    &[nameMapAttr="5"]  { background-color: hsl(90, 100, 50); }
-    &[nameMapAttr="6"]  { background-color: hsl(108, 100, 50); }
-    &[nameMapAttr="7"]  { background-color: hsl(126, 100, 50); }
-    &[nameMapAttr="8"]  { background-color: hsl(144, 100, 50); }
-    &[nameMapAttr="9"]  { background-color: hsl(162, 100, 50); }
-    &[nameMapAttr="10"] { background-color: hsl(180, 100, 50); }
-    &[nameMapAttr="11"] { background-color: hsl(198, 100, 50); }
-    &[nameMapAttr="12"] { background-color: hsl(216, 100, 50); }
-    &[nameMapAttr="13"] { background-color: hsl(234, 100, 50); }
-    &[nameMapAttr="14"] { background-color: hsl(252, 100, 50); }
-    &[nameMapAttr="15"] { background-color: hsl(270, 100, 50); }
-    &[nameMapAttr="16"] { background-color: hsl(288, 100, 50); }
-    &[nameMapAttr="17"] { background-color: hsl(306, 100, 50); }
-    &[nameMapAttr="18"] { background-color: hsl(324, 100, 50); }
-    &[nameMapAttr="19"] { background-color: hsl(342, 100, 50); }
+    &[nameMapAttr="0"]  { background-color: #ff0000; }
+    &[nameMapAttr="1"]  { background-color: #ff4d00; }
+    &[nameMapAttr="2"]  { background-color: #ff9900; }
+    &[nameMapAttr="3"]  { background-color: #ffe600; }
+    &[nameMapAttr="4"]  { background-color: #ccff00; }
+    &[nameMapAttr="5"]  { background-color: #80ff00; }
+    &[nameMapAttr="6"]  { background-color: #33ff00; }
+    &[nameMapAttr="7"]  { background-color: #00ff1a; }
+    &[nameMapAttr="8"]  { background-color: #00ff66; }
+    &[nameMapAttr="9"]  { background-color: #00ffb3; }
+    &[nameMapAttr="10"] { background-color: #00ffff; }
+    &[nameMapAttr="11"] { background-color: #00b3ff; }
+    &[nameMapAttr="12"] { background-color: #0066ff; }
+    &[nameMapAttr="13"] { background-color: #001aff; }
+    &[nameMapAttr="14"] { background-color: #3300ff; }
+    &[nameMapAttr="15"] { background-color: #8000ff; }
+    &[nameMapAttr="16"] { background-color: #cc00ff; }
+    &[nameMapAttr="17"] { background-color: #ff00e6; }
+    &[nameMapAttr="18"] { background-color: #ff0099; }
+    &[nameMapAttr="19"] { background-color: #ff004c; }
   }
 
   &.default {
@@ -286,5 +286,13 @@
   }
 }
 
+// 用于 `exLock` 按钮锁定外部滚动
 .nf-style-overflow-hidden { overflow: hidden !important; }
+
+// 用于处理 `.json` 独立文件 (仅obsidian使用)
 .nf-style-display-none { display: none !important; }
+
+// 用于独立显示模式 (期望匹配 `.json` 独立文件) (仅vuepress使用)
+.theme-hope-content>div:first-child>.normal-size:first-child>.nf-shell-mini {
+  height: 900px;
+}
