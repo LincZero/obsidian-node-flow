@@ -53,40 +53,41 @@ Example - List Grammer (举例 - 列表语法)：
 ````md
 ```nodeflow-list
 - nodes
-  - node1: KSample
+  - node1:KSample
     - Latent, o
     - model, i
     - positive, i
     - negative, i
     - Latent, i
-    - seed, v
-    - control_after_generate, randomize:v
-    - steps , 20:v
-    - CFG, 8.0:v
-    - sampler_name, euler:v
-    - scheduler, normal:v
-    - denoise, 1.00:v
-    - io defaultTest, test:i
-    - io defaultTest, test:o
-    - t1:noValueTest, v
-    - t2: , noKeyTest:v
-  - node2: KSample
-    - 潜空间, 0
+    - seed,
+    - control_after_generate,, randomize
+    - steps,, 20
+    - CFG,, 8.0
+    - sampler_name,, euler
+    - scheduler,, normal
+    - denoise,, 1.00
+    - io defaultTest, i , test
+    - io defaultTest, o, test
+    - t1:noValueTest,
+    - t2:,, noKeyTest
+      mul lines test
+  - node2:KSample
+    - 潜空间, o
     - 模型, i
     - 正面条件, i
     - 负面条件, i
     - 潜空间, i
-    - 种子, v
-    - 运行后操作, v
-    - 步数, v
-    - CFG, v
-    - 采样器/采样方法, v
-    - 调度器, v
-    - 降噪, v
+    - 种子,
+    - 运行后操作,
+    - 步数,
+    - CFG,
+    - 采样器/采样方法,
+    - 调度器,
+    - 降噪,
   - translate
 - edges
   - node1,Latent, translate,l
-  - translate,r, node2,模型
+  - translate,r, node2, 潜空间
 ```
 ````
 
