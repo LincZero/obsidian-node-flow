@@ -5,6 +5,7 @@ on:                           # 触发器，定义何时运行此工作流
     branches: [main]          # 默认分支名
   pull_request:
     branches: [main]
+  workflow_despatch:
 
 jobs:                         # 工作流
   build:                      # 作业名
