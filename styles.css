@@ -248,9 +248,11 @@ h2[data-v-8021e7da] {
 .comfyui-node[aria-label^=Group] .comfyui-node-content[data-v-95296bb4] {
   background-color: #2e465640;
 }
+.vue-flow__node-comfyui-group {
+  background-color: #3f789e44;
+}
 .comfyui-group[data-v-e30ebec0] {
   z-index: -2;
-  background-color: #3f789e44;
 }
 .comfyui-node[data-v-e30ebec0] {
   height: 100%;
