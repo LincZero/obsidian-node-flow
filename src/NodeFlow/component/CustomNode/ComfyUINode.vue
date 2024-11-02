@@ -206,41 +206,6 @@ hasCustomHandle.value = props.data?.inputs?.length!=0 || props.data?.outputs?.le
   text-align: right;
 }
 
-.vue-flow__handle.custom {
-  background-color: #a598dd;
-  border: none;
-  box-sizing: border-box;
-  width: 10px;
-  height: 10px;
-}
-.vue-flow__handle.custom.target {
-  left: 12px;
-}
-.vue-flow__handle.custom.source {
-  right: 12px;
-  border: solid 2px #211820;
-}
-.vue-flow__handle.custom[indexAttr="0"] { top:calc(30px + 0.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="1"] { top:calc(30px + 1.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="2"] { top:calc(30px + 2.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="3"] { top:calc(30px + 3.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="4"] { top:calc(30px + 4.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="5"] { top:calc(30px + 5.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="6"] { top:calc(30px + 6.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="7"] { top:calc(30px + 7.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="8"] { top:calc(30px + 8.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="9"] { top:calc(30px + 9.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="10"] { top:calc(30px + 10.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="11"] { top:calc(30px + 11.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="12"] { top:calc(30px + 12.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="13"] { top:calc(30px + 13.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="14"] { top:calc(30px + 14.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="15"] { top:calc(30px + 15.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="16"] { top:calc(30px + 16.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="17"] { top:calc(30px + 17.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
-.vue-flow__handle.custom[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
-
 .comfyui-node[aria-label="Note"] .comfyui-node-title { background-color: #443322; }
 .comfyui-node[aria-label="Note"] .comfyui-node-content { background-color: #665533; }
 .comfyui-node[aria-label*="Sampler"] .comfyui-node-title { background-color: #223333; }
