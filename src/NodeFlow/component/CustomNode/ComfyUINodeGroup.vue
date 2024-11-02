@@ -27,6 +27,7 @@ const props = defineProps({
 <style scoped>
 .comfyui-group {
   z-index: -2;
+  background-color: rgba(63, 120, 158, 0.267); /** 默认，如果json文件有指定颜色，会被覆盖 */
 }
 
 /* 下面的同ComfyUINode的样式 */

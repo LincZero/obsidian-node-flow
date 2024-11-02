@@ -248,6 +248,7 @@ h2[data-v-8021e7da] {
 }
 .comfyui-group[data-v-e30ebec0] {
   z-index: -2;
+  background-color: #3f789e44;
 }
 .comfyui-node[data-v-e30ebec0] {
   height: 100%;
