@@ -180,7 +180,7 @@ hasCustomHandle.value = props.data?.inputs?.length!=0 || props.data?.outputs?.le
   height: auto;
   margin-bottom: 4px;
 
-  padding: 1px 28px;
+  padding: 1px 12px;
   border: solid 1px #616161;
   background-color: #222222;
   border-radius: 13px;
@@ -190,6 +190,9 @@ hasCustomHandle.value = props.data?.inputs?.length!=0 || props.data?.outputs?.le
   min-height: 20px;
   height: auto;
   font-size: 12px;
+
+  white-space: break-spaces;
+  overflow-wrap: break-word;
 }
 
 .comfyui-node .comfyui-node-content .comfyui-node-handle-name {
