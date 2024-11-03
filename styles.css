@@ -689,16 +689,16 @@ h2[data-v-8021e7da] {
   padding-left: 4px;
 }
 .common-node[aria-label=Note] .node-title {
-  background-color: #443322;
+  background-color: rgba(68, 51, 34, 0.9375);
 }
 .common-node[aria-label=Note] .node-content {
-  background-color: #665533;
+  background-color: rgba(102, 85, 51, 0.9375);
 }
 .common-node[aria-label*=Sampler] .node-title {
-  background-color: #223333;
+  background-color: rgba(34, 51, 51, 0.9375);
 }
 .common-node[aria-label*=Sampler] .node-content {
-  background-color: #335555;
+  background-color: rgba(51, 85, 85, 0.9375);
 }
 .common-node[aria-label^=Group] {
   min-width: 200px;

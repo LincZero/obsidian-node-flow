@@ -171,10 +171,10 @@
     // }
   }
   
-  &[aria-label="Note"] .node-title { background-color: #443322; }
-  &[aria-label="Note"] .node-content { background-color: #665533; }
-  &[aria-label*="Sampler"] .node-title { background-color: #223333; }
-  &[aria-label*="Sampler"] .node-content { background-color: #335555; }
+  &[aria-label="Note"] .node-title { background-color: rgba($color: #443322, $alpha: 0.9375); }
+  &[aria-label="Note"] .node-content { background-color: rgba($color: #665533, $alpha: 0.9375); }
+  &[aria-label*="Sampler"] .node-title { background-color: rgba($color: #223333, $alpha: 0.9375); }
+  &[aria-label*="Sampler"] .node-content { background-color: rgba($color: #335555, $alpha: 0.9375); }
   &[aria-label^="Group"] {
     min-width: 200px;
     height: 200px;
