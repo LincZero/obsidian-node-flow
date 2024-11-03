@@ -212,6 +212,10 @@
   background-color: rgba(46, 70, 86, 0.25);
 }
 
+.vue-flow__node-comfyui-group.selected .comfyui-group {
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+
 .vue-flow__node-comfyui.selected .comfyui-node {
   box-shadow: 0 0 8px 3px #ec4899;
 }
