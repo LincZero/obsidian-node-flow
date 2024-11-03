@@ -192,17 +192,4 @@ hasCustomHandle.value = props.data?.inputs?.length!=0 || props.data?.outputs?.le
 .comfyui-node .comfyui-node-content .comfyui-node-handle-name>.right {
   text-align: right;
 }
-
-.comfyui-node[aria-label="Note"] .comfyui-node-title { background-color: #443322; }
-.comfyui-node[aria-label="Note"] .comfyui-node-content { background-color: #665533; }
-.comfyui-node[aria-label*="Sampler"] .comfyui-node-title { background-color: #223333; }
-.comfyui-node[aria-label*="Sampler"] .comfyui-node-content { background-color: #335555; }
-.comfyui-node[aria-label^="Group"] {
-  min-width: 200px;
-  height: 200px;
-  z-index: -1,
-}
-.comfyui-node[aria-label^="Group"] .comfyui-node-content {
-  background-color: #2e465640;
-}
 </style>

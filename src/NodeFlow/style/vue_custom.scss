@@ -184,6 +184,20 @@
     background-color: rgba($color: #2e4656, $alpha: 0.25);
   }
 }
+.comfyui-node {
+  &[aria-label="Note"] .comfyui-node-title { background-color: rgba($color: #443322, $alpha: 0.9375); }
+  &[aria-label="Note"] .comfyui-node-content { background-color: rgba($color: #665533, $alpha: 0.9375); }
+  &[aria-label*="Sampler"] .comfyui-node-title { background-color: rgba($color: #223333, $alpha: 0.9375); }
+  &[aria-label*="Sampler"] .comfyui-node-content { background-color: rgba($color: #335555, $alpha: 0.9375); }
+  &[aria-label^="Group"] {
+    min-width: 200px;
+    height: 200px;
+    z-index: -1,
+  }
+  &[aria-label^="Group"] .comfyui-node-content {
+    background-color: rgba($color: #2e4656, $alpha: 0.25);
+  }
+}
 .vue-flow__node-comfyui.selected .comfyui-node{
   box-shadow: 0 0 8px 3px #ec4899;
 }

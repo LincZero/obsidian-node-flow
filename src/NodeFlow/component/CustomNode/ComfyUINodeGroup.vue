@@ -50,6 +50,6 @@ const props = defineProps({
 
   border-radius: 8px 8px 0 0;
   color: #999999;
-  background-color: #2e4656;
+  background-color: #00000040;
 }
 </style>
