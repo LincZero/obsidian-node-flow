@@ -95,20 +95,7 @@ const props = defineProps({
   },
 })
 
+// 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
 hasCustomHandle.value = props.data?.inputs?.length!=0 || props.data?.outputs?.length!=0
 </script>
-
-<style>
-.vue-flow__node-common.selected .common-node{
-  box-shadow: 0 0 8px 3px #ec4899;
-}
-
-.vue-flow__edge .vue-flow__edge-path{
-  stroke-width: 2;
-}
-.vue-flow__edge.selected .vue-flow__edge-path{
-  stroke: #ec4899 !important; /* 应该改成流动样式 */
-  stroke-width: 4;
-}
-</style>

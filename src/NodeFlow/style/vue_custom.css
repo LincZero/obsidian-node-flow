@@ -186,6 +186,14 @@
   background-color: rgba(46, 70, 86, 0.25);
 }
 
+.vue-flow__node-comfyui.selected .comfyui-node {
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+
+.vue-flow__node-common.selected .common-node {
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+
 .vue-flow__handle.custom {
   border: none;
   box-sizing: border-box;
@@ -403,6 +411,14 @@
   /* background-color: red !important; */
   background: none;
   border: none;
+}
+
+.vue-flow__edge .vue-flow__edge-path {
+  stroke-width: 2;
+}
+
+.vue-flow__edge.selected .vue-flow__edge-path {
+  stroke-width: 4;
 }
 
 .nf-style-overflow-hidden {

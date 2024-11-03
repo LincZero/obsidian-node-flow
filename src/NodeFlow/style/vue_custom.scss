@@ -37,6 +37,7 @@
  *       div.vue-flow__handle
  *     ...
  */
+
 .common-id {
   position: absolute;
   height: 0;
@@ -55,6 +56,7 @@
     border-radius: 6px;
   }
 }
+// 节点部分
 .common-node {
   height: 100%;
   width: 100%;
@@ -182,7 +184,14 @@
     background-color: rgba($color: #2e4656, $alpha: 0.25);
   }
 }
+.vue-flow__node-comfyui.selected .comfyui-node{
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+.vue-flow__node-common.selected .common-node{
+  box-shadow: 0 0 8px 3px #ec4899;
+}
 
+// 节点socket
 .vue-flow__handle {
   &.custom {
     border: none;
@@ -283,6 +292,17 @@
     /* background-color: red !important; */
     background: none;
     border: none;
+  }
+}
+
+// 线
+.vue-flow__edge {
+  .vue-flow__edge-path{
+    stroke-width: 2;
+  }
+  &.selected .vue-flow__edge-path{
+    // stroke: #ec4899 !important; // js会赋予animated状态，用流动样式区分
+    stroke-width: 4;
   }
 }
 

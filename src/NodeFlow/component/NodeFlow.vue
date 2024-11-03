@@ -5,6 +5,7 @@
     class="nf-node-flow" 
     :nodes="nodes" :edges="edges"
     :prevent-scrolling="true"
+    @edges-change="edgeAnimated"
     @nodes-initialized="isNodeInitialized=true">
     <!-- :pan-on-drag="[0,2]" -->
     <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
@@ -135,6 +136,30 @@ async function ...() {
 //   // @ts-ignore 新接口，但旧接口似乎不支持
 //   MarkdownRenderer.render(app, markdown, el, app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
 // }
+
+/**
+ * 事件 - 线变动
+ * 
+ * 选择的线变为流动样式
+ * 
+ * 注意区分：
+ * - @edges-change      点击触发
+ * - @edge-update       (不确定，一般不触发)
+ * - @edge-mouse-enter  鼠标悬浮触发
+ * - @edge-mouse-leave  鼠标离开悬浮触发
+ * - @edge-mouse-move   鼠标悬浮移动时一直触发
+ * - @edges-change      包括selectionChange、removeChange、addChange
+ */
+import type { EdgeChange, EdgeSelectionChange } from '@vue-flow/core'
+const { findEdge } = useVueFlow()
+function edgeAnimated(changes: EdgeChange[]) {
+  for (const change of changes) {
+    if (change.hasOwnProperty("selected")) { // EdgeSelectionChange 类型
+      const edge = findEdge((change as EdgeSelectionChange).id)
+      edge.animated = (change as EdgeSelectionChange).selected
+    }
+  }
+}
 </script>
 
 <style>
