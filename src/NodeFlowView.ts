@@ -17,7 +17,7 @@ export class NodeFlowView extends ItemView {
     return NodeFlowViewFlag;
   }
   getIcon(): string {
-    return "dice";
+    return "workflow"; // https://lucide.dev/icons/
   }
   async onOpen() {
     const container = this.containerEl.children[1];

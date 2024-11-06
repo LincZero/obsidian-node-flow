@@ -1,4 +1,4 @@
-import { Plugin, TFile } from "obsidian";
+import { MarkdownView, Plugin, TFile } from "obsidian";
 import { MarkdownPostProcessorContext, WorkspaceLeaf } from "obsidian"
 import { factoryVueDom } from './NodeFlow/factoryVueDom'
 import { setting } from "./NodeFlow/setting";
@@ -50,7 +50,7 @@ export default class NodeFlowPlugin extends Plugin {
         // 通用检查
         if (!file) return
         // @ts-ignore
-        const div_leaf: HTMLElement = this.app.workspace.activeLeaf.containerEl
+        const div_leaf: HTMLElement = this.app.workspace.getActiveViewOfType(MarkdownView)
         if (!div_leaf) return
         let div_view: HTMLElement = div_leaf.querySelector(".view-content")
         if (!div_view) return
