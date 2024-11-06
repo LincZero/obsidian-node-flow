@@ -49,8 +49,8 @@ export default class NodeFlowPlugin extends Plugin {
       this.app.workspace.on('file-open', async (file: TFile) => {
         // 通用检查
         if (!file) return
-        // @ts-ignore
-        const div_leaf: HTMLElement = this.app.workspace.getActiveViewOfType(MarkdownView)
+        // @ts-ignore 类型“WorkspaceLeaf”上不存在属性“containerEl”
+        const div_leaf: HTMLElement = this.app.workspace.getLeaf().containerEl
         if (!div_leaf) return
         let div_view: HTMLElement = div_leaf.querySelector(".view-content")
         if (!div_view) return
