@@ -112,12 +112,12 @@ Example - List Grammer (举例 - 列表语法)：
 
 - feat
   - ~~支持socket的name-value显示~~ (241027)
-  - Obsidian版本的全屏优化
+  - ~~Obsidian版本的全屏优化~~
 - enhance
   - [非全屏状态下的中间拖拽优化](https://github.com/bcakmakoglu/vue-flow/issues/1557)
   - [带节点组的情况下进行自动布局](https://github.com/bcakmakoglu/vue-flow/discussions/1658)
   - 代码优化
-    - 整理一下，捋一下各种节点类型，以及对应的data数据，然后把socket与线色的关系再优化一下
+    - ~~整理一下，捋一下各种节点类型，以及对应的data数据，然后把socket与线色的关系再优化一下~~
 - style
   - [scss代码优化问题](ttps://github.com/pipe01/esbuild-plugin-vue3/issues/30)
   - 更好看的工具栏与样式

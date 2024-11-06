@@ -6,12 +6,12 @@ import { setting } from "./NodeFlow/setting";
 import { NodeFlowViewFlag, NodeFlowView, fn_newView } from './NodeFlowView'
 import { NodeFlowFileViewFlag, NodeFlowFileView } from './NodeFlowFileView'
 
+// 设置
 interface NodeFlowPluginSettings {
-  mySetting: string;
+  isDebug: boolean;
 }
-
-const DEFAULT_SETTINGS: NodeFlowPluginSettings = {
-  mySetting: 'default'
+const NODEFLOW_SETTINGS: NodeFlowPluginSettings = {
+  isDebug: false // This command is used to control whether debugging information is printed
 }
 
 export default class NodeFlowPlugin extends Plugin {
@@ -94,10 +94,16 @@ export default class NodeFlowPlugin extends Plugin {
 
   onunload() {}
 
+  // 设置的加载与保存
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-  }
+    const data = await this.loadData() // 如果没有配置文件则为null
+    this.settings = Object.assign({}, NODEFLOW_SETTINGS, data); // 合并默认值和配置文件的值
 
+    // 如果没有配置文件则生成一个默认值的配置文件
+    if (!data) {
+      this.saveData(this.settings);
+    }
+  }
   async saveSettings() {
     await this.saveData(this.settings);
   }
