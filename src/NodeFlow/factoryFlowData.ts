@@ -9,6 +9,7 @@ import {
 import {
   testData2
 } from "./test/testData2"
+import { nfSetting } from "./setting"
 
 /**
  * 解析并转化json，将各种类型的json转化为统一的vueflow形式
@@ -330,10 +331,10 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
       // - 一是先将换行转项，再解析一个项。优点是简单些，但读项次数会x2，后期需要再遍历一遍
       // - 二是不是先解析项，发现非项再追加到项。优点是语法的内联分析完全在第一步
       if (!result_exp[2]) {
-        if (map_indent.length==0) { console.warn("追加换行内容失败: 首行非列表"); continue; }
+        if (map_indent.length==0) { if(nfSetting.isDebug){console.warn("追加换行内容失败: 首行非列表");} continue; }
         const last_item = map_item[map_item.length-1]
         last_item.self += "\n"+result_exp[3] // TODO 暂不支持带空格前缀的换行空格
-        if (!last_item.self_data.hasOwnProperty("value")) { console.warn("追加换行内容失败: 追加节点无vlaue属性"); continue; }
+        if (!last_item.self_data.hasOwnProperty("value")) { if(nfSetting.isDebug){console.warn("追加换行内容失败: 追加节点无vlaue属性");} continue; }
         // @ts-ignore ...上不存在属性“value”
         last_item.self_data.value += (last_item.self_data.value==""?"":"\n")+result_exp[3]
         continue

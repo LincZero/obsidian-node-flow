@@ -96,6 +96,7 @@
 <script setup lang="ts">
 import { Panel, useVueFlow } from '@vue-flow/core'
 import { ref } from 'vue'
+import { nfSetting } from '../../setting'
 
 const {
   nodesDraggable,
@@ -130,12 +131,14 @@ const captureZoomClick = ref(false)
 const captureZoomScroll = ref(false)
 
 onConnect((params) => addEdges(params))
-onNodeDragStart((e) => console.log('drag start', e))
-onNodeDragStop((e) => console.log('drag stop', e))
-onPaneClick((event) => captureZoomClick.value && console.log('pane click', event))
-onPaneScroll((event) => captureZoomScroll.value && console.log('pane scroll', event))
-onPaneContextMenu((event) => captureZoomClick.value && console.log('pane ctx menu', event))
-onMoveEnd((flowTransform) => console.log('move end', flowTransform))
+
+// 都是打印
+onNodeDragStart((e) => nfSetting.isDebug && console.log('drag start', e))
+onNodeDragStop((e) => nfSetting.isDebug && console.log('drag stop', e))
+onPaneClick((event) => nfSetting.isDebug && captureZoomClick.value && console.log('pane click', event))
+onPaneScroll((event) => nfSetting.isDebug && captureZoomScroll.value && console.log('pane scroll', event))
+onPaneContextMenu((event) => nfSetting.isDebug && captureZoomClick.value && console.log('pane ctx menu', event))
+onMoveEnd((flowTransform) => nfSetting.isDebug && console.log('move end', flowTransform))
 </script>
 
 <style scoped>

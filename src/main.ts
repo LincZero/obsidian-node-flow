@@ -1,7 +1,7 @@
 import { MarkdownView, Plugin, TFile } from "obsidian";
 import { MarkdownPostProcessorContext, WorkspaceLeaf } from "obsidian"
 import { factoryVueDom } from './NodeFlow/factoryVueDom'
-import { setting } from "./NodeFlow/setting";
+import { nfSetting } from "./NodeFlow/setting";
 
 import { NodeFlowViewFlag, NodeFlowView, fn_newView } from './NodeFlowView'
 import { NodeFlowFileViewFlag, NodeFlowFileView } from './NodeFlowFileView'
@@ -35,7 +35,7 @@ export default class NodeFlowPlugin extends Plugin {
     }
 
     // 注册 - 视图
-    setting.cahce_workspace = this.app.workspace // 防止在Vue的上下文中，不存在workspace
+    nfSetting.cahce_workspace = this.app.workspace // 防止在Vue的上下文中，不存在workspace
     this.registerView(NodeFlowViewFlag, (leaf) => new NodeFlowView(leaf))
     this.registerView(NodeFlowFileViewFlag, (leaf: WorkspaceLeaf) => new NodeFlowFileView(leaf));
 
@@ -103,6 +103,8 @@ export default class NodeFlowPlugin extends Plugin {
     if (!data) {
       this.saveData(this.settings);
     }
+
+    nfSetting.isDebug = this.settings.isDebug
   }
   async saveSettings() {
     await this.saveData(this.settings);

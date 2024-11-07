@@ -1,4 +1,4 @@
-import { setting } from "./NodeFlow/setting";
+import { nfSetting } from "./NodeFlow/setting";
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 
 export const  NodeFlowViewFlag = "NodeFlowView"
@@ -33,7 +33,7 @@ export class NodeFlowView extends ItemView {
 /// 在Obsidian的新视图中显示节点画布
 export async function fn_newView(): Promise<HTMLElement> {
   // 如果没有该Docker视图则创建一个
-  const cahce_workspace = setting.cahce_workspace
+  const cahce_workspace = nfSetting.cahce_workspace
   if (cahce_workspace.getLeavesOfType(NodeFlowViewFlag).length === 0) {
     await cahce_workspace.getRightLeaf(false).setViewState({
       type: NodeFlowViewFlag,
