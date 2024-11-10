@@ -7,14 +7,14 @@
       <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="_isMini"/>
     </div>
     <div class="nf-toolbar">
-      <button class="nf-btn-fullScreen" @click="fn_fullScreen()">fullScreen</button>
-      <button class="nf-btn-newView" @click="_fn_newView()">newView</button>
-      <button class="nf-btn-autoPos" @click="fn_autoPos('LR')">autoPosLR</button>
-      <button class="nf-btn-autoPos" @click="fn_autoPos('TB')">autoPosTB</button>
+      <button class="nf-btn-fullscreen" @click="fn_fullScreen()">fullScreen</button>
+      <button class="nf-btn-newview" @click="_fn_newView()">newView</button>
+      <button class="nf-btn-autopos" @click="fn_autoPos('LR')">autoPosLR</button>
+      <button class="nf-btn-autopos" @click="fn_autoPos('TB')">autoPosTB</button>
       <button class="nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
-      <button class="nf-btn-printJson" @click="fn_printJson">printJson</button>
+      <button class="nf-btn-printjson" @click="fn_printJson">printJson</button>
       <!-- <button class="nf-btn-copyMd" @click="fn_copyRaw(true)">fn_copyMd</button> -->
-      <button class="nf-btn-copyJson" @click="fn_copyRaw(false)">copyJson</button>
+      <button class="nf-btn-copyjson" @click="fn_copyRaw(false)">copyJson</button>
     </div>
   </div>
 </template>
