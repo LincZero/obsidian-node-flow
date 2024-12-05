@@ -64,7 +64,7 @@ function fn_switchAllowScroll() {
 
 // 按钮 - 全屏
 const CanFullScreen = ref()
-import { switchFullScreen } from "./utils/fullScreen"
+import { switchFullScreen } from "../utils/fullScreen"
 function fn_fullScreen() {
   switchFullScreen(CanFullScreen.value, _isMini)
 }

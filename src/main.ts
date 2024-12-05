@@ -26,7 +26,8 @@ export default class NodeFlowPlugin extends Plugin {
       "nodeflow-vueflow", "nodeflow-vueflow-demo", "nodeflow-vueflow-demo2", "nodeflow-vueflow-demo3",
       "nodeflow-obcanvas", "nodeflow-obcanvas-demo",
       "nodeflow-comfyui", "nodeflow-comfyui-demo", "nodeflow-comfyui-demo2",
-      "nodeflow-list", "nodeflow-list-demo"
+      "nodeflow-list", "nodeflow-list-demo",
+      "nodeflow-item",
     ]
     for (let item of code_type_list) {
       this.registerMarkdownCodeBlockProcessor(item, (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {

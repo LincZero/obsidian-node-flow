@@ -1,6 +1,6 @@
 import { createApp, App as VueApp } from 'vue';
-import VueTest from './component/VueTest.vue';
-import NodeFlowContainerS from './component/NodeFlowContainerS.vue';
+import VueTest from './component/container/VueTest.vue';
+import NodeFlowContainerS from './component/container/NodeFlowContainerS.vue';
 
 import { factoryFlowData } from './factoryFlowData'
 

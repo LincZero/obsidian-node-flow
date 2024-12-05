@@ -64,7 +64,7 @@ const props = defineProps({
 const { updateNodeData, getConnectedEdges } = useVueFlow()
 
 // 选择颜色后，修改线色
-function onSelect(color) {
+function onSelect(color: any) {
   updateNodeData(props.id, { color, isGradient: false })
   const connectedEdges = getConnectedEdges(props.id)
   for (const edge of connectedEdges) {

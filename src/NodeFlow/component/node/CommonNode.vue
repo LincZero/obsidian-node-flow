@@ -1,6 +1,7 @@
 <!-- 通用的节点 -->
 
 <template>
+  <!-- 节点id -->
   <div class="common-id">
     <div>
       #{{ id }}
@@ -11,11 +12,15 @@
       #{{ id }}
     </div>
   </NodeToolbar> -->
+
+  <!-- 节点 -->
   <div class="common-node" :aria-label="data.label">
+    <!-- 节点标题 -->
     <div class="node-title">
       <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
       <span style="display: inline-block; margin-left: 10px;">{{ data.label }}</span>
     </div>
+    <!-- 节点内容 -->
     <div class="node-content">
       <div class="node-content-handle">
         <div class="left">
@@ -47,6 +52,7 @@
         </div>
       </div>
     </div>
+
     <!-- Handle - 根据数据自动生成 -->
     <!-- 注意这里的MapAttr暂时用的id，而comfyui那边用的type -->
     <Handle
