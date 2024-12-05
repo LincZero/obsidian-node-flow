@@ -1,5 +1,4 @@
 import { createApp, App as VueApp } from 'vue';
-import VueTest from './component/container/VueTest.vue';
 import NodeFlowContainerS from './component/container/NodeFlowContainerS.vue';
 
 import { factoryFlowData } from './factoryFlowData'
@@ -19,12 +18,24 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
     let result: {code: number, msg: string, data: object}
     result = factoryFlowData(jsonType, mdStr)
     if (result.code != 0) {
-      const _app = createApp(VueTest, {
-        data: result.msg,
-        isMini: _isMini,
-      });
-      _app.mount(targetEl);
-      return
+      result.data = {
+        "nodes": [
+          {
+            "id": "ERROR",
+            "position": {"x": 0, "y": 0},
+            "type": "common",
+            "data": {
+              "label": "ERROR",
+              "inputs": [],
+              "outputs": [],
+              "values": [
+                { "id": "0", "name": "", "value": result.msg }
+              ],
+            }
+          },
+        ],
+        "edges": []
+      }
     }
 
     // 根据新json生成节点流
