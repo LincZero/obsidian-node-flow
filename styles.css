@@ -496,7 +496,7 @@
 .nf-toolbar[data-v-638a96fb] {
   height: 24px;
 }
-.nf-toolbar > button[data-v-638a96fb] {
+.nf-toolbar > .nf-btn[data-v-638a96fb] {
   height: 24px;
   margin-top: 0;
   margin-bottom: 0;
@@ -817,6 +817,50 @@
 }
 .theme-hope-content > div:first-child > .normal-size:first-child > .nf-shell-mini {
   height: 900px;
+}
+.dd-button {
+  position: relative;
+  display: inline-block;
+}
+.dd-button button {
+  height: 100%;
+}
+.dd-button button.dd-button-main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.dd-button button.dd-button-dropdown {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+  width: 14px;
+}
+.dd-button .dd-button-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 2px 0 0;
+  min-width: 100%;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+.dd-button .dd-button-menu li {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.dd-button .dd-button-menu li:hover {
+  background-color: #f5f5f5;
+}
+.dd-button .fade-enter-active,
+.dd-button .fade-leave-active {
+  transition: opacity .2s;
+}
+.dd-button .fade-enter,
+.dd-button .fade-leave-to {
+  opacity: 0;
 }
 
 /* src/main.css */

@@ -28,7 +28,7 @@
 <script setup lang="ts">
 // 自身属性、通用导入
 const props = defineProps<{
-  jsonData?: object,
+  jsonData?: any,
   isMini: boolean, // true为局部渲染，尽可能简化；false为在更大的独立视图中渲染，可以显示更多东西
 }>()
 import { ref, watch } from 'vue'

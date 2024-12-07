@@ -1,20 +1,28 @@
-<!-- 显示容器 -->
+<!-- 显示容器 (主要为了在局部模式和全局模式之间切换) -->
 
 <template>
   <div ref="CanFullScreen" :class="_isMini?'normal-size':'full-size'">
+    <!-- 主画布 -->
     <!-- TODO 有空捋一下这里，全屏这块有些代码应该抽离复用 -->
     <div :class="_isMini?'nf-shell-mini':'nf-shell-view'">
       <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="_isMini"/>
     </div>
+
+    <!-- 工具栏 -->
     <div class="nf-toolbar">
-      <button class="nf-btn-fullscreen" @click="fn_fullScreen()">fullScreen</button>
-      <button class="nf-btn-newview" @click="_fn_newView()">newView</button>
-      <button class="nf-btn-autopos" @click="fn_autoPos('LR')">autoPosLR</button>
-      <button class="nf-btn-autopos" @click="fn_autoPos('TB')">autoPosTB</button>
-      <button class="nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
-      <button class="nf-btn-printjson" @click="fn_printJson">printJson</button>
-      <!-- <button class="nf-btn-copyMd" @click="fn_copyRaw(true)">fn_copyMd</button> -->
-      <button class="nf-btn-copyjson" @click="fn_copyRaw(false)">copyJson</button>
+      <DropdownButton class="nf-btn">
+        <button>test 1</button>
+        <button>test 2</button>
+        <button>test 3</button>
+      </DropdownButton>
+      <button class="nf-btn nf-btn-fullscreen" @click="fn_fullScreen()">fullScreen</button>
+      <button class="nf-btn nf-btn-newview" @click="_fn_newView()">newView</button>
+      <button class="nf-btn nf-btn-autopos" @click="fn_autoPos('LR')">autoPosLR</button>
+      <button class="nf-btn nf-btn-autopos" @click="fn_autoPos('TB')">autoPosTB</button>
+      <button class="nf-btn nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
+      <button class="nf-btn nf-btn-printjson" @click="fn_printJson">printJson</button>
+      <!-- <button class="nf-btn nf-btn-copyMd" @click="fn_copyRaw(true)">fn_copyMd</button> -->
+      <button class="nf-btn nf-btn-copyjson" @click="fn_copyRaw(false)">copyJson</button>
     </div>
   </div>
 </template>
@@ -38,15 +46,18 @@ const RefChild = ref<{
   layoutGraph: (direction: string)=>void,
 }>();
 
-// 按钮 - 展示json数据
+// 组件 - 工具栏
+import DropdownButton from '../utils/dropdownButton.vue'
+
+//   按钮 - 展示json数据
 function fn_printJson() {
   console.log("debug json: ", props.jsonData)
 }
 
-// 按钮 - 自动调整顺序
+//   按钮 - 自动调整顺序
 function fn_autoPos(position: string) { RefChild.value?.layoutGraph(position) }
 
-// 按钮 - 是否禁用滚动
+//   按钮 - 是否禁用滚动
 const isAllowScroll = ref(true);
 function fn_switchAllowScroll() {
   const exDiv1: HTMLElement|null = document.body // vuepress等使用
@@ -62,14 +73,14 @@ function fn_switchAllowScroll() {
   }
 }
 
-// 按钮 - 全屏
+//   按钮 - 全屏
 const CanFullScreen = ref()
 import { switchFullScreen } from "../utils/fullScreen"
 function fn_fullScreen() {
   switchFullScreen(CanFullScreen.value, _isMini)
 }
 
-// 按钮 - 拷贝到黏贴版
+//   按钮 - 拷贝到黏贴版
 function fn_copyRaw (isWithCodeBlock: boolean) {
   // const str = _rawData.value
   navigator.clipboard.writeText(_rawData.value).then(() => {
@@ -104,7 +115,7 @@ function fn_copyRaw (isWithCodeBlock: boolean) {
 .nf-toolbar {
   height: 24px;
 }
-.nf-toolbar>button {
+.nf-toolbar>.nf-btn {
   height: 24px;
   margin-top: 0;
   margin-bottom: 0;
