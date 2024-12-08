@@ -464,20 +464,22 @@
 }
 
 .dd-button {
+  --dd-button-height: 24px;
+  height: var(--dd-button-height);
   position: relative;
   display: inline-block;
 }
 
-.dd-button button {
+.dd-button > button {
   height: 100%;
 }
 
-.dd-button button.dd-button-main {
+.dd-button > button.dd-button-main {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.dd-button button.dd-button-dropdown {
+.dd-button > button.dd-button-dropdown {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   padding-left: 0;
@@ -485,7 +487,7 @@
   width: 14px;
 }
 
-.dd-button .dd-button-menu {
+.dd-button > .dd-button-menu {
   position: absolute;
   bottom: 100%;
   left: 0;
@@ -497,13 +499,9 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
-.dd-button .dd-button-menu li {
-  padding: 8px 16px;
-  cursor: pointer;
-}
-
-.dd-button .dd-button-menu li:hover {
-  background-color: #f5f5f5;
+.dd-button > .dd-button-menu > button {
+  height: var(--dd-button-height);
+  margin-bottom: 4px;
 }
 
 .dd-button .fade-enter-active, .dd-button .fade-leave-active {

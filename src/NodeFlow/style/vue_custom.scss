@@ -341,17 +341,20 @@
 // dropdownButton.vue
 
 .dd-button {
+  --dd-button-height: 24px;
+  height: var(--dd-button-height);
+
   position: relative;
   display: inline-block;
 
-  button {
+  >button {
     height: 100%;
   }
-  button.dd-button-main {
+  >button.dd-button-main {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-  button.dd-button-dropdown {
+  >button.dd-button-dropdown {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     padding-left: 0;
@@ -359,7 +362,7 @@
     width: 14px;
   }
 
-  .dd-button-menu {
+  >.dd-button-menu {
     position: absolute;
     bottom: 100%; // 由于 cm 的 contain: paint !important; 样式，无法 overflow，只能颠倒方向
     left: 0;
@@ -369,15 +372,9 @@
     margin: 2px 0 0;
     min-width: 100%;
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
-    li {
-      padding: 8px 16px;
-      cursor: pointer;
-    }
-    li:hover {
-      background-color: #f5f5f5;
-    }
-    button {
-
+    >button {
+      height: var(--dd-button-height);
+      margin-bottom: 4px;
     }
   }
 

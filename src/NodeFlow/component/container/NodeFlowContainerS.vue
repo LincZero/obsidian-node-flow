@@ -10,19 +10,18 @@
 
     <!-- 工具栏 -->
     <div class="nf-toolbar">
-      <DropdownButton class="nf-btn">
-        <button>test 1</button>
-        <button>test 2</button>
-        <button>test 3</button>
-      </DropdownButton>
       <button class="nf-btn nf-btn-fullscreen" @click="fn_fullScreen()">fullScreen</button>
       <button class="nf-btn nf-btn-newview" @click="_fn_newView()">newView</button>
-      <button class="nf-btn nf-btn-autopos" @click="fn_autoPos('LR')">autoPosLR</button>
-      <button class="nf-btn nf-btn-autopos" @click="fn_autoPos('TB')">autoPosTB</button>
+      <DropdownButton class="nf-btn" :label='"autoPosLR"' :fn="() => fn_autoPos('LR')" #default="{ selectItem }">
+        <button class="nf-btn nf-btn-autopos" @click="selectItem('autoPosLR', () => fn_autoPos('LR'))">autoPosLR</button>
+        <button class="nf-btn nf-btn-autopos" @click="selectItem('autoPosTB', () => fn_autoPos('TB'))">autoPosTB</button>
+      </DropdownButton>
+      <DropdownButton class="nf-btn" :label='"printJson"' :fn="fn_printJson" #default="{ selectItem }">
+        <button class="nf-btn nf-btn-printjson" @click="selectItem('printJson', fn_printJson)">printJson</button>
+        <button class="nf-btn nf-btn-copyMd" @click="selectItem('copyMd', () => fn_copyRaw(true))">copyMd</button>
+        <button class="nf-btn nf-btn-copyjson" @click="selectItem('copyJson', () => fn_copyRaw(false))">copyJson</button>
+      </DropdownButton>
       <button class="nf-btn nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
-      <button class="nf-btn nf-btn-printjson" @click="fn_printJson">printJson</button>
-      <!-- <button class="nf-btn nf-btn-copyMd" @click="fn_copyRaw(true)">fn_copyMd</button> -->
-      <button class="nf-btn nf-btn-copyjson" @click="fn_copyRaw(false)">copyJson</button>
     </div>
   </div>
 </template>

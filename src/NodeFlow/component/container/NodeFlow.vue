@@ -9,6 +9,7 @@
     @nodes-initialized="isNodeInitialized=true">
     <!-- :pan-on-drag="[0,2]" -->
     <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
+    <!-- 话说这里的设计很神奇。VueFlow先通过数据构造有自定义标签的插槽位置，然后再用具名插槽v-slot(简写#)把插槽内容进行插入/替换 -->
     <template #node-obcanvas="props">
       <ObcanvasNode :id="props.id" :data="props.data"/>
     </template>
