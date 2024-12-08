@@ -16,13 +16,13 @@
         <button class="nf-btn" @click="selectItem('autoPosLR', () => fn_autoPos('LR'))">autoPosLR</button>
         <button class="nf-btn" @click="selectItem('autoPosTB', () => fn_autoPos('TB'))">autoPosTB</button>
       </DropdownButton>
-      <DropdownButton class="nf-btn" :label='"printJson"' :fn="() => fn_printJson('jsonData')" #default="{ selectItem }">
-        <button class="nf-btn" @click="selectItem('printJson', () => fn_printJson('jsonData'))">printJson</button>
-        <button class="nf-btn" @click="selectItem('printMd', () => fn_printJson('mdData'))">printMd</button>
-        <button class="nf-btn" @click="selectItem('printRaw', () => fn_printJson('rawData'))">printRaw</button>
-        <button class="nf-btn" @click="selectItem('copyJson', () => fn_copyRaw('jsonData'))">copyJson</button>
-        <button class="nf-btn" @click="selectItem('copyMd', () => fn_copyRaw('mdData'))">copyMd</button>
-        <button class="nf-btn" @click="selectItem('copyRaw', () => fn_copyRaw('rawData'))">copyRaw</button>
+      <DropdownButton class="nf-btn" :label='"copyMd"' :fn="() => fn_copyData('mdData')" #default="{ selectItem }">
+        <button class="nf-btn" @click="selectItem('printJson', () => fn_printData('jsonData'))">printJson</button>
+        <button class="nf-btn" @click="selectItem('printMd', () => fn_printData('mdData'))">printMd</button>
+        <button class="nf-btn" @click="selectItem('printRaw', () => fn_printData('rawData'))">printRaw</button>
+        <button class="nf-btn" @click="selectItem('copyJson', () => fn_copyData('jsonData'))">copyJson</button>
+        <button class="nf-btn" @click="selectItem('copyMd', () => fn_copyData('mdData'))">copyMd</button>
+        <button class="nf-btn" @click="selectItem('copyRaw', () => fn_copyData('rawData'))">copyRaw</button>
       </DropdownButton>
       <button class="nf-btn" @click="fn_switchAllowScroll()">exLock</button>
     </div>
@@ -78,7 +78,7 @@ function fn_fullScreen() {
 }
 
 //   按钮 - 展示json数据
-function fn_printJson(type:"mdData"|"rawData"|"jsonData") {
+function fn_printData(type:"mdData"|"rawData"|"jsonData") {
   let data: any
   if (type == "mdData") data = "\n" + props.mdData
   else if (type == "rawData") data = "\n" + props.rawData
@@ -87,7 +87,7 @@ function fn_printJson(type:"mdData"|"rawData"|"jsonData") {
 }
 
 //   按钮 - 拷贝到黏贴版
-function fn_copyRaw (type:"mdData"|"rawData"|"jsonData") {
+function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
   let data: string
   if (type == "mdData") data = props.mdData
   else if (type == "rawData") data = props.rawData
