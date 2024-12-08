@@ -10,18 +10,21 @@
 
     <!-- 工具栏 -->
     <div class="nf-toolbar">
-      <button class="nf-btn nf-btn-fullscreen" @click="fn_fullScreen()">fullScreen</button>
-      <button class="nf-btn nf-btn-newview" @click="_fn_newView()">newView</button>
+      <button class="nf-btn" @click="fn_fullScreen()">fullScreen</button>
+      <button class="nf-btn" @click="_fn_newView()">newView</button>
       <DropdownButton class="nf-btn" :label='"autoPosLR"' :fn="() => fn_autoPos('LR')" #default="{ selectItem }">
-        <button class="nf-btn nf-btn-autopos" @click="selectItem('autoPosLR', () => fn_autoPos('LR'))">autoPosLR</button>
-        <button class="nf-btn nf-btn-autopos" @click="selectItem('autoPosTB', () => fn_autoPos('TB'))">autoPosTB</button>
+        <button class="nf-btn" @click="selectItem('autoPosLR', () => fn_autoPos('LR'))">autoPosLR</button>
+        <button class="nf-btn" @click="selectItem('autoPosTB', () => fn_autoPos('TB'))">autoPosTB</button>
       </DropdownButton>
-      <DropdownButton class="nf-btn" :label='"printJson"' :fn="fn_printJson" #default="{ selectItem }">
-        <button class="nf-btn nf-btn-printjson" @click="selectItem('printJson', fn_printJson)">printJson</button>
-        <button class="nf-btn nf-btn-copyMd" @click="selectItem('copyMd', () => fn_copyRaw(true))">copyMd</button>
-        <button class="nf-btn nf-btn-copyjson" @click="selectItem('copyJson', () => fn_copyRaw(false))">copyJson</button>
+      <DropdownButton class="nf-btn" :label='"printJson"' :fn="() => fn_printJson('jsonData')" #default="{ selectItem }">
+        <button class="nf-btn" @click="selectItem('printJson', () => fn_printJson('jsonData'))">printJson</button>
+        <button class="nf-btn" @click="selectItem('printMd', () => fn_printJson('mdData'))">printMd</button>
+        <button class="nf-btn" @click="selectItem('printRaw', () => fn_printJson('rawData'))">printRaw</button>
+        <button class="nf-btn" @click="selectItem('copyJson', () => fn_copyRaw('jsonData'))">copyJson</button>
+        <button class="nf-btn" @click="selectItem('copyMd', () => fn_copyRaw('mdData'))">copyMd</button>
+        <button class="nf-btn" @click="selectItem('copyRaw', () => fn_copyRaw('rawData'))">copyRaw</button>
       </DropdownButton>
-      <button class="nf-btn nf-btn-lock" @click="fn_switchAllowScroll()">exLock</button>
+      <button class="nf-btn" @click="fn_switchAllowScroll()">exLock</button>
     </div>
   </div>
 </template>
@@ -29,14 +32,14 @@
 <script setup lang="ts">
 // 自身属性、通用导入
 const props = defineProps<{
-  jsonData: object,
+  rawData?: string, // 仅打印用
+  mdData?: string,  // 仅打印用
+  jsonData: any,
   isMini: boolean,
-  rawData?: string,
   fn_newView?: () => Promise<void>,
 }>()
 import { computed, ref } from 'vue'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
-const _rawData = computed(() => props.rawData || "error: get raw data error");
 const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
 
 // 组件 - 节点画布
@@ -47,11 +50,6 @@ const RefChild = ref<{
 
 // 组件 - 工具栏
 import DropdownButton from '../utils/dropdownButton.vue'
-
-//   按钮 - 展示json数据
-function fn_printJson() {
-  console.log("debug json: ", props.jsonData)
-}
 
 //   按钮 - 自动调整顺序
 function fn_autoPos(position: string) { RefChild.value?.layoutGraph(position) }
@@ -79,10 +77,23 @@ function fn_fullScreen() {
   switchFullScreen(CanFullScreen.value, _isMini)
 }
 
+//   按钮 - 展示json数据
+function fn_printJson(type:"mdData"|"rawData"|"jsonData") {
+  let data: any
+  if (type == "mdData") data = "\n" + props.mdData
+  else if (type == "rawData") data = "\n" + props.rawData
+  else data = props.jsonData
+  console.log("debug json:", data)
+}
+
 //   按钮 - 拷贝到黏贴版
-function fn_copyRaw (isWithCodeBlock: boolean) {
-  // const str = _rawData.value
-  navigator.clipboard.writeText(_rawData.value).then(() => {
+function fn_copyRaw (type:"mdData"|"rawData"|"jsonData") {
+  let data: string
+  if (type == "mdData") data = props.mdData
+  else if (type == "rawData") data = props.rawData
+  else { const _rawData = computed(() => props.rawData || "error: get raw data error"); data = _rawData.value }
+
+  navigator.clipboard.writeText(data).then(() => {
     console.log('info: 已复制文本');
   }, () => {
     console.error('error: 无法复制文本');
