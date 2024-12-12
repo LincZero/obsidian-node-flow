@@ -96,7 +96,7 @@
 <script setup lang="ts">
 import { Panel, useVueFlow } from '@vue-flow/core'
 import { ref } from 'vue'
-import { nfSetting } from '../../setting'
+import { nfSetting } from '../../utils/setting'
 
 const {
   nodesDraggable,

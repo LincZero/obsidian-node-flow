@@ -1,4 +1,4 @@
-import { nfSetting } from "./NodeFlow/setting";
+import { nfSetting } from "./NodeFlow/utils/setting";
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 
 export const  NodeFlowViewFlag = "NodeFlowView"

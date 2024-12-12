@@ -5,14 +5,14 @@ import {
   testData_obcanvas,
   testData_comfyUI,
   testData_list
-} from "./test/testData"
+} from "../test/testData"
 import {
   testData2
-} from "./test/testData2"
+} from "../test/testData2"
 import { nfSetting } from "./setting"
 
 /**
- * 解析并转化json，将各种类型的json转化为统一的vueflow形式
+ * 解析并转化json，将各种类型的json转化为统一的vueflow形式 (统一的 {nodes:[],edges:[]} 格式)
  * 
  * TODO 缺少Schema校验，提高稳定性
  * 
