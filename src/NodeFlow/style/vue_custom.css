@@ -88,23 +88,23 @@
   background-color: rgba(53, 53, 53, 0.875);
 }
 
-.common-node > .node-content > .node-content-handle {
+.common-node > .node-content > .node-content-handle, .common-node > .node-content > .node-content-lr {
   display: flex;
   justify-content: space-between;
 }
 
-.common-node > .node-content > .node-content-handle .line {
+.common-node > .node-content > .node-content-handle .line, .common-node > .node-content > .node-content-lr .line {
   line-height: 24px;
   min-height: 24px;
   height: auto;
   font-size: 12px;
 }
 
-.common-node > .node-content > .node-content-handle .line > .item-sub {
+.common-node > .node-content > .node-content-handle .line > .item-sub, .common-node > .node-content > .node-content-lr .line > .item-sub {
   min-height: 16px;
 }
 
-.common-node > .node-content > .node-content-handle .line > .item-value {
+.common-node > .node-content > .node-content-handle .line > .item-value, .common-node > .node-content > .node-content-lr .line > .item-value {
   line-height: 20px;
   height: auto;
   margin: 1px 8px 1px;
@@ -114,21 +114,21 @@
   background-color: #222222;
 }
 
-.common-node > .node-content > .node-content-handle > .left {
+.common-node > .node-content > .node-content-handle > .left, .common-node > .node-content > .node-content-handle > .node-content-l, .common-node > .node-content > .node-content-lr > .left, .common-node > .node-content > .node-content-lr > .node-content-l {
   text-align: left;
   padding-right: 4px;
 }
 
-.common-node > .node-content > .node-content-handle > .right {
+.common-node > .node-content > .node-content-handle > .left > .line > .item-sub, .common-node > .node-content > .node-content-handle > .node-content-l > .line > .item-sub, .common-node > .node-content > .node-content-lr > .left > .line > .item-sub, .common-node > .node-content > .node-content-lr > .node-content-l > .line > .item-sub {
+  float: left;
+}
+
+.common-node > .node-content > .node-content-handle > .right, .common-node > .node-content > .node-content-handle > .node-content-r, .common-node > .node-content > .node-content-lr > .right, .common-node > .node-content > .node-content-lr > .node-content-r {
   text-align: right;
   padding-left: 4px;
 }
 
-.common-node > .node-content > .node-content-handle > .left > .line > .item-sub {
-  float: left;
-}
-
-.common-node > .node-content > .node-content-handle > .right > .line > .item-sub {
+.common-node > .node-content > .node-content-handle > .right > .line > .item-sub, .common-node > .node-content > .node-content-handle > .node-content-r > .line > .item-sub, .common-node > .node-content > .node-content-lr > .right > .line > .item-sub, .common-node > .node-content > .node-content-lr > .node-content-r > .line > .item-sub {
   float: right;
 }
 
@@ -224,48 +224,75 @@
   box-shadow: 0 0 8px 3px #ec4899;
 }
 
+.item-node .line {
+  position: relative;
+}
+
+.item-node .line .vue-flow__handle.item-handle {
+  border: none;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 8px;
+  transform: none;
+}
+
+.item-node .line .vue-flow__handle.item-handle.target {
+  float: left;
+  left: -15px;
+}
+
+.item-node .line .vue-flow__handle.item-handle.source {
+  float: right;
+  right: -15px;
+}
+
+.vue-flow__handle {
+  /**
+   * Handle着色 (按首字母映射，且习惯将白色填第一)
+   * 
+   * 颜色来源：HSL(0步进18~360, 100%, 50%), 共得到20种颜色
+   * 16进制根据在vscode环境下css文件打hsl，然后屏幕取色得到
+   * hsl(0, 100, 50)     #ff0000
+   * hsl(18, 100, 50)    #ff4d00
+   * hsl(36, 100, 50)    #ff9900
+   * hsl(54, 100, 50)    #ffe600
+   * hsl(72, 100, 50)    #ccff00
+   * hsl(90, 100, 50)    #80ff00
+   * hsl(108, 100, 50)   #33ff00
+   * hsl(126, 100, 50)   #00ff1a
+   * hsl(144, 100, 50)   #00ff66
+   * hsl(162, 100, 50)   #00ffb3
+   * hsl(180, 100, 50)   #00ffff
+   * hsl(198, 100, 50)   #00b3ff
+   * hsl(216, 100, 50)   #0066ff
+   * hsl(234, 100, 50)   #001aff
+   * hsl(252, 100, 50)   #3300ff
+   * hsl(270, 100, 50)   #8000ff
+   * hsl(288, 100, 50)   #cc00ff
+   * hsl(306, 100, 50)   #ff00e6
+   * hsl(324, 100, 50)   #ff0099
+   * hsl(342, 100, 50)   #ff004c
+   * 
+   * 可选 - 使用颜色优化排序 (使必要时能指定颜色)
+   * 0            8
+   * red          14
+   * orange       11
+   * yellow       1
+   * green        3
+   * cyam         19
+   * blue         18
+   * purple/pink  12
+   */
+  background-color: #a598dd;
+}
+
 .vue-flow__handle.custom {
   border: none;
   box-sizing: border-box;
   width: 10px;
   height: 10px;
-  /**
-     * Handle着色 (按首字母映射，且习惯将白色填第一)
-     * 
-     * 颜色来源：HSL(0步进18~360, 100%, 50%), 共得到20种颜色
-     * 16进制根据在vscode环境下css文件打hsl，然后屏幕取色得到
-     * hsl(0, 100, 50)     #ff0000
-     * hsl(18, 100, 50)    #ff4d00
-     * hsl(36, 100, 50)    #ff9900
-     * hsl(54, 100, 50)    #ffe600
-     * hsl(72, 100, 50)    #ccff00
-     * hsl(90, 100, 50)    #80ff00
-     * hsl(108, 100, 50)   #33ff00
-     * hsl(126, 100, 50)   #00ff1a
-     * hsl(144, 100, 50)   #00ff66
-     * hsl(162, 100, 50)   #00ffb3
-     * hsl(180, 100, 50)   #00ffff
-     * hsl(198, 100, 50)   #00b3ff
-     * hsl(216, 100, 50)   #0066ff
-     * hsl(234, 100, 50)   #001aff
-     * hsl(252, 100, 50)   #3300ff
-     * hsl(270, 100, 50)   #8000ff
-     * hsl(288, 100, 50)   #cc00ff
-     * hsl(306, 100, 50)   #ff00e6
-     * hsl(324, 100, 50)   #ff0099
-     * hsl(342, 100, 50)   #ff004c
-     * 
-     * 可选 - 使用颜色优化排序 (使必要时能指定颜色)
-     * 0            8
-     * red          14
-     * orange       11
-     * yellow       1
-     * green        3
-     * cyam         19
-     * blue         18
-     * purple/pink  12
-     */
-  background-color: #a598dd;
 }
 
 .vue-flow__handle.custom.target {
@@ -357,90 +384,90 @@
   top: calc(30px + 19.5 * 24px);
 }
 
-.vue-flow__handle.custom[nameMapAttr="0"] {
+.vue-flow__handle.default {
+  /* background-color: red !important; */
+  background: none !important;
+  border: none;
+}
+
+.vue-flow__handle[nameMapAttr="0"] {
   background-color: #ff0000;
 }
 
-.vue-flow__handle.custom[nameMapAttr="1"] {
+.vue-flow__handle[nameMapAttr="1"] {
   background-color: #ff4d00;
 }
 
-.vue-flow__handle.custom[nameMapAttr="2"] {
+.vue-flow__handle[nameMapAttr="2"] {
   background-color: #ff9900;
 }
 
-.vue-flow__handle.custom[nameMapAttr="3"] {
+.vue-flow__handle[nameMapAttr="3"] {
   background-color: #ffe600;
 }
 
-.vue-flow__handle.custom[nameMapAttr="4"] {
+.vue-flow__handle[nameMapAttr="4"] {
   background-color: #ccff00;
 }
 
-.vue-flow__handle.custom[nameMapAttr="5"] {
+.vue-flow__handle[nameMapAttr="5"] {
   background-color: #80ff00;
 }
 
-.vue-flow__handle.custom[nameMapAttr="6"] {
+.vue-flow__handle[nameMapAttr="6"] {
   background-color: #33ff00;
 }
 
-.vue-flow__handle.custom[nameMapAttr="7"] {
+.vue-flow__handle[nameMapAttr="7"] {
   background-color: #00ff1a;
 }
 
-.vue-flow__handle.custom[nameMapAttr="8"] {
+.vue-flow__handle[nameMapAttr="8"] {
   background-color: #00ff66;
 }
 
-.vue-flow__handle.custom[nameMapAttr="9"] {
+.vue-flow__handle[nameMapAttr="9"] {
   background-color: #00ffb3;
 }
 
-.vue-flow__handle.custom[nameMapAttr="10"] {
+.vue-flow__handle[nameMapAttr="10"] {
   background-color: #00ffff;
 }
 
-.vue-flow__handle.custom[nameMapAttr="11"] {
+.vue-flow__handle[nameMapAttr="11"] {
   background-color: #00b3ff;
 }
 
-.vue-flow__handle.custom[nameMapAttr="12"] {
+.vue-flow__handle[nameMapAttr="12"] {
   background-color: #0066ff;
 }
 
-.vue-flow__handle.custom[nameMapAttr="13"] {
+.vue-flow__handle[nameMapAttr="13"] {
   background-color: #001aff;
 }
 
-.vue-flow__handle.custom[nameMapAttr="14"] {
+.vue-flow__handle[nameMapAttr="14"] {
   background-color: #3300ff;
 }
 
-.vue-flow__handle.custom[nameMapAttr="15"] {
+.vue-flow__handle[nameMapAttr="15"] {
   background-color: #8000ff;
 }
 
-.vue-flow__handle.custom[nameMapAttr="16"] {
+.vue-flow__handle[nameMapAttr="16"] {
   background-color: #cc00ff;
 }
 
-.vue-flow__handle.custom[nameMapAttr="17"] {
+.vue-flow__handle[nameMapAttr="17"] {
   background-color: #ff00e6;
 }
 
-.vue-flow__handle.custom[nameMapAttr="18"] {
+.vue-flow__handle[nameMapAttr="18"] {
   background-color: #ff0099;
 }
 
-.vue-flow__handle.custom[nameMapAttr="19"] {
+.vue-flow__handle[nameMapAttr="19"] {
   background-color: #ff004c;
-}
-
-.vue-flow__handle.default {
-  /* background-color: red !important; */
-  background: none;
-  border: none;
 }
 
 .vue-flow__edge .vue-flow__edge-path {

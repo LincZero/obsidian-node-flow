@@ -1,24 +1,51 @@
-<!-- 通用的节点 -->
+<!--
+Item类型的节点
+
+结构1：
+- common-id
+- common-node
+  - node-title          标题
+  - node-content
+    - node-content-lr
+      - left            输入项
+      - right           输出项
+    - node-content-self 值项
+
+结构2:
+- 项(输入/输出/值)
+  - 任意布局class
+    - item-handle
+    - item-name
+    - item-value
+-->
 
 <template>
-  <!-- 节点id -->
+  <!-- id项 -->
   <div class="common-id">
     <div>
       #{{ id }}
     </div>
   </div>
-  <!-- 节点 -->
-  <div class="common-node" :aria-label="data.label">
-    <!-- 节点标题 -->
+  <div class="common-node item-node" :aria-label="data.label">
+    <!-- 标题项 -->
     <div class="node-title">
       <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
       <span style="display: inline-block; margin-left: 10px;">{{ data.label }}</span>
     </div>
-    <!-- 节点内容 -->
+    <!-- 项集 -->
     <div class="node-content">
-      <div class="node-content-handle">
-        <div class="left">
-          <div v-for="(item,index) in data.inputs" class="line">
+      <div class="node-content-lr">
+        <div class="node-content-l">
+          <!-- 输入项 -->
+          <div v-for="(item,index) in inputItems" class="line">
+            <Handle
+              class="item-handle"
+              :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
+              :indexAttr="index"
+              :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
+              :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
+              type="target"
+              :position="Position.Left" />
             <span class="item-sub item-name">{{ item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type }}</span>
             <span class="item-sub item-value" v-if="item.value">
               <div class="item-sub-sub">
@@ -27,8 +54,17 @@
             </span>
           </div>
         </div>
-        <div class="right">
-          <div v-for="(item,index) in data.outputs" class="line">
+        <div class="node-content-r">
+          <!-- 输出项 -->
+          <div v-for="(item,index) in outputItems" class="line">
+            <Handle
+              class="item-handle"
+              :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
+              :indexAttr="index"
+              :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
+              :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
+              type="source"
+              :position="Position.Right" />
             <span class="item-sub item-name">{{ item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type }}</span>
             <span class="item-sub item-value" v-if="item.value">
               <div>{{ item.value }}</div>
@@ -37,38 +73,17 @@
         </div>
       </div>
       <div class="node-content-self">
-        <div v-for="(item,index) in data.values" class="line">
+        <!-- 值项 -->
+        <div v-for="(item,index) in valueItems" class="line">
           <div class="item-sub">
             <span class="item-name">{{ item.name }}</span>
             <span class="item-value">{{ item.value }}</span>
+            <slot :name="item.valueType"></slot>
             <div style="height:0; clear: both;"></div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Handle - 根据数据自动生成 -->
-    <!-- 注意这里的MapAttr暂时用的id，而comfyui那边用的type -->
-    <Handle
-      v-for="(item,index) in data.inputs"
-      :key="index"
-      :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
-      class="custom"
-      :indexAttr="index"
-      :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-      :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
-      type="target"
-      :position="Position.Left" />
-    <Handle
-      v-for="(item,index) in data.outputs"
-      :key="index"
-      :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
-      class="custom"
-      :indexAttr="index"
-      :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-      :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
-      type="source"
-      :position="Position.Right" />
     <!-- Handle - 默认隐藏 -->
     <Handle v-show="!hasCustomHandle"
       id="l" class="default" type="target" :position="Position.Left" />
@@ -83,7 +98,7 @@
 
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from '@vue-flow/core'
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 const props = defineProps({
   id: {
     type: String,
@@ -94,6 +109,19 @@ const props = defineProps({
     required: true,
   },
 })
+// 计算属性
+const inputItems = computed(() => 
+  props.data.items.filter((item:any) => item.refType === 'input')
+);
+const outputItems = computed(() => 
+  props.data.items.filter((item:any) => item.refType === 'output')
+);
+const valueItems = computed(() => 
+  props.data.items.filter((item:any) => item.refType === 'value')
+);
+
+// 根据json创建具名插槽
+
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)

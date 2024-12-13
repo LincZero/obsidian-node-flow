@@ -1,7 +1,7 @@
-<!-- 颜色项 -->
+<!-- Markdown项 -->
 
 <template>
-  COLOR!
+  MD!
 </template>
 
 <script setup lang="ts">

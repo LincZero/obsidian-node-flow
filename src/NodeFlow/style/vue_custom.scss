@@ -92,7 +92,7 @@
     color: #aaaaaa;
     background-color: rgba($color: #353535, $alpha: 0.875);
 
-    >.node-content-handle {
+    >.node-content-handle, >.node-content-lr {
       display: flex;
       justify-content: space-between;
       .line { // h:24
@@ -114,10 +114,14 @@
         }
       }
 
-      >.left { text-align: left; padding-right: 4px; }
-      >.right { text-align: right; padding-left: 4px; }
-      >.left>.line>.item-sub { float: left; }
-      >.right>.line>.item-sub { float: right; }
+      >.left, >.node-content-l {
+        text-align: left; padding-right: 4px;
+        &>.line>.item-sub { float: left; }
+      }
+      >.right, >.node-content-r {
+        text-align: right; padding-left: 4px;
+        &>.line>.item-sub { float: right; }
+      }
     }
 
     >.node-content-self {
@@ -212,6 +216,34 @@
   box-shadow: 0 0 8px 3px #ec4899;
 }
 
+//   ItemNode.vue
+
+.item-node {
+  .line {
+    position: relative;
+    .vue-flow__handle.item-handle {
+      // layout
+      border: none;
+      box-sizing: border-box;
+      width: 8px;
+      height: 8px;
+      position: absolute;
+      top: 8px;
+      transform: none;
+
+      &.target {
+        float: left;
+        left: -15px;
+      }
+      &.source {
+        float: right;
+        right: -15px;
+        // border: solid 2px #211820;
+      }
+    }
+  }
+}
+
 //   节点socket
 .vue-flow__handle {
   &.custom {
@@ -249,71 +281,71 @@
     &[indexAttr="17"] { top:calc(30px + 17.5 * 24px) }
     &[indexAttr="18"] { top:calc(30px + 18.5 * 24px) }
     &[indexAttr="19"] { top:calc(30px + 19.5 * 24px) }
-
-    /**
-     * Handle着色 (按首字母映射，且习惯将白色填第一)
-     * 
-     * 颜色来源：HSL(0步进18~360, 100%, 50%), 共得到20种颜色
-     * 16进制根据在vscode环境下css文件打hsl，然后屏幕取色得到
-     * hsl(0, 100, 50)     #ff0000
-     * hsl(18, 100, 50)    #ff4d00
-     * hsl(36, 100, 50)    #ff9900
-     * hsl(54, 100, 50)    #ffe600
-     * hsl(72, 100, 50)    #ccff00
-     * hsl(90, 100, 50)    #80ff00
-     * hsl(108, 100, 50)   #33ff00
-     * hsl(126, 100, 50)   #00ff1a
-     * hsl(144, 100, 50)   #00ff66
-     * hsl(162, 100, 50)   #00ffb3
-     * hsl(180, 100, 50)   #00ffff
-     * hsl(198, 100, 50)   #00b3ff
-     * hsl(216, 100, 50)   #0066ff
-     * hsl(234, 100, 50)   #001aff
-     * hsl(252, 100, 50)   #3300ff
-     * hsl(270, 100, 50)   #8000ff
-     * hsl(288, 100, 50)   #cc00ff
-     * hsl(306, 100, 50)   #ff00e6
-     * hsl(324, 100, 50)   #ff0099
-     * hsl(342, 100, 50)   #ff004c
-     * 
-     * 可选 - 使用颜色优化排序 (使必要时能指定颜色)
-     * 0            8
-     * red          14
-     * orange       11
-     * yellow       1
-     * green        3
-     * cyam         19
-     * blue         18
-     * purple/pink  12
-     */
-    background-color: #a598dd;
-    &[nameMapAttr="0"]  { background-color: #ff0000; }
-    &[nameMapAttr="1"]  { background-color: #ff4d00; }
-    &[nameMapAttr="2"]  { background-color: #ff9900; }
-    &[nameMapAttr="3"]  { background-color: #ffe600; }
-    &[nameMapAttr="4"]  { background-color: #ccff00; }
-    &[nameMapAttr="5"]  { background-color: #80ff00; }
-    &[nameMapAttr="6"]  { background-color: #33ff00; }
-    &[nameMapAttr="7"]  { background-color: #00ff1a; }
-    &[nameMapAttr="8"]  { background-color: #00ff66; }
-    &[nameMapAttr="9"]  { background-color: #00ffb3; }
-    &[nameMapAttr="10"] { background-color: #00ffff; }
-    &[nameMapAttr="11"] { background-color: #00b3ff; }
-    &[nameMapAttr="12"] { background-color: #0066ff; }
-    &[nameMapAttr="13"] { background-color: #001aff; }
-    &[nameMapAttr="14"] { background-color: #3300ff; }
-    &[nameMapAttr="15"] { background-color: #8000ff; }
-    &[nameMapAttr="16"] { background-color: #cc00ff; }
-    &[nameMapAttr="17"] { background-color: #ff00e6; }
-    &[nameMapAttr="18"] { background-color: #ff0099; }
-    &[nameMapAttr="19"] { background-color: #ff004c; }
   }
 
   &.default {
     /* background-color: red !important; */
-    background: none;
+    background: none !important;
     border: none;
   }
+
+  /**
+   * Handle着色 (按首字母映射，且习惯将白色填第一)
+   * 
+   * 颜色来源：HSL(0步进18~360, 100%, 50%), 共得到20种颜色
+   * 16进制根据在vscode环境下css文件打hsl，然后屏幕取色得到
+   * hsl(0, 100, 50)     #ff0000
+   * hsl(18, 100, 50)    #ff4d00
+   * hsl(36, 100, 50)    #ff9900
+   * hsl(54, 100, 50)    #ffe600
+   * hsl(72, 100, 50)    #ccff00
+   * hsl(90, 100, 50)    #80ff00
+   * hsl(108, 100, 50)   #33ff00
+   * hsl(126, 100, 50)   #00ff1a
+   * hsl(144, 100, 50)   #00ff66
+   * hsl(162, 100, 50)   #00ffb3
+   * hsl(180, 100, 50)   #00ffff
+   * hsl(198, 100, 50)   #00b3ff
+   * hsl(216, 100, 50)   #0066ff
+   * hsl(234, 100, 50)   #001aff
+   * hsl(252, 100, 50)   #3300ff
+   * hsl(270, 100, 50)   #8000ff
+   * hsl(288, 100, 50)   #cc00ff
+   * hsl(306, 100, 50)   #ff00e6
+   * hsl(324, 100, 50)   #ff0099
+   * hsl(342, 100, 50)   #ff004c
+   * 
+   * 可选 - 使用颜色优化排序 (使必要时能指定颜色)
+   * 0            8
+   * red          14
+   * orange       11
+   * yellow       1
+   * green        3
+   * cyam         19
+   * blue         18
+   * purple/pink  12
+   */
+  background-color: #a598dd;
+  &[nameMapAttr="0"]  { background-color: #ff0000; }
+  &[nameMapAttr="1"]  { background-color: #ff4d00; }
+  &[nameMapAttr="2"]  { background-color: #ff9900; }
+  &[nameMapAttr="3"]  { background-color: #ffe600; }
+  &[nameMapAttr="4"]  { background-color: #ccff00; }
+  &[nameMapAttr="5"]  { background-color: #80ff00; }
+  &[nameMapAttr="6"]  { background-color: #33ff00; }
+  &[nameMapAttr="7"]  { background-color: #00ff1a; }
+  &[nameMapAttr="8"]  { background-color: #00ff66; }
+  &[nameMapAttr="9"]  { background-color: #00ffb3; }
+  &[nameMapAttr="10"] { background-color: #00ffff; }
+  &[nameMapAttr="11"] { background-color: #00b3ff; }
+  &[nameMapAttr="12"] { background-color: #0066ff; }
+  &[nameMapAttr="13"] { background-color: #001aff; }
+  &[nameMapAttr="14"] { background-color: #3300ff; }
+  &[nameMapAttr="15"] { background-color: #8000ff; }
+  &[nameMapAttr="16"] { background-color: #cc00ff; }
+  &[nameMapAttr="17"] { background-color: #ff00e6; }
+  &[nameMapAttr="18"] { background-color: #ff0099; }
+  &[nameMapAttr="19"] { background-color: #ff004c; }
 }
 
 // 线
@@ -339,7 +371,6 @@
 }
 
 // dropdownButton.vue
-
 .dd-button {
   --dd-button-height: 24px;
   height: var(--dd-button-height);

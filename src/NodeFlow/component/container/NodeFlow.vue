@@ -10,20 +10,15 @@
     <!-- :pan-on-drag="[0,2]" -->
     <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
     <!-- 话说这里的设计很神奇。VueFlow先通过数据构造有自定义标签的插槽位置，然后再用具名插槽v-slot(简写#)把插槽内容进行插入/替换 -->
-    <template #node-obcanvas="props">
-      <ObcanvasNode :id="props.id" :data="props.data"/>
-    </template>
-    <template #node-comfyui="props">
-      <ComfyUINode :id="props.id" :data="props.data"/>
-    </template>
-    <template #node-comfyui-group="props">
-      <ComfyUINodeGroup :id="props.id" :data="props.data"/>
-    </template>
-    <template #node-common="props">
-      <CommonNode :id="props.id" :data="props.data"/>
-    </template>
+    <template #node-obcanvas="props"><ObcanvasNode :id="props.id" :data="props.data"/></template>
+    <template #node-comfyui="props"><ComfyUINode :id="props.id" :data="props.data"/></template>
+    <template #node-comfyui-group="props"><ComfyUINodeGroup :id="props.id" :data="props.data"/></template>
+    <template #node-common="props"><CommonNode :id="props.id" :data="props.data"/></template>
     <template #node-item="props">
-      <ItemNode :id="props.id" :data="props.data"/>
+      <ItemNode :id="props.id" :data="props.data">
+        <template #item-color="props"><ColorItem></ColorItem></template>
+        <template #item-markdown="props"><MarkdownItem></MarkdownItem></template>
+      </ItemNode>
     </template>
     <InteractionControls v-if="!props.isMini"/>
   </VueFlow>
@@ -45,6 +40,9 @@ import ComfyUINode from '../node/ComfyUINode.vue'              // comfyui 节点
 import ComfyUINodeGroup from '../node/ComfyUINodeGroup.vue'    // 节点组
 import CommonNode from '../node/CommonNode.vue'                // 通用节点
 import ItemNode from '../node/ItemNode.vue'                    // 项节点
+
+import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
+import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
 
 // 组件 - 其他
 import InteractionControls from '../utils/InteractionControls.vue'   // 控制画布控制的操作开关
