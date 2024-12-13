@@ -7,12 +7,6 @@
       #{{ id }}
     </div>
   </div>
-  <!-- <NodeToolbar :is-visible="true" :position="Position.Top" class="common-id">
-    <div>
-      #{{ id }}
-    </div>
-  </NodeToolbar> -->
-
   <!-- 节点 -->
   <div class="common-node" :aria-label="data.label">
     <!-- 节点标题 -->

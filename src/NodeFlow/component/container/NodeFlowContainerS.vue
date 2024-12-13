@@ -72,7 +72,7 @@ function fn_switchAllowScroll() {
 
 //   按钮 - 全屏
 const CanFullScreen = ref()
-import { switchFullScreen } from "../utils/fullScreen"
+import { switchFullScreen } from "./fullScreen"
 function fn_fullScreen() {
   switchFullScreen(CanFullScreen.value, _isMini)
 }
@@ -106,7 +106,7 @@ function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
   height: 100%;
 }
 .normal-size {
-  margin-bottom: 22px;
+  /* margin-bottom: 22px; ob不需要，似乎vuepress需要 */
 }
 
 .nf-shell-mini {
@@ -123,7 +123,7 @@ function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
 }
 
 .nf-toolbar {
-  height: 24px;
+  height: 26px;
 }
 .nf-toolbar>.nf-btn {
   height: 24px;

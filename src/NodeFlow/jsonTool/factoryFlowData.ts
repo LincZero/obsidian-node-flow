@@ -9,7 +9,10 @@ import {
 import {
   testData2
 } from "../test/testData2"
-import { nfSetting } from "./setting"
+import {
+  testData_itemData
+} from "../test/itemData"
+import { nfSetting } from "../utils/setting"
 
 /**
  * 解析并转化json，将各种类型的json转化为统一的vueflow形式 (统一的 {nodes:[],edges:[]} 格式)
@@ -33,6 +36,7 @@ export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nod
   else if (jsonType == "nodeflow-comfyui-demo2") { jsonType = "comfyui"; json = JSON.stringify(testData2) }
   else if (jsonType == "nodeflow-list") { jsonType = "list" }
   else if (jsonType == "nodeflow-list-demo") { jsonType = "list", json = testData_list }
+  else if (jsonType == "nodeflow-item-demo") { jsonType = "item", json = JSON.stringify(testData_itemData) }
 
   // 统一检查
   let parsedData;
@@ -49,16 +53,17 @@ export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nod
   }
 
   // 类型分发
-  let result: {code: number, msg: string, data: object}; // TODO：优化，应该减少json的解析次数，很多大json的。应该是code msg data模式
+  let result: {code: number, msg: string, data: any};
   if (jsonType == "comfyui") {
     result = factoryFlowData_comfyui(parsedData)
-  }
-  else if (jsonType=="obcanvas") {
+  } else if (jsonType=="obcanvas") {
     result = factoryFlowData_obcanvas(parsedData)
   } else if (jsonType == "vueflow") {
     result = {code: 0, msg: "", data: parsedData}
   } else if (jsonType == "list") {
     result = factoryFlowData_list(json)
+  } else if (jsonType == "item") {
+    result = factoryFlowData_item(parsedData)
   } else {
     return {code: -1, msg: "error: invalid json type: " + jsonType, data: {}}
   }
@@ -66,7 +71,7 @@ export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nod
   // 再次检查
   if (result.code != 0) return result
   if (!result.data.hasOwnProperty("nodes")) {return {code: -1, msg: "json without nodes attrs", data: {}}}
-  if (!result.data.hasOwnProperty("edges")) {return {code: -1, msg: "json without edges attrs", data: {}}}
+  if (!result.data.hasOwnProperty("edges")) { result.data.edges = [] }
   return result
 }
 
@@ -534,4 +539,15 @@ function factoryFlowData_list(md:string): {code: number, msg: string, data: obje
     // 处理完成
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
   }
+}
+
+function factoryFlowData_item(parsedData:any): {code: number, msg: string, data: object} {
+  for (let item of parsedData["nodes"]) {
+    if (!item.hasOwnProperty("position")) {
+      item.position = { x: 0, y: 0 }
+    }
+    item.type = "item"
+  }
+
+  return { code: 0, msg: "", data: parsedData}
 }

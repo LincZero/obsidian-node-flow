@@ -22,6 +22,9 @@
     <template #node-common="props">
       <CommonNode :id="props.id" :data="props.data"/>
     </template>
+    <template #node-item="props">
+      <ItemNode :id="props.id" :data="props.data"/>
+    </template>
     <InteractionControls v-if="!props.isMini"/>
   </VueFlow>
 </template>
@@ -39,8 +42,9 @@ import { useVueFlow } from '@vue-flow/core'
 // 组件 - 自定义节点
 import ObcanvasNode from '../node/ObcanvasNode.vue'            // ob canvas 节点
 import ComfyUINode from '../node/ComfyUINode.vue'              // comfyui 节点
-import ComfyUINodeGroup from '../node/ComfyUINodeGroup.vue'    // 
+import ComfyUINodeGroup from '../node/ComfyUINodeGroup.vue'    // 节点组
 import CommonNode from '../node/CommonNode.vue'                // 通用节点
+import ItemNode from '../node/ItemNode.vue'                    // 项节点
 
 // 组件 - 其他
 import InteractionControls from '../utils/InteractionControls.vue'   // 控制画布控制的操作开关
@@ -76,9 +80,9 @@ let edges = ref<Edge[]>([]);
   }
 }
 
-// 功能 - 自动顺序模块
+// 功能 - 自动布局模块
 import { nextTick } from 'vue'
-import { useLayout } from '../utils/useLayout'
+import { useLayout } from '../../jsonTool/useLayout'
 const { layout } = useLayout()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小

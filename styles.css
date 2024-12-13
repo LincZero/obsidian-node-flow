@@ -479,9 +479,6 @@
 .full-size[data-v-638a96fb] {
   height: 100%;
 }
-.normal-size[data-v-638a96fb] {
-  margin-bottom: 22px;
-}
 .nf-shell-mini[data-v-638a96fb] {
   width: 100%;
   height: 500px;
@@ -494,7 +491,7 @@
   overflow: hidden;
 }
 .nf-toolbar[data-v-638a96fb] {
-  height: 24px;
+  height: 26px;
 }
 .nf-toolbar > .nf-btn[data-v-638a96fb] {
   height: 24px;
