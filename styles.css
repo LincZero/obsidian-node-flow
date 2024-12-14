@@ -18,80 +18,6 @@
   background: none;
   border: none;
 }
-.comfyui-id[data-v-be01cfd6] {
-  position: absolute;
-  height: 0;
-  line-height: 20px;
-  font-size: 12px;
-  width: 100%;
-}
-.comfyui-id > div[data-v-be01cfd6] {
-  position: relative;
-  bottom: 22px;
-  right: 4px;
-  height: 20px;
-  line-height: 20px;
-  float: right;
-  padding: 0 6px;
-  background-color: #0f1f0f;
-  border-radius: 6px;
-}
-.comfyui-node[data-v-be01cfd6] {
-  height: 100%;
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 3px 3px 10px 2px #111;
-}
-.comfyui-node .comfyui-node-title[data-v-be01cfd6] {
-  height: 30px;
-  line-height: 30px;
-  font-size: 14px;
-  padding: 0 12px;
-  border-radius: 8px 8px 0 0;
-  color: #999;
-  background-color: #2e4656f0;
-}
-.comfyui-node .comfyui-node-content[data-v-be01cfd6] {
-  height: calc(100% - 30px);
-  padding: 0 24px 16px;
-  border-radius: 0 0 8px 8px;
-  color: #aaa;
-  background-color: #353535f0;
-}
-.comfyui-node .comfyui-node-content .item[data-v-be01cfd6] {
-  line-height: 24px;
-  min-height: 24px;
-  height: auto;
-  font-size: 12px;
-}
-.comfyui-node .comfyui-node-content .item-c[data-v-be01cfd6] {
-  box-sizing: border-box;
-  min-height: 24px;
-  height: auto;
-  margin-bottom: 4px;
-  padding: 1px 12px;
-  border: solid 1px #616161;
-  background-color: #222;
-  border-radius: 13px;
-}
-.comfyui-node .comfyui-node-content .item-c .item[data-v-be01cfd6] {
-  line-height: 20px;
-  min-height: 20px;
-  height: auto;
-  font-size: 12px;
-  white-space: break-spaces;
-  overflow-wrap: break-word;
-}
-.comfyui-node .comfyui-node-content .comfyui-node-handle-name[data-v-be01cfd6] {
-  display: flex;
-  justify-content: space-between;
-}
-.comfyui-node .comfyui-node-content .comfyui-node-handle-name > .left[data-v-be01cfd6] {
-  text-align: left;
-}
-.comfyui-node .comfyui-node-content .comfyui-node-handle-name > .right[data-v-be01cfd6] {
-  text-align: right;
-}
 .vue-flow__node-comfyui-group {
   background-color: #3f789e44;
 }
@@ -534,14 +460,14 @@
 }
 
 /* src/NodeFlow/style/vue_custom.css */
-.common-id {
+.common-node > .node-id {
   position: absolute;
   height: 0;
   line-height: 20px;
   font-size: 12px;
   width: 100%;
 }
-.common-id div {
+.common-node > .node-id div {
   position: relative;
   bottom: 22px;
   right: 4px;
@@ -552,20 +478,20 @@
   background-color: #0f1f0f;
   border-radius: 6px;
 }
-.common-node {
+.common-node > .node-main {
   height: 100%;
   width: 100%;
   border-radius: 8px;
   box-shadow: 3px 3px 10px 2px #111;
 }
-.common-node span {
+.common-node > .node-main span {
   white-space: break-spaces;
   overflow-wrap: break-word;
 }
-.common-node span code {
+.common-node > .node-main span code {
   white-space: pre;
 }
-.common-node > .node-title {
+.common-node > .node-main > .node-title {
   height: 30px;
   line-height: 30px;
   font-size: 14px;
@@ -574,7 +500,7 @@
   color: #999999;
   background-color: rgba(46, 70, 86, 0.875);
 }
-.common-node > .node-content {
+.common-node > .node-main > .node-content {
   height: calc(100% - 30px);
   padding: 0 24px;
   padding-bottom: 16px;
@@ -582,24 +508,24 @@
   color: #aaaaaa;
   background-color: rgba(53, 53, 53, 0.875);
 }
-.common-node > .node-content > .node-content-handle,
-.common-node > .node-content > .node-content-lr {
+.common-node > .node-main > .node-content > .node-content-handle,
+.common-node > .node-main > .node-content > .node-content-lr {
   display: flex;
   justify-content: space-between;
 }
-.common-node > .node-content > .node-content-handle .line,
-.common-node > .node-content > .node-content-lr .line {
+.common-node > .node-main > .node-content > .node-content-handle .line,
+.common-node > .node-main > .node-content > .node-content-lr .line {
   line-height: 24px;
   min-height: 24px;
   height: auto;
   font-size: 12px;
 }
-.common-node > .node-content > .node-content-handle .line > .item-sub,
-.common-node > .node-content > .node-content-lr .line > .item-sub {
+.common-node > .node-main > .node-content > .node-content-handle .line > .item-sub,
+.common-node > .node-main > .node-content > .node-content-lr .line > .item-sub {
   min-height: 16px;
 }
-.common-node > .node-content > .node-content-handle .line > .item-value,
-.common-node > .node-content > .node-content-lr .line > .item-value {
+.common-node > .node-main > .node-content > .node-content-handle .line > .item-value,
+.common-node > .node-main > .node-content > .node-content-lr .line > .item-value {
   line-height: 20px;
   height: auto;
   margin: 1px 8px 1px;
@@ -608,33 +534,33 @@
   border: solid 1px #616161;
   background-color: #222222;
 }
-.common-node > .node-content > .node-content-handle > .left,
-.common-node > .node-content > .node-content-handle > .node-content-l,
-.common-node > .node-content > .node-content-lr > .left,
-.common-node > .node-content > .node-content-lr > .node-content-l {
+.common-node > .node-main > .node-content > .node-content-handle > .left,
+.common-node > .node-main > .node-content > .node-content-handle > .node-content-l,
+.common-node > .node-main > .node-content > .node-content-lr > .left,
+.common-node > .node-main > .node-content > .node-content-lr > .node-content-l {
   text-align: left;
   padding-right: 4px;
 }
-.common-node > .node-content > .node-content-handle > .left > .line > .item-sub,
-.common-node > .node-content > .node-content-handle > .node-content-l > .line > .item-sub,
-.common-node > .node-content > .node-content-lr > .left > .line > .item-sub,
-.common-node > .node-content > .node-content-lr > .node-content-l > .line > .item-sub {
+.common-node > .node-main > .node-content > .node-content-handle > .left > .line > .item-sub,
+.common-node > .node-main > .node-content > .node-content-handle > .node-content-l > .line > .item-sub,
+.common-node > .node-main > .node-content > .node-content-lr > .left > .line > .item-sub,
+.common-node > .node-main > .node-content > .node-content-lr > .node-content-l > .line > .item-sub {
   float: left;
 }
-.common-node > .node-content > .node-content-handle > .right,
-.common-node > .node-content > .node-content-handle > .node-content-r,
-.common-node > .node-content > .node-content-lr > .right,
-.common-node > .node-content > .node-content-lr > .node-content-r {
+.common-node > .node-main > .node-content > .node-content-handle > .right,
+.common-node > .node-main > .node-content > .node-content-handle > .node-content-r,
+.common-node > .node-main > .node-content > .node-content-lr > .right,
+.common-node > .node-main > .node-content > .node-content-lr > .node-content-r {
   text-align: right;
   padding-left: 4px;
 }
-.common-node > .node-content > .node-content-handle > .right > .line > .item-sub,
-.common-node > .node-content > .node-content-handle > .node-content-r > .line > .item-sub,
-.common-node > .node-content > .node-content-lr > .right > .line > .item-sub,
-.common-node > .node-content > .node-content-lr > .node-content-r > .line > .item-sub {
+.common-node > .node-main > .node-content > .node-content-handle > .right > .line > .item-sub,
+.common-node > .node-main > .node-content > .node-content-handle > .node-content-r > .line > .item-sub,
+.common-node > .node-main > .node-content > .node-content-lr > .right > .line > .item-sub,
+.common-node > .node-main > .node-content > .node-content-lr > .node-content-r > .line > .item-sub {
   float: right;
 }
-.common-node > .node-content > .node-content-self > .line {
+.common-node > .node-main > .node-content > .node-content-self > .line {
   box-sizing: border-box;
   min-height: 24px;
   height: auto;
@@ -644,17 +570,17 @@
   background-color: #222222;
   border-radius: 13px;
 }
-.common-node > .node-content > .node-content-self > .line > .item-sub {
+.common-node > .node-main > .node-content > .node-content-self > .line > .item-sub {
   line-height: 20px;
   min-height: 20px;
   height: auto;
   font-size: 12px;
 }
-.common-node > .node-content > .node-content-self > .line > .item-sub > .item-name {
+.common-node > .node-main > .node-content > .node-content-self > .line > .item-sub > .item-name {
   float: left;
   padding-right: 4px;
 }
-.common-node > .node-content > .node-content-self > .line > .item-sub > .item-value {
+.common-node > .node-main > .node-content > .node-content-self > .line > .item-sub > .item-value {
   float: right;
   padding-left: 4px;
 }
@@ -678,34 +604,16 @@
 .common-node[aria-label^=Group] .node-content {
   background-color: rgba(46, 70, 86, 0.25);
 }
-.comfyui-node[aria-label=Note] .comfyui-node-title {
-  background-color: rgba(68, 51, 34, 0.9375);
+.comfyui-node {
 }
-.comfyui-node[aria-label=Note] .comfyui-node-content {
-  background-color: rgba(102, 85, 51, 0.9375);
-}
-.comfyui-node[aria-label*=Sampler] .comfyui-node-title {
-  background-color: rgba(34, 51, 51, 0.9375);
-}
-.comfyui-node[aria-label*=Sampler] .comfyui-node-content {
-  background-color: rgba(51, 85, 85, 0.9375);
-}
-.comfyui-node[aria-label^=Group] {
-  min-width: 200px;
-  height: 200px;
-  z-index: -1;
-}
-.comfyui-node[aria-label^=Group] .comfyui-node-content {
-  background-color: rgba(46, 70, 86, 0.25);
-}
-.item-node .node-id {
+.comfyui-node > .node-id {
   position: absolute;
   height: 0;
   line-height: 20px;
   font-size: 12px;
   width: 100%;
 }
-.item-node .node-id div {
+.comfyui-node > .node-id > div {
   position: relative;
   bottom: 22px;
   right: 4px;
@@ -716,7 +624,13 @@
   background-color: #0f1f0f;
   border-radius: 6px;
 }
-.item-node .node-main > .node-title {
+.comfyui-node > .node-main {
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 3px 3px 10px 2px #111;
+}
+.comfyui-node > .node-main .node-title {
   height: 30px;
   line-height: 30px;
   font-size: 14px;
@@ -725,7 +639,102 @@
   color: #999999;
   background-color: rgba(46, 70, 86, 0.875);
 }
-.item-node .node-main > .node-content {
+.comfyui-node > .node-main .node-content {
+  height: calc(100% - 30px);
+  padding: 0 24px;
+  padding-bottom: 16px;
+  border-radius: 0 0 8px 8px;
+  color: #aaaaaa;
+  background-color: rgba(53, 53, 53, 0.875);
+}
+.comfyui-node > .node-main .node-content .item {
+  line-height: 24px;
+  min-height: 24px;
+  height: auto;
+  font-size: 12px;
+}
+.comfyui-node > .node-main .node-content .item-c {
+  box-sizing: border-box;
+  min-height: 24px;
+  height: auto;
+  margin-bottom: 4px;
+  padding: 1px 12px;
+  border: solid 1px #616161;
+  background-color: #222222;
+  border-radius: 13px;
+}
+.comfyui-node > .node-main .node-content .item-c .item {
+  line-height: 20px;
+  min-height: 20px;
+  height: auto;
+  font-size: 12px;
+  white-space: break-spaces;
+  overflow-wrap: break-word;
+}
+.comfyui-node > .node-main .node-content .node-handle-name {
+  display: flex;
+  justify-content: space-between;
+}
+.comfyui-node > .node-main .node-content .node-handle-name > .left {
+  text-align: left;
+}
+.comfyui-node > .node-main .node-content .node-handle-name > .right {
+  text-align: right;
+}
+.comfyui-node > .node-main[aria-label=Note] .node-title {
+  background-color: rgba(68, 51, 34, 0.9375);
+}
+.comfyui-node > .node-main[aria-label=Note] .node-content {
+  background-color: rgba(102, 85, 51, 0.9375);
+}
+.comfyui-node > .node-main[aria-label*=Sampler] .node-title {
+  background-color: rgba(34, 51, 51, 0.9375);
+}
+.comfyui-node > .node-main[aria-label*=Sampler] .node-content {
+  background-color: rgba(51, 85, 85, 0.9375);
+}
+.comfyui-node > .node-main[aria-label^=Group] {
+  min-width: 200px;
+  height: 200px;
+  z-index: -1;
+}
+.comfyui-node > .node-main[aria-label^=Group] .node-content {
+  background-color: rgba(46, 70, 86, 0.25);
+}
+.item-node > .node-id {
+  position: absolute;
+  height: 0;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100%;
+}
+.item-node > .node-id div {
+  position: relative;
+  bottom: 22px;
+  right: 4px;
+  height: 20px;
+  line-height: 20px;
+  float: right;
+  padding: 0 6px;
+  background-color: #0f1f0f;
+  border-radius: 6px;
+}
+.item-node > .node-main {
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 3px 3px 10px 2px #111;
+}
+.item-node > .node-main > .node-title {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  color: #999999;
+  background-color: rgba(46, 70, 86, 0.875);
+}
+.item-node > .node-main > .node-content {
   height: calc(100% - 30px);
   padding: 0 24px;
   padding-bottom: 16px;
@@ -734,12 +743,12 @@
   color: #aaaaaa;
   background-color: rgba(53, 53, 53, 0.875);
 }
-.item-node .node-main > .node-content > .line.node-item {
+.item-node > .node-main > .node-content > .line.node-item {
   position: relative;
   font-size: 12px;
   margin-bottom: 4px;
 }
-.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {
+.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {
   border: none;
   box-sizing: border-box;
   width: 8px;
@@ -748,42 +757,45 @@
   top: 7px;
   transform: none;
 }
-.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
+.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
   float: left;
   left: -15px;
 }
-.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
+.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
   float: right;
   right: -15px;
 }
-.item-node .node-main > .node-content > .line.node-item > .node-item-slot {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot {
   width: 100%;
 }
-.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
   float: left;
 }
-.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
   float: right;
 }
-.item-node .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name {
   float: right;
 }
-.item-node .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value {
   float: left;
 }
-.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
   font-weight: bolder;
 }
-.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
   font-weight: lighter;
 }
 .vue-flow__node-comfyui-group.selected .comfyui-group {
   box-shadow: 0 0 8px 3px #ec4899;
 }
-.vue-flow__node-comfyui.selected .comfyui-node {
+.vue-flow__node-comfyui.selected .comfyui-node .node-main {
   box-shadow: 0 0 8px 3px #ec4899;
 }
-.vue-flow__node-common.selected .common-node {
+.vue-flow__node-common.selected .common-node .node-main {
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+.vue-flow__node-item.selected .item-node .node-main {
   box-shadow: 0 0 8px 3px #ec4899;
 }
 .vue-flow__handle {

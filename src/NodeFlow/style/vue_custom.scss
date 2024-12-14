@@ -39,114 +39,115 @@
  */
 
 // 节点部分
-.common-id {
-  position: absolute;
-  height: 0;
-  line-height: 20px;
-  font-size: 12px;
-  width: 100%;
-  div {
-    position: relative;
-    bottom: 22px;
-    right: 4px;
-    height: 20px;
-    line-height: 20px;
-    float: right;
-    padding: 0 6px;
-    background-color: #0f1f0f;
-    border-radius: 6px;
-  }
-}
-
 //   CommonNode.vue (Scope)  --------------------------------------------------------------------------------
 .common-node {
-  height: 100%;
-  width: 100%;
-  border-radius:8px;
-  box-shadow: 3px 3px 10px 2px #111;
-
-  // 自动换行
-  span {
-    white-space: break-spaces; // 自动换行
-    overflow-wrap: break-word; // 单词中换行
-    code {white-space: pre;}   // 一个用于手动控制不换行的方式
+  >.node-id {
+    position: absolute;
+    height: 0;
+    line-height: 20px;
+    font-size: 12px;
+    width: 100%;
+    div {
+      position: relative;
+      bottom: 22px;
+      right: 4px;
+      height: 20px;
+      line-height: 20px;
+      float: right;
+      padding: 0 6px;
+      background-color: #0f1f0f;
+      border-radius: 6px;
+    }
   }
+  >.node-main {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 3px 3px 10px 2px #111;
 
-  >.node-title {
-    height: 30px;
-    line-height: 30px;
-    font-size: 14px;
-    padding: 0 12px;
-
-    border-radius: 8px 8px 0 0;
-    color: #999999;
-    background-color: rgba($color: #2e4656, $alpha: 0.875);
-  }
-
-  >.node-content {
-    height: calc(100% - 30px);
-    padding: 0 24px;
-    padding-bottom: 16px;
-
-    border-radius: 0 0 8px 8px;
-    color: #aaaaaa;
-    background-color: rgba($color: #353535, $alpha: 0.875);
-
-    >.node-content-handle, >.node-content-lr {
-      display: flex;
-      justify-content: space-between;
-      .line { // h:24
-        line-height: 24px;
-        min-height: 24px;
-        height: auto;
-        font-size: 12px;
-        >.item-sub { min-height: 16px; }
-        >.item-name {}
-        >.item-value { // h: 20
-          line-height: 20px;
-          height: auto;
-          margin: 1px 8px 1px;
-
-          border-radius: 10px;
-          padding: 0px 8px;
-          border: solid 1px #616161;
-          background-color: #222222;
-        }
-      }
-
-      >.left, >.node-content-l {
-        text-align: left; padding-right: 4px;
-        &>.line>.item-sub { float: left; }
-      }
-      >.right, >.node-content-r {
-        text-align: right; padding-left: 4px;
-        &>.line>.item-sub { float: right; }
-      }
+    // 自动换行
+    span {
+      white-space: break-spaces; // 自动换行
+      overflow-wrap: break-word; // 单词中换行
+      code {white-space: pre;}   // 一个用于手动控制不换行的方式
     }
 
-    >.node-content-self {
-      >.line { // h:24+4
-        box-sizing: border-box;
-        min-height: 24px;
-        height: auto;
-        margin-bottom: 4px;
-  
-        padding: 1px 28px;
-        border: solid 1px #616161;
-        background-color: #222222;
-        border-radius: 13px;
-  
-        >.item-sub {
-          line-height: 20px;
-          min-height: 20px;
+    >.node-title {
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+      padding: 0 12px;
+
+      border-radius: 8px 8px 0 0;
+      color: #999999;
+      background-color: rgba($color: #2e4656, $alpha: 0.875);
+    }
+
+    >.node-content {
+      height: calc(100% - 30px);
+      padding: 0 24px;
+      padding-bottom: 16px;
+
+      border-radius: 0 0 8px 8px;
+      color: #aaaaaa;
+      background-color: rgba($color: #353535, $alpha: 0.875);
+
+      >.node-content-handle, >.node-content-lr {
+        display: flex;
+        justify-content: space-between;
+        .line { // h:24
+          line-height: 24px;
+          min-height: 24px;
           height: auto;
           font-size: 12px;
+          >.item-sub { min-height: 16px; }
+          >.item-name {}
+          >.item-value { // h: 20
+            line-height: 20px;
+            height: auto;
+            margin: 1px 8px 1px;
 
-          >.item-name { float: left; padding-right: 4px; }
-          >.item-value { float: right; padding-left: 4px; }
+            border-radius: 10px;
+            padding: 0px 8px;
+            border: solid 1px #616161;
+            background-color: #222222;
+          }
+        }
+
+        >.left, >.node-content-l {
+          text-align: left; padding-right: 4px;
+          &>.line>.item-sub { float: left; }
+        }
+        >.right, >.node-content-r {
+          text-align: right; padding-left: 4px;
+          &>.line>.item-sub { float: right; }
         }
       }
-    }    
+
+      >.node-content-self {
+        >.line { // h:24+4
+          box-sizing: border-box;
+          min-height: 24px;
+          height: auto;
+          margin-bottom: 4px;
+    
+          padding: 1px 28px;
+          border: solid 1px #616161;
+          background-color: #222222;
+          border-radius: 13px;
+    
+          >.item-sub {
+            line-height: 20px;
+            min-height: 20px;
+            height: auto;
+            font-size: 12px;
+
+            >.item-name { float: left; padding-right: 4px; }
+            >.item-value { float: right; padding-left: 4px; }
+          }
+        }
+      }    
+    }
   
     // .item {
     //   line-height: 24px;
@@ -193,23 +194,129 @@
 
 //   ComfyUINode.vue (Scope) --------------------------------------------------------------------------------
 .comfyui-node {
-  &[aria-label="Note"] .comfyui-node-title { background-color: rgba($color: #443322, $alpha: 0.9375); }
-  &[aria-label="Note"] .comfyui-node-content { background-color: rgba($color: #665533, $alpha: 0.9375); }
-  &[aria-label*="Sampler"] .comfyui-node-title { background-color: rgba($color: #223333, $alpha: 0.9375); }
-  &[aria-label*="Sampler"] .comfyui-node-content { background-color: rgba($color: #335555, $alpha: 0.9375); }
-  &[aria-label^="Group"] {
-    min-width: 200px;
-    height: 200px;
-    z-index: -1,
+  /**
+   * 结构一：scoped外的部分
+   *
+   * .vue-flow.nf-node-flow
+   *   .vue-flow__viewport vue-flow__container
+   *     .vue-flow__pane vue-flow__container draggable
+   *       .vue-flow__transformationpane.vue-flow__container
+   *         svg
+   *         svg
+   *         .vue-flow__edge-labels               线所在区域
+   *         .vue-flow__nodes.vue-flow__container 节点所在区域
+   * 
+   * 结构二：scoped内的部分
+   *
+   * .vue-flow__nodes vue-flow__container
+   *   .vue-flow__node.vue-flow__node-comfyui 
+   *     div.comfyui-node                         // 从这里开始进入scrop选择范围
+   *       div.node-id
+   *       div.node-title   h:30
+   *       div.node-content
+   *         .node-handle-name
+   *         .node-self-attr
+   *       div.vue-flow__handle
+   *     ...
+   */
+  >.node-id {
+    position: absolute;
+    height: 0;
+    line-height: 20px;
+    font-size: 12px;
+    width: 100%;
+    >div {
+      position: relative;
+      bottom: 22px;
+      right: 4px;
+      height: 20px;
+      line-height: 20px;
+      float: right;
+      padding: 0 6px;
+      background-color: #0f1f0f;
+      border-radius: 6px;
+    }
   }
-  &[aria-label^="Group"] .comfyui-node-content {
-    background-color: rgba($color: #2e4656, $alpha: 0.25);
+  >.node-main {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 3px 3px 10px 2px #111;
+    .node-title {
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+      padding: 0 12px;
+    
+      border-radius: 8px 8px 0 0;
+      color: #999999;
+      background-color: rgba($color: #2e4656, $alpha: 0.875);
+    }
+
+    .node-content {
+      height: calc(100% - 30px);
+      padding: 0 24px;
+      padding-bottom: 16px;
+    
+      border-radius: 0 0 8px 8px;
+      color: #aaaaaa;
+      background-color: rgba($color: #353535, $alpha: 0.875);
+
+      .item {
+        line-height: 24px;
+        min-height: 24px;
+        height: auto;
+        font-size: 12px;
+      }
+
+      .item-c {
+        box-sizing: border-box;
+        min-height: 24px;
+        height: auto;
+        margin-bottom: 4px;
+      
+        padding: 1px 12px;
+        border: solid 1px #616161;
+        background-color: #222222;
+        border-radius: 13px;
+
+        .item {
+          line-height: 20px;
+          min-height: 20px;
+          height: auto;
+          font-size: 12px;
+        
+          white-space: break-spaces;
+          overflow-wrap: break-word;
+        }
+      }
+
+      .node-handle-name {
+        display: flex;
+        justify-content: space-between;
+        >.left { text-align: left; }
+        >.right { text-align: right; }
+      }
+    }
+
+    &[aria-label="Note"] .node-title { background-color: rgba($color: #443322, $alpha: 0.9375); }
+    &[aria-label="Note"] .node-content { background-color: rgba($color: #665533, $alpha: 0.9375); }
+    &[aria-label*="Sampler"] .node-title { background-color: rgba($color: #223333, $alpha: 0.9375); }
+    &[aria-label*="Sampler"] .node-content { background-color: rgba($color: #335555, $alpha: 0.9375); }
+    &[aria-label^="Group"] {
+      min-width: 200px;
+      height: 200px;
+      z-index: -1,
+    }
+    &[aria-label^="Group"] .node-content {
+      background-color: rgba($color: #2e4656, $alpha: 0.25);
+    }
   }
 }
 
 //   ItemNode.vue (Scope) -------------------------------------------------------------------------------------
 .item-node {
-  .node-id {
+  >.node-id {
     position: absolute;
     height: 0;
     line-height: 20px;
@@ -227,7 +334,11 @@
       border-radius: 6px;
     }
   }
-  .node-main {
+  >.node-main {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 3px 3px 10px 2px #111;
     >.node-title {
       height: 30px;
       line-height: 30px;
@@ -295,18 +406,21 @@
   }
 }
 
-//   ComfyUINode.vue (No Scope) -----------------------------------------------------------------------------
+//   Node (No Scope) -----------------------------------------------------------------------------
 .vue-flow__node-comfyui-group.selected .comfyui-group {
   box-shadow: 0 0 8px 3px #ec4899;
 }
-.vue-flow__node-comfyui.selected .comfyui-node{
+.vue-flow__node-comfyui.selected .comfyui-node .node-main {
   box-shadow: 0 0 8px 3px #ec4899;
 }
-.vue-flow__node-common.selected .common-node{
+.vue-flow__node-common.selected .common-node .node-main {
+  box-shadow: 0 0 8px 3px #ec4899;
+}
+.vue-flow__node-item.selected .item-node .node-main {
   box-shadow: 0 0 8px 3px #ec4899;
 }
 
-//   节点socket ----------------------------------------------------------------------------------------------
+// socket (No Scope) -----------------------------------------------------------------------------
 .vue-flow__handle {
   &.custom {
     border: none;
@@ -410,7 +524,7 @@
   &[nameMapAttr="19"] { background-color: #ff004c; }
 }
 
-// 线
+// 线 (No Scope) -----------------------------------------------------------------------------
 .vue-flow__edge {
   .vue-flow__edge-path{
     stroke-width: 2;
@@ -420,6 +534,8 @@
     stroke-width: 4;
   }
 }
+
+// --------------------------------------------------------------------------------------------
 
 // 用于 `exLock` 按钮锁定外部滚动
 .nf-style-overflow-hidden { overflow: hidden !important; }

@@ -1,9 +1,9 @@
 <!-- 通用的节点 -->
 
 <template>
-  <div>
+  <div class="common-node">
     <!-- 节点id -->
-    <div class="common-id">
+    <div class="node-id">
       <div>
         #{{ id }}
       </div>
@@ -15,7 +15,7 @@
     </NodeToolbar> -->
 
     <!-- 节点 -->
-    <div class="common-node" :aria-label="data.label">
+    <div class="node-main" :aria-label="data.label">
       <!-- 节点标题 -->
       <div class="node-title">
         <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
