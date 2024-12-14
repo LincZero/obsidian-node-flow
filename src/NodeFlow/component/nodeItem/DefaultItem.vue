@@ -2,12 +2,12 @@
 
 <template>
   <div>
-    DEFAULT! {{ props.data }}
+    {{ props.data.value }}
   </div>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
-  data: string
+  data: any
 }>()
 </script>

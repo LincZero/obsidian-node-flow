@@ -48,10 +48,10 @@ export const testData_itemData = {
           },
           {
             "id": "6",
-            "name": "vName",
+            "name": "",
             "refType": "value",
             "valueType": "item-markdown",
-            "value": "vValue",
+            "value": "## Markdown\n\n**bord** *italic* ==highlight== ~~del~~",
           }
         ],
       }

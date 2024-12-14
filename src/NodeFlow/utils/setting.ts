@@ -1,8 +1,10 @@
 /// 全局变量
 
-import type { Workspace } from "obsidian"
+import type { App, Workspace, MarkdownPostProcessorContext } from "obsidian"
 
-export let nfSetting: { cahce_workspace: Workspace, isDebug: boolean } = {
+export let nfSetting: any = {
+  app: null, // App,
+  ctx: null, // MarkdownPostProcessorContext,
   cahce_workspace: null,
-  isDebug: false
+  isDebug: false,
 }

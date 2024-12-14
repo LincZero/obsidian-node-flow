@@ -17,6 +17,7 @@ export default class NodeFlowPlugin extends Plugin {
 
   async onload() {
     await this.loadSettings();
+    nfSetting.app = this.app
 
     // 注册 - 代码块
     const code_type_list = [
@@ -28,6 +29,7 @@ export default class NodeFlowPlugin extends Plugin {
     ]
     for (let item of code_type_list) {
       this.registerMarkdownCodeBlockProcessor(item, (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+        nfSetting.ctx = ctx
         factoryVueDom(item, blockEl, src)
       })
     }

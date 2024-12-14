@@ -77,8 +77,7 @@ Item类型的节点
         <div v-for="(item,index) in valueItems" class="line">
           <div class="item-sub">
             <span class="item-name">{{ item.name }}</span>
-            <span class="item-value">{{ item.value }}</span>
-            <slot :name="item.valueType" :data="item.value"></slot>
+            <slot class="item-value" :name="item.valueType" :data="item"></slot>
             <div style="height:0; clear: both;"></div>
           </div>
         </div>
