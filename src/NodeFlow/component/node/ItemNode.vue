@@ -78,7 +78,7 @@ Item类型的节点
           <div class="item-sub">
             <span class="item-name">{{ item.name }}</span>
             <span class="item-value">{{ item.value }}</span>
-            <slot :name="item.valueType"></slot>
+            <slot :name="item.valueType" :data="item.value"></slot>
             <div style="height:0; clear: both;"></div>
           </div>
         </div>

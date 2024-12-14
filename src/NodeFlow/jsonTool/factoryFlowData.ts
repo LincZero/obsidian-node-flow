@@ -546,6 +546,9 @@ function factoryFlowData_item(parsedData:any): {code: number, msg: string, data:
     if (!item.hasOwnProperty("position")) {
       item.position = { x: 0, y: 0 }
     }
+    if (!item.hasOwnProperty("valueType") || item.valueType == "") {
+      item.valueType = "item-default"
+    }
     item.type = "item"
   }
 

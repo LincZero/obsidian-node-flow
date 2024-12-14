@@ -1,7 +1,9 @@
 <!-- Markdown项 -->
 
 <template>
-  MD!
+  <div>
+    MD!
+  </div>
 </template>
 
 <script setup lang="ts">

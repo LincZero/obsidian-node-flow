@@ -27,7 +27,7 @@ export const testData_itemData = {
             "id": "3",
             "name": "vName",
             "refType": "value",
-            "valueType": "item-color",
+            "valueType": "item-default",
             "value": "vValue",
           },
           {

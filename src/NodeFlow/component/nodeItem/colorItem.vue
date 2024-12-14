@@ -1,7 +1,9 @@
 <!-- 颜色项 -->
 
 <template>
-  COLOR!
+  <div>
+    COLOR!
+  </div>
 </template>
 
 <script setup lang="ts">

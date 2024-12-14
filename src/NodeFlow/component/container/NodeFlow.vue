@@ -1,4 +1,8 @@
-<!-- 主画布 -->
+<!--
+主画布
+
+使用前需要通过具名插槽的方式注册自定义的节点、以及节点项
+-->
 
 <template>
   <VueFlow
@@ -16,8 +20,9 @@
     <template #node-common="props"><CommonNode :id="props.id" :data="props.data"/></template>
     <template #node-item="props">
       <ItemNode :id="props.id" :data="props.data">
-        <template #item-color="props"><ColorItem></ColorItem></template>
-        <template #item-markdown="props"><MarkdownItem></MarkdownItem></template>
+        <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
+        <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
+        <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
       </ItemNode>
     </template>
     <InteractionControls v-if="!props.isMini"/>
@@ -41,8 +46,9 @@ import ComfyUINodeGroup from '../node/ComfyUINodeGroup.vue'    // 节点组
 import CommonNode from '../node/CommonNode.vue'                // 通用节点
 import ItemNode from '../node/ItemNode.vue'                    // 项节点
 
-import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
+import DefaultItem from "../nodeItem/DefaultItem.vue"           // 默认项
 import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
+import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
 
 // 组件 - 其他
 import InteractionControls from '../utils/InteractionControls.vue'   // 控制画布控制的操作开关
