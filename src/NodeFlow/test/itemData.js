@@ -3,29 +3,34 @@ export const testData_itemData = {
     {
       "id": 6,
       "data": {
-        "label": "CLIP文本编码器",
-        "valueType": "CLIPTextEncode",
+        "label": "itemData testData",
+        "valueType": "itemData valueType",
         // 可选(自动布局) "bounds": { "x": 373, "y": 47, "width": 422.84503173828125, "height": 164.31304931640625 },
         "items": [
           {
             "id": "01",
-            "name": "clip",
+            "name": "null",
             "refType": "input",
-            // 可选 "ref": "", 用于指向传递过来的节点id和位置?
             "valueType": "item-default",
             "value": "",
-            // 可选 "widgetType": ""
           },
           {
             "id": "02",
-            "name": "clip",
+            "name": "null",
             "refType": "output",
             "valueType": "item-default",
             "value": "",
           },
           {
+            "id": "03",
+            "name": "color",
+            "refType": "input",
+            "valueType": "item-color",
+            "value": "#2283fc",
+          },
+          {
             "id": "1",
-            "name": "clip",
+            "name": "number",
             "refType": "input",
             // 可选 "ref": "", 用于指向传递过来的节点id和位置?
             "valueType": "item-default",
@@ -34,7 +39,7 @@ export const testData_itemData = {
           },
           {
             "id": "2",
-            "name": "clip",
+            "name": "number",
             "refType": "output",
             "valueType": "item-default",
             "value": "456",
@@ -64,7 +69,7 @@ export const testData_itemData = {
           },
           {
             "id": "6",
-            "name": "",
+            "name": "markdown",
             "refType": "value",
             "valueType": "item-markdown",
             "value": "## Markdown\n\n**bord** *italic* ==highlight== ~~del~~",

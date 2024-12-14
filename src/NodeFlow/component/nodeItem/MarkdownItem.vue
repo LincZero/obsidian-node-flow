@@ -53,4 +53,7 @@ onMounted(() => {
   background-color: #222222;
   border-radius: 13px;
 }
+.markdown-item .node-item-name, .markdown-item .node-item-value {
+  float: none !important;
+}
 </style>

@@ -133,6 +133,14 @@
   background-color: #222;
   border-radius: 13px;
 }
+.markdown-item .node-item-name[data-v-adf15d24],
+.markdown-item .node-item-value[data-v-adf15d24] {
+  float: none !important;
+}
+.node-item-value[data-v-6326b0c1] {
+  border-radius: 8px;
+  padding: 0 8px;
+}
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;
   padding: 10px;
