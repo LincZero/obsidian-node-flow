@@ -58,7 +58,7 @@
   }
 }
 
-//   CommonNode.uve
+//   CommonNode.vue (Scope)  --------------------------------------------------------------------------------
 .common-node {
   height: 100%;
   width: 100%;
@@ -191,7 +191,7 @@
   }
 }
 
-//   ComfyUINode.uve
+//   ComfyUINode.vue (Scope) --------------------------------------------------------------------------------
 .comfyui-node {
   &[aria-label="Note"] .comfyui-node-title { background-color: rgba($color: #443322, $alpha: 0.9375); }
   &[aria-label="Note"] .comfyui-node-content { background-color: rgba($color: #665533, $alpha: 0.9375); }
@@ -206,6 +206,96 @@
     background-color: rgba($color: #2e4656, $alpha: 0.25);
   }
 }
+
+//   ItemNode.vue (Scope) -------------------------------------------------------------------------------------
+.item-node {
+  .node-id {
+    position: absolute;
+    height: 0;
+    line-height: 20px;
+    font-size: 12px;
+    width: 100%;
+    div {
+      position: relative;
+      bottom: 22px;
+      right: 4px;
+      height: 20px;
+      line-height: 20px;
+      float: right;
+      padding: 0 6px;
+      background-color: #0f1f0f;
+      border-radius: 6px;
+    }
+  }
+  .node-main {
+    >.node-title {
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+      padding: 0 12px;
+
+      border-radius: 8px 8px 0 0;
+      color: #999999;
+      background-color: rgba($color: #2e4656, $alpha: 0.875);
+    }
+    >.node-content {
+      height: calc(100% - 30px);
+      padding: 0 24px;
+      padding-bottom: 16px;
+      padding-top: 2px;
+
+      border-radius: 0 0 8px 8px;
+      color: #aaaaaa;
+      background-color: rgba($color: #353535, $alpha: 0.875);
+
+      // 项
+      >.line.node-item {
+        position: relative;
+        font-size: 12px;
+        margin-bottom: 4px;
+
+        // handle
+        .vue-flow__handle.node-item-handle {
+          // layout
+          border: none;
+          box-sizing: border-box;
+          width: 8px;
+          height: 8px;
+          position: absolute;
+          top: 7px;
+          transform: none;
+    
+          &.target {
+            float: left;
+            left: -15px;
+          }
+          &.source {
+            float: right;
+            right: -15px;
+            // border: solid 2px #211820;
+          }
+        }
+
+        >.node-item-slot {
+          width: 100%;
+          
+          // &.input 或默认
+          .node-item-name { float: left; }
+          .node-item-value { float: right; }
+          &.output {
+            .node-item-name { float: right; }
+            .node-item-value { float: left; }
+          }
+
+          .node-item-name { font-weight: bolder; }
+          .node-item-value { font-weight: lighter; }
+        }
+      }
+    }
+  }
+}
+
+//   ComfyUINode.vue (No Scope) -----------------------------------------------------------------------------
 .vue-flow__node-comfyui-group.selected .comfyui-group {
   box-shadow: 0 0 8px 3px #ec4899;
 }
@@ -216,35 +306,7 @@
   box-shadow: 0 0 8px 3px #ec4899;
 }
 
-//   ItemNode.vue
-
-.item-node {
-  .line {
-    position: relative;
-    .vue-flow__handle.item-handle {
-      // layout
-      border: none;
-      box-sizing: border-box;
-      width: 8px;
-      height: 8px;
-      position: absolute;
-      top: 8px;
-      transform: none;
-
-      &.target {
-        float: left;
-        left: -15px;
-      }
-      &.source {
-        float: right;
-        right: -15px;
-        // border: solid 2px #211820;
-      }
-    }
-  }
-}
-
-//   节点socket
+//   节点socket ----------------------------------------------------------------------------------------------
 .vue-flow__handle {
   &.custom {
     border: none;

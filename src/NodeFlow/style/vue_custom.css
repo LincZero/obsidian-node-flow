@@ -212,6 +212,100 @@
   background-color: rgba(46, 70, 86, 0.25);
 }
 
+.item-node .node-id {
+  position: absolute;
+  height: 0;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100%;
+}
+
+.item-node .node-id div {
+  position: relative;
+  bottom: 22px;
+  right: 4px;
+  height: 20px;
+  line-height: 20px;
+  float: right;
+  padding: 0 6px;
+  background-color: #0f1f0f;
+  border-radius: 6px;
+}
+
+.item-node .node-main > .node-title {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  color: #999999;
+  background-color: rgba(46, 70, 86, 0.875);
+}
+
+.item-node .node-main > .node-content {
+  height: calc(100% - 30px);
+  padding: 0 24px;
+  padding-bottom: 16px;
+  padding-top: 2px;
+  border-radius: 0 0 8px 8px;
+  color: #aaaaaa;
+  background-color: rgba(53, 53, 53, 0.875);
+}
+
+.item-node .node-main > .node-content > .line.node-item {
+  position: relative;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {
+  border: none;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 7px;
+  transform: none;
+}
+
+.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
+  float: left;
+  left: -15px;
+}
+
+.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
+  float: right;
+  right: -15px;
+}
+
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot {
+  width: 100%;
+}
+
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  float: left;
+}
+
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  float: right;
+}
+
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name {
+  float: right;
+}
+
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value {
+  float: left;
+}
+
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  font-weight: bolder;
+}
+
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  font-weight: lighter;
+}
+
 .vue-flow__node-comfyui-group.selected .comfyui-group {
   box-shadow: 0 0 8px 3px #ec4899;
 }
@@ -222,30 +316,6 @@
 
 .vue-flow__node-common.selected .common-node {
   box-shadow: 0 0 8px 3px #ec4899;
-}
-
-.item-node .line {
-  position: relative;
-}
-
-.item-node .line .vue-flow__handle.item-handle {
-  border: none;
-  box-sizing: border-box;
-  width: 8px;
-  height: 8px;
-  position: absolute;
-  top: 8px;
-  transform: none;
-}
-
-.item-node .line .vue-flow__handle.item-handle.target {
-  float: left;
-  left: -15px;
-}
-
-.item-node .line .vue-flow__handle.item-handle.source {
-  float: right;
-  right: -15px;
 }
 
 .vue-flow__handle {

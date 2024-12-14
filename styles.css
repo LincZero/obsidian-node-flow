@@ -112,6 +112,27 @@
   color: #999;
   background-color: #00000040;
 }
+.default-item[data-v-3b87dde5] {
+  box-sizing: border-box;
+  min-height: 24px;
+  height: auto;
+  padding: 1px 0;
+}
+.default-item.has-value[data-v-3b87dde5] {
+  padding: 1px 12px;
+  border-radius: 13px;
+  border: solid 1px #616161;
+  background-color: #222;
+}
+.markdown-item[data-v-adf15d24] {
+  box-sizing: border-box;
+  min-height: 24px;
+  height: auto;
+  padding: 1px 12px;
+  border: solid 1px #616161;
+  background-color: #222;
+  border-radius: 13px;
+}
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;
   padding: 10px;
@@ -669,6 +690,85 @@
 .comfyui-node[aria-label^=Group] .comfyui-node-content {
   background-color: rgba(46, 70, 86, 0.25);
 }
+.item-node .node-id {
+  position: absolute;
+  height: 0;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100%;
+}
+.item-node .node-id div {
+  position: relative;
+  bottom: 22px;
+  right: 4px;
+  height: 20px;
+  line-height: 20px;
+  float: right;
+  padding: 0 6px;
+  background-color: #0f1f0f;
+  border-radius: 6px;
+}
+.item-node .node-main > .node-title {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  color: #999999;
+  background-color: rgba(46, 70, 86, 0.875);
+}
+.item-node .node-main > .node-content {
+  height: calc(100% - 30px);
+  padding: 0 24px;
+  padding-bottom: 16px;
+  padding-top: 2px;
+  border-radius: 0 0 8px 8px;
+  color: #aaaaaa;
+  background-color: rgba(53, 53, 53, 0.875);
+}
+.item-node .node-main > .node-content > .line.node-item {
+  position: relative;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {
+  border: none;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 7px;
+  transform: none;
+}
+.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
+  float: left;
+  left: -15px;
+}
+.item-node .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
+  float: right;
+  right: -15px;
+}
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot {
+  width: 100%;
+}
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  float: left;
+}
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  float: right;
+}
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name {
+  float: right;
+}
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value {
+  float: left;
+}
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  font-weight: bolder;
+}
+.item-node .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  font-weight: lighter;
+}
 .vue-flow__node-comfyui-group.selected .comfyui-group {
   box-shadow: 0 0 8px 3px #ec4899;
 }
@@ -677,26 +777,6 @@
 }
 .vue-flow__node-common.selected .common-node {
   box-shadow: 0 0 8px 3px #ec4899;
-}
-.item-node .line {
-  position: relative;
-}
-.item-node .line .vue-flow__handle.item-handle {
-  border: none;
-  box-sizing: border-box;
-  width: 8px;
-  height: 8px;
-  position: absolute;
-  top: 8px;
-  transform: none;
-}
-.item-node .line .vue-flow__handle.item-handle.target {
-  float: left;
-  left: -15px;
-}
-.item-node .line .vue-flow__handle.item-handle.source {
-  float: right;
-  right: -15px;
 }
 .vue-flow__handle {
   background-color: #a598dd;

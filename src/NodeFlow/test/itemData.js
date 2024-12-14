@@ -8,20 +8,36 @@ export const testData_itemData = {
         // 可选(自动布局) "bounds": { "x": 373, "y": 47, "width": 422.84503173828125, "height": 164.31304931640625 },
         "items": [
           {
+            "id": "01",
+            "name": "clip",
+            "refType": "input",
+            // 可选 "ref": "", 用于指向传递过来的节点id和位置?
+            "valueType": "item-default",
+            "value": "",
+            // 可选 "widgetType": ""
+          },
+          {
+            "id": "02",
+            "name": "clip",
+            "refType": "output",
+            "valueType": "item-default",
+            "value": "",
+          },
+          {
             "id": "1",
             "name": "clip",
             "refType": "input",
             // 可选 "ref": "", 用于指向传递过来的节点id和位置?
-            "valueType": "CLIP",
-            "value": "",
+            "valueType": "item-default",
+            "value": "123",
             // 可选 "widgetType": ""
           },
           {
             "id": "2",
             "name": "clip",
             "refType": "output",
-            "valueType": "CLIP",
-            "value": "",
+            "valueType": "item-default",
+            "value": "456",
           },
           {
             "id": "3",
@@ -35,7 +51,7 @@ export const testData_itemData = {
             "name": "clip",
             "refType": "input",
             // 可选 "ref": "", 用于指向传递过来的节点id和位置?
-            "valueType": "CLIP",
+            "valueType": "item-default",
             "value": "",
             // 可选 "widgetType": ""
           },
@@ -43,7 +59,7 @@ export const testData_itemData = {
             "id": "5",
             "name": "clip",
             "refType": "output",
-            "valueType": "CLIP",
+            "valueType": "item-default",
             "value": "",
           },
           {
