@@ -23,6 +23,7 @@
         <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
         <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
         <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
+        <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
       </ItemNode>
     </template>
     <InteractionControls v-if="!props.isMini"/>
@@ -49,6 +50,7 @@ import ItemNode from '../node/ItemNode.vue'                    // 项节点
 import DefaultItem from "../nodeItem/DefaultItem.vue"           // 默认项
 import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
 import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
+import DropdownItem from "../nodeItem/DropdownItem.vue"         // 下拉项
 
 // 组件 - 其他
 import InteractionControls from '../utils/InteractionControls.vue'   // 控制画布控制的操作开关

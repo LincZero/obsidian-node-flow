@@ -42,13 +42,33 @@
   box-sizing: border-box;
   min-height: 24px;
   height: auto;
-  padding: 1px 0;
+  padding: 2px 0;
 }
 .default-item.has-value[data-v-3b87dde5] {
   padding: 1px 12px;
-  border-radius: 13px;
   border: solid 1px #616161;
+  border-radius: 13px;
   background-color: #222;
+}
+.node-item-name[data-v-3b87dde5] {
+  height: 20px;
+  line-height: 20px;
+}
+.node-item-value[data-v-3b87dde5] {
+  height: 20px;
+  line-height: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.default-item .node-item-value[data-v-3b87dde5] {
+  text-align: right;
+  margin-left: 2px;
+}
+.default-item.output .node-item-value[data-v-3b87dde5] {
+  text-align: left;
+  margin-right: 2px;
 }
 .markdown-item[data-v-adf15d24] {
   box-sizing: border-box;
@@ -63,9 +83,54 @@
 .markdown-item .node-item-value[data-v-adf15d24] {
   float: none !important;
 }
-.node-item-value[data-v-6326b0c1] {
-  border-radius: 8px;
-  padding: 0 8px;
+.color-item[data-v-6326b0c1] {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 24px;
+  padding: 0;
+}
+.color-item .node-item-name[data-v-6326b0c1] {
+  height: 24px;
+  padding: 2px 0;
+  line-height: 20px;
+}
+.color-item .node-item-value[data-v-6326b0c1] {
+  height: 24px;
+  padding: 2px 14px;
+  line-height: 20px;
+  border-radius: 12px;
+  border: solid 1px #616161;
+}
+.dropdown-item[data-v-447493a8] {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 24px;
+  padding: 0;
+}
+.dropdown-item .node-item-name[data-v-447493a8] {
+  height: 24px;
+  padding: 2px 0;
+  line-height: 20px;
+}
+.dropdown-item .node-item-value[data-v-447493a8] {
+  height: 24px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+.dropdown-item .node-item-value select[data-v-447493a8] {
+  height: 100%;
+  margin: 0;
+  padding: 2px 4px 2px 10px;
+  line-height: 20px;
+  border-radius: 12px;
+  border: none;
+  box-shadow: none;
+  background: #222222;
+  border: solid 1px #616161;
+  appearance: revert;
 }
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;
@@ -746,6 +811,7 @@
 .item-node > .node-main > .node-content > .line.node-item {
   position: relative;
   font-size: 12px;
+  min-height: 24px;
   margin-bottom: 4px;
 }
 .item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {

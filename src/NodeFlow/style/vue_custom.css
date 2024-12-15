@@ -376,6 +376,7 @@
 .item-node > .node-main > .node-content > .line.node-item {
   position: relative;
   font-size: 12px;
+  min-height: 24px;
   margin-bottom: 4px;
 }
 

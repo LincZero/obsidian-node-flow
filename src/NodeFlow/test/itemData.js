@@ -69,6 +69,13 @@ export const testData_itemData = {
           },
           {
             "id": "6",
+            "name": "selectName",
+            "refType": "value",
+            "valueType": "item-dropdown",
+            "value": "select1|select2|select3",
+          },
+          {
+            "id": "7",
             "name": "markdown",
             "refType": "value",
             "valueType": "item-markdown",

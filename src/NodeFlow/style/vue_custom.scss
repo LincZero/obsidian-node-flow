@@ -363,6 +363,7 @@
       >.line.node-item {
         position: relative;
         font-size: 12px;
+        min-height: 24px; // 可以是 content20 + padding2 + border2 + margin4 或其他
         margin-bottom: 4px;
 
         // handle
