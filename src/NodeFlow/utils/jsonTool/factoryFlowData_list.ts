@@ -1,4 +1,4 @@
-import { nfSetting } from "../utils/setting"
+import { nfSetting } from "../main/setting"
 
 /**
  * 将md list文本转化为对应json

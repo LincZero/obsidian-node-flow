@@ -25,7 +25,7 @@ function redefine_renderMarkdown(callback: (markdown: string, el: HTMLElement, c
 
 // md渲染 - 定义，obsidian版本
 import { MarkdownRenderChild, MarkdownRenderer, App } from 'obsidian'
-import { nfSetting } from 'src/NodeFlow/utils/setting';
+import { nfSetting } from '../../utils/main/setting';
 redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => {
   el.classList.add("markdown-rendered")
   const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);

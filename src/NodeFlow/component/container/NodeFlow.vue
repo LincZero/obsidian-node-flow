@@ -88,7 +88,7 @@ let edges = ref<Edge[]>([]);
 
 // 功能 - 自动布局模块
 import { nextTick } from 'vue'
-import { useLayout } from '../../jsonTool/useLayout'
+import { useLayout } from '../../utils/layout/useLayout'
 const { layout } = useLayout()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小

@@ -1,4 +1,4 @@
-import { factoryVueDom } from "./NodeFlow/jsonTool/factoryVueDom";
+import { factoryVueDom } from "./NodeFlow/utils/main/factoryVueDom";
 import { TextFileView } from "obsidian";
 
 export const NodeFlowFileViewFlag = "NodeFlowFileView";

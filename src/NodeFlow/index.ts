@@ -1,2 +1,2 @@
-export { nfSetting } from "./utils/setting"
-export { factoryVueDom } from "./jsonTool/factoryVueDom"
+export { nfSetting } from "./utils/main/setting"
+export { factoryVueDom } from "./utils/main/factoryVueDom"

@@ -1,10 +1,10 @@
 import { createApp, App as VueApp } from 'vue';
-import NodeFlowContainerS from '../component/container/NodeFlowContainerS.vue';
+import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue';
 
-import { factoryFlowData } from './factoryFlowData'
+import { factoryFlowData } from '../jsonTool/factoryFlowData'
 
 // 非obsidian环境没有。需要提供一个HTMLElement对象，允许异步
-import { fn_newView } from '../../NodeFlowView'
+import { fn_newView } from '../../../NodeFlowView'
 
 /// 在div内创建指定的 Vue UI
 export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:string = "", isMini:boolean = true):void {
