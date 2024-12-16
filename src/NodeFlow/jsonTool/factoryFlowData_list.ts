@@ -1,6 +1,3 @@
-import {
-  testData_list
-} from "../test/testData"
 import { nfSetting } from "../utils/setting"
 
 /**
@@ -307,3 +304,69 @@ export function factoryFlowData_list(md:string): {code: number, msg: string, dat
     return { code: 0, msg: "", data: {nodes: nodes_new, edges: edges_new}}
   }
 }
+
+const testData_list = `
+- nodes
+  - node1:KSample
+    - Latent, o
+    - model, i
+    - positive, i
+    - negative, i
+    - Latent, i
+    - seed,
+    - control_after_generate,, randomize
+    - steps,, 20
+    - CFG,, 8.0
+    - sampler_name,, euler
+    - scheduler,, normal
+    - denoise,, 1.00
+    - io defaultTest, i , test
+    - io defaultTest, o, test
+    - t1:noValueTest,
+    - t2:,, noKeyTest
+      mul lines test
+  - node2:KSample
+    - 潜空间, o
+    - 模型, i
+    - 正面条件, i
+    - 负面条件, i
+    - 潜空间, i
+    - 种子,
+    - 运行后操作,
+    - 步数,
+    - CFG,
+    - 采样器/采样方法,
+    - 调度器,
+    - 降噪,
+  - translate
+- edges
+  - node1,Latent, translate,l
+  - translate,r, node2, 潜空间
+`
+
+const testData_list2 = `
+- nodes
+  - NodeTitle
+    - only name, i
+    - i2, i, *i2
+    - i3, i, mul line
+      i3-2
+      i3-3
+    - i4, i, *i4
+    - only name, o
+    - o2, o, *o2
+    - o3, o, *o3
+    - o4, o, mul line
+      o4-2
+      o4-3
+    - v2, v, *v2
+    - v4, , mul line
+      v4-2
+      v4-3
+    - v3, , *v3
+    - only name, 
+    - v5:, , only value
+      v5-1
+      v5-2
+- edges
+`
