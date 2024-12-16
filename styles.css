@@ -99,7 +99,7 @@
   padding: 2px 14px;
   line-height: 20px;
   border-radius: 12px;
-  border: solid 1px #616161;
+  border: solid 1px currentColor;
 }
 .dropdown-item[data-v-447493a8] {
   box-sizing: border-box;

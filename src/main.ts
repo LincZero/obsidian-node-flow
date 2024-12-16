@@ -21,11 +21,7 @@ export default class NodeFlowPlugin extends Plugin {
 
     // 注册 - 代码块
     const code_type_list = [
-      "nodeflow-vueflow", "nodeflow-vueflow-demo", "nodeflow-vueflow-demo2", "nodeflow-vueflow-demo3",
-      "nodeflow-obcanvas", "nodeflow-obcanvas-demo",
-      "nodeflow-comfyui", "nodeflow-comfyui-demo", "nodeflow-comfyui-demo2",
-      "nodeflow-list", "nodeflow-list-demo",
-      "nodeflow-item", "nodeflow-item-demo",
+      "nodeflow-vueflow", "nodeflow-obcanvas", "nodeflow-comfyui", "nodeflow-list", "nodeflow-item"
     ]
     for (let item of code_type_list) {
       this.registerMarkdownCodeBlockProcessor(item, (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {

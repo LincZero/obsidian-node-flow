@@ -417,3 +417,30 @@ export const testData_list = `
   - node1,Latent, translate,l
   - translate,r, node2, 潜空间
 `
+
+export const testData_list2 = `
+- nodes
+  - NodeTitle
+    - only name, i
+    - i2, i, *i2
+    - i3, i, mul line
+      i3-2
+      i3-3
+    - i4, i, *i4
+    - only name, o
+    - o2, o, *o2
+    - o3, o, *o3
+    - o4, o, mul line
+      o4-2
+      o4-3
+    - v2, v, *v2
+    - v4, , mul line
+      v4-2
+      v4-3
+    - v3, , *v3
+    - only name, 
+    - v5:, , only value
+      v5-1
+      v5-2
+- edges
+`
