@@ -162,6 +162,9 @@ textarea[data-v-3b87dde5] {
 .vue-flow__panel .fold-title button[data-v-5f38abf1] {
   width: 100%;
 }
+.fold-content > div[data-v-5f38abf1] {
+  height: 24px;
+}
 .vue-flow {
   position: relative;
   width: 100%;

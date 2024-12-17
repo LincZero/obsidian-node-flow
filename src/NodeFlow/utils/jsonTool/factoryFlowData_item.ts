@@ -78,10 +78,8 @@ const testData_itemData = {
             "id": "4",
             "name": "clip",
             "refType": "input",
-            // 可选 "ref": "", 用于指向传递过来的节点id和位置?
             "valueType": "item-default",
             "value": "",
-            // 可选 "widgetType": ""
           },
           {
             "id": "5",
