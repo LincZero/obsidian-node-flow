@@ -346,10 +346,19 @@ export const testData_listitem = `
       v4-2
       v4-3
     - v3, , *v3
-    - only name, 
     - v5:color, :item-color, #008888
     - v6:, :item-markdown, only value
       **v6-1**
       *v6-2*
+    - v7, :item-dropdown, option1|option2|option3
+    - v8 only name, 
+    - v9, :item-item, l
+      - only name2, i
+      - i22, i, *i2
+      - v91, :item-item, l
+        - v911, 
+      - v92, :item-item, l
+        - v921, 
+    - v10,,over
 - edges
 `

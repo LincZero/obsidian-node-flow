@@ -1,6 +1,19 @@
 @charset "UTF-8";
 
 /* main.css */
+.markdown-item[data-v-adf15d24] {
+  box-sizing: border-box;
+  min-height: 24px;
+  height: auto;
+  padding: 1px 12px;
+  border: solid 1px #616161;
+  background-color: #222;
+  border-radius: 13px;
+}
+.markdown-item .node-item-name[data-v-adf15d24],
+.markdown-item .node-item-value[data-v-adf15d24] {
+  float: none !important;
+}
 .obcanvas-node[data-v-6026aac7] {
   display: flex;
   align-items: center;
@@ -10,9 +23,8 @@
   justify-content: center;
   margin: auto;
   gap: 4px;
-  padding: 16px 24px;
   border: 1px solid currentColor;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 .vue-flow__handle[data-v-6026aac7] {
   background: none;
@@ -80,19 +92,6 @@ textarea.node-item-value[data-v-3b87dde5] {
   text-align: left;
   margin-left: 0;
   margin-right: 8px;
-}
-.markdown-item[data-v-adf15d24] {
-  box-sizing: border-box;
-  min-height: 24px;
-  height: auto;
-  padding: 1px 12px;
-  border: solid 1px #616161;
-  background-color: #222;
-  border-radius: 13px;
-}
-.markdown-item .node-item-name[data-v-adf15d24],
-.markdown-item .node-item-value[data-v-adf15d24] {
-  float: none !important;
 }
 .color-item[data-v-6326b0c1] {
   box-sizing: border-box;

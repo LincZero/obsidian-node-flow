@@ -53,8 +53,8 @@ export function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: st
 
 const testData_obcanvas = {
   "nodes":[
-    {"id":"d1acdb5136ffb1f1","x":25,"y":70,"width":250,"height":60,"type":"text","text":"Test1\n"},
-    {"id":"f7dc36d69da1bb36","x":330,"y":70,"width":250,"height":60,"type":"text","text":"Test2\n"}
+    {"id":"d1acdb5136ffb1f1","x":25,"y":70,"width":250,"height":60,"type":"text","text":"## Title\n\n**Test** *1*\n"},
+    {"id":"f7dc36d69da1bb36","x":330,"y":70,"width":250,"height":60,"type":"text","text":"~~Test~~ ==2==\n"}
   ],
   "edges":[
     {"id":"fc3f1bc43902aac9","fromNode":"d1acdb5136ffb1f1","fromSide":"right","toNode":"f7dc36d69da1bb36","toSide":"left"}

@@ -6,7 +6,7 @@
     <textarea
       v-if="props.data.value"
       class="node-item-value"
-      :value="props.data.value"
+      v-model="props.data.value"
       :rows="props.data.value.split('\n').length"
       cols="10"
       @input="handleInput"
@@ -22,7 +22,6 @@ const props = defineProps<{
 }>()
 import { nextTick, onMounted, ref } from 'vue';
 const TextArea3 = ref(null) // 可能由于v-if而不存在
-const TextArea2 = ref(null)
 
 function handleInput(e:any) {
   autoSize(e.target)
@@ -45,7 +44,6 @@ function autoSize(el:HTMLElement) {
   //   .forEach(value => value.style.marginTop = el.scrollHeight + 'px');
 }
 onMounted(()=>{
-  // console.error("奇怪的错误，初始找不到TextAreaRef", TextArea3.value, TextArea2.value);
   autoSize(TextArea3.value)
   nextTick(() => {
     autoSize(TextArea3.value)

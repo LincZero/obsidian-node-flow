@@ -2,7 +2,7 @@
 
 <template>
   <div class="obcanvas-node">
-    {{ data.label }}
+    <MarkdownItem :data="newData"></MarkdownItem>
   </div>
 
   <Handle id="left" type="target" :position="Position.Left" />
@@ -25,9 +25,17 @@ import { Handle, Position } from '@vue-flow/core'
 // })
 const props = defineProps<{
   id: string,
-  data: any,
-  md_render?: (markdown: string, el: HTMLElement)=>void, // 暂不支持
+  data: any
 }>()
+import { ref } from 'vue';
+const newData = ref({
+  name: "",
+  value: props.data.label,
+  refType: "value",
+  valueType: "item-markdown",
+})
+
+import MarkdownItem from '../nodeItem/MarkdownItem.vue';
 </script>
 
 <style scoped>
@@ -52,9 +60,9 @@ const props = defineProps<{
   gap:4px;
 
   /* ob */
-  padding: 16px 24px;
+  /* padding: 16px 24px; */
   border: 1px solid currentColor;
-  border-radius:8px;
+  border-radius:12px;
 }
 
 .vue-flow__handle {
