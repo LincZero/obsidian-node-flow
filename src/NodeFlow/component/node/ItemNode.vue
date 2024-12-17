@@ -29,25 +29,7 @@ Item类型的节点
       <!-- 项集 -->
       <div class="node-content">
         <div v-for="(item,index) in data.items" :class="'line node-item '+item.refType">
-          <Handle
-            v-if="item.refType === 'input' || item.refType === 'i'"
-            class="node-item-handle"
-            :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
-            :indexAttr="index"
-            :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-            :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
-            type="target"
-            :position="Position.Left" />
-          <Handle
-            v-if="item.refType === 'output' || item.refType === 'o'"
-            class="node-item-handle"
-            :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
-            :indexAttr="index"
-            :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
-            :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
-            type="source"
-            :position="Position.Right" />
-          <ItemNodeSlot :data="item">
+          <ItemNodeSlot :index="index" :item="item">
             <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
@@ -57,14 +39,12 @@ Item类型的节点
         </div>
       </div>
       <!-- Handle - 默认隐藏 -->
-      <Handle v-show="!hasCustomHandle"
-        id="l" class="default" type="target" :position="Position.Left" />
-      <Handle v-show="!hasCustomHandle"
-        id="t" class="default" :position="Position.Top" />
-      <Handle v-show="!hasCustomHandle"
-        id="r" class="default" type="source" :position="Position.Right" />
-      <Handle v-show="!hasCustomHandle"
-        id="b" class="default" :position="Position.Bottom" />
+      <div v-show="!hasCustomHandle">
+        <Handle id="l" class="default" type="target" :position="Position.Left" />
+        <Handle id="t" class="default" :position="Position.Top" />
+        <Handle id="r" class="default" type="source" :position="Position.Right" />
+        <Handle id="b" class="default" :position="Position.Bottom" />
+      </div>
     </div>
   </div>
 </template>
@@ -82,7 +62,7 @@ const props = defineProps({
     required: true,
   },
 })
-// 计算属性
+// 计算属性 (如果需要让输入输出socket同行显示，则需要用到。但会增加一些复杂度)
 const inputItems = computed(() => props.data.items.filter((item:any) => item.refType === 'input'));
 const outputItems = computed(() => props.data.items.filter((item:any) => item.refType === 'output'));
 const valueItems = computed(() => props.data.items.filter((item:any) => item.refType === 'value'));
