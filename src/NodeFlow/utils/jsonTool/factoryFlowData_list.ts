@@ -18,8 +18,10 @@ import { nfSetting } from "../main/setting"
  */
 export function factoryFlowData_list(md:string): {code: number, msg: string, data: object} {
   // 使用demo数据
-  if (md == "demo") { md = testData_list }
-  else { return {code: -1, msg: "error demo: "+md, data: {}}  }
+  if (md.startsWith("demo")) {
+    if (md == "demo") { md = testData_list }
+    else { return {code: -1, msg: "error demo: "+md, data: {}}  }
+  }
 
   /**
    * self-children-object
