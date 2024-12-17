@@ -17,10 +17,8 @@ Item类型的节点
 <template>
   <div class="item-node">
     <!-- id项 -->
-    <div class="node-id">
-      <div>
-        #{{ id }}
-      </div>
+    <div :v-show="id != ''" class="node-id">
+      <div>#{{ id }}</div>
     </div>
     <div class="common-node node-main" :aria-label="data.label">
       <!-- 标题项 -->
@@ -49,7 +47,13 @@ Item类型的节点
             :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
             type="source"
             :position="Position.Right" />
-          <slot :name="item.valueType" :id="item.id" :data="item"></slot>
+          <ItemNodeSlot :data="item">
+            <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
+            <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
+            <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
+            <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
+            <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
+          </ItemNodeSlot>
         </div>
       </div>
       <!-- Handle - 默认隐藏 -->
@@ -79,15 +83,15 @@ const props = defineProps({
   },
 })
 // 计算属性
-const inputItems = computed(() => 
-  props.data.items.filter((item:any) => item.refType === 'input')
-);
-const outputItems = computed(() => 
-  props.data.items.filter((item:any) => item.refType === 'output')
-);
-const valueItems = computed(() => 
-  props.data.items.filter((item:any) => item.refType === 'value')
-);
+const inputItems = computed(() => props.data.items.filter((item:any) => item.refType === 'input'));
+const outputItems = computed(() => props.data.items.filter((item:any) => item.refType === 'output'));
+const valueItems = computed(() => props.data.items.filter((item:any) => item.refType === 'value'));
+
+import ItemNodeSlot from "../nodeItem/ItemNodeSlot.vue"
+import DefaultItem from "../nodeItem/DefaultItem.vue"           // 默认项
+import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
+import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
+import DropdownItem from "../nodeItem/DropdownItem.vue"         // 下拉项
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)

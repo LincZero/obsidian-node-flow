@@ -19,18 +19,7 @@
     <template #node-comfyui-group="props"><ComfyUINodeGroup :id="props.id" :data="props.data"/></template>
     <template #node-common="props"><CommonNode :id="props.id" :data="props.data"/></template>
     <template #node-item="props">
-      <ItemNode :id="props.id" :data="props.data">
-        <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
-        <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
-        <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
-        <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
-        <template #item-item="props"><ItemNode :id="props.id" :data="props.data">
-          <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
-          <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
-          <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
-          <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
-        </ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
-      </ItemNode>
+      <ItemNode :id="props.id" :data="props.data"></ItemNode>
     </template>
     <InteractionControls v-if="!props.isMini"/>
   </VueFlow>
@@ -43,7 +32,6 @@ const props = defineProps<{
   isMini: boolean, // true为局部渲染，尽可能简化；false为在更大的独立视图中渲染，可以显示更多东西
 }>()
 import { ref, watch } from 'vue'
-import type { Ref } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 
 // 组件 - 自定义节点
@@ -52,11 +40,6 @@ import ComfyUINode from '../node/ComfyUINode.vue'              // comfyui 节点
 import ComfyUINodeGroup from '../node/ComfyUINodeGroup.vue'    // 节点组
 import CommonNode from '../node/CommonNode.vue'                // 通用节点
 import ItemNode from '../node/ItemNode.vue'                    // 项节点
-
-import DefaultItem from "../nodeItem/DefaultItem.vue"           // 默认项
-import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
-import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
-import DropdownItem from "../nodeItem/DropdownItem.vue"         // 下拉项
 
 // 组件 - 其他
 import InteractionControls from '../utils/InteractionControls.vue'   // 控制画布控制的操作开关
