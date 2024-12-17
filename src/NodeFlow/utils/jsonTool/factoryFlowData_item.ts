@@ -6,7 +6,7 @@
 export function factoryFlowData_item(parsedData:any): {code: number, msg: string, data: object} {
     // 使用demo数据
     if (parsedData == "demo") { parsedData = JSON.parse(JSON.stringify(testData_itemData)) }
-    else { console.error("error demo") }
+    else { return {code: -1, msg: "error demo: "+parsedData, data: {}}  }
 
   for (let item of parsedData["nodes"]) {
     if (!item.hasOwnProperty("position")) {

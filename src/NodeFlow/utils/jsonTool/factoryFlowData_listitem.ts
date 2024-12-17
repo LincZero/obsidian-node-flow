@@ -72,7 +72,7 @@ interface type_selfChildren_edge extends type_selfChildren_base {
 export function factoryFlowData_listitem(md:string): {code: number, msg: string, data: object} {
   // 使用demo数据
   if (md == "demo") { md = testData_list }
-  else { console.error("error demo") }
+  else { return {code: -1, msg: "error demo: "+md, data: {}}  }
 
   // step1
   let result_items: type_selfChildren[]

@@ -3,7 +3,7 @@ export function factoryFlowData_vueflow(parsedData:any): {code: number, msg: str
   if (parsedData == "demo") { parsedData = JSON.parse(JSON.stringify(testData_vueflow)) }
   else if (parsedData == "demo2") { parsedData = JSON.parse(JSON.stringify(testData_vueflow_withoutPos)) }
   else if (parsedData == "demo3") { parsedData = JSON.parse(JSON.stringify(testData_vueflow_customNode)) }
-  else { console.error("error demo") }
+  else { return {code: -1, msg: "error demo: "+parsedData, data: {}}  }
 
   return {code: 0, msg: "", data: parsedData}
 }

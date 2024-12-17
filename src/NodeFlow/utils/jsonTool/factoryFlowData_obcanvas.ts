@@ -4,7 +4,7 @@
 export function factoryFlowData_obcanvas(parsedData:any): {code: number, msg: string, data: object} {
   // 使用demo数据
   if (parsedData == "demo") { parsedData = JSON.parse(JSON.stringify(testData_obcanvas)) }
-  else { console.error("error demo") }
+  else { return {code: -1, msg: "error demo: "+parsedData, data: {}}  }
 
   try {
     let nodes_new: object[] = []

@@ -16,12 +16,16 @@ import { factoryFlowData_listitem } from "./factoryFlowData_listitem"
 export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: object} {
   // 统一检查，json是否合法
   let parsedData;
-  if (json.startsWith("demo")) {}
-  else if (jsonType === "list" || jsonType === "listitem") {}
+  if (json.trim()=="") {
+    return {code: -1, msg: "error: content is empty", data: {}}
+  }
+  else if (json.startsWith("demo")) {
+    parsedData = json
+  }
+  else if (jsonType === "list" || jsonType === "listitem") {
+    parsedData = json
+  }
   else {
-    if (json.trim()=="") {
-      return {code: -1, msg: "error: json content is empty", data: {}}
-    }
     try {
       parsedData = JSON.parse(json)
       if (!parsedData) { return {code: -1, msg: "error: not a legitimate json", data: {}} }
@@ -39,7 +43,7 @@ export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nod
   } else if (jsonType == "nodeflow-vueflow") {
     result = factoryFlowData_vueflow(parsedData)
   } else if (jsonType == "nodeflow-list") {
-    result = factoryFlowData_list(json)
+    result = factoryFlowData_list(parsedData)
   } else if (jsonType == "nodeflow-item") {
     result = factoryFlowData_item(parsedData)
   } else if (jsonType == "nodeflow-listitem") {

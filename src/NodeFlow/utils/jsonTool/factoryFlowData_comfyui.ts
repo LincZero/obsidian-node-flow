@@ -7,7 +7,7 @@ export function factoryFlowData_comfyui(parsedData:any): {code: number, msg: str
   // 使用demo数据
   if (parsedData == "demo") { parsedData = JSON.parse(JSON.stringify(testData_comfyUI)) }
   else if (parsedData == "demo2") { parsedData = JSON.parse(JSON.stringify(testData_comfyUI2)) }
-  else { console.error("error demo") }
+  else { return {code: -1, msg: "error demo: "+parsedData, data: {}}  }
 
   try {
     let nodes_new: object[] = []
