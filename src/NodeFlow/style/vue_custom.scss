@@ -391,16 +391,16 @@
         >.node-item-slot {
           width: 100%;
           
-          // &.input 或默认
+          // &.input, &.i 或默认
           .node-item-name { float: left; }
           .node-item-value { float: right; }
-          &.output {
+          &.output, &.o {
             .node-item-name { float: right; }
             .node-item-value { float: left; }
           }
 
-          .node-item-name { font-weight: bolder; }
-          .node-item-value { font-weight: lighter; }
+          // .node-item-name { font-weight: bolder; }
+          // .node-item-value { font-weight: lighter; }
         }
       }
     }

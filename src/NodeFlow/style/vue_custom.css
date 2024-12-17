@@ -412,20 +412,12 @@
   float: right;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name, .item-node > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-name {
   float: right;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value, .item-node > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-value {
   float: left;
-}
-
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
-  font-weight: bolder;
-}
-
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
-  font-weight: lighter;
 }
 
 .vue-flow__node-comfyui-group.selected .comfyui-group {

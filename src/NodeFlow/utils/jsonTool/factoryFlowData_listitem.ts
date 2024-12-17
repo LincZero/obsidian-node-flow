@@ -23,7 +23,7 @@ interface type_selfChildren_node extends type_selfChildren_base {
     name: string,                               // 节点名 (会显示)
     parentId: string,                           // 父节点id，根节点没有，为 ""
     parent: type_selfChildren|null,
-    items: type_selfChildren_socket[],          // 缓存节点内部数据，不再分开类型 (旧inputs+outputs+values)
+    items: any,                                 // 缓存节点内部数据，不再分开类型 (旧inputs+outputs+values)
   }
 }
 interface type_selfChildren_socket extends type_selfChildren_base {
@@ -104,7 +104,7 @@ export function factoryFlowData_listitem(md:string): {code: number, msg: string,
             },
             position: { x: 0, y: 0 },
             ...(item.self_data.parentId==""||item.self_data.parentId=="nodes")?{}:{parentNode: item.self_data.parentId},
-            type: "common",
+            type: "item",
           }
           nodes_new.push(current_node)
           recursion_node(item.children)
@@ -266,7 +266,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
             type: "socket",
             // @ts-ignore type类型不对
             refType: (ll_content[1]&&["i","input","o","output","v","value"].includes(ll_content[1][0]))?ll_content[1][0]:"value",
-            valueType: (ll_content[1]&&ll_content[1][1])?ll_content[1][1]:"item-defualt",
+            valueType: (ll_content[1]&&ll_content[1][1])?ll_content[1][1]:"item-default",
             id: ll_content[0][0],
             name: ll_content[0][1]??ll_content[0][0],
             parentId: "", parent: null,
@@ -304,9 +304,9 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
           if (parent_item.self_data.type!= "n" && parent_item.self_data.type!= "node" && parent_item.self_data.type!= "g" && parent_item.self_data.type!= "group") continue
           parent_item.children.push(current_item)
           current_item.self_data.parentId = parent_item.self_data.id; current_item.self_data.parent = parent_item;
-          if (current_item.self_data.type == "edge" || current_item.self_data.type == "e") { 
+          if (current_item.self_data.type == "socket" || current_item.self_data.type == "s") { 
             parent_item.self_data.type = "node"
-            parent_item.self_data.items.push(current_item as type_selfChildren_socket)
+            parent_item.self_data.items.push((current_item as type_selfChildren_socket).self_data)
           }
           else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
             parent_item.self_data.type = "group"

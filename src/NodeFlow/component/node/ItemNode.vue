@@ -99,5 +99,5 @@ const valueItems = computed(() =>
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
-hasCustomHandle.value = props.data?.inputs?.length!=0 || props.data?.outputs?.length!=0
+hasCustomHandle.value = props.data?.items?.length!=0
 </script>

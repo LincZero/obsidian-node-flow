@@ -42,6 +42,7 @@ const props = defineProps<{
   padding: 0;
   margin: 0;
 }
-.default-item .node-item-value { text-align: right; margin-left: 2px;} /* default/input */
+.default-item .node-item-value { text-align: right; margin-left: 2px;} /* default/input/i */
 .default-item.output .node-item-value { text-align: left; margin-right: 2px; }
+.default-item.o .node-item-value { text-align: left; margin-right: 2px; }
 </style>

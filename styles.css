@@ -66,7 +66,8 @@
   text-align: right;
   margin-left: 2px;
 }
-.default-item.output .node-item-value[data-v-3b87dde5] {
+.default-item.output .node-item-value[data-v-3b87dde5],
+.default-item.o .node-item-value[data-v-3b87dde5] {
   text-align: left;
   margin-right: 2px;
 }
@@ -840,17 +841,13 @@
 .item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
   float: right;
 }
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name,
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-name {
   float: right;
 }
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value {
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value,
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-value {
   float: left;
-}
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
-  font-weight: bolder;
-}
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
-  font-weight: lighter;
 }
 .vue-flow__node-comfyui-group.selected .comfyui-group {
   box-shadow: 0 0 8px 3px #ec4899;
