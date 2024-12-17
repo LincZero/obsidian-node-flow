@@ -1077,3 +1077,6 @@ textarea.node-item-value[data-v-3b87dde5] {
 .nf-autoDie {
   height: 100%;
 }
+.markdown-reading-view .normal-size {
+  margin-bottom: 24px;
+}

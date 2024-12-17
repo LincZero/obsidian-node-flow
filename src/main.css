@@ -12,3 +12,7 @@
 .nf-autoDie {
   height: 100%;
 }
+/* 阅读模式 */
+.markdown-reading-view .normal-size {
+  margin-bottom: 24px;
+}
