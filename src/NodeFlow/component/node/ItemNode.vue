@@ -37,7 +37,7 @@ Item类型的节点
       <div class="node-content">
         <div v-for="(item,index) in data.items" :class="'line node-item '+item.refType">
           <Handle
-            v-if="item.refType === 'input'"
+            v-if="item.refType === 'input' || item.refType === 'i'"
             class="node-item-handle"
             :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
             :indexAttr="index"
@@ -46,7 +46,7 @@ Item类型的节点
             type="target"
             :position="Position.Left" />
           <Handle
-            v-if="item.refType === 'output'"
+            v-if="item.refType === 'output' || item.refType === 'o'"
             class="node-item-handle"
             :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
             :indexAttr="index"

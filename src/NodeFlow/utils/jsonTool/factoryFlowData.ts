@@ -3,6 +3,7 @@ import { factoryFlowData_obcanvas } from "./factoryFlowData_obcanvas"
 import { factoryFlowData_comfyui } from "./factoryFlowData_comfyui"
 import { factoryFlowData_list } from "./factoryFlowData_list"
 import { factoryFlowData_item } from "./factoryFlowData_item"
+import { factoryFlowData_listitem } from "./factoryFlowData_listitem"
 
 /**
  * 解析并转化json，将各种类型的json转化为统一的vueflow形式 (统一的 {nodes:[],edges:[]} 格式)
@@ -16,7 +17,7 @@ export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nod
   // 统一检查，json是否合法
   let parsedData;
   if (json.startsWith("demo")) {}
-  else if (jsonType == "list") {}
+  else if (jsonType === "list" || jsonType === "listitem") {}
   else {
     if (json.trim()=="") {
       return {code: -1, msg: "error: json content is empty", data: {}}
@@ -41,6 +42,8 @@ export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nod
     result = factoryFlowData_list(json)
   } else if (jsonType == "nodeflow-item") {
     result = factoryFlowData_item(parsedData)
+  } else if (jsonType == "nodeflow-listitem") {
+    result = factoryFlowData_listitem(parsedData)
   } else {
     return {code: -1, msg: "error: invalid json type: " + jsonType, data: {}}
   }

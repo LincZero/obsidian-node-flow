@@ -305,7 +305,7 @@ export function factoryFlowData_list(md:string): {code: number, msg: string, dat
   }
 }
 
-const testData_list = `
+export const testData_list = `
 - nodes
   - node1:KSample
     - Latent, o
@@ -344,7 +344,7 @@ const testData_list = `
   - translate,r, node2, 潜空间
 `
 
-const testData_list2 = `
+export const testData_list2 = `
 - nodes
   - NodeTitle
     - only name, i
@@ -365,8 +365,9 @@ const testData_list2 = `
       v4-3
     - v3, , *v3
     - only name, 
-    - v5:, , only value
+    - v5:, :item-markdown, only value
       v5-1
       v5-2
+    - v6:color, :item-color, #008888
 - edges
 `
