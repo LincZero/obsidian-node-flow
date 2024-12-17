@@ -24,13 +24,7 @@ Tutorials, online effects, use cases, and more (教程、在线效果、用例�
 Supported code block types (支持的代码块类型)：
 
 ```json
-[
-  "nodeflow-test",
-  "nodeflow-vueflow", "nodeflow-vueflow-demo", "nodeflow-vueflow-demo2", "nodeflow-vueflow-demo3",
-  "nodeflow-obcanvas", "nodeflow-obcanvas-demo",
-  "nodeflow-comfyui", "nodeflow-comfyui-demo", "nodeflow-comfyui-demo2",
-  "nodeflow-list", "nodeflow-list-demo"
-]
+["nodeflow-test", "nodeflow-vueflow", "nodeflow-obcanvas", "nodeflow-comfyui", "nodeflow-list", "nodeflow-listitem"]
 ```
 
 - en
@@ -39,14 +33,16 @@ Supported code block types (支持的代码块类型)：
   2. `nodeflow-obcanvas` prefix, using the content of the obsidian canvas file (open with Notepad, you will find that it is a json format)
   3. `nodeflow-list` prefix, indicating that this is a reference mermaid/plantuml, using light text to describe the chart format.
     See [NodeFlow List Grammer](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/NodeFlow%20List%20Grammer.html) for details
-  4. See the [documentation](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html) for specific uses of these types
+  4. `nodeflow-list` prefix, in beta testing. Similar to `nodeflow-list`, but can support multiple item types, such as color, markdown, etc.
+  5. See the [documentation](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html) for specific uses of these types
 - zh
   这些代码块的类型都不太一样
   1. `nodeflow-comfyui` 前缀的，使用comfyui软件导出的工作流json作为内容
   2. `nodeflow-obcanvas` 前缀的，使用obsidian canvas文件的内容 (用记事本打开，会发现里面是一个json格式)
   3. `nodeflow-list` 前缀的，表示这是一个对标mermaid/plantuml的，用轻文字描述图表的格式。
     具体语法参考 [NodeFlow List Grammer](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/NodeFlow%20List%20Grammer.html)
-  4. 这些类型更具体的用法见[文档](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.htm)
+  4. `nodeflow-listitem` 前缀的，beta测试中。与 `nodeflow-list` 相似，但能支持多种项类型，如颜色、markdown等
+  5. 这些类型更具体的用法见[文档](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.htm)
 
 Example - List Grammer (举例 - 列表语法)：
 
@@ -90,6 +86,8 @@ Example - List Grammer (举例 - 列表语法)：
   - translate,r, node2, 潜空间
 ```
 ````
+
+You can alse use the demo use case by filling in `demo`/`demo2`/`demo3` in the code block and checking that it works (你也可以在代码块内填写 `demo`/`demo2`/`demo3` 来使用demo用例，并检查其是否正常工作)
 
 ### Method 2: Independent file (方式二: 独立文件)
 
