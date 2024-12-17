@@ -51,16 +51,14 @@
   background-color: #222;
 }
 .node-item-name[data-v-3b87dde5] {
-  height: 20px;
   line-height: 20px;
 }
 .node-item-value[data-v-3b87dde5] {
-  height: 20px;
   line-height: 20px;
   background: none;
   border: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 0 4px;
 }
 .default-item .node-item-value[data-v-3b87dde5] {
   text-align: right;
@@ -70,6 +68,11 @@
 .default-item.o .node-item-value[data-v-3b87dde5] {
   text-align: left;
   margin-right: 2px;
+}
+textarea[data-v-3b87dde5] {
+  overflow: hidden;
+  overflow-y: auto;
+  resize: none;
 }
 .markdown-item[data-v-adf15d24] {
   box-sizing: border-box;

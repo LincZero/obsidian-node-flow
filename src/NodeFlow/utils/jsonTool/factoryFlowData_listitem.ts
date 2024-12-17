@@ -1,5 +1,4 @@
 import { nfSetting } from "../main/setting"
-import { testData_list, testData_list2 } from "./factoryFlowData_list"
 
 /**
  * self-children-object
@@ -71,7 +70,7 @@ interface type_selfChildren_edge extends type_selfChildren_base {
  */
 export function factoryFlowData_listitem(md:string): {code: number, msg: string, data: object} {
   // 使用demo数据
-  if (md == "demo") { md = testData_list }
+  if (md == "demo") { md = testData_listitem }
   else { return {code: -1, msg: "error demo: "+md, data: {}}  }
 
   // step1
@@ -158,7 +157,8 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
     // let last_item;                             // 上一行的解析结果，等同 map_item[map_item.length-1]
     let current_index:number = 0                  // 当前行的行数
     let current_line:string                       // 当前行的内容
-    let current_exp:RegExpMatchArray              // 当前行的正则对象
+    let current_exp:RegExpMatchArray              // 当前行的正则对象 (将current_line拆成indent和content)
+    let current_content:string                    // 当前行的正文内容 (去除前缀的`空格-`)
     let current_indent:number                     // 当前行的缩进空格 (从0开始)
     let current_level:number                      // 当前行的级别。level表示位于第几层中嵌套中 (最外层是0)
     let current_item:type_selfChildren            // 当前行的解析结果
@@ -172,6 +172,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
       current_exp = next_exp ?? current_line.match(/(^\s*)(- )?(.*)/);
       if (!current_exp) continue
       if (!current_exp[2]) continue // 追加项
+      current_content = current_exp[3]
 
       /**
        * no change current, 仅处理追加项
@@ -197,6 +198,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
         }
         if (!next_exp[2]) { // 追加项
           current_line += "\n" + next_exp[3]
+          current_content += "\n" + next_exp[3]
           current_index++
           continue
         }
@@ -224,7 +226,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
 
       // change3: current_item & map_item，当前内容 & 父子关系缓存表
       current_item = {
-        self: current_exp[3],
+        self: current_content,
         children: [],
         self_data: null
       }
@@ -242,7 +244,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
          *   线条 `from, from socket, to, to socket, (name)?`
          */
         let ll_content:string[][] = []
-        const content = current_exp[3]
+        const content = current_content
         const l_content = content.split(",")
         for (let item of l_content) {
           ll_content.push(item.trim().split(":"))
@@ -302,7 +304,6 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
           // 修正父节点类型，父节点不能为socket或线、且socket的父节点强制为node，node的父节点强制为group
           // 无法使用 (!["n", "node", "g", "group"].includes(parent.self_data.type)) 简化……否则飘红，代码编辑器没那么智能……
           if (parent_item.self_data.type!= "n" && parent_item.self_data.type!= "node" && parent_item.self_data.type!= "g" && parent_item.self_data.type!= "group") continue
-          parent_item.children.push(current_item)
           current_item.self_data.parentId = parent_item.self_data.id; current_item.self_data.parent = parent_item;
           if (current_item.self_data.type == "socket" || current_item.self_data.type == "s") { 
             parent_item.self_data.type = "node"
@@ -311,6 +312,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
           else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
             parent_item.self_data.type = "group"
           }
+          parent_item.children.push(current_item)
         }
       }
     }
@@ -319,3 +321,31 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
   }
   return {code: 0, msg:"", data: result_items}
 }
+
+export const testData_listitem = `
+- nodes
+  - NodeTitle
+    - only name, i
+    - i2, i, *i2
+    - i3, i, mul line
+      i3-2
+      i3-3
+    - i4, i, *i4
+    - only name, o
+    - o2, o, *o2
+    - o3, o, *o3
+    - o4, o, mul line
+      o4-2
+      o4-3
+    - v2, v, *v2
+    - v4, , mul line
+      v4-2
+      v4-3
+    - v3, , *v3
+    - only name, 
+    - v5:color, :item-color, #008888
+    - v6:, :item-markdown, only value
+      **v6-1**
+      *v6-2*
+- edges
+`
