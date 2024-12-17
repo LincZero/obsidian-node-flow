@@ -432,7 +432,7 @@
   box-shadow: 0 0 8px 3px #ec4899;
 }
 
-.vue-flow__node-item.selected .item-node .node-main {
+.vue-flow__node-item.selected > .item-node > .node-main {
   box-shadow: 0 0 8px 3px #ec4899;
 }
 
