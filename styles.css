@@ -45,10 +45,14 @@
   padding: 2px 0;
 }
 .default-item.has-value[data-v-3b87dde5] {
-  padding: 1px 12px;
+  padding: 1px 0;
   border: solid 1px #616161;
   border-radius: 13px;
   background-color: #222;
+}
+.default-item.has-value .node-item-name[data-v-3b87dde5],
+.default-item.has-value .node-item-value[data-v-3b87dde5] {
+  padding: 0 12px;
 }
 .node-item-name[data-v-3b87dde5] {
   line-height: 20px;
@@ -57,8 +61,14 @@
   line-height: 20px;
   background: none;
   border: none;
-  padding: 0;
   margin: 0 0 0 4px;
+}
+textarea.node-item-value[data-v-3b87dde5] {
+  overflow: hidden;
+  white-space: pre;
+  resize: none;
+  border-radius: 12px;
+  line-height: 20px;
 }
 .default-item .node-item-value[data-v-3b87dde5] {
   text-align: right;
@@ -70,11 +80,6 @@
   text-align: left;
   margin-left: 0;
   margin-right: 8px;
-}
-textarea[data-v-3b87dde5] {
-  overflow: hidden;
-  overflow-y: auto;
-  resize: none;
 }
 .markdown-item[data-v-adf15d24] {
   box-sizing: border-box;
