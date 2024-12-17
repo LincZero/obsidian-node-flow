@@ -46,9 +46,9 @@
         <label class="label">
           Pan on scroll mode
           <select id="panonscrollmode" v-model="panOnScrollMode" class="vue-flow__panonscrollmode">
-            <option value="free">free</option>
-            <option value="horizontal">horizontal</option>
-            <option value="vertical">vertical</option>
+            <option value="free">Free</option>
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
           </select>
         </label>
       </div>
