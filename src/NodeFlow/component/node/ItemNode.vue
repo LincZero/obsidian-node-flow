@@ -1,22 +1,17 @@
 <!--
 Item类型的节点
 
-结构1：
+结构：
 - common-id
 - common-node
   - node-title          标题
   - node-content
-    - node-content-lr
-      - left            输入项
-      - right           输出项
-    - node-content-self 值项
+    - handle (可选)
+    - slot (节点项，可自定义)
 
-结构2:
-- 项(输入/输出/值)
-  - 任意布局class
-    - item-handle
-    - item-name
-    - item-value
+特点：
+- 节点也应该是节点项，但有一些不同
+- 作为节点项的节点没有位置的大小属性，也不在根data的nodes下，不归vueflow管。只是长得像节点但其实不是节点
 -->
 
 <template>
@@ -31,7 +26,7 @@ Item类型的节点
       <!-- 标题项 -->
       <div class="node-title">
         <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
-        <span style="display: inline-block; margin-left: 10px;">{{ data.label }}</span>
+        <span style="display: inline-block; margin-left: 10px;">{{ data.hasOwnProperty('label')?data.label:data.hasOwnProperty('name')?data.name:data.id }}</span>
       </div>
       <!-- 项集 -->
       <div class="node-content">
@@ -54,7 +49,7 @@ Item类型的节点
             :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
             type="source"
             :position="Position.Right" />
-          <slot :name="item.valueType" :data="item"></slot>
+          <slot :name="item.valueType" :id="item.id" :data="item"></slot>
         </div>
       </div>
       <!-- Handle - 默认隐藏 -->
@@ -71,7 +66,7 @@ Item类型的节点
 </template>
 
 <script setup lang="ts">
-import { Handle, Position, useVueFlow } from '@vue-flow/core'
+import { Handle, Position } from '@vue-flow/core'
 import { computed, ref } from 'vue';
 const props = defineProps({
   id: {
@@ -93,9 +88,6 @@ const outputItems = computed(() =>
 const valueItems = computed(() => 
   props.data.items.filter((item:any) => item.refType === 'value')
 );
-
-// 根据json创建具名插槽
-
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)

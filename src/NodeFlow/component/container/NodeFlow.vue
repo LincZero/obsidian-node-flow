@@ -24,6 +24,12 @@
         <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
         <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
         <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
+        <template #item-item="props"><ItemNode :id="props.id" :data="props.data">
+          <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
+          <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
+          <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
+          <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
+        </ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
       </ItemNode>
     </template>
     <InteractionControls v-if="!props.isMini"/>

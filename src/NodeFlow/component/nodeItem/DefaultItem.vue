@@ -44,9 +44,16 @@ import { onMounted, ref } from 'vue';
   margin: 0;
   margin-left: 4px;
 }
-.default-item .node-item-value { text-align: right; margin-left: 2px;} /* default/input/i */
-.default-item.output .node-item-value { text-align: left; margin-right: 2px; }
-.default-item.o .node-item-value { text-align: left; margin-right: 2px; }
+.default-item .node-item-value { /* default/input/i */
+  text-align: right;
+  margin-left: 8px;
+  margin-right: 0;
+}
+.default-item.output .node-item-value, .default-item.o .node-item-value {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 8px;
+}
 
 textarea {
   overflow: hidden;

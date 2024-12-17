@@ -62,12 +62,14 @@
 }
 .default-item .node-item-value[data-v-3b87dde5] {
   text-align: right;
-  margin-left: 2px;
+  margin-left: 8px;
+  margin-right: 0;
 }
 .default-item.output .node-item-value[data-v-3b87dde5],
 .default-item.o .node-item-value[data-v-3b87dde5] {
   text-align: left;
-  margin-right: 2px;
+  margin-left: 0;
+  margin-right: 8px;
 }
 textarea[data-v-3b87dde5] {
   overflow: hidden;

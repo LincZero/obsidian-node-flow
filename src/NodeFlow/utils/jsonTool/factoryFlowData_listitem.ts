@@ -35,6 +35,7 @@ interface type_selfChildren_socket extends type_selfChildren_base {
     parentId: string,                           // 父节点id，根节点没有，为 ""
     parent: type_selfChildren|null,
     value: string,                              // value类型的socket使用 (会显示，可多行)
+    items: any,
   }
 }
 interface type_selfChildren_edge extends type_selfChildren_base {
@@ -275,6 +276,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
             name: ll_content[0][1]??ll_content[0][0],
             parentId: "", parent: null,
             value: ll_content[2]?ll_content[2][0]:"",
+            items: []
           }
         }
         // node
@@ -303,16 +305,16 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
         // 非根项，更新与父亲有关数据
         else {
           const parent_item = map_item[current_level-1]
-          // 修正父节点类型，父节点不能为socket或线、且socket的父节点强制为node，node的父节点强制为group
-          // 无法使用 (!["n", "node", "g", "group"].includes(parent.self_data.type)) 简化……否则飘红，代码编辑器没那么智能……
-          if (parent_item.self_data.type!= "n" && parent_item.self_data.type!= "node" && parent_item.self_data.type!= "g" && parent_item.self_data.type!= "group") continue
+          // 允许socket内嵌套其他东西，不再限制
+          if (parent_item.self_data.type!= "n" && parent_item.self_data.type!= "node"
+            && parent_item.self_data.type!= "g" && parent_item.self_data.type!= "group"
+            && parent_item.self_data.type!= "s" && parent_item.self_data.type!= "socket"
+          ) continue
           current_item.self_data.parentId = parent_item.self_data.id; current_item.self_data.parent = parent_item;
-          if (current_item.self_data.type == "socket" || current_item.self_data.type == "s") { 
-            parent_item.self_data.type = "node"
+          if (current_item.self_data.type == "socket" || current_item.self_data.type == "s"
+            || current_item.self_data.type == "node" || current_item.self_data.type == "n"
+          ) { 
             parent_item.self_data.items.push((current_item as type_selfChildren_socket).self_data)
-          }
-          else if (current_item.self_data.type == "node" || current_item.self_data.type == "n") {
-            parent_item.self_data.type = "group"
           }
           parent_item.children.push(current_item)
         }
