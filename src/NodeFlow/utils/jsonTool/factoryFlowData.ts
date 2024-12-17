@@ -13,7 +13,7 @@ import { factoryFlowData_listitem } from "./factoryFlowData_listitem"
  * @param jsonType 说明了第二个参数的结构类型
  * @param json 不一定是json，list版本的语法是纯文本
  */
-export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: object} {
+export function factoryFlowData(jsonType:string = "nodeflow-vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: object} {
   // 统一检查，json是否合法
   let parsedData;
   if (json.trim()=="") {
@@ -22,15 +22,15 @@ export function factoryFlowData(jsonType:string = "vueflow", json:string = "{nod
   else if (json.startsWith("demo")) {
     parsedData = json
   }
-  else if (jsonType === "list" || jsonType === "listitem") {
+  else if (jsonType === "nodeflow-list" || jsonType === "nodeflow-listitem") {
     parsedData = json
   }
   else {
     try {
       parsedData = JSON.parse(json)
-      if (!parsedData) { return {code: -1, msg: "error: not a legitimate json", data: {}} }
+      if (!parsedData) { return {code: -1, msg: "Error: not a legitimate json", data: {}} }
     } catch (error) {
-      return {code: -1, msg: "error: not a legitimate json: " + error, data: {}}
+      return {code: -1, msg: "Error: not a legitimate json: " + error, data: {}}
     }
   }
 
