@@ -3,9 +3,9 @@
  * 
  * 一些统一的检查校验
  */
-export function factoryFlowData_item(parsedData:any): {code: number, msg: string, data: object} {
+export function factoryFlowData_item(parsedData:any|string): {code: number, msg: string, data: object} {
     // 使用demo数据
-    if (parsedData.startsWith("demo")) {
+    if (typeof parsedData === "string") {
       if (parsedData.startsWith("demo")) { parsedData = JSON.parse(JSON.stringify(testData_itemData)) }
       else { return {code: -1, msg: "error demo: "+parsedData, data: {}}  }
     }

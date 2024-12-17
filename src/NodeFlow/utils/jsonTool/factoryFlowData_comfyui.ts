@@ -3,9 +3,9 @@
  * 
  * TODO 需要注意，普通节点和群组，节点id和标题都是不在宽高尺寸里面的！当前是高度+30，y-30，的方式临时解决
  */
-export function factoryFlowData_comfyui(parsedData:any): {code: number, msg: string, data: object} {
+export function factoryFlowData_comfyui(parsedData: any|string): {code: number, msg: string, data: object} {
   // 使用demo数据
-  if (parsedData.startsWith("demo")) {
+  if (typeof parsedData === "string") {
     if (parsedData == "demo") { parsedData = JSON.parse(JSON.stringify(testData_comfyUI)) }
     else if (parsedData == "demo2") { parsedData = JSON.parse(JSON.stringify(testData_comfyUI2)) }
     else { return {code: -1, msg: "error demo: "+parsedData, data: {}}  }
