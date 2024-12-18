@@ -89,6 +89,7 @@ textarea.node-item-value {
   resize: none; /* 禁止用户手动调整大小 */
   border-radius: 12px;
   line-height: 20px;
+  color: currentColor;
 }
 
 /* 有i/o类型时 */

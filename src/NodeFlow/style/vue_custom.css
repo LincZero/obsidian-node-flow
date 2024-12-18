@@ -50,6 +50,7 @@
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
+  color: currentColor;
   border-radius: 6px;
 }
 
@@ -231,6 +232,7 @@
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
+  color: currentColor;
   border-radius: 6px;
 }
 
@@ -343,6 +345,7 @@
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
+  color: currentColor;
   border-radius: 6px;
 }
 
