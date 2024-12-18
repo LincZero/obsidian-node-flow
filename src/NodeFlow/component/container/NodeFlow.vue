@@ -69,9 +69,14 @@ let edges = ref<Edge[]>([]);
     const {
       zoomOnScroll,       // default true
       zoomOnDoubleClick,  // default true
+      nodesConnectable,   // default true
+      onConnect,
+      addEdges,
     } = useVueFlow();
     zoomOnScroll.value = false;
     zoomOnDoubleClick.value = false;
+    nodesConnectable.value = true;
+    onConnect((params) => addEdges(params))
   }
 }
 

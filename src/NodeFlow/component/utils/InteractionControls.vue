@@ -122,15 +122,14 @@ const {
   setMaxZoom,
 } = useVueFlow()
 
+// 全局设置
 let isFold = ref(true);
-
-const onZoomIn = ()=>{setMaxZoom(3); zoomIn();}; onZoomIn();
-const onZoomOut = ()=>{setMinZoom(0.1); zoomOut();}; onZoomOut();
-
 const captureZoomClick = ref(false)
 const captureZoomScroll = ref(false)
-
-onConnect((params) => addEdges(params))
+onConnect((params) => addEdges(params)) // nodesConnectable只是是否允许拖拽线出来，加这行后两个端点之间的线在鼠标松开后才能保持
+const onZoomIn = ()=>{ setMaxZoom(3); zoomIn(); };
+const onZoomOut = ()=>{ setMinZoom(0.1); zoomOut(); };
+onZoomIn(); onZoomOut(); // 应用缩放限制，set(Max/Min)Zoom后要zoom(In/Out)才能生效
 
 // 都是打印
 onNodeDragStart((e) => nfSetting.isDebug && console.log('Drag start', e))
