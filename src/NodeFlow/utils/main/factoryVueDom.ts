@@ -3,7 +3,7 @@ import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue
 
 import { factoryFlowData } from '../jsonTool/factoryFlowData'
 
-// 非obsidian环境没有。需要提供一个HTMLElement对象，允许异步
+// 非obsidian环境没有，需要注释掉引用该[文件(index.ts)]的相关代码。需要提供一个HTMLElement对象，允许异步
 import { fn_newView } from '../../../NodeFlowView'
 
 /// 在div内创建指定的 Vue UI
