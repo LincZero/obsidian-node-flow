@@ -72,11 +72,15 @@ onMounted(()=>{
 .node-item-name {
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
+  
+  color: #aaaaaa;
+  background: none;
 }
 .node-item-value {
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
-  
+
+  color: #c9c9c9; /* 原 #aaaaaa */
   background: none;
   border: none;
   margin: 0;
@@ -89,7 +93,6 @@ textarea.node-item-value {
   resize: none; /* 禁止用户手动调整大小 */
   border-radius: 12px;
   line-height: 20px;
-  color: currentColor;
 }
 
 /* 有i/o类型时 */

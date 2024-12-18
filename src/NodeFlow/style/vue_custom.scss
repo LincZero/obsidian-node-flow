@@ -56,7 +56,7 @@
       float: right;
       padding: 0 6px;
       background-color: #0f1f0f;
-      color: currentColor;
+      color: #c9c9c9; // 原 #aaaaaa
       border-radius: 6px;
     }
   }
@@ -81,17 +81,16 @@
 
       border-radius: 8px 8px 0 0;
       color: #999999;
-      background-color: rgba($color: #2e4656, $alpha: 0.875);
+      background-color: rgba($color: #2e4656, $alpha: 0.75);
     }
 
     >.node-content {
       height: calc(100% - 30px);
-      padding: 0 24px;
-      padding-bottom: 16px;
+      padding: 4px 24px 16px;
 
       border-radius: 0 0 8px 8px;
       color: #aaaaaa;
-      background-color: rgba($color: #353535, $alpha: 0.875);
+      background-color: rgba($color: #353535, $alpha: 0.75);
 
       >.node-content-handle, >.node-content-lr {
         display: flex;
@@ -350,17 +349,15 @@
 
       border-radius: 8px 8px 0 0;
       color: #999999;
-      background-color: rgba($color: #2e4656, $alpha: 0.875);
+      background-color: rgba($color: #2e4656, $alpha: 0.75);
     }
     >.node-content {
       height: calc(100% - 30px);
-      padding: 0 24px;
-      padding-bottom: 16px;
-      padding-top: 2px;
+      padding: 4px 24px 16px;
 
       border-radius: 0 0 8px 8px;
       color: #aaaaaa;
-      background-color: rgba($color: #353535, $alpha: 0.875);
+      background-color: rgba($color: #353535, $alpha: 0.75);
 
       // 项
       >.line.node-item {
@@ -395,6 +392,8 @@
           width: 100%;
           box-sizing: border-box;
           div { box-sizing: border-box; }
+          .node-item-name { color: #aaaaaa; background: none; border: none; }
+          .node-item-value { color: #c9c9c9; background: none; border: none; }
           
           // &.input, &.i 或默认
           .node-item-name { float: left; }

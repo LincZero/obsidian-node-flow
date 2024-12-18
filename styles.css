@@ -68,9 +68,12 @@
 }
 .node-item-name[data-v-3b87dde5] {
   line-height: 20px;
+  color: #aaa;
+  background: none;
 }
 .node-item-value[data-v-3b87dde5] {
   line-height: 20px;
+  color: #c9c9c9;
   background: none;
   border: none;
   margin: 0 0 0 4px;
@@ -554,6 +557,7 @@ textarea.node-item-value[data-v-3b87dde5] {
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
+  color: #c9c9c9;
   border-radius: 6px;
 }
 .common-node > .node-main {
@@ -576,15 +580,14 @@ textarea.node-item-value[data-v-3b87dde5] {
   padding: 0 12px;
   border-radius: 8px 8px 0 0;
   color: #999999;
-  background-color: rgba(46, 70, 86, 0.875);
+  background-color: rgba(46, 70, 86, 0.75);
 }
 .common-node > .node-main > .node-content {
   height: calc(100% - 30px);
-  padding: 0 24px;
-  padding-bottom: 16px;
+  padding: 4px 24px 16px;
   border-radius: 0 0 8px 8px;
   color: #aaaaaa;
-  background-color: rgba(53, 53, 53, 0.875);
+  background-color: rgba(53, 53, 53, 0.75);
 }
 .common-node > .node-main > .node-content > .node-content-handle,
 .common-node > .node-main > .node-content > .node-content-lr {
@@ -700,6 +703,7 @@ textarea.node-item-value[data-v-3b87dde5] {
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
+  color: currentColor;
   border-radius: 6px;
 }
 .comfyui-node > .node-main {
@@ -795,6 +799,7 @@ textarea.node-item-value[data-v-3b87dde5] {
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
+  color: currentColor;
   border-radius: 6px;
 }
 .item-node > .node-main {
@@ -810,16 +815,14 @@ textarea.node-item-value[data-v-3b87dde5] {
   padding: 0 12px;
   border-radius: 8px 8px 0 0;
   color: #999999;
-  background-color: rgba(46, 70, 86, 0.875);
+  background-color: rgba(46, 70, 86, 0.75);
 }
 .item-node > .node-main > .node-content {
   height: calc(100% - 30px);
-  padding: 0 24px;
-  padding-bottom: 16px;
-  padding-top: 2px;
+  padding: 4px 24px 16px;
   border-radius: 0 0 8px 8px;
   color: #aaaaaa;
-  background-color: rgba(53, 53, 53, 0.875);
+  background-color: rgba(53, 53, 53, 0.75);
 }
 .item-node > .node-main > .node-content > .line.node-item {
   position: relative;
@@ -846,6 +849,20 @@ textarea.node-item-value[data-v-3b87dde5] {
 }
 .item-node > .node-main > .node-content > .line.node-item > .node-item-slot {
   width: 100%;
+  box-sizing: border-box;
+}
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot div {
+  box-sizing: border-box;
+}
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  color: #aaaaaa;
+  background: none;
+  border: none;
+}
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  color: #c9c9c9;
+  background: none;
+  border: none;
 }
 .item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
   float: left;
@@ -1034,8 +1051,10 @@ textarea.node-item-value[data-v-3b87dde5] {
   position: relative;
   display: inline-block;
 }
-.dd-button > button {
+.dd-button button {
   height: 100%;
+  border: none;
+  border-radius: 5px;
 }
 .dd-button > button.dd-button-main {
   border-top-right-radius: 0;
