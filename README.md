@@ -1,4 +1,4 @@
-# Obsidian NodeFlow
+# NodeFlow
 
 - en
 
