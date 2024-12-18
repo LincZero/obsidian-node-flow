@@ -36,15 +36,19 @@ redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => 
 })
 // (二选一) md渲染 - 定义, mdit版本
 // import MarkdownIt from "markdown-it";
+// const md = MarkdownIt()
 // redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => {
 //   el.classList.add("markdown-rendered")
-//   if (!nfSetting.md) {
-//     el.innerHTML = markdown
-//   }
-//   else {
-//     const result: string = (nfSetting.md as MarkdownIt).render(markdown)
-//     const el_child = document.createElement("div"); el.appendChild(el_child); el_child.innerHTML = result;
-//   }
+
+//   const result: string = (md as MarkdownIt).render(markdown)
+//   const el_child = document.createElement("div"); el.appendChild(el_child); el_child.innerHTML = result;
+
+//   // 好像没办法获取到vuepress的md对象……
+//   // if (!nfSetting.md) {
+//   //   console.warn("无法渲染markdown", nfSetting)
+//   //   el.innerHTML = markdown
+//   // }
+//   // else {}
 // })
 
 // md渲染 - 执行

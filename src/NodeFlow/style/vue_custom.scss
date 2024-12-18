@@ -390,6 +390,8 @@
 
         >.node-item-slot {
           width: 100%;
+          box-sizing: border-box;
+          div { box-sizing: border-box; }
           
           // &.input, &.i 或默认
           .node-item-name { float: left; }
@@ -557,9 +559,12 @@
   position: relative;
   display: inline-block;
 
-  >button {
+  button {
     height: 100%;
+    border: none;
+    border-radius: 5px;
   }
+
   >button.dd-button-main {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -571,7 +576,6 @@
     padding-right: 0;
     width: 14px;
   }
-
   >.dd-button-menu {
     position: absolute;
     bottom: 100%; // 由于 cm 的 contain: paint !important; 样式，无法 overflow，只能颠倒方向

@@ -402,6 +402,11 @@
 
 .item-node > .node-main > .node-content > .line.node-item > .node-item-slot {
   width: 100%;
+  box-sizing: border-box;
+}
+
+.item-node > .node-main > .node-content > .line.node-item > .node-item-slot div {
+  box-sizing: border-box;
 }
 
 .item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
@@ -685,8 +690,10 @@
   display: inline-block;
 }
 
-.dd-button > button {
+.dd-button button {
   height: 100%;
+  border: none;
+  border-radius: 5px;
 }
 
 .dd-button > button.dd-button-main {
