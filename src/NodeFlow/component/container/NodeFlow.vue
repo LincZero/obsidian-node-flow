@@ -9,6 +9,7 @@
     class="nf-node-flow" 
     :nodes="nodes" :edges="edges"
     :prevent-scrolling="true"
+    fit-view-on-init
     @edges-change="edgeAnimated"
     @nodes-initialized="isNodeInitialized=true">
     <!-- :pan-on-drag="[0,2]" -->
