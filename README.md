@@ -10,7 +10,11 @@
   渲染节点流，像 `ComfyUi`, `UE`, `Houdini`, `Blender` 等，使其易于编写相关笔记。
 
   允许使用轻量语法或从上述软件导出的Json描述了图表，该插件在Obsidian与VuePress博客中均可使用
-  
+
+## Effect display (Partial) (效果展示 - 部分)
+
+![](./docs/image.png)
+
 ## Docs
 
 Tutorials, online effects, use cases, and more (教程、在线效果、用例等)
@@ -102,10 +106,6 @@ You can alse use the demo use case by filling in `demo`/`demo2`/`demo3` in the c
   
   直接将comfyui的导出workflow.json文件扩展名修改成`.workflow_json`，也能正确识别
 
-## Effect display (Partial) (效果展示 - 部分)
-
-![](./docs/image.png)
-
 ## TODO
 
 - feat
@@ -118,4 +118,4 @@ You can alse use the demo use case by filling in `demo`/`demo2`/`demo3` in the c
     - ~~整理一下，捋一下各种节点类型，以及对应的data数据，然后把socket与线色的关系再优化一下~~
 - style
   - [scss代码优化问题](ttps://github.com/pipe01/esbuild-plugin-vue3/issues/30)
-  - 更好看的工具栏与样式
+  - ~~更好看的工具栏与样式~~
