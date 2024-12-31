@@ -119,3 +119,35 @@ You can alse use the demo use case by filling in `demo`/`demo2`/`demo3` in the c
 - style
   - [scss代码优化问题](ttps://github.com/pipe01/esbuild-plugin-vue3/issues/30)
   - ~~更好看的工具栏与样式~~
+
+## 更多用法
+
+详见 [Online effects (在线效果)、demo](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html)，这里仅再列举部分：
+
+复制以下内容到你的obsidian中：
+
+````md
+```nodeflow-comfyui
+demo
+```
+
+```nodeflow-obcanvas
+demo
+```
+
+```nodeflow-list
+demo
+```
+
+```nodeflow-vueflow
+demo
+```
+
+```nodeflow-item
+demo
+```
+
+```nodeflow-listitem
+demo
+```
+````
