@@ -48,7 +48,7 @@ export default class NodeFlowPlugin extends Plugin {
         // @ts-ignore 类型“WorkspaceLeaf”上不存在属性“containerEl”
         // const div_leaf: HTMLElement = this.app.workspace.activeLeaf.containerEl // 弃用，审查员也不会让你用
         // const div_leaf: HTMLElement = this.app.workspace.getLeaf().containerEl  // bug: 切换到锁定标签页会新增一个新标签页
-        const div_leaf: HTMLElement = this.app.workspace.getActiveViewOfType(MarkdownView).containerEl
+        const div_leaf: HTMLElement = this.app.workspace.getActiveViewOfType(MarkdownView)?.containerEl
         if (!div_leaf) return
         let div_view: HTMLElement = div_leaf.querySelector(".view-content")
         if (!div_view) return
