@@ -72,17 +72,10 @@ onMounted(()=>{
 .node-item-name {
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
-  
-  color: #aaaaaa;
-  background: none;
 }
 .node-item-value {
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
-
-  color: #c9c9c9; /* 原 #aaaaaa */
-  background: none;
-  border: none;
   margin: 0;
   margin-left: 4px;
 }

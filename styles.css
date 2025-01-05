@@ -68,14 +68,9 @@
 }
 .node-item-name[data-v-3b87dde5] {
   line-height: 20px;
-  color: #aaa;
-  background: none;
 }
 .node-item-value[data-v-3b87dde5] {
   line-height: 20px;
-  color: #c9c9c9;
-  background: none;
-  border: none;
   margin: 0 0 0 4px;
 }
 textarea.node-item-value[data-v-3b87dde5] {
@@ -144,6 +139,37 @@ textarea.node-item-value[data-v-3b87dde5] {
   background: #222222;
   border: solid 1px #616161;
   appearance: revert;
+}
+.debug-item[data-v-55ca04a6] {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 24px;
+  padding: 0;
+}
+.debug-item .node-item-name[data-v-55ca04a6] {
+  height: 24px;
+  padding: 2px 0;
+  line-height: 20px;
+}
+.debug-item .node-item-value[data-v-55ca04a6] {
+  line-height: 20px;
+  border-radius: 12px;
+  border: solid 1px currentColor;
+}
+.debug-item .node-item-value[data-v-55ca04a6] > * {
+  padding: 2px 14px;
+  box-sizing: border-box;
+  height: 24px;
+  line-height: 20px;
+  margin: 0;
+}
+.debug-item .node-item-value[data-v-55ca04a6] > * * {
+  box-sizing: border-box;
+  height: 20px;
+  line-height: 20px;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;

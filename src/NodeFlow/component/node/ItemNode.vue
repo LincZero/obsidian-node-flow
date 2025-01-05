@@ -34,6 +34,7 @@ Item类型的节点
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
+            <template #item-debug="props"><DebugItem :parent="props" :data="props.data"></DebugItem></template>
             <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
           </ItemNodeSlot>
         </div>
@@ -41,9 +42,9 @@ Item类型的节点
       <!-- Handle - 默认隐藏 -->
       <div v-show="!hasCustomHandle">
         <Handle id="l" class="default" type="target" :position="Position.Left" />
-        <Handle id="t" class="default" :position="Position.Top" />
+        <Handle id="t" class="default" type="target" :position="Position.Top" />
         <Handle id="r" class="default" type="source" :position="Position.Right" />
-        <Handle id="b" class="default" :position="Position.Bottom" />
+        <Handle id="b" class="default" type="source" :position="Position.Bottom" />
       </div>
     </div>
   </div>
@@ -72,6 +73,7 @@ import DefaultItem from "../nodeItem/DefaultItem.vue"           // 默认项
 import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
 import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
 import DropdownItem from "../nodeItem/DropdownItem.vue"         // 下拉项
+import DebugItem from "../nodeItem/DebugItem.vue"               // 调试项
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
