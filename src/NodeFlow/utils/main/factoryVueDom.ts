@@ -23,7 +23,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
           {
             "id": "ERROR",
             "position": {"x": 0, "y": 0},
-            "type": "common",
+            "type": "common", // TODO 这样的话错误信息无法复制，后续应该改用listitem类型的节点，那个可以复制
             "data": {
               "label": "ERROR",
               "inputs": [],
@@ -42,6 +42,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
     const _app = createApp(NodeFlowContainerS, {
       rawData: mdStr,
       mdData: `\`\`\`${jsonType}\n${mdStr}\n\`\`\`\n`,
+      jsonType: jsonType,
       jsonData: result.data,
       fn_newView: async ()=>{ // 闭包
         const targetEl: HTMLElement = await fn_newView()

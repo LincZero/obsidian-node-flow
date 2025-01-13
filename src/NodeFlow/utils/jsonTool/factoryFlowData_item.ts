@@ -26,7 +26,7 @@ export function factoryFlowData_item(parsedData:any|string): {code: number, msg:
 const testData_itemData = {
   "nodes": [
     {
-      "id": 6,
+      "id": "6",
       "data": {
         "label": "itemData testData",
         "valueType": "itemData valueType",
@@ -37,21 +37,21 @@ const testData_itemData = {
             "name": "null",
             "refType": "input",
             "valueType": "item-default",
-            "value": "",
+            "value": ""
           },
           {
             "id": "02",
             "name": "null",
             "refType": "output",
             "valueType": "item-default",
-            "value": "",
+            "value": ""
           },
           {
             "id": "03",
             "name": "color",
             "refType": "input",
             "valueType": "item-color",
-            "value": "#2283fc",
+            "value": "#2283fc"
           },
           {
             "id": "1",
@@ -59,7 +59,7 @@ const testData_itemData = {
             "refType": "input",
             // 可选 "ref": "", 用于指向传递过来的节点id和位置?
             "valueType": "item-default",
-            "value": "123",
+            "value": "123"
             // 可选 "widgetType": ""
           },
           {
@@ -67,44 +67,44 @@ const testData_itemData = {
             "name": "number",
             "refType": "output",
             "valueType": "item-default",
-            "value": "456",
+            "value": "456"
           },
           {
             "id": "3",
             "name": "vName",
             "refType": "value",
             "valueType": "item-default",
-            "value": "vValue",
+            "value": "vValue"
           },
           {
             "id": "4",
             "name": "clip",
             "refType": "input",
             "valueType": "item-default",
-            "value": "",
+            "value": ""
           },
           {
             "id": "5",
             "name": "clip",
             "refType": "output",
             "valueType": "item-default",
-            "value": "",
+            "value": ""
           },
           {
             "id": "6",
             "name": "selectName",
             "refType": "value",
             "valueType": "item-dropdown",
-            "value": "select1|select2|select3",
+            "value": "select1|select2|select3"
           },
           {
             "id": "7",
             "name": "markdown",
             "refType": "value",
             "valueType": "item-markdown",
-            "value": "## Markdown\n\n**bord** *italic* ==highlight== ~~del~~",
+            "value": "## Markdown\n\n**bord** *italic* ==highlight== ~~del~~"
           }
-        ],
+        ]
       }
     }
   ]

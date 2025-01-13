@@ -10,6 +10,7 @@
 
     <!-- 工具栏 -->
     <div class="nf-toolbar">
+      <button class="nf-btn" @click="fn_saveChange()" v-if="saveable">Save</button>
       <button class="nf-btn" @click="fn_fullScreen()">Full screen</button>
       <button class="nf-btn" @click="_fn_newView()">New view</button>
       <DropdownButton class="nf-btn" :label="'LR layout'" :fn="() => fn_autoPos('LR')" #default="{ selectItem }">
@@ -34,6 +35,7 @@
 const props = defineProps<{
   rawData?: string, // 仅打印用
   mdData?: string,  // 仅打印用
+  jsonType?: string,// 仅打印、序列化用
   jsonData: any,
   isMini: boolean,
   fn_newView?: () => Promise<void>,
@@ -98,6 +100,14 @@ function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
   }, () => {
     console.error('Error: copy fail');
   });
+}
+
+//   按钮 - 保存修改
+import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
+const saveable = true; // [环境]仅obsidian等可写环境需要，vuepress这种非可写环境不需要
+function fn_saveChange () {
+  if (!props.hasOwnProperty("jsonType")) return
+  serializeFlowData(props.jsonType, props.jsonData)
 }
 </script>
 
