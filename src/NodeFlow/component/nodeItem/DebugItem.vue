@@ -3,26 +3,34 @@
 
 需要注意的是，由于NodeFlow V1.1后采用的项类型代替节点类型的策略。
 如果计算和程序需要左右节点的属性时，可以不直接判断节点类型，而是采用鸭子方法
+
+在debug中，用于表示节点结构的方式有几种：
+  原json -> 归一化json(将不同结构的json规范为统一结构的json) -> NodesData结构
 -->
 
 <template>
   <div :class="'debug-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div v-if="props.data.value" class="node-item-value">
+      <div><span>---TheNode-----</span></div>
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
       <div><button @click="console.log(_useNode)">useNode</button></div>
-      <div><button @click="console.log(_useNodesData)">useNodesData</button></div>
+      <div><button @click="console.log(ref_useNodesData)">useNodesData</button></div>
+      <div><span>---TheHandle---</span></div>
+      <div><button @click="console.log(data)">componentData</button></div>
+      <div><button @click="console.log(ref_useNodesData.data.items)">listItem type use</button></div>
+      <div><span>---TheOutter---</span></div>
       <div><button @click="console.log(_useEdge)">useEdge</button></div>
       <div><button @click="console.log(_useHandleConnections)">useHandleConnections</button></div>
-      <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
 </template>
   
 <script setup lang="ts">
+import { ComputedRef, computed } from 'vue';
 const props = defineProps<{
-  parent: any, // 父节点
+  // parent: any, // 父节点
   data: any
 }>();
 
@@ -33,25 +41,28 @@ import {
   useVueFlow
 } from '@vue-flow/core'
 const _useNodeId: string = useNodeId()
-const _useNode = useNode(useNodeId())
-const _useNodesData = useNodesData(_useNodeId).value
-const _useEdge = useEdge()
+const _useNode: object = useNode(useNodeId())
+const ref_useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
+const _useEdge: object = useEdge()
 
 // 非通用，根据节点数据格式而定
-// TODO 这个有问题……button动态获取不了，静态可以。那途中连线状态变更要怎么办？
-const _useHandleConnections: any[] = []
-for (let item of _useNodesData.data.items) {
-  let type: 'source'|'target'
-  if (item['refType']=='o' || item['refType']=='output') { type = 'source' }
-  else if (item['refType']=='i' || item['refType']=='input') { type = 'target' }
-  else { continue } // 不连线的
+const _useHandleConnections: any = computed(()=>{ // watch useNodesData()
+  const _useHandleConnections_tmp: any[] = []
+  for (let item of ref_useNodesData.value.data.items) {
+    let type: 'source'|'target'
+    if (item['refType']=='o' || item['refType']=='output') { type = 'source' }
+    else if (item['refType']=='i' || item['refType']=='input') { type = 'target' }
+    else { continue } // 不连线的
 
-  _useHandleConnections.push(useHandleConnections({
-    nodeId: _useNodeId,
-    id: item['id'],
-    type: type
-  }))
-}
+    _useHandleConnections_tmp.push(useHandleConnections({
+      nodeId: _useNodeId,
+      id: item['id'],
+      type: type
+    }))
+  }
+  return _useHandleConnections_tmp
+})
+
 </script>
 
 <style scoped>

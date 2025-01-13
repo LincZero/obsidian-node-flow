@@ -43,7 +43,7 @@ import CommonNode from '../node/CommonNode.vue'                // 通用节点
 import ItemNode from '../node/ItemNode.vue'                    // 项节点
 
 // 组件 - 其他
-import InteractionControls from '../utils/InteractionControls.vue'   // 控制画布控制的操作开关
+import InteractionControls from '../utils/InteractionControls.vue'  // 控制画布控制的操作开关
 import { Background } from '@vue-flow/background'                   // 背景控制
 
 // 组件 - VueFlow，并准备节点数据 (解析JSON数据，在外面已经校验过一次了，这里大概率不会有问题)

@@ -34,7 +34,7 @@ Item类型的节点
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
-            <template #item-debug="props"><DebugItem :parent="props" :data="props.data"></DebugItem></template>
+            <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
             <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
           </ItemNodeSlot>
         </div>
