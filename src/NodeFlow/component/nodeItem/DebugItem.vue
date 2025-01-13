@@ -4,8 +4,15 @@
 需要注意的是，由于NodeFlow V1.1后采用的项类型代替节点类型的策略。
 如果计算和程序需要左右节点的属性时，可以不直接判断节点类型，而是采用鸭子方法
 
-在debug中，用于表示节点结构的方式有几种：
-  原json -> 归一化json(将不同结构的json规范为统一结构的json) -> NodesData结构
+主要数据：
+  在debug中，用于表示节点结构的方式有几种：
+  1. 原json ->
+  2. 归一化json(将不同结构的json规范为统一结构的json) ->
+  3. useNodesData结构
+  而他们的更新与序列化(同步)：
+  1. useNodeData直接修改data对象(不能像官方示例那样用updateNodeData方法，因为更新位置通常在nodeitem中，item没有完整的node data) ->
+  2. 然后转归一化json比较简单 ->
+  3. 再转原json
 -->
 
 <template>

@@ -1,13 +1,13 @@
 <!-- 默认项 -->
 
 <template>
-  <div ref="TextArea2" :class="'default-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
+  <div ref="TextArea2" :class="'default-item  node-item-slot ' + props.data.refType + (writable_value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <textarea
-      v-if="props.data.value"
+      v-if="writable_value"
       class="node-item-value"
-      v-model="props.data.value"
-      :rows="props.data.value.split('\n').length"
+      v-model="writable_value"
+      :rows="writable_value.split('\n').length"
       cols="10"
       @input="handleInput"
       ref="TextArea3"
@@ -17,17 +17,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed, nextTick, onMounted, ref } from 'vue';
+
 const props = defineProps<{
   data: any
 }>()
-import { nextTick, onMounted, ref } from 'vue';
-const TextArea3 = ref(null) // 可能由于v-if而不存在
 
-function handleInput(e:any) {
-  autoSize(e.target)
-}
-/// 自动调整高度。当大于初始的(rows、cols值)时，才会(出现overflow然后)撑开
-/// 存在问题：只能变大不能变小
+// 可写属性
+import { useNode, useVueFlow } from '@vue-flow/core'
+const { updateNodeData } = useVueFlow()
+const writable_value = computed({
+  get: () => props.data.value,
+  set: (value) => { props.data.value = value }, // 无需 return updateNodeData(props.id, props.data)
+})
+
+// 自动调整高度。当大于初始的(rows、cols值)时，才会(出现overflow然后)撑开
+// 存在问题：只能变大不能变小
 function autoSize(el:HTMLElement) {
   if (!el) { return }
   el.style.height = 'auto';
@@ -43,12 +48,16 @@ function autoSize(el:HTMLElement) {
   // document.getElementsByName('del' + el.name)
   //   .forEach(value => value.style.marginTop = el.scrollHeight + 'px');
 }
+const TextArea3 = ref(null) // 可能由于v-if而不存在
 onMounted(()=>{
   autoSize(TextArea3.value)
   nextTick(() => {
     autoSize(TextArea3.value)
   })
 })
+function handleInput(e:any) {
+  autoSize(e.target)
+}
 </script>
 
 <style scoped>
