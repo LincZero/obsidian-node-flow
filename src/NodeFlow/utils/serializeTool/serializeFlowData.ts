@@ -1,9 +1,8 @@
 export function serializeFlowData (jsonType: string, jsonData: any): {code: number, msg: string, data: string} {
-  console.log("尝试保存修改中。当前jsonData: ", jsonData);
-  if (jsonType == "item") {
+  if (jsonType == "nodeflow-item") {
     return serializeFlowData_item(jsonData)
   }
-  else if (jsonType == "itemlist") {
+  else if (jsonType == "nodeflow-itemlist") {
     return serializeFlowData_listitem(jsonData)
   }
   return { code: -1, msg: "No supported serialization in this jsonType: " + jsonType, data: ""}

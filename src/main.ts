@@ -26,7 +26,14 @@ export default class NodeFlowPlugin extends Plugin {
     for (let item of code_type_list) {
       this.registerMarkdownCodeBlockProcessor(item, (src: string, blockEl: HTMLElement, ctx: MarkdownPostProcessorContext) => {
         nfSetting.ctx = ctx
-        factoryVueDom(item, blockEl, src)
+        factoryVueDom(item, blockEl, src, true, (str: string) => {
+          const { lineEnd, lineStart, text } = ctx.getSectionInfo(blockEl)
+
+          const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+          const editor = view.editor;
+          // 不修改代码块的前后围栏部分。开头是围栏头下一行的开头，结束是围栏尾的第一个字符，所以str要保证`\n`结尾
+          editor.replaceRange(str+"\n", {ch:0, line:lineStart+1}, {ch:0, line:lineEnd})
+        })
       })
     }
 

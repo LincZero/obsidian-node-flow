@@ -1,4 +1,11 @@
-<!-- 显示容器 (主要为了在局部模式和全局模式之间切换) -->
+<!--
+主画布的容器（画布外的一层）
+
+作用：
+1. 显示容器 (主要为了在局部模式和全局模式之间切换)
+2. 提供按钮
+3. 提供适配底层的方法接收 (如何渲染，如何保存更新序列化内容)
+-->
 
 <template>
   <div ref="CanFullScreen" :class="_isMini?'normal-size':'full-size'">
@@ -33,12 +40,13 @@
 <script setup lang="ts">
 // 自身属性、通用导入
 const props = defineProps<{
-  rawData?: string, // 仅打印用
-  mdData?: string,  // 仅打印用
-  jsonType?: string,// 仅打印、序列化用
+  rawData?: string,     // 仅打印用
+  mdData?: string,      // 仅打印用
+  jsonType?: string,    // 仅打印、序列化用
   jsonData: any,
   isMini: boolean,
-  fn_newView?: () => Promise<void>,
+  fn_newView?: () => Promise<void>, // 在新视图中显示画布
+  fn_save?: (str: string) => void,  // 保存
 }>()
 import { computed, ref } from 'vue'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
@@ -106,8 +114,14 @@ function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 const saveable = true; // [环境]仅obsidian等可写环境需要，vuepress这种非可写环境不需要
 function fn_saveChange () {
-  if (!props.hasOwnProperty("jsonType")) return
-  serializeFlowData(props.jsonType, props.jsonData)
+  if (!props.hasOwnProperty("jsonType") || !props.hasOwnProperty("fn_save")) return
+  const result = serializeFlowData(props.jsonType, props.jsonData)
+  if (result.code == 0) {
+    props.fn_save(result.data)
+  }
+  else {
+    console.error("无法保存修改", result)
+  }
 }
 </script>
 

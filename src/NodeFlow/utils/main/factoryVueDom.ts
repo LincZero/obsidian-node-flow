@@ -5,9 +5,16 @@ import { factoryFlowData } from '../jsonTool/factoryFlowData'
 
 // 非obsidian环境没有，需要注释掉引用该[文件(index.ts)]的相关代码。需要提供一个HTMLElement对象，允许异步
 import { fn_newView } from '../../../NodeFlowView'
+import { MarkdownView } from 'obsidian';
 
 /// 在div内创建指定的 Vue UI
-export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:string = "", isMini:boolean = true):void {
+export function factoryVueDom(
+  jsonType: string = "nodeflow-item",
+  div: HTMLElement,
+  mdStr: string = "",
+  isMini: boolean = true,
+  fn_save: (str: string) => void = ()=>{ console.warn("The save hook is not set") }
+):void {
   // 代码块，替换为节点流画布
   const targetEl = div
   mountVue(targetEl, isMini)
@@ -48,6 +55,7 @@ export function factoryVueDom(jsonType:string = "test", div:HTMLElement, mdStr:s
         const targetEl: HTMLElement = await fn_newView()
         mountVue(targetEl, false)
       },
+      fn_save: fn_save,
       isMini: _isMini
     });
     _app.mount(targetEl);

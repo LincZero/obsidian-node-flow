@@ -24,7 +24,7 @@ function redefine_renderMarkdown(callback: (markdown: string, el: HTMLElement, c
 }
 
 import { nfSetting } from '../../utils/main/setting';
-// (二选一) md渲染 - 定义, obsidian版本
+// [环境] (二选一) md渲染 - 定义, obsidian版本
 import { MarkdownRenderChild, MarkdownRenderer } from 'obsidian'
 redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => {
   el.classList.add("markdown-rendered")
@@ -34,7 +34,7 @@ redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => 
   // @ts-ignore 新接口，但旧接口似乎不支持
   MarkdownRenderer.render(nfSetting.app, markdown, el, nfSetting.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
 })
-// (二选一) md渲染 - 定义, mdit版本
+// [环境] (二选一) md渲染 - 定义, mdit版本
 // import MarkdownIt from "markdown-it";
 // const md = MarkdownIt()
 // redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => {
