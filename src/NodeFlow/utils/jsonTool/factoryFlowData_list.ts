@@ -244,7 +244,7 @@ export function factoryFlowData_list(md:string): {code: number, msg: string, dat
   // step2. self-children-object 再转 nodes-edges-array
   // TODO 先假设不支持节点组，先假设不支持隐藏nodes和edges根节点
   {
-    if (result_items.length != 2) return {code: -1, msg: "error: without rootNode: edges and edges", data: {}}
+    if (result_items.length != 2) return {code: -1, msg: "error: without rootNode: nodes and edges", data: {}}
 
     // 遍历 - 节点
     let nodes_new:object[] = []

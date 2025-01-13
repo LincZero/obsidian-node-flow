@@ -2,8 +2,11 @@ export function serializeFlowData (jsonType: string, jsonData: any): {code: numb
   if (jsonType == "nodeflow-item") {
     return serializeFlowData_item(jsonData)
   }
-  else if (jsonType == "nodeflow-itemlist") {
+  else if (jsonType == "nodeflow-listitem") {
     return serializeFlowData_listitem(jsonData)
+  }
+  else if (jsonType == "nodeflow-list") {
+    return serializeFlowData_listitem(jsonData) // listitem向下兼容list，这里用listitem的序列化程序就行了
   }
   return { code: -1, msg: "No supported serialization in this jsonType: " + jsonType, data: ""}
 }
@@ -21,6 +24,20 @@ function serializeFlowData_item(jsonData: any) {
   return { code: 0, msg: "", data: JSON.stringify(newJsonData, null, 2) }
 }
 
+// 暂时不支持嵌套nodeitem
 function serializeFlowData_listitem(jsonData: any) {
-  return { code: -1, msg: "Failed to serialize listitem flowData", data: ""}
+  let newText = ""
+  newText += "- nodes\n"
+  for (let node of jsonData.nodes) {
+    newText += `  - ${node.id}:${node.data.label}\n`
+    for (let item of node.data.items) {
+      newText += `    - ${item.id}:${item.name}, ${item.refType}:${item.valueType}, ${item.value}\n`
+    }
+  }
+  newText += "- edges\n"
+  for (let edge of jsonData.edges) {
+    newText += `  - ${edge.source}, ${edge.sourceHandle}, ${edge.target}, ${edge.targetHandle}\n`
+  }
+
+  return { code: 0, msg: "", data: newText }
 }
