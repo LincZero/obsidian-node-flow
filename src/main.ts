@@ -32,7 +32,7 @@ export default class NodeFlowPlugin extends Plugin {
           const view = this.app.workspace.getActiveViewOfType(MarkdownView);
           const editor = view.editor;
           // 不修改代码块的前后围栏部分。开头是围栏头下一行的开头，结束是围栏尾的第一个字符，所以str要保证`\n`结尾
-          editor.replaceRange(str+"\n", {ch:0, line:lineStart+1}, {ch:0, line:lineEnd})
+          editor.replaceRange(str.endsWith("\n")?str:str+"\n", {ch:0, line:lineStart+1}, {ch:0, line:lineEnd})
         })
       })
     }
