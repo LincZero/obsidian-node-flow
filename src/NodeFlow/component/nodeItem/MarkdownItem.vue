@@ -18,38 +18,8 @@ import { onMounted, ref } from 'vue';
 const MdArea = ref()
 
 // md渲染 - 声明函数
-let renderMarkdownFn: (markdown: string, el: HTMLElement, ctx?: any) => void;
-function redefine_renderMarkdown(callback: (markdown: string, el: HTMLElement, ctx?: any) => void) {
-  renderMarkdownFn = callback
-}
-
-import { nfSetting } from '../../utils/main/setting';
-// [环境] (二选一) md渲染 - 定义, obsidian版本
-import { MarkdownRenderChild, MarkdownRenderer } from 'obsidian'
-redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => {
-  el.classList.add("markdown-rendered")
-  const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
-  if (ctx) ctx.addChild(mdrc);
-  else if (nfSetting.ctx) nfSetting.ctx.addChild(mdrc);
-  // @ts-ignore 新接口，但旧接口似乎不支持
-  MarkdownRenderer.render(nfSetting.app, markdown, el, nfSetting.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
-})
-// [环境] (二选一) md渲染 - 定义, mdit版本
-// import MarkdownIt from "markdown-it";
-// const md = MarkdownIt()
-// redefine_renderMarkdown((markdown: string, el: HTMLElement, ctx?: any): void => {
-//   el.classList.add("markdown-rendered")
-
-//   const result: string = (md as MarkdownIt).render(markdown)
-//   const el_child = document.createElement("div"); el.appendChild(el_child); el_child.innerHTML = result;
-
-//   // 好像没办法获取到vuepress的md对象……
-//   // if (!nfSetting.md) {
-//   //   console.warn("无法渲染markdown", nfSetting)
-//   //   el.innerHTML = markdown
-//   // }
-//   // else {}
-// })
+import { renderMarkdown } from '../../utils/main/setting';
+let renderMarkdownFn: (markdown: string, el: HTMLElement, ctx?: any) => void = renderMarkdown
 
 // md渲染 - 执行
 onMounted(() => {
