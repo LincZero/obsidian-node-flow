@@ -31,16 +31,18 @@
       <div><button @click="console.log(_useTargetConnections)">TargetConnections</button></div>
       <div><button @click="console.log(_useSourceNodesData)">SourceNodesData</button></div>
       <div><button @click="console.log(_useTargetNodesData)">TargetNodesData</button></div>
+      <div><span>---TheFlow-----</span></div>
+      <div><button @click="debugConsole()">DebugConsole</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
 </template>
   
 <script setup lang="ts">
-import { ComputedRef, computed } from 'vue';
+import { ComputedRef, computed, ref, watch } from 'vue';
 const props = defineProps<{
   // parent: any, // 父节点
-  data: any
+  data: any,
 }>();
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
@@ -54,8 +56,34 @@ const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
 const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
+// TODO 这里会重复的
 const _useSourceNodesData: ComputedRef<any> = useNodesData(() => _useSourceConnections.value.map((connection:any) => connection.source))
 const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConnections.value.map((connection:any) => connection.target))
+const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
+
+// 流程控制 - 执行主要操作、触发下一节点
+const debugConsole = async () => {
+  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
+  console.log(_useTargetConnections, _useTargetNodesData, _useTargetNode);
+  props.data.isRunning = false;
+
+  // 然后尝试运行下一个节点的debugConsole
+  if (_useTargetNodesData.value.length > 0) {
+    _useTargetNodesData.value[0].data.isRunning = true;
+  } else {
+    console.log('No target node to run');
+  } 
+};
+
+// 流程控制 - 钩子
+props.data['isRunning'] = false
+// let ref_isRunning = ref<boolean>(props.data['isRunning'])
+watch(props.data.isRunning, (newVal, oldVal) => {
+  console.log('isRunning change', newVal, oldVal);
+  if (newVal == true) {
+    debugConsole();
+  }
+});
 
 /**
  * 非通用，根据节点数据格式而定

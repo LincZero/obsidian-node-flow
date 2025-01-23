@@ -1,15 +1,22 @@
-// https://vueflow.dev/examples/layout.html
+// Take from: https://vueflow.dev/examples/layout.html
 
 import { ref, toRef, toValue } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 
 /**
- * 可组合以模拟运行流程树
+ * Composable to simulate running a process tree.
  *
- * 它循环遍历每个节点，假装运行一个异步进程，并更新节点的数据，表明进程是否已经完成。
- * 当一个节点结束时，下一个节点开始。
+ * It loops through each node, pretends to run an async process, and updates the node's data indicating whether the process has finished.
+ * When one node finishes, the next one starts.
  *
- * 当一个节点有多个后代时，它将并行运行它们。
+ * When a node has multiple descendants, it will run them in parallel.
+ *
+ * @param options
+ * @param options.graph The graph object containing the nodes and edges.
+ * @param options.cancelOnError Whether to cancel the process if an error occurs.
+ * 
+ * Core
+ * - updateNodeData, getConnectedEdges
  */
 export function useRunProcess({ graph: dagreGraph, cancelOnError = true }) {
   const { updateNodeData, getConnectedEdges } = useVueFlow()
@@ -121,6 +128,7 @@ export function useRunProcess({ graph: dagreGraph, cancelOnError = true }) {
     }
   }
 
+  // skip descendants
   async function skipDescendants(nodeId) {
     const children = graph.value.successors(nodeId)
 
