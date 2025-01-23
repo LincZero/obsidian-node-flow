@@ -21,14 +21,16 @@
     <div v-if="props.data.value" class="node-item-value">
       <div><span>---TheNode-----</span></div>
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
-      <div><button @click="console.log(_useNode)">useNode</button></div>
-      <div><button @click="console.log(ref_useNodesData)">useNodesData</button></div>
+      <div><button @click="console.log(_useNode)">Node</button></div>
+      <div><button @click="console.log(_useNodesData)">NodesData</button></div>
+      <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
       <div><span>---TheHandle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
-      <div><button @click="console.log(ref_useNodesData.data.items)">listItem type use</button></div>
       <div><span>---TheOutter---</span></div>
-      <div><button @click="console.log(_useEdge)">useEdge</button></div>
-      <div><button @click="console.log(_useHandleConnections)">useHandleConnections</button></div>
+      <div><button @click="console.log(_useSourceConnections)">SourceConnections</button></div>
+      <div><button @click="console.log(_useTargetConnections)">TargetConnections</button></div>
+      <div><button @click="console.log(_useSourceNodesData)">SourceNodesData</button></div>
+      <div><button @click="console.log(_useTargetNodesData)">TargetNodesData</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -43,17 +45,24 @@ const props = defineProps<{
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
-  useNode, useNodeId, useNodesData, useEdge,
-  useHandleConnections,
-  useVueFlow
+  useNode, useNodeId, useNodesData, // TheNode
+  useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
+  useEdge, useVueFlow,
 } from '@vue-flow/core'
 const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
-const ref_useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
-const _useEdge: object = useEdge()
+const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
+const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
+const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
+const _useSourceNodesData: ComputedRef<any> = useNodesData(() => _useSourceConnections.value.map((connection:any) => connection.source))
+const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConnections.value.map((connection:any) => connection.target))
 
-// 非通用，根据节点数据格式而定
-const _useHandleConnections: any = computed(()=>{ // watch useNodesData()
+/**
+ * 非通用，根据节点数据格式而定
+ * @deprecated 旧版，官方弃用useHandleConnections
+ * 而且还有bug，watch useNodesData()得不对，没拿到正确数据，要修。不watch则行
+ */
+/*const _useHandleConnections: any = computed(()=>{
   const _useHandleConnections_tmp: any[] = []
   for (let item of ref_useNodesData.value.data.items) {
     let type: 'source'|'target'
@@ -61,6 +70,11 @@ const _useHandleConnections: any = computed(()=>{ // watch useNodesData()
     else if (item['refType']=='i' || item['refType']=='input') { type = 'target' }
     else { continue } // 不连线的
 
+    console.log('useHandleConnections', item['id'], type, useHandleConnections({
+      nodeId: _useNodeId,
+      id: item['id'],
+      type: type
+    }))
     _useHandleConnections_tmp.push(useHandleConnections({
       nodeId: _useNodeId,
       id: item['id'],
@@ -68,7 +82,7 @@ const _useHandleConnections: any = computed(()=>{ // watch useNodesData()
     }))
   }
   return _useHandleConnections_tmp
-})
+})*/
 
 </script>
 

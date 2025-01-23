@@ -48,6 +48,7 @@ export function useRunProcess({ graph: dagreGraph, cancelOnError = true }) {
     // mark the node as executed, so it doesn't run again
     executedNodes.add(node.id)
 
+    // (Core)
     updateNodeData(node.id, { isRunning: true, isFinished: false, hasError: false, isCancelled: false })
 
     // simulate an async process with a random timeout between 1-2 seconds
