@@ -35,6 +35,7 @@ Item类型的节点
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
+            <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
           </ItemNodeSlot>
         </div>
@@ -74,8 +75,11 @@ import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
 import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
 import DropdownItem from "../nodeItem/DropdownItem.vue"         // 下拉项
 import DebugItem from "../nodeItem/DebugItem.vue"               // 调试项
+import FlowItem from "../nodeItem/FlowItem.vue"                 // 流程控制项
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
 hasCustomHandle.value = props.data?.items?.length!=0
+
+
 </script>

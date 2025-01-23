@@ -31,8 +31,6 @@
       <div><button @click="console.log(_useTargetConnections)">TargetConnections</button></div>
       <div><button @click="console.log(_useSourceNodesData)">SourceNodesData</button></div>
       <div><button @click="console.log(_useTargetNodesData)">TargetNodesData</button></div>
-      <div><span>---TheFlow-----</span></div>
-      <div><button @click="debugConsole()">DebugConsole</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -61,58 +59,6 @@ const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType:
 const _useSourceNodesData: ComputedRef<any> = useNodesData(() => _useSourceConnections.value.map((connection:any) => connection.source))
 const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConnections.value.map((connection:any) => connection.target))
 const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
-
-// 流程控制 - 执行主要操作、触发下一节点
-const debugConsole = async () => {
-  // 该节点的操作
-  // ... 其他操作
-  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
-  _useNodesData.value.data.isRunning = false;
-
-  // 然后尝试运行下一个节点的debugConsole
-  if (_useTargetNodesData.value.length > 0) {
-    _useTargetNodesData.value[0].data.isRunning = true;
-    updateNodeData(_useTargetNodesData.value[0].id, _useTargetNodesData.value[0].data);
-  } else {
-    console.log(`debugConsole, end`);
-  } 
-};
-
-// 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
-_useNodesData.value.data['isRunning'] = false
-// let ref_isRunning = ref<boolean>(props.data['isRunning'])
-watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
-  if (newVal.data.isRunning == true) {
-    debugConsole();
-  }
-});
-
-/**
- * 非通用，根据节点数据格式而定
- * @deprecated 旧版，官方弃用useHandleConnections
- * 而且还有bug，watch useNodesData()得不对，没拿到正确数据，要修。不watch则行
- */
-/*const _useHandleConnections: any = computed(()=>{
-  const _useHandleConnections_tmp: any[] = []
-  for (let item of ref_useNodesData.value.data.items) {
-    let type: 'source'|'target'
-    if (item['refType']=='o' || item['refType']=='output') { type = 'source' }
-    else if (item['refType']=='i' || item['refType']=='input') { type = 'target' }
-    else { continue } // 不连线的
-
-    console.log('useHandleConnections', item['id'], type, useHandleConnections({
-      nodeId: _useNodeId,
-      id: item['id'],
-      type: type
-    }))
-    _useHandleConnections_tmp.push(useHandleConnections({
-      nodeId: _useNodeId,
-      id: item['id'],
-      type: type
-    }))
-  }
-  return _useHandleConnections_tmp
-})*/
 
 </script>
 
