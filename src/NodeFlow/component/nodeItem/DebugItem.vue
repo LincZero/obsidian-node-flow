@@ -51,6 +51,7 @@ import {
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
   useEdge, useVueFlow,
 } from '@vue-flow/core'
+const { updateNodeData, getConnectedEdges } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
@@ -63,24 +64,24 @@ const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
 
 // 流程控制 - 执行主要操作、触发下一节点
 const debugConsole = async () => {
-  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
-  console.log(_useTargetConnections, _useTargetNodesData, _useTargetNode);
+  // 该节点的操作
+  // ... 其他操作
   props.data.isRunning = false;
 
   // 然后尝试运行下一个节点的debugConsole
   if (_useTargetNodesData.value.length > 0) {
     _useTargetNodesData.value[0].data.isRunning = true;
+    updateNodeData(_useTargetNodesData.value[0].id, _useTargetNodesData.value[0].data);
   } else {
-    console.log('No target node to run');
+    console.log(`debugConsole, end`);
   } 
 };
 
-// 流程控制 - 钩子
+// 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
 props.data['isRunning'] = false
 // let ref_isRunning = ref<boolean>(props.data['isRunning'])
-watch(props.data.isRunning, (newVal, oldVal) => {
-  console.log('isRunning change', newVal, oldVal);
-  if (newVal == true) {
+watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
+  if (newVal.data.isRunning == true) {
     debugConsole();
   }
 });
