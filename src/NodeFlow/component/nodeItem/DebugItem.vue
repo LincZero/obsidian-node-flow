@@ -66,7 +66,8 @@ const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
 const debugConsole = async () => {
   // 该节点的操作
   // ... 其他操作
-  props.data.isRunning = false;
+  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
+  _useNodesData.value.data.isRunning = false;
 
   // 然后尝试运行下一个节点的debugConsole
   if (_useTargetNodesData.value.length > 0) {
@@ -78,7 +79,7 @@ const debugConsole = async () => {
 };
 
 // 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
-props.data['isRunning'] = false
+_useNodesData.value.data['isRunning'] = false
 // let ref_isRunning = ref<boolean>(props.data['isRunning'])
 watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
   if (newVal.data.isRunning == true) {
