@@ -1,15 +1,14 @@
 <!--
-流程控制项
+流程控制项 - 延时
 -->
 
 <template>
-  <div :class="'flow-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
+  <div :class="'flowdelay-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div class="node-item-value"
       title="点击可以从此开启运行节点流程"
       @click="debugConsole_start()"
       :style="'background:' + (_useNodesData.data.isRunning?'green;':'red;')">
-      {{ props.data.value }}
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -20,7 +19,7 @@ import { ComputedRef, computed, ref, watch } from 'vue';
 const props = defineProps<{
   data: any,
 }>();
-if (!props.data.value) props.data.value = '';
+if (!props.data.value) props.data.value = "0"; // [!code]
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
@@ -44,9 +43,9 @@ const debugConsole_start = async () => {
 // 流程控制 - 执行主要操作、触发下一节点
 const debugConsole = async () => {
   // 该节点的操作
-  // ... 其他操作
-  await new Promise(resolve => setTimeout(resolve, 1000)); // delay 1000ms
-  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
+  // ... 其他操作 // [!code]
+  await new Promise(resolve => setTimeout(resolve, props.data.value)); // delay // [!code]
+  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} delay:${props.data.value}`);
   _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
 
   // 然后尝试运行下一个节点的debugConsole
@@ -69,20 +68,20 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
 </script>
 
 <style scoped>
-.flow-item {
+.flowdelay-item {
   /* layout 20+2+2 */
   box-sizing: border-box;
   height: auto;
   min-height: 24px;
   padding: 0px 0px;
 }
-.flow-item .node-item-name {
+.flowdelay-item .node-item-name {
   height: 24px;
 
   padding: 2px 0px;
   line-height: calc(24px - 4px);
 }
-.flow-item .node-item-value { /** 一般应该是没内容的，就是个圆点。24=(18)+6 */
+.flowdelay-item .node-item-value { /** 一般应该是没内容的，就是个圆点。24=(18)+6 */
   height: 12px;
   width: 12px;
   margin-top: 6px;

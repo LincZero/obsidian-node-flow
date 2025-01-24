@@ -11,6 +11,7 @@
     v-if="item.refType === 'input' || item.refType === 'i'"
     class="node-item-handle"
     :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
+    :title="item.hasOwnProperty('id')?item['id']:'target-'+index"
     :indexAttr="index"
     :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
     :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
@@ -20,6 +21,7 @@
     v-if="item.refType === 'output' || item.refType === 'o'"
     class="node-item-handle"
     :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
+    :title="item.hasOwnProperty('id')?item['id']:'source-'+index"
     :indexAttr="index"
     :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
     :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"

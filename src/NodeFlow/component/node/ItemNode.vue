@@ -30,13 +30,15 @@ Item类型的节点
       <div class="node-content">
         <div v-for="(item,index) in data.items" :class="'line node-item '+item.refType">
           <ItemNodeSlot :index="index" :item="item">
+            <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
             <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
-            <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
+            <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
+            <template #item-flowreq="props"><FlowReqItem :data="props.data"></FlowReqItem></template>
           </ItemNodeSlot>
         </div>
       </div>
@@ -75,7 +77,9 @@ import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
 import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
 import DropdownItem from "../nodeItem/DropdownItem.vue"         // 下拉项
 import DebugItem from "../nodeItem/DebugItem.vue"               // 调试项
-import FlowItem from "../nodeItem/FlowItem.vue"                 // 流程控制项
+import FlowItem from "../nodeItem/flowItem/FlowItem.vue"        // 流程控制项1
+import FlowDelayItem from "../nodeItem/flowItem/FlowDelayItem.vue"  // 流程控制项2
+import FlowReqItem from "../nodeItem/flowItem/FlowReqItem.vue"    // 流程控制项3
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
