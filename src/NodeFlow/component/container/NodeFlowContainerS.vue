@@ -33,6 +33,8 @@
         <button class="nf-btn" @click="selectItem('Copy raw', () => fn_copyData('rawData'))">Copy raw</button>
       </DropdownButton>
       <button class="nf-btn" @click="fn_switchAllowScroll()">Ex lock</button>
+      <button class="nf-btn" title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)"
+        @click="fn_zoomInit()" ref="zoomButton">Zoom area</button>
     </div>
   </div>
 </template>
@@ -48,7 +50,7 @@ const props = defineProps<{
   fn_newView?: () => Promise<void>, // 在新视图中显示画布
   fn_save?: (str: string) => void,  // 保存
 }>()
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
 const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
 
@@ -122,6 +124,28 @@ function fn_saveChange () {
   else {
     console.error("无法保存修改", result)
   }
+}
+
+//   按钮 - ZommArea (单手缩放、重置大小)
+import { useVueFlow } from '@vue-flow/core'
+const { zoomIn, zoomOut, zoomTo } = useVueFlow()
+const zoomButton = ref()
+onMounted(() => {
+  document.addEventListener('wheel', (event)=>{
+    if (!zoomButton.value.contains(event.target)) return
+    event.preventDefault();
+    if (event.deltaY > 0) {
+      zoomOut()
+    } else {
+      zoomIn()
+    }
+  }, { passive: false });
+})
+onUnmounted(() => {
+  document.removeEventListener('wheel', ()=>{})
+})
+function fn_zoomInit() {
+  zoomTo(1)
 }
 </script>
 

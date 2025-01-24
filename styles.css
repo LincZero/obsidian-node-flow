@@ -167,7 +167,7 @@ textarea.node-item-value[data-v-3b87dde5] {
 .debug-item .node-item-value[data-v-55ca04a6] > * * {
   box-sizing: border-box;
   height: 20px;
-  line-height: 20px;
+  line-height: calc(100% - 4px);
   margin: 0;
   padding-top: 0;
   padding-bottom: 0;
@@ -186,7 +186,8 @@ textarea.node-item-value[data-v-3b87dde5] {
 .flow-item .node-item-value[data-v-9ca1aeb5] {
   height: 12px;
   width: 12px;
-  margin: 6px;
+  margin-top: 6px;
+  margin-bottom: 6px;
   padding: 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;
