@@ -18,7 +18,7 @@
 <template>
   <div :class="'debug-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <div v-if="props.data.value" class="node-item-value">
+    <div class="node-item-value">
       <div><span>---TheNode-----</span></div>
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
       <div><button @click="console.log(_useNode)">Node</button></div>
@@ -42,6 +42,7 @@ const props = defineProps<{
   // parent: any, // 父节点
   data: any,
 }>();
+if (!props.data.value) props.data.value = '';
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
@@ -95,7 +96,7 @@ const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
 .debug-item .node-item-value>* * {
   box-sizing: border-box;
   height: calc(24px - 4px);
-  line-height: calc(24px - 4px);
+  line-height: calc(100% - 4px);
   margin: 0;
   padding-top: 0;
   padding-bottom: 0;

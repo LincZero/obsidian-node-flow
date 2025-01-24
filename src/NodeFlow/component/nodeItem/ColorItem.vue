@@ -3,7 +3,7 @@
 <template>
   <div :class="'color-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <div v-if="props.data.value" class="node-item-value"
+    <div class="node-item-value"
       :style="'background:'+props.data.value+'; color:'+getHighContrastTextColor(props.data.value)">
       {{ props.data.value }} 
     </div>
@@ -15,6 +15,7 @@
 const props = defineProps<{
   data: any
 }>();
+if (!props.data.value) props.data.value = '#fff';
 
 /// 文字颜色计算
 function getHighContrastTextColor(hexColor: string) {

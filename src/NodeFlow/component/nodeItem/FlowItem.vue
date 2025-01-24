@@ -5,7 +5,7 @@
 <template>
   <div :class="'flow-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <div v-if="props.data.value" class="node-item-value"
+    <div class="node-item-value"
       title="点击可以从此开启运行节点流程"
       @click="debugConsole_start()"
       :style="'background:' + (_useNodesData.data.isRunning?'green;':'red;')">
@@ -20,6 +20,7 @@ import { ComputedRef, computed, ref, watch } from 'vue';
 const props = defineProps<{
   data: any,
 }>();
+if (!props.data.value) props.data.value = '';
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
@@ -81,11 +82,14 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
   padding: 2px 0px;
   line-height: calc(24px - 4px);
 }
-.flow-item .node-item-value {
-  height: 24px;
+.flow-item .node-item-value { /** 一般应该是没内容的，就是个圆点。24=(18)+6 */
+  height: 12px;
+  width: 12px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 
-  padding: 2px 14px;
-  line-height: calc(24px - 4px);
+  padding: 2px 2px;
+  line-height: calc(100% - 4px);
   border-radius: 12px;
   border: solid 1px currentColor;
   cursor: pointer;
