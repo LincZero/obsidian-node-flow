@@ -35,6 +35,7 @@ interface type_selfChildren_socket extends type_selfChildren_base {
     parentId: string,                           // 父节点id，根节点没有，为 ""
     parent: type_selfChildren|null,
     value: string,                              // value类型的socket使用 (会显示，可多行)
+    // TODO 增加refValue (valueType对应value, refType对应refValue。这个量是缓存型的，非序列化的。仅用于缓存上一个节点给该节点的socket)
     items: any,
   }
 }

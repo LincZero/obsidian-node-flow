@@ -33,8 +33,8 @@
         <button class="nf-btn" @click="selectItem('Copy raw', () => fn_copyData('rawData'))">Copy raw</button>
       </DropdownButton>
       <button class="nf-btn" @click="fn_switchAllowScroll()">Ex lock</button>
-      <button class="nf-btn" title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)"
-        @click="fn_zoomInit()" ref="zoomButton">Zoom area</button>
+      <button class="nf-btn" @click="fn_zoomInit()" ref="zoomButton"
+        title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)">Zoom area</button>
     </div>
   </div>
 </template>
@@ -128,12 +128,14 @@ function fn_saveChange () {
 
 //   按钮 - ZommArea (单手缩放、重置大小)
 import { useVueFlow } from '@vue-flow/core'
-const { zoomIn, zoomOut, zoomTo } = useVueFlow()
+const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom } = useVueFlow()
 const zoomButton = ref()
 onMounted(() => {
   document.addEventListener('wheel', (event)=>{
     if (!zoomButton.value.contains(event.target)) return
     event.preventDefault();
+    setMaxZoom(3);
+    setMinZoom(0.1);
     if (event.deltaY > 0) {
       zoomOut()
     } else {
