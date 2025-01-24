@@ -186,8 +186,7 @@ textarea.node-item-value[data-v-3b87dde5] {
 .flow-item .node-item-value[data-v-63dfc957] {
   height: 12px;
   width: 12px;
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin: 6px 0 6px 8px;
   padding: 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;
@@ -208,8 +207,7 @@ textarea.node-item-value[data-v-3b87dde5] {
 .flowdelay-item .node-item-value[data-v-88f12da3] {
   height: 12px;
   width: 12px;
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin: 6px 0 6px 8px;
   padding: 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;
@@ -230,8 +228,7 @@ textarea.node-item-value[data-v-3b87dde5] {
 .flowreq-item .node-item-value[data-v-cfd6d4e8] {
   height: 12px;
   width: 12px;
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin: 6px 0 6px 8px;
   padding: 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;

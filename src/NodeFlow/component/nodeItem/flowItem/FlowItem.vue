@@ -84,8 +84,7 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
 .flow-item .node-item-value { /** 一般应该是没内容的，就是个圆点。24=(18)+6 */
   height: 12px;
   width: 12px;
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin: 6px 0 6px 8px;
 
   padding: 2px 2px;
   line-height: calc(100% - 4px);
