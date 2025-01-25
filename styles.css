@@ -235,6 +235,9 @@ textarea.node-item-value[data-v-3b87dde5] {
   border: solid 1px currentColor;
   cursor: pointer;
 }
+.node-main.running[data-v-d6284d8b] {
+  box-shadow: 0 0 8px 3px green !important;
+}
 .vue-flow__panel[data-v-5f38abf1] {
   background-color: #2d3748;
   padding: 10px;

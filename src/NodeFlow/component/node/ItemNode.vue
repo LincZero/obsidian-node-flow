@@ -20,7 +20,7 @@ Item类型的节点
     <div :v-show="id != ''" class="node-id">
       <div>#{{ id }}</div>
     </div>
-    <div class="common-node node-main" :aria-label="data.label">
+    <div class="common-node node-main" :class="data.isRunning?'running':''" :aria-label="data.label">
       <!-- 标题项 -->
       <div class="node-title">
         <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
@@ -84,6 +84,10 @@ import FlowReqItem from "../nodeItem/flowItem/FlowReqItem.vue"    // 流程控�
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
 hasCustomHandle.value = props.data?.items?.length!=0
-
-
 </script>
+
+<style scoped>
+.node-main.running {
+  box-shadow: 0 0 8px 3px green !important;
+}
+</style>
