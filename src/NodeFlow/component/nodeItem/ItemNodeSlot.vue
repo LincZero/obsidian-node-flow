@@ -8,27 +8,27 @@
 
 <template>
   <Handle
-    v-if="item.refType === 'input' || item.refType === 'i'"
+    v-if="item.refType === 'input' || item.refType === 'i' || item.refType === 'io'"
     class="node-item-handle"
     :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
     :title="item.hasOwnProperty('id')?item['id']:'target-'+index"
     :indexAttr="index"
     :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
     :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
-    :typeAttr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
-    :typeMapAttr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
+    :type-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default')"
+    :type-map-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
     type="target"
     :position="Position.Left" />
   <Handle
-    v-if="item.refType === 'output' || item.refType === 'o'"
+    v-if="item.refType === 'output' || item.refType === 'o' || item.refType === 'io'"
     class="node-item-handle"
     :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
     :title="item.hasOwnProperty('id')?item['id']:'source-'+index"
     :indexAttr="index"
     :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
     :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'source-'+index).toLowerCase().charCodeAt(0)%20"
-    :typeAttr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
-    :typeMapAttr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
+    :type-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default')"
+    :type-map-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
     type="source"
     :position="Position.Right" />
   <slot :name="props.item.valueType" :id="props.item.id" :data="props.item"></slot>

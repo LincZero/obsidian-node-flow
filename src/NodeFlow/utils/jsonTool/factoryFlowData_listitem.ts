@@ -28,7 +28,7 @@ interface type_selfChildren_node extends type_selfChildren_base {
 interface type_selfChildren_socket extends type_selfChildren_base {
   self_data: {                                  // socket，在nodes-edges-array中将会被废弃掉
     type: "s"|"socket",
-    refType: "i"|"input"|"o"|"output"|"v"|"value",
+    refType: "i"|"input"|"o"|"output"|"v"|"value"|"io",
     valueType: string,
     id: string,                                 // socketId
     name: string,                               // socket名 (会显示)
@@ -271,7 +271,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
           current_item.self_data = {
             type: "socket",
             // @ts-ignore type类型不对
-            refType: (ll_content[1]&&["i","input","o","output","v","value"].includes(ll_content[1][0]))?ll_content[1][0]:"value",
+            refType: (ll_content[1]&&["i","input","o","output","v","value","io"].includes(ll_content[1][0]))?ll_content[1][0]:"value",
             valueType: (ll_content[1]&&ll_content[1][1])?ll_content[1][1]:"item-default",
             id: ll_content[0][0],
             name: ll_content[0][1]??ll_content[0][0],

@@ -140,6 +140,7 @@ textarea.node-item-value[data-v-559f1621] {
   border-radius: 12px;
   border: solid 1px currentColor;
   cursor: pointer;
+  margin-left: 4px;
 }
 .debug-item[data-v-09946fa2] {
   box-sizing: border-box;
@@ -184,9 +185,9 @@ textarea.node-item-value[data-v-559f1621] {
   line-height: 20px;
 }
 .flow-item .node-item-value[data-v-1cbc6d96] {
-  height: 12px;
-  width: 12px;
-  margin: 6px 0 6px 8px;
+  height: 8px;
+  width: 8px;
+  margin: 8px 0 8px 9px;
   padding: 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;
@@ -205,9 +206,9 @@ textarea.node-item-value[data-v-559f1621] {
   line-height: 20px;
 }
 .flowdelay-item .node-item-value[data-v-3aa9b2e9] {
-  height: 12px;
-  width: 12px;
-  margin: 6px 0 6px 8px;
+  height: 8px;
+  width: 8px;
+  margin: 8px 0 8px 9px;
   padding: 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;
@@ -226,9 +227,9 @@ textarea.node-item-value[data-v-559f1621] {
   line-height: 20px;
 }
 .flowreq-item .node-item-value[data-v-03376f15] {
-  height: 12px;
-  width: 12px;
-  margin: 6px 0 6px 8px;
+  height: 8px;
+  width: 8px;
+  margin: 8px 0 8px 9px;
   padding: 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;
@@ -931,6 +932,13 @@ textarea.node-item-value[data-v-559f1621] {
   position: absolute;
   top: 7px;
   transform: none;
+}
+.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^=item-flow] {
+  background: transparent;
+  border-radius: 0;
+  border-left: 9px solid white;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
 }
 .item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
   float: left;

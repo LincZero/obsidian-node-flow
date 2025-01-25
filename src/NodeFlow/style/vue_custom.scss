@@ -377,6 +377,14 @@
           top: 7px;
           transform: none;
     
+          &[type-attr^="item-flow"] {
+            background: transparent;
+            border-radius: 0;
+            border-left: 9px solid white;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+          }
+
           &.target {
             float: left;
             left: -15px;

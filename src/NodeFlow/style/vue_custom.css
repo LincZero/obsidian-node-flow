@@ -390,6 +390,14 @@
   transform: none;
 }
 
+.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"] {
+  background: transparent;
+  border-radius: 0;
+  border-left: 9px solid white;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
 .item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
   float: left;
   left: -15px;
