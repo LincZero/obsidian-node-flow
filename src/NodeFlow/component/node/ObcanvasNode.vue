@@ -35,7 +35,7 @@ const newData = ref({
   valueType: "item-markdown",
 })
 
-import MarkdownItem from '../nodeItem/MarkdownItem.vue';
+import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
 </script>
 
 <style scoped>

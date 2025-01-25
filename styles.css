@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* main.css */
-.markdown-item[data-v-adf15d24] {
+.markdown-item[data-v-0a5737f9] {
   box-sizing: border-box;
   min-height: 24px;
   height: auto;
@@ -10,8 +10,8 @@
   background-color: #222;
   border-radius: 13px;
 }
-.markdown-item .node-item-name[data-v-adf15d24],
-.markdown-item .node-item-value[data-v-adf15d24] {
+.markdown-item .node-item-name[data-v-0a5737f9],
+.markdown-item .node-item-value[data-v-0a5737f9] {
   float: none !important;
 }
 .obcanvas-node[data-v-6026aac7] {
@@ -50,78 +50,59 @@
   color: #999;
   background-color: #00000040;
 }
-.default-item[data-v-3b87dde5] {
+.default-item[data-v-559f1621] {
   box-sizing: border-box;
   min-height: 24px;
   height: auto;
   padding: 2px 0;
 }
-.default-item.has-value[data-v-3b87dde5] {
+.default-item.has-value[data-v-559f1621] {
   padding: 1px 0;
   border: solid 1px #616161;
   border-radius: 13px;
   background-color: #222;
 }
-.default-item.has-value .node-item-name[data-v-3b87dde5],
-.default-item.has-value .node-item-value[data-v-3b87dde5] {
+.default-item.has-value .node-item-name[data-v-559f1621],
+.default-item.has-value .node-item-value[data-v-559f1621] {
   padding: 0 12px;
 }
-.node-item-name[data-v-3b87dde5] {
+.node-item-name[data-v-559f1621] {
   line-height: 20px;
 }
-.node-item-value[data-v-3b87dde5] {
+.node-item-value[data-v-559f1621] {
   line-height: 20px;
   margin: 0 0 0 4px;
 }
-textarea.node-item-value[data-v-3b87dde5] {
+textarea.node-item-value[data-v-559f1621] {
   overflow: hidden;
   white-space: pre;
   resize: none;
   border-radius: 12px;
   line-height: 20px;
 }
-.default-item .node-item-value[data-v-3b87dde5] {
+.default-item .node-item-value[data-v-559f1621] {
   text-align: right;
   margin-left: 8px;
   margin-right: 0;
 }
-.default-item.output .node-item-value[data-v-3b87dde5],
-.default-item.o .node-item-value[data-v-3b87dde5] {
+.default-item.output .node-item-value[data-v-559f1621],
+.default-item.o .node-item-value[data-v-559f1621] {
   text-align: left;
   margin-left: 0;
   margin-right: 8px;
 }
-.color-item[data-v-6326b0c1] {
+.dropdown-item[data-v-c8cee915] {
   box-sizing: border-box;
   height: auto;
   min-height: 24px;
   padding: 0;
 }
-.color-item .node-item-name[data-v-6326b0c1] {
+.dropdown-item .node-item-name[data-v-c8cee915] {
   height: 24px;
   padding: 2px 0;
   line-height: 20px;
 }
-.color-item .node-item-value[data-v-6326b0c1] {
-  height: 24px;
-  padding: 2px 14px;
-  line-height: 20px;
-  border-radius: 12px;
-  border: solid 1px currentColor;
-  cursor: pointer;
-}
-.dropdown-item[data-v-447493a8] {
-  box-sizing: border-box;
-  height: auto;
-  min-height: 24px;
-  padding: 0;
-}
-.dropdown-item .node-item-name[data-v-447493a8] {
-  height: 24px;
-  padding: 2px 0;
-  line-height: 20px;
-}
-.dropdown-item .node-item-value[data-v-447493a8] {
+.dropdown-item .node-item-value[data-v-c8cee915] {
   height: 24px;
   padding: 0;
   margin: 0;
@@ -129,7 +110,7 @@ textarea.node-item-value[data-v-3b87dde5] {
   box-shadow: none;
   background: none;
 }
-.dropdown-item .node-item-value select[data-v-447493a8] {
+.dropdown-item .node-item-value select[data-v-c8cee915] {
   height: 100%;
   margin: 0;
   padding: 2px 4px 2px 10px;
@@ -141,30 +122,49 @@ textarea.node-item-value[data-v-3b87dde5] {
   border: solid 1px #616161;
   appearance: revert;
 }
-.debug-item[data-v-55ca04a6] {
+.color-item[data-v-979c2133] {
   box-sizing: border-box;
   height: auto;
   min-height: 24px;
   padding: 0;
 }
-.debug-item .node-item-name[data-v-55ca04a6] {
+.color-item .node-item-name[data-v-979c2133] {
   height: 24px;
   padding: 2px 0;
   line-height: 20px;
 }
-.debug-item .node-item-value[data-v-55ca04a6] {
+.color-item .node-item-value[data-v-979c2133] {
+  height: 24px;
+  padding: 2px 14px;
+  line-height: 20px;
+  border-radius: 12px;
+  border: solid 1px currentColor;
+  cursor: pointer;
+}
+.debug-item[data-v-09946fa2] {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 24px;
+  padding: 0;
+}
+.debug-item .node-item-name[data-v-09946fa2] {
+  height: 24px;
+  padding: 2px 0;
+  line-height: 20px;
+}
+.debug-item .node-item-value[data-v-09946fa2] {
   line-height: 20px;
   border-radius: 12px;
   border: solid 1px currentColor;
 }
-.debug-item .node-item-value[data-v-55ca04a6] > * {
+.debug-item .node-item-value[data-v-09946fa2] > * {
   padding: 2px 14px;
   box-sizing: border-box;
   height: 24px;
   line-height: 20px;
   margin: 0;
 }
-.debug-item .node-item-value[data-v-55ca04a6] > * * {
+.debug-item .node-item-value[data-v-09946fa2] > * * {
   box-sizing: border-box;
   height: 20px;
   line-height: calc(100% - 4px);
@@ -172,18 +172,18 @@ textarea.node-item-value[data-v-3b87dde5] {
   padding-top: 0;
   padding-bottom: 0;
 }
-.flow-item[data-v-63dfc957] {
+.flow-item[data-v-1cbc6d96] {
   box-sizing: border-box;
   height: auto;
   min-height: 24px;
   padding: 0;
 }
-.flow-item .node-item-name[data-v-63dfc957] {
+.flow-item .node-item-name[data-v-1cbc6d96] {
   height: 24px;
   padding: 2px 0;
   line-height: 20px;
 }
-.flow-item .node-item-value[data-v-63dfc957] {
+.flow-item .node-item-value[data-v-1cbc6d96] {
   height: 12px;
   width: 12px;
   margin: 6px 0 6px 8px;
@@ -193,18 +193,18 @@ textarea.node-item-value[data-v-3b87dde5] {
   border: solid 1px currentColor;
   cursor: pointer;
 }
-.flowdelay-item[data-v-88f12da3] {
+.flowdelay-item[data-v-3aa9b2e9] {
   box-sizing: border-box;
   height: auto;
   min-height: 24px;
   padding: 0;
 }
-.flowdelay-item .node-item-name[data-v-88f12da3] {
+.flowdelay-item .node-item-name[data-v-3aa9b2e9] {
   height: 24px;
   padding: 2px 0;
   line-height: 20px;
 }
-.flowdelay-item .node-item-value[data-v-88f12da3] {
+.flowdelay-item .node-item-value[data-v-3aa9b2e9] {
   height: 12px;
   width: 12px;
   margin: 6px 0 6px 8px;
@@ -214,18 +214,18 @@ textarea.node-item-value[data-v-3b87dde5] {
   border: solid 1px currentColor;
   cursor: pointer;
 }
-.flowreq-item[data-v-cfd6d4e8] {
+.flowreq-item[data-v-03376f15] {
   box-sizing: border-box;
   height: auto;
   min-height: 24px;
   padding: 0;
 }
-.flowreq-item .node-item-name[data-v-cfd6d4e8] {
+.flowreq-item .node-item-name[data-v-03376f15] {
   height: 24px;
   padding: 2px 0;
   line-height: 20px;
 }
-.flowreq-item .node-item-value[data-v-cfd6d4e8] {
+.flowreq-item .node-item-value[data-v-03376f15] {
   height: 12px;
   width: 12px;
   margin: 6px 0 6px 8px;

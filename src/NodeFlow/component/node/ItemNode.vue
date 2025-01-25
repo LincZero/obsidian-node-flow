@@ -32,9 +32,9 @@ Item类型的节点
           <ItemNodeSlot :index="index" :item="item">
             <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
             <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
-            <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
-            <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
+            <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
+            <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
@@ -72,14 +72,14 @@ const outputItems = computed(() => props.data.items.filter((item:any) => item.re
 const valueItems = computed(() => props.data.items.filter((item:any) => item.refType === 'value'));
 
 import ItemNodeSlot from "../nodeItem/ItemNodeSlot.vue"
-import DefaultItem from "../nodeItem/DefaultItem.vue"           // 默认项
-import MarkdownItem from "../nodeItem/MarkdownItem.vue"         // Markdown项
-import ColorItem from "../nodeItem/ColorItem.vue"               // 颜色项
-import DropdownItem from "../nodeItem/DropdownItem.vue"         // 下拉项
-import DebugItem from "../nodeItem/DebugItem.vue"               // 调试项
-import FlowItem from "../nodeItem/flowItem/FlowItem.vue"        // 流程控制项1
-import FlowDelayItem from "../nodeItem/flowItem/FlowDelayItem.vue"  // 流程控制项2
-import FlowReqItem from "../nodeItem/flowItem/FlowReqItem.vue"    // 流程控制项3
+import DefaultItem from "../nodeItem/string/DefaultItem.vue"    // 默认项
+import DropdownItem from "../nodeItem/string/DropdownItem.vue"  // 下拉项
+import ColorItem from "../nodeItem/color/ColorItem.vue"         // 颜色项
+import MarkdownItem from "../nodeItem/view/MarkdownItem.vue"    // Markdown项
+import DebugItem from "../nodeItem/view/DebugItem.vue"          // 调试项
+import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项1
+import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项2
+import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项3
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
