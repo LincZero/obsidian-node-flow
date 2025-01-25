@@ -235,7 +235,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
         self_data: null
       }
       // 内联解析。根据value字符串解析成json，进行self_data填充
-      function inline_parse() {
+      function inline_parse(): boolean {
         /**
          * 先解析
          * 
@@ -281,7 +281,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
           }
         }
         // node
-        else {
+        else if (ll_content[0] && ll_content[0][0] != "") {
           current_item.self_data = {
             type: "node",
             id: ll_content[0][0],
@@ -290,10 +290,16 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
             items: []
           }
         }
+        // 不合法，可能在编辑中
+        else {
+          return false
+        }
         map_item = map_item.slice(0, map_indent.length)
         map_item[current_level] = current_item
+        return true
       }
-      inline_parse()
+      const ret = inline_parse()
+      if (!ret) return {code: -1, msg: "error: inline parse fail", data: []}
 
       // change4: result_items & (parent's item)，结果 & (父容器的item项)
       {
