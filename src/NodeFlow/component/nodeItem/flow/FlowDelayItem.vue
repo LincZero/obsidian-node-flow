@@ -11,6 +11,14 @@
       :style="'background:' + (_useNodesData.data.isRunning?'green;':'red;')">
     </div>
     <div style="height:0; clear: both;"></div>
+    <div class="node-item-value2" style="overflow-x: auto;">
+      <textarea
+        v-model="writable_value"
+        :rows="writable_value.split('\n').length"
+        cols="20"
+      ></textarea>
+    </div>
+    <div style="height:0; clear: both;"></div>
   </div>
 </template>
   
@@ -20,6 +28,10 @@ const props = defineProps<{
   data: any,
 }>();
 if (!props.data.value) props.data.value = "0"; // [!code]
+const writable_value = computed({
+  get: () => props.data.value,
+  set: (value) => { props.data.value = value },
+})
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {

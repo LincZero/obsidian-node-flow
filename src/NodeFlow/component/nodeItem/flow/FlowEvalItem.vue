@@ -1,9 +1,9 @@
 <!--
-流程控制项 - http请求
+流程控制项 - Eval
 -->
 
 <template>
-  <div :class="'flowreq-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
+  <div :class="'floweval-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div class="node-item-value"
       title="点击可以从此开启运行节点流程"
@@ -17,19 +17,17 @@
         :rows="writable_value.split('\n').length"
         cols="20"
       ></textarea>
-      <div style="height:0; clear: both;"></div>
-      <textarea v-if="resp_str.length > 0">{{ resp_str }}</textarea>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
 </template>
-
+  
 <script setup lang="ts">
 import { ComputedRef, computed, ref, watch } from 'vue';
 const props = defineProps<{
   data: any,
 }>();
-if (!props.data.value) props.data.value = 'https://httpbin.org/get'; // [!code]
+if (!props.data.value) props.data.value = "console.log('debug output')"; // [!code]
 const writable_value = computed({
   get: () => props.data.value,
   set: (value) => { props.data.value = value },
@@ -54,23 +52,17 @@ const debugConsole_start = async () => {
   _useNodesData.value.data.isRunning = true; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 
-import { request } from "../../../utils/main/setting"
-let resp_str = ""
 // 流程控制 - 执行主要操作、触发下一节点
 const debugConsole = async () => {
   // 该节点的操作
   // ... 其他操作 // [!code]
-  const resp = await request(props.data.value, 'GET', undefined, undefined)
-  resp_str = resp.status.toString()
-  if (resp.status != 200) {
-    console.warn(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:`, resp);
-  } else {
-    if (resp.json) {
-      resp_str = JSON.stringify(resp.json, null, 2)
-      console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:\n`, resp_str);
-    } else {
-      console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:`, resp);
-    }
+  try { // [!code]
+    // eval(props.data.value)
+    // const func = new Function(props.data.value);
+    // func();
+    console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
+  } catch (error) {
+    console.error(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} error:`, error);
   }
   _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
 
@@ -94,20 +86,20 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
 </script>
 
 <style scoped>
-.flowreq-item {
+.floweval-item {
   /* layout 20+2+2 */
   box-sizing: border-box;
   height: auto;
   min-height: 24px;
   padding: 0px 0px;
 }
-.flowreq-item .node-item-name {
+.floweval-item .node-item-name {
   height: 24px;
 
   padding: 2px 0px;
   line-height: calc(24px - 4px);
 }
-.flowreq-item .node-item-value { /** 一般应该是没内容的，就是个圆点。24=(18)+6 */
+.floweval-item .node-item-value { /** 一般应该是没内容的，就是个圆点。24=(18)+6 */
   height: 8px;
   width: 8px;
   margin: 8px 0 8px 9px;

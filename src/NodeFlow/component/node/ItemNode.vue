@@ -39,6 +39,7 @@ Item类型的节点
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
             <template #item-flowreq="props"><FlowReqItem :data="props.data"></FlowReqItem></template>
+            <template #item-floweval="props"><FlowEvalItem :data="props.data"></FlowEvalItem></template>
           </ItemNodeSlot>
         </div>
       </div>
@@ -80,6 +81,7 @@ import DebugItem from "../nodeItem/view/DebugItem.vue"          // 调试项
 import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项1
 import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项2
 import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项3
+import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制项4
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)

@@ -4,7 +4,6 @@
   <div ref="TextArea2" :class="'default-item  node-item-slot ' + props.data.refType + (writable_value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <textarea
-      v-if="writable_value"
       class="node-item-value"
       v-model="writable_value"
       :rows="writable_value.split('\n').length"
@@ -26,9 +25,10 @@ const props = defineProps<{
 // 可写属性
 import { useNode, useVueFlow } from '@vue-flow/core'
 const { updateNodeData } = useVueFlow()
+if (!props.data.value) props.data.value = ''
 const writable_value = computed({
   get: () => props.data.value,
-  set: (value) => { props.data.value = value }, // 无需 return updateNodeData(props.id, props.data)
+  set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
 })
 
 // 自动调整高度。当大于初始的(rows、cols值)时，才会(出现overflow然后)撑开
