@@ -10,7 +10,7 @@
     :nodes="nodes" :edges="edges"
     :prevent-scrolling="true"
     fit-view-on-init
-    @edges-change="edgeAnimated"
+    @edges-change="onEdgeChange"
     @nodes-initialized="isNodeInitialized=true">
     <!-- :pan-on-drag="[0,2]" -->
     <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
@@ -136,9 +136,10 @@ async function ...() {
 // }
 
 /**
- * 事件 - 线变动
+ * 事件 - 线状态变动
  * 
  * 选择的线变为流动样式
+ * 需要特别注意的是，最好修改props.jsonData而不是nodes和edges，特别是后者不能直接赋值
  * 
  * 注意区分：
  * - @edges-change      点击触发
@@ -149,15 +150,48 @@ async function ...() {
  * - @edges-change      包括selectionChange、removeChange、addChange
  */
 import type { EdgeChange, EdgeSelectionChange } from '@vue-flow/core'
-const { findEdge } = useVueFlow()
-function edgeAnimated(changes: EdgeChange[]) {
+const { findEdge, updateEdgeData, addEdges, removeEdges } = useVueFlow()
+function onEdgeChange(changes: EdgeChange[]) {
   for (const change of changes) {
-    if (change.hasOwnProperty("selected")) { // EdgeSelectionChange 类型
+    // 改
+    if (change.type == "select" && change.hasOwnProperty("selected")) {
       const edge = findEdge((change as EdgeSelectionChange).id)
       edge.animated = (change as EdgeSelectionChange).selected
     }
+    // 增
+    else if (change.type == "add" && change.hasOwnProperty("item")) {
+      const colors = [
+        "#ff0000", "#ff4d00", "#ff9900", "#ffe600", "#ccff00",
+        "#80ff00", "#33ff00", "#00ff1a", "#00ff66", "#00ffb3",
+        "#00ffff", "#00b3ff", "#0066ff", "#001aff", "#3300ff",
+        "#8000ff", "#cc00ff", "#ff00e6", "#ff0099", "#ff004c"
+      ]
+      const nameMapAttr = change.item.targetHandle.toLowerCase().charCodeAt(0)%20;
+      props.jsonData.edges.push({
+        id: change.item.id,
+        style: {
+          stroke: colors[nameMapAttr]
+        },
+        target: change.item.target,
+        targetHandle: change.item.targetHandle,
+        source: change.item.source,
+        sourceHandle: change.item.sourceHandle,
+      })
+    }
+    // 删
+    else if (change.type == "remove") {
+      props.jsonData.edges = props.jsonData.edges.filter((edge:any) => edge.id != change.id)
+    }
+    // console.log('onEdgeChange', change, edges.value, props.jsonData)
   }
 }
+// onConnect((edge) => { // 仅 {s s t t} 数据
+//   console.log('nodeItem onConnect', edge)
+//   const nameMapAttr = edge.sourceHandle.toLowerCase().charCodeAt(0)%20;
+// })
+// onConnectEnd((edge) => { //
+//   console.log('nodeItem onConnectEnd', edge)
+// })
 </script>
 
 <style>
