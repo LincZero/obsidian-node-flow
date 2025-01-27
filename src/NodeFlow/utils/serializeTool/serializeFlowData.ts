@@ -28,13 +28,16 @@ function serializeFlowData_item(jsonData: any) {
 function serializeFlowData_listitem(jsonData: any) {
   let newText = ""
   newText += "- nodes\n"
+  // Node
   for (let node of jsonData.nodes) {
-    newText += `  - ${node.id}:${node.data.label}\n`
-    for (let item of node.data.items) {
-      newText += `    - ${item.id}:${item.name}, ${item.refType}:${item.valueType}, ${item.value}\n`
+    newText += `  - ${node.id}${node.id==node.data.label?'':':'+node.data.label}\n`
+    // Handle
+    for (let socket of node.data.items) {
+      newText += `    - ${socket.id}${socket.id==socket.name?'':':'+socket.name}, ${socket.refType=='v'?'':socket.refType}:${socket.valueType}, ${socket.value}\n`
     }
   }
   newText += "- edges\n"
+  // Edge
   for (let edge of jsonData.edges) {
     newText += `  - ${edge.source}, ${edge.sourceHandle}, ${edge.target}, ${edge.targetHandle}\n`
   }

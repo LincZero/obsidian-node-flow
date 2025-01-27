@@ -26,11 +26,15 @@
       <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
       <div><span>---TheHandle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
-      <div><span>---TheOutter---</span></div>
-      <div><button @click="console.log(_useSourceConnections)">SourceConnections</button></div>
-      <div><button @click="console.log(_useTargetConnections)">TargetConnections</button></div>
+      <div><span>---OutNode-----</span></div>
       <div><button @click="console.log(_useSourceNodesData)">SourceNodesData</button></div>
       <div><button @click="console.log(_useTargetNodesData)">TargetNodesData</button></div>
+      <div><span>---OutHandle---</span></div>
+      <div><button @click="console.log(_useSourceConnections)">SourceConnections</button></div>
+      <div><button @click="console.log(_useTargetConnections)">TargetConnections</button></div>
+      <div><span>---OutEdge-----</span></div>
+      <div><button @click="console.log(_getEdges)">GetEdges</button></div>
+      <div><button @click="console.log(_useEdgesData1)">EdgesData1</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -49,11 +53,14 @@ import {
   useNode, useNodeId, useNodesData, // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
   useEdge, useVueFlow,
+  useEdgesData,
+  type GraphEdge,
 } from '@vue-flow/core'
 const { updateNodeData, getConnectedEdges } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
+
 const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
 const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
 // TODO 这里会重复的
@@ -61,6 +68,8 @@ const _useSourceNodesData: ComputedRef<any> = useNodesData(() => _useSourceConne
 const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConnections.value.map((connection:any) => connection.target))
 const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
 
+const _getEdges: GraphEdge[] = getConnectedEdges(_useNodeId)
+const _useEdgesData1: ComputedRef<any> = useEdgesData(_getEdges[0]?.id)
 </script>
 
 <style scoped>
