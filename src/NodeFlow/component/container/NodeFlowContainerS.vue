@@ -12,14 +12,16 @@
     <!-- 主画布 -->
     <!-- TODO 有空捋一下这里，全屏这块有些代码应该抽离复用 -->
     <div :class="_isMini?'nf-shell-mini':'nf-shell-view'">
-      <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="_isMini"/>
+      <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="_isMini" :isShowControls="_isShowControls"/>
     </div>
 
     <!-- 工具栏 -->
     <div class="nf-toolbar">
       <button class="nf-btn" @click="fn_saveChange()" v-if="saveable">Save</button>
-      <button class="nf-btn" @click="fn_fullScreen()">Full screen</button>
-      <button class="nf-btn" @click="_fn_newView()">New view</button>
+      <DropdownButton class="nf-btn" :label="'Full screen'" :fn="() => fn_fullScreen()" #default="{ selectItem }">
+        <button class="nf-btn" @click="selectItem('Full screen', () => fn_fullScreen())">Full screen</button>
+        <button class="nf-btn" @click="selectItem('New view', () => _fn_newView())">New view</button>
+      </DropdownButton>
       <DropdownButton class="nf-btn" :label="'LR layout'" :fn="() => fn_autoPos('LR')" #default="{ selectItem }">
         <button class="nf-btn" @click="selectItem('LR layout', () => fn_autoPos('LR'))">LR layout</button>
         <button class="nf-btn" @click="selectItem('TB layout', () => fn_autoPos('TB'))">TB layout</button>
@@ -35,6 +37,7 @@
       <button class="nf-btn" @click="fn_switchAllowScroll()">Ex lock</button>
       <button class="nf-btn" @click="fn_zoomInit()" ref="zoomButton"
         title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)">Zoom area</button>
+      <button class="nf-btn" @click="_isShowControls = !_isShowControls">Show Controls</button>
     </div>
   </div>
 </template>
@@ -53,6 +56,7 @@ const props = defineProps<{
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
 const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
+const _isShowControls = ref(false)
 
 // 组件 - 节点画布
 import NodeFlow from './NodeFlow.vue'

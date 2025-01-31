@@ -10,6 +10,7 @@
     :nodes="nodes" :edges="edges"
     :prevent-scrolling="true"
     fit-view-on-init
+    @nodes-change="onNodeChange"
     @edges-change="onEdgeChange"
     @nodes-initialized="isNodeInitialized=true">
     <!-- :pan-on-drag="[0,2]" -->
@@ -22,16 +23,20 @@
     <template #node-item="props">
       <ItemNode :id="props.id" :data="props.data"></ItemNode>
     </template>
-    <InteractionControls v-if="!props.isMini"/>
+    <InteractionControls v-if="!props.isMini || props.isShowControls"/>
   </VueFlow>
 </template>
 
 <script setup lang="ts">
 // 自身属性、通用导入
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   jsonData?: any,
+  isShowControls?: boolean, // 强制显示控制面板
   isMini: boolean, // true为局部渲染，尽可能简化；false为在更大的独立视图中渲染，可以显示更多东西
-}>()
+}>(), {
+  jsonData: {nodes:[], edges:[]},
+  isShowControls: false
+})
 import { ref, watch } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 
@@ -51,17 +56,11 @@ import { VueFlow } from '@vue-flow/core'
 import type { Node, Edge } from '@vue-flow/core' 
 let nodes = ref<Node[]>([]);
 let edges = ref<Edge[]>([]);
-{
-  let defaultFlag:boolean = true;
-  if (props.jsonData) {
-    try {
-      nodes = ref(props.jsonData.nodes);
-      edges = ref(props.jsonData.edges);
-      defaultFlag = false
-    } catch (error) {
-      console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(props.jsonData));
-    }
-  }
+try {
+  nodes = ref(props.jsonData.nodes);
+  edges = ref(props.jsonData.edges);
+} catch (error) {
+  console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(props.jsonData));
 }
 
 // 全局设置
@@ -116,24 +115,7 @@ async function ...() {
   reset(nodes.value)
 }*/
 
-// 功能 - md渲染模块 (仅obsidian)
-// import { MarkdownRenderChild, MarkdownRenderer } from 'obsidian'
-// function md_render(markdown: string, el: HTMLElement) {
-//   const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
-//   // if (ctx) ctx.addChild(mdrc);
-//   // else if (ABCSetting.global_ctx) ABCSetting.global_ctx.addChild(mdrc);
-//   /**
-//    * Renders markdown string to an HTML element.
-//    * @param app - A reference to the app object
-//    * @param markdown - The markdown source code
-//    * @param el - The element to append to
-//    * @param sourcePath - The normalized path of this markdown file, used to resolve relative internal links
-//    * @param component - A parent component to manage the lifecycle of the rendered child components.
-//    * @public
-//    */
-//   // @ts-ignore 新接口，但旧接口似乎不支持
-//   MarkdownRenderer.render(app, markdown, el, app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
-// }
+// 增删改查管理器 (仅动态环境需要，像静态部署则不需要这部分) --------------------------
 
 /**
  * 事件 - 线状态变动
@@ -149,7 +131,7 @@ async function ...() {
  * - @edge-mouse-move   鼠标悬浮移动时一直触发
  * - @edges-change      包括selectionChange、removeChange、addChange
  */
-import type { EdgeChange, EdgeSelectionChange } from '@vue-flow/core'
+import type { EdgeChange, NodeChange, EdgeSelectionChange } from '@vue-flow/core'
 const { findEdge, updateEdgeData, addEdges, removeEdges } = useVueFlow()
 function onEdgeChange(changes: EdgeChange[]) {
   for (const change of changes) {
@@ -192,6 +174,10 @@ function onEdgeChange(changes: EdgeChange[]) {
 // onConnectEnd((edge) => { //
 //   console.log('nodeItem onConnectEnd', edge)
 // })
+
+function onNodeChange(changes: NodeChange[]) {
+  return
+}
 </script>
 
 <style>
