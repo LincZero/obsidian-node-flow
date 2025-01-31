@@ -261,6 +261,23 @@ textarea.node-item-value[data-v-559f1621] {
   box-shadow: 0 0 8px 3px green !important;
 }
 .vue-flow__panel[data-v-5f38abf1] {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-y: auto;
+}
+.vue-flow__panel .fold-title[data-v-5f38abf1] {
+  width: 100%;
+  height: 24px;
+  margin: 2px 0;
+}
+.vue-flow__panel .fold-title button[data-v-5f38abf1] {
+  width: 100%;
+  height: 100%;
+}
+.vue-flow__panel .fold-content[data-v-5f38abf1] {
   background-color: #2d3748;
   padding: 10px;
   border-radius: 8px;
@@ -272,22 +289,27 @@ textarea.node-item-value[data-v-559f1621] {
   font-size: 12px;
   font-weight: 600;
 }
-.vue-flow__panel .label[data-v-5f38abf1] {
+.vue-flow__panel .fold-content > div[data-v-5f38abf1],
+.vue-flow__panel .fold-content > div div[data-v-5f38abf1],
+.vue-flow__panel .fold-content > div button[data-v-5f38abf1],
+.vue-flow__panel .fold-content > div select[data-v-5f38abf1],
+.vue-flow__panel .fold-content > div label[data-v-5f38abf1] {
+  height: 24px;
+  width: 100%;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 24px;
+}
+.vue-flow__panel .fold-content > div[data-v-5f38abf1] {
+  margin-bottom: 2px;
+}
+.vue-flow__panel .fold-content > div > label[data-v-5f38abf1] {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 5px;
   cursor: pointer;
-}
-.vue-flow__panel .fold-title[data-v-5f38abf1] {
-  width: 100%;
-  margin-bottom: 10px;
-}
-.vue-flow__panel .fold-title button[data-v-5f38abf1] {
-  width: 100%;
-}
-.fold-content > div[data-v-5f38abf1] {
-  height: 24px;
 }
 .vue-flow {
   position: relative;
