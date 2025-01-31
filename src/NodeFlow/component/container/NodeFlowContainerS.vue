@@ -74,7 +74,7 @@ function fn_autoPos(position: string) { RefChild.value?.layoutGraph(position) }
 const isAllowScroll = ref(true);
 function fn_switchAllowScroll() {
   const exDiv1: HTMLElement|null = document.body // vuepress等使用
-  const exDiv2: HTMLElement|null = document.querySelector('.markdown-source-view .cm-scroller') // obsidian使用
+  const exDiv2: HTMLElement|null = document.querySelector('.workspace-leaf.mod-active .markdown-source-view .cm-scroller') // obsidian使用
   if (isAllowScroll.value) {
     isAllowScroll.value = false
     if (exDiv1) exDiv1.classList.add("nf-style-overflow-hidden")
