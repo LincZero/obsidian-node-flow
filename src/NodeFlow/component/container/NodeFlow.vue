@@ -28,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-// 自身属性、通用导入
+// 1. 自身组件
+// 属性、通用导入
 const props = withDefaults(defineProps<{
   jsonData?: any,
   isShowControls?: boolean, // 强制显示控制面板
@@ -40,18 +41,20 @@ const props = withDefaults(defineProps<{
 import { ref, watch } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 
-// 组件 - 自定义节点
+// 2. 子组件
+
+//   组件 - 自定义节点
 import ObcanvasNode from '../node/ObcanvasNode.vue'            // ob canvas 节点
 import ComfyUINode from '../node/ComfyUINode.vue'              // comfyui 节点
 import ComfyUINodeGroup from '../node/ComfyUINodeGroup.vue'    // 节点组
 import CommonNode from '../node/CommonNode.vue'                // 通用节点
 import ItemNode from '../node/ItemNode.vue'                    // 项节点
 
-// 组件 - 其他
+//   组件 - 其他
 import InteractionControls from '../utils/InteractionControls.vue'  // 控制画布控制的操作开关
 import { Background } from '@vue-flow/background'                   // 背景控制
 
-// 组件 - VueFlow，并准备节点数据 (解析JSON数据，在外面已经校验过一次了，这里大概率不会有问题)
+//   组件 - VueFlow，并准备节点数据 (解析JSON数据，在外面已经校验过一次了，这里大概率不会有问题)
 import { VueFlow } from '@vue-flow/core'
 import type { Node, Edge } from '@vue-flow/core' 
 let nodes = ref<Node[]>([]);
@@ -63,7 +66,7 @@ try {
   console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(props.jsonData));
 }
 
-// 全局设置
+// 3. 全局设置
 {
   if (props.isMini) {
     const {
@@ -80,7 +83,9 @@ try {
   }
 }
 
-// 功能 - 自动布局模块
+// 4. 功能
+
+//   功能 - 自动布局模块
 import { nextTick } from 'vue'
 import { useLayout } from '../../utils/layout/useLayout'
 const { layout } = useLayout()
@@ -107,13 +112,15 @@ defineExpose({
   layoutGraph
 })
 
-// 功能 - 模拟运行流程树
+//   功能 - 模拟运行流程树
 /*import { useRunProcess } from './useRunProcess'
 const { run, stop, reset, isRunning } = useRunProcess({ graph })
 async function ...() {
   await stop()
   reset(nodes.value)
 }*/
+
+// 5. 事件
 
 // 增删改查管理器 (仅动态环境需要，像静态部署则不需要这部分) --------------------------
 

@@ -3,6 +3,14 @@
 <template>
   <Panel position="top-right">
     <div class="fold-title">
+      <button @click="isFold2=!isFold2">Nodes Tool {{isFold2?"v":"^"}}</button>
+    </div>
+    <div v-show="!isFold2" class="fold-content">
+      <div title="复制并黏贴当前选中节点">
+        <button @click="copyAndPaste()">Copy&Paste</button>
+      </div>
+    </div>
+    <div class="fold-title">
       <button @click="isFold1=!isFold1">Canvas Config {{isFold1?"v":"^"}}</button>
     </div>
     <div v-show="!isFold1" class="fold-content">
@@ -77,23 +85,14 @@
         </label>
       </div>
       <div>
-        <label title="放大">
-          
+        <label title="放大视图">
           <button :onclick="onZoomIn">Zoom in</button>
         </label>
       </div>
       <div>
-        <label>
+        <label title="缩小视图">
           <button :onclick="onZoomOut">Zoom out</button>
         </label>
-      </div>
-    </div>
-    <div class="fold-title">
-      <button @click="isFold2=!isFold2">Nodes Tool {{isFold2?"v":"^"}}</button>
-    </div>
-    <div v-show="!isFold2" class="fold-content">
-      <div>
-        <button>Copy&Paste</button>
       </div>
     </div>
   </Panel>
@@ -108,6 +107,7 @@ let isFold1 = ref(true);
 let isFold2 = ref(true);
 
 const {
+  // 开关配置类
   nodesDraggable,
   nodesConnectable,
   elementsSelectable,
@@ -117,6 +117,7 @@ const {
   panOnScroll,
   panOnScrollMode,
   panOnDrag,
+  // 监听类
   onConnect,
   onNodeDragStop,
   onPaneClick,
@@ -125,6 +126,7 @@ const {
   onNodeDragStart,
   onMoveEnd,
   addEdges,
+  // 功能类
   zoomIn,
   zoomOut,
   setMinZoom,
@@ -136,11 +138,18 @@ const captureZoomClick = ref(false)
 const captureZoomScroll = ref(false)
 onConnect((params) => addEdges(params)) // nodesConnectable只是是否允许拖拽线出来，加这行后两个端点之间的线在鼠标松开后才能保持
 // zoomOnScroll.value = true;
+
+// 按钮
+
+//   复制并黏贴
+function copyAndPaste() {}
+
+//   缩放
 const onZoomIn = ()=>{ setMaxZoom(3); zoomIn(); };
 const onZoomOut = ()=>{ setMinZoom(0.1); zoomOut(); };
 onZoomIn(); onZoomOut(); // 应用缩放限制，set(Max/Min)Zoom后要zoom(In/Out)才能生效
 
-// 都是打印
+// 一些钩子，都是打印
 onNodeDragStart((e) => nfSetting.isDebug && console.log('Drag start', e))
 onNodeDragStop((e) => nfSetting.isDebug && console.log('Drag stop', e))
 onPaneClick((event) => nfSetting.isDebug && captureZoomClick.value && console.log('Pane click', event))
@@ -183,11 +192,10 @@ onMoveEnd((flowTransform) => nfSetting.isDebug && console.log('Move end', flowTr
   font-weight:600;
 }
 
-.vue-flow__panel .fold-content>div,
-.vue-flow__panel .fold-content>div div,
-.vue-flow__panel .fold-content>div button,
-.vue-flow__panel .fold-content>div select,
-.vue-flow__panel .fold-content>div label {
+.vue-flow__panel .fold-content div,
+.vue-flow__panel .fold-content button,
+.vue-flow__panel .fold-content select,
+.vue-flow__panel .fold-content label {
   height: 24px;
   width: 100%;
   margin: 0;

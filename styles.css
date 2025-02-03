@@ -289,11 +289,10 @@ textarea.node-item-value[data-v-559f1621] {
   font-size: 12px;
   font-weight: 600;
 }
-.vue-flow__panel .fold-content > div[data-v-5f38abf1],
-.vue-flow__panel .fold-content > div div[data-v-5f38abf1],
-.vue-flow__panel .fold-content > div button[data-v-5f38abf1],
-.vue-flow__panel .fold-content > div select[data-v-5f38abf1],
-.vue-flow__panel .fold-content > div label[data-v-5f38abf1] {
+.vue-flow__panel .fold-content div[data-v-5f38abf1],
+.vue-flow__panel .fold-content button[data-v-5f38abf1],
+.vue-flow__panel .fold-content select[data-v-5f38abf1],
+.vue-flow__panel .fold-content label[data-v-5f38abf1] {
   height: 24px;
   width: 100%;
   margin: 0;
