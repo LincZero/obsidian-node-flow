@@ -23,6 +23,7 @@
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
       <div><button @click="console.log(_useNode)">Node</button></div>
       <div><button @click="console.log(_useNodesData)">NodesData</button></div>
+      <div><button @click="console.log(findNode(_useNodeId))">Node Fined</button></div>
       <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
       <div><span>---TheHandle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
@@ -49,6 +50,7 @@ const props = defineProps<{
 if (!props.data.value) props.data.value = '';
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
+// 而 useVueFlow() 出来的函数通常则不需要。如findNode等
 import {
   useNode, useNodeId, useNodesData, // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
@@ -56,7 +58,7 @@ import {
   useEdgesData,
   type GraphEdge,
 } from '@vue-flow/core'
-const { updateNodeData, getConnectedEdges } = useVueFlow()
+const { updateNodeData, getConnectedEdges, findNode } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)

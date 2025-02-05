@@ -38,8 +38,8 @@ const props = withDefaults(defineProps<{
   jsonData: {nodes:[], edges:[]},
   isShowControls: false
 })
-import { ref, watch } from 'vue'
-import { useVueFlow } from '@vue-flow/core'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useNodesData, useVueFlow } from '@vue-flow/core'
 
 // 2. 子组件
 
@@ -127,6 +127,8 @@ async function ...() {
 /**
  * 事件 - 线状态变动
  * 
+ * on emit by <VueFlow @edge-change="onEdgeChange">
+ * 
  * 选择的线变为流动样式
  * 需要特别注意的是，最好修改props.jsonData而不是nodes和edges，特别是后者不能直接赋值
  * 
@@ -139,7 +141,10 @@ async function ...() {
  * - @edges-change      包括selectionChange、removeChange、addChange
  */
 import type { EdgeChange, NodeChange, EdgeSelectionChange } from '@vue-flow/core'
-const { findEdge, updateEdgeData, addEdges, removeEdges } = useVueFlow()
+const {
+  findEdge, updateEdgeData, addEdges, removeEdges,
+  findNode, updateNodeData, addNodes, removeNodes,
+} = useVueFlow()
 function onEdgeChange(changes: EdgeChange[]) {
   for (const change of changes) {
     // 改
@@ -182,9 +187,57 @@ function onEdgeChange(changes: EdgeChange[]) {
 //   console.log('nodeItem onConnectEnd', edge)
 // })
 
+/**
+ * 事件 - 节点状态变动
+ * 
+ * on emit by <VueFlow @nodes-change="onNodeChange">
+ */
 function onNodeChange(changes: NodeChange[]) {
-  return
+  for (const change of changes) {
+    if (change.type == "select" && change.hasOwnProperty("selected")) {
+      const data = findNode(change.id)
+      if (change.selected) {
+        cache_selected.value.push(change.id)
+      } else {
+        cache_selected.value = cache_selected.value.filter(item => item !== change.id);
+      }
+    }
+    // 增
+    else if (change.type == "add" && change.hasOwnProperty("item")) {
+    }
+    // 删
+    else if (change.type == "remove") {
+    }
+  }
 }
+// cache selected
+let cache_selected = ref<string[]>([]);
+const cvSelected = () => {
+  console.log('Ctrl+D')
+  for (let id of cache_selected.value) {
+    // console.log("selected2", id, findNode(id), props.jsonData)
+    const data = findNode(id)
+    const newData = {
+      id: data.id+"-d", // TODO 检查是否存在同名节点
+      data: data.data,
+      position: data.position,
+      type: data.type
+    }
+    props.jsonData.nodes.push(newData); addNodes(newData); // TODO 应该以addNodes为主，jsonData被动更新
+  }
+}
+const ctrl_d = (event: any) => {
+  if (event.ctrlKey && event.key === 'd') {
+    event.preventDefault();
+    cvSelected();
+  }
+}
+onMounted(() => {
+  document.addEventListener('keydown', ctrl_d)
+})
+onUnmounted(() => {
+  document.removeEventListener('keydown', ctrl_d)
+})
 </script>
 
 <style>
