@@ -38,6 +38,7 @@
       <button class="nf-btn" @click="fn_zoomInit()" ref="zoomButton"
         title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)">Zoom area</button>
       <button class="nf-btn" @click="_isShowControls = !_isShowControls">Show Controls</button>
+      <!-- TODO 修改成 "允许编辑和监听快捷键" 功能 -->
     </div>
   </div>
 </template>

@@ -121,8 +121,8 @@ async function ...() {
 }*/
 
 //   功能 - copy and paste
-function cvSelected() {
-  for (let id of cache_selected.value) {
+function pasteSelected(array: any) {
+  for (let id of array.value) {
     const data = findNode(id)
     let count = 2
     while(true) {
@@ -142,10 +142,23 @@ function cvSelected() {
     addNodes(newData);
   }
 }
+let cache_selected = ref<string[]>([]);
+let cache_copyed = ref<string[]>([]);
 const ctrl_d = (event: any) => {
+  // 注意：这里暂时使用内部剪切版，无法跨画布传输
+  // 注意：要打开编辑模式 (显示控制面板) 才允许快捷键，避免冲突
+  if (!props.isShowControls) return;
   if (event.ctrlKey && event.key === 'd') {
     event.preventDefault();
-    cvSelected();
+    pasteSelected(cache_selected);
+  }
+  else if (event.ctrlKey && event.key === 'c') {
+    event.preventDefault();
+    cache_copyed.value = cache_selected.value
+  }
+  else if (event.ctrlKey && event.key === 'v') {
+    event.preventDefault();
+    pasteSelected(cache_copyed);
   }
 }
 onMounted(() => {
@@ -247,8 +260,6 @@ function onNodeChange(changes: NodeChange[]) {
     }
   }
 }
-// cache selected
-let cache_selected = ref<string[]>([]);
 
 /**
  * 事件 - 其他，废弃
