@@ -120,9 +120,44 @@ async function ...() {
   reset(nodes.value)
 }*/
 
+//   功能 - copy and paste
+function cvSelected() {
+  for (let id of cache_selected.value) {
+    const data = findNode(id)
+    let count = 2
+    while(true) {
+      if (!findNode(id + count)) break
+      // console.warn("continue find", count);
+      count++
+    }
+    const newData = {
+      id: data.id + count,
+      data: data.data,
+      position: {
+        x: data.position.x+100,
+        y: data.position.y+100,
+      },
+      type: data.type
+    }
+    addNodes(newData);
+  }
+}
+const ctrl_d = (event: any) => {
+  if (event.ctrlKey && event.key === 'd') {
+    event.preventDefault();
+    cvSelected();
+  }
+}
+onMounted(() => {
+  document.addEventListener('keydown', ctrl_d)
+})
+onUnmounted(() => {
+  document.removeEventListener('keydown', ctrl_d)
+})
+
 // 5. 事件
 
-// 增删改查管理器 (仅动态环境需要，像静态部署则不需要这部分) --------------------------
+// 增删改查管理器 (仅动态环境需要，静态部署则不需要这部分) --------------------------
 
 /**
  * 事件 - 线状态变动
@@ -179,13 +214,6 @@ function onEdgeChange(changes: EdgeChange[]) {
     // console.log('onEdgeChange', change, edges.value, props.jsonData)
   }
 }
-// onConnect((edge) => { // 仅 {s s t t} 数据
-//   console.log('nodeItem onConnect', edge)
-//   const nameMapAttr = edge.sourceHandle.toLowerCase().charCodeAt(0)%20;
-// })
-// onConnectEnd((edge) => { //
-//   console.log('nodeItem onConnectEnd', edge)
-// })
 
 /**
  * 事件 - 节点状态变动
@@ -194,6 +222,7 @@ function onEdgeChange(changes: EdgeChange[]) {
  */
 function onNodeChange(changes: NodeChange[]) {
   for (const change of changes) {
+    // 改
     if (change.type == "select" && change.hasOwnProperty("selected")) {
       const data = findNode(change.id)
       if (change.selected) {
@@ -204,40 +233,33 @@ function onNodeChange(changes: NodeChange[]) {
     }
     // 增
     else if (change.type == "add" && change.hasOwnProperty("item")) {
+      const data = findNode(change.item.id)
+      props.jsonData.nodes.push({
+        id: data.id,
+        data: data.data,
+        position: data.position,
+        type: data.type
+      })
     }
     // 删
     else if (change.type == "remove") {
+      props.jsonData.nodes = props.jsonData.nodes.filter((node:any) => node.id != change.id)
     }
   }
 }
 // cache selected
 let cache_selected = ref<string[]>([]);
-const cvSelected = () => {
-  console.log('Ctrl+D')
-  for (let id of cache_selected.value) {
-    // console.log("selected2", id, findNode(id), props.jsonData)
-    const data = findNode(id)
-    const newData = {
-      id: data.id+"-d", // TODO 检查是否存在同名节点
-      data: data.data,
-      position: data.position,
-      type: data.type
-    }
-    props.jsonData.nodes.push(newData); addNodes(newData); // TODO 应该以addNodes为主，jsonData被动更新
-  }
-}
-const ctrl_d = (event: any) => {
-  if (event.ctrlKey && event.key === 'd') {
-    event.preventDefault();
-    cvSelected();
-  }
-}
-onMounted(() => {
-  document.addEventListener('keydown', ctrl_d)
-})
-onUnmounted(() => {
-  document.removeEventListener('keydown', ctrl_d)
-})
+
+/**
+ * 事件 - 其他，废弃
+ */
+// onConnect((edge) => { // 仅 {s s t t} 数据
+//   console.log('nodeItem onConnect', edge)
+//   const nameMapAttr = edge.sourceHandle.toLowerCase().charCodeAt(0)%20;
+// })
+// onConnectEnd((edge) => { //
+//   console.log('nodeItem onConnectEnd', edge)
+// })
 </script>
 
 <style>
