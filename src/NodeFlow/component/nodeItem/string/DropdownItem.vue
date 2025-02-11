@@ -68,6 +68,7 @@ const enum_current = ref<string>(enum_data.value[0])
   border-radius: 12px;
   border: none;
   box-shadow: none;
+  color: currentColor;
   background: #222222;
   border: solid 1px #616161;
   appearance: revert; /* 下拉框箭头样式 */

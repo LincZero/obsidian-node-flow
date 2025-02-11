@@ -173,7 +173,7 @@ function fn_zoomInit() {
 }
 
 .nf-shell-view {
-  height: calc(100% - 24px);
+  height: calc(100% - 26px);
   overflow: hidden;
 }
 

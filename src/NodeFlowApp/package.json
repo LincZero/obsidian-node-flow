@@ -11,5 +11,8 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
     "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0"
   }
 }
