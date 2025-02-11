@@ -8,6 +8,8 @@
   - 入口：使用共用模块里的factoryVueDom
 - vuepress
   - 入口：直接使用一个vue组件作为入口
+- app
+  - 入口：直接使用一个vue组件作为入口
 
 ## Obsidian安装插件
 

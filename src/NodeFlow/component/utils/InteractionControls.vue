@@ -7,7 +7,13 @@
     </div>
     <div v-show="!isFold2" class="fold-content">
       <div title="复制并黏贴当前选中节点">
-        <button @click="copyAndPaste()">Copy&Paste</button>
+        <button title="请在编辑模式下使用快捷键ctrl+d">Copy&Paste</button>
+      </div>
+      <div title="复制">
+        <button title="请在编辑模式下使用快捷键ctrl+c">Copy</button>
+      </div>
+      <div title="黏贴">
+        <button title="请在编辑模式下使用快捷键ctrl+v">Paste</button>
       </div>
     </div>
     <div class="fold-title">
@@ -100,7 +106,7 @@
 
 
 <script setup lang="ts">
-import { Panel, useVueFlow } from '@vue-flow/core'
+import { Panel, useNodesData, useVueFlow } from '@vue-flow/core'
 import { ref } from 'vue'
 import { nfSetting } from '../../utils/main/setting'
 let isFold1 = ref(true);
@@ -140,9 +146,6 @@ onConnect((params) => addEdges(params)) // nodesConnectable只是是否允许拖
 // zoomOnScroll.value = true;
 
 // 按钮
-
-//   复制并黏贴
-function copyAndPaste() {}
 
 //   缩放
 const onZoomIn = ()=>{ setMaxZoom(3); zoomIn(); };
