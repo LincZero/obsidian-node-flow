@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, provide } from 'vue'
 
 import { factoryFlowData } from '../../NodeFlow/utils/jsonTool/factoryFlowData'
 import { testData_listitem2 } from '../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
@@ -25,26 +25,43 @@ const enum_data = computed(() => {
     "nodeflow-listitem-demo2": "nodeflow-listitem-demo2",
   }
 })
+
+import TabBar from './components/TabBar.vue';
+
+import GoldenLayout from './components/goldenLayout/GoldenLayout.vue'
+import { prefinedLayouts } from './components/goldenLayout/predefined-layouts'
+const GLayoutRootRef = ref(null); // Golden-Layout
+provide("LAYOUT", GLayoutRootRef);
 </script>
 
 <template>
-  <div id="app-main">
-    <div class="left">
-      <input class="item" v-model="jsonType"></input>
-      <textarea spellcheck="false" class="item" v-model="mdStr"></textarea>
-      <!-- TODO: pre，shiki、prismjs、highlight.js -->
-      <!-- <pre spellcheck="false" class="item">
-        <code
-          contenteditable="true"
-          @input="(event)=>{mdStr = event.target.innerText;}"
-          v-html="mdStr"
-        ></code>
-      </pre> -->
-      <select>
-        <option v-for="item in enum_data" :value="item">{{ item }}</option>
-      </select>
-    </div>
-    <div class="right">
+  <TabBar class="main-nav"></TabBar>
+
+  <golden-layout
+    class="golden-layout main-golden"
+    ref="GLayoutRootRef"
+    :config="prefinedLayouts.miniRow"
+  >
+    <template #JsonEditor>
+      <div class="json-editor">
+        <input class="item" v-model="jsonType"></input>
+        <textarea spellcheck="false" class="item" v-model="mdStr"></textarea>
+        <!-- TODO: pre，shiki、prismjs、highlight.js -->
+        <!-- <pre spellcheck="false" class="item">
+          <code
+            contenteditable="true"
+            @input="(event)=>{mdStr = event.target.innerText;}"
+            v-html="mdStr"
+          ></code>
+        </pre> -->
+        <div>预设：</div>
+        <select class="item">
+          <option v-for="item in enum_data" :value="item">{{ item }}</option>
+        </select>
+      </div>
+    </template>
+    
+    <template #NodeFlow>
       <!-- 用key进行强制刷新 -->
       <NodeFlowContainerS
         :key="componentKey"
@@ -56,9 +73,13 @@ const enum_data = computed(() => {
         :fn_save="()=>{}"
         :isMini="false"
       ></NodeFlowContainerS>
-    </div>
-  </div>
+    </template>
+  </golden-layout>
 </template>
+
+<!--goldenlayout必须样式-->
+<style src="golden-layout/dist/css/goldenlayout-base.css"></style>
+<style src="golden-layout/dist/css/themes/goldenlayout-dark-theme.css"></style>
 
 <style>
 @import "../../NodeFlow/style/vue_custom.css";
@@ -73,35 +94,33 @@ html, body, #app {
 </style>
 
 <style lang="scss" scoped>
-#app-main {
-  height: 100%;
-  .left {
-    height: 100%;
-    width: 300px;
-    float: left;
-    padding: 10px;
-    box-sizing: border-box;
-    >.item {
-      width: 100%;
-      line-height: 24px;
-      margin: 0 0 4px 0;
-    }
-    >textarea.item {
-      line-height: 18px;
-      font-size: 14px;
-      height: calc(100% - 90px);
+.main-nav {
+  height: 28px;
+}
+.main-golden {
+  height: calc(100% - 28px);
+  width: 100%;
+}
 
-      padding-top: 4px;
-      padding-bottom: 4px;
-      white-space: pre;
-      overflow-x: auto;
-      overflow-y: auto;
-    }
+.json-editor {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  >.item {
+    width: 100%;
+    line-height: 24px;
+    margin: 0 0 4px 0;
   }
-  .right {
-    height: 100%;
-    width: calc(100% - 300px);
-    float: left;
+  >textarea.item {
+    line-height: 18px;
+    font-size: 14px;
+    height: calc(100% - 150px);
+    padding-top: 4px;
+    padding-bottom: 4px;
+    white-space: pre;
+    overflow-x: auto;
+    overflow-y: auto;
   }
 
   input, textarea, pre {
@@ -112,6 +131,9 @@ html, body, #app {
     padding: 0 10px;
     width: 100%;
     box-sizing: border-box;
+  }
+  div {
+    color: #c9c9c9;
   }
 }
 </style>
