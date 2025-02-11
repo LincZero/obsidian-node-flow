@@ -137,7 +137,7 @@ const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom } = useVueFlow()
 const zoomButton = ref()
 onMounted(() => {
   document.addEventListener('wheel', (event)=>{
-    if (!zoomButton.value.contains(event.target)) return
+    if (!zoomButton.value || !zoomButton.value.contains(event.target)) return
     event.preventDefault();
     setMaxZoom(3);
     setMinZoom(0.1);

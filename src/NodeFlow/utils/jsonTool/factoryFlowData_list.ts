@@ -307,8 +307,8 @@ export function factoryFlowData_list(md:string): {code: number, msg: string, dat
   }
 }
 
-export const testData_list = `
-- nodes
+export const testData_list =
+`- nodes
   - node1:KSample
     - Latent, o
     - model, i

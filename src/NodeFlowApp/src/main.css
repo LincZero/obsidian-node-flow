@@ -1,8 +1,0 @@
-@import "../../NodeFlow/style/vue_custom.css";
-
-html, body, #app {
-  height: 100%;
-  border: none;
-  margin: 0;
-  padding: 0;
-}

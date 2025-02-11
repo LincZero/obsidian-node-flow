@@ -74,6 +74,7 @@ export function factoryFlowData_listitem(md:string): {code: number, msg: string,
   // 使用demo数据
   if (md.startsWith("demo")) {
     if (md == "demo") { md = testData_listitem }
+    else if (md == "demo2") { md = testData_listitem2 }
     else { return {code: -1, msg: "error demo: "+md, data: {}}  }
   }
 
@@ -333,8 +334,8 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
   return {code: 0, msg:"", data: result_items}
 }
 
-export const testData_listitem = `
-- nodes
+export const testData_listitem = 
+`- nodes
   - NodeTitle
     - only name, i
     - i2, i, *i2
@@ -368,4 +369,36 @@ export const testData_listitem = `
         - v921, 
     - v10,,over
 - edges
+`
+
+export const testData_listitem2 =
+`- nodes
+  - 运行一
+    - Flow:空流程, io:item-flow, 
+    - 空节点i, i:item-default, 
+    - 空节点o, o:item-default, 
+    - color, value:item-color, #0ff
+    - a, value:item-default, 
+  - 运行二
+    - FlowDelay:延时, io:item-flowdelay, 2000
+    - 空节点i, i:item-default, 
+    - 空节点o, o:item-default, 
+  - 运行三
+    - FlowReq:Http请求, io:item-flowreq, 
+    - 空节点i, i:item-default, 
+    - 空节点o, o:item-default, 
+  - 运行四
+    - FlowEval:执行任意代码, io:item-floweval, console.log('debug output')
+    - 空节点i, i:item-default, 
+    - 空节点o, o:item-default, 
+    - debug, value:item-debug, 
+  - 运行三2:运行三
+    - FlowReq:Http请求, io:item-flowreq, https
+    - 空节点i, i:item-default, 
+    - 空节点o, o:item-default, 
+- edges
+  - 运行三, FlowReq, 运行四, FlowEval
+  - 运行一, Flow, 运行二, FlowDelay
+  - 运行二, FlowDelay, 运行三, FlowReq
+  - 运行一, 空节点o, 运行二, 空节点i
 `
