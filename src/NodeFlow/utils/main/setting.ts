@@ -11,7 +11,7 @@ export let nfSetting: any = {
   md: null,   // MarkdownIt
 }
 
-// [环境] (二选一) md渲染, obsidian版本
+// @env [环境] (二选一) md渲染, obsidian版本
 import { MarkdownRenderChild, MarkdownRenderer } from 'obsidian'
 export const renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): void => {
   el.classList.add("markdown-rendered")
@@ -21,7 +21,7 @@ export const renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): v
   // @ts-ignore 新接口，但旧接口似乎不支持
   MarkdownRenderer.render(nfSetting.app, markdown, el, nfSetting.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
 })
-// [环境] (二选一) md渲染, mdit版本
+// @env [环境] (二选一) md渲染, mdit版本
 // import MarkdownIt from "markdown-it";
 // const md = MarkdownIt()
 // export const renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): void => {
@@ -38,7 +38,7 @@ export const renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): v
 //   // else {}
 // })
 
-// [环境] (二选一) http接口，obsidian版本 (obsidian有自己的http接口)
+// @env [环境] (二选一) http接口，obsidian版本 (obsidian有自己的http接口)
 import { requestUrl } from 'obsidian'
 export const request = async (
   url: string,
@@ -47,11 +47,16 @@ export const request = async (
   body: string | ArrayBuffer | undefined 
 ) => {
   const responseData  = await requestUrl({ url, method, headers, body });
-  // 可以在这个地方检查是否json
   return responseData
 }
 
-// [环境] (二选一) http接口，其他环境版本
-// export const request = async (URL, method, headers, body) => {
-//   return {} // TODO
+// @env [环境] (二选一) http接口，其他环境版本。需要注意ob requestUrl和fetch的返回值不一样，前者还有一层status和json
+// export const request = async (
+//   url: string,
+//   method: string | undefined,
+//   headers: Record<string, string> | undefined,
+//   body: string | ArrayBuffer | undefined 
+// ) => {
+//   const responseData = await fetch(url, {method, headers, body});
+//   return responseData
 // }

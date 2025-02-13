@@ -54,31 +54,42 @@ const debugConsole_start = async () => {
   _useNodesData.value.data.isRunning = true; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 
-import { request } from "../../../utils/main/setting"
-let resp_str = ""
+import { request } from '../../../utils/main/setting'
+let resp_str = ref('')
 // 流程控制 - 执行主要操作、触发下一节点
 const debugConsole = async () => {
   // 该节点的操作
   // ... 其他操作 // [!code]
   const resp = await request(props.data.value, 'GET', undefined, undefined)
-  resp_str = resp.status.toString()
-  if (resp.status != 200) {
-    console.warn(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:`, resp);
-  } else {
-    if (resp.json) {
-      resp_str = JSON.stringify(resp.json, null, 2)
-      console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:\n`, resp_str);
-    } else {
-      console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:`, resp);
-    }
-  }
-  _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+  
+  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:\n`, resp);
 
+  // 检查是否正常响应
+  if (resp.status != 200) { // resp.ok // TODO，fetch版本应该用ok，ob版本有空再调试
+    resp_str.value = "warning: ok/status:" + resp.status.toString()
+    _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+    return false
+  }
+
+  // 检查返回值是否json，并解析
+  if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
+    resp_str.value = JSON.stringify(resp.json, null, 2)
+    _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+  } else if (typeof resp.json == 'function') { // @env 其他环境版本 (fetch)
+    const resp_json = await resp.json();
+    resp_str.value = JSON.stringify(resp_json, null, 2)
+    _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+  } else {
+    resp_str.value = 'warning: without json'
+    _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+    return false
+  }
+  
   // 然后尝试运行下一个节点的debugConsole
   if (_useTargetNodesData.value.length > 0) {
     _useTargetNodesData.value[0].data.isRunning = true; updateNodeData(_useTargetNodesData.value[0].id, _useTargetNodesData.value[0].data);
   } else {
-    console.log(`debugConsole, end`);
+    console.log('debugConsole, end');
   } 
 };
 
