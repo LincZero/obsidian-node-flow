@@ -118,6 +118,7 @@ textarea.node-item-value[data-v-559f1621] {
   border-radius: 12px;
   border: none;
   box-shadow: none;
+  color: currentColor;
   background: #222222;
   border: solid 1px #616161;
   appearance: revert;
@@ -839,7 +840,7 @@ textarea.node-item-value[data-v-559f1621] {
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
-  color: currentColor;
+  color: #c9c9c9;
   border-radius: 6px;
 }
 .comfyui-node > .node-main {
@@ -935,7 +936,7 @@ textarea.node-item-value[data-v-559f1621] {
   float: right;
   padding: 0 6px;
   background-color: #0f1f0f;
-  color: currentColor;
+  color: #c9c9c9;
   border-radius: 6px;
 }
 .item-node > .node-main {
