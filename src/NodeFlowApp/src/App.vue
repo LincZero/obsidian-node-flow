@@ -44,6 +44,10 @@ provide("LAYOUT", GLayoutRootRef);
   >
     <template #JsonEditor>
       <div class="json-editor">
+        <div class="item">预设：</div>
+        <select class="item">
+          <option v-for="item in enum_data" :value="item">{{ item }}</option>
+        </select>
         <input class="item" v-model="jsonType"></input>
         <textarea spellcheck="false" class="item" v-model="mdStr"></textarea>
         <!-- TODO: pre，shiki、prismjs、highlight.js -->
@@ -54,10 +58,6 @@ provide("LAYOUT", GLayoutRootRef);
             v-html="mdStr"
           ></code>
         </pre> -->
-        <div>预设：</div>
-        <select class="item">
-          <option v-for="item in enum_data" :value="item">{{ item }}</option>
-        </select>
       </div>
     </template>
     
@@ -103,6 +103,8 @@ html, body, #app {
 }
 
 .json-editor {
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   height: 100%;
   width: 100%;
@@ -115,7 +117,8 @@ html, body, #app {
   >textarea.item {
     line-height: 18px;
     font-size: 14px;
-    height: calc(100% - 150px);
+    // height: calc(100% - 150px);
+    flex: 1; // 占据剩余空间
     padding-top: 4px;
     padding-bottom: 4px;
     white-space: pre;
@@ -123,17 +126,16 @@ html, body, #app {
     overflow-y: auto;
   }
 
-  input, textarea, pre {
+  input, textarea, pre, div {
     background: #222222;
     color: #c9c9c9;
-    border: solid 1px #616161;
-    border-radius: 10px;
     padding: 0 10px;
     width: 100%;
     box-sizing: border-box;
   }
-  div {
-    color: #c9c9c9;
+  input, textarea, pre {
+    border: solid 1px #616161;
+    border-radius: 10px;
   }
 }
 </style>
