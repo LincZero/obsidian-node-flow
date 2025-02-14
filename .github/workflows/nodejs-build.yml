@@ -17,7 +17,7 @@ jobs:                         # 工作流
       with:
         node-version: '20'
     - run: npm ci                 # 脚本 - 安装依赖，npm ci代替npm install以获得更快的速度
-    - run: npm run build          # 脚本 - 构建脚本
+    - run: npm run ob:build       # 脚本 - 构建obsidian脚本
     - name: Upload Build Artifact # 其他 - 保存构建产物 (使用的是官方提供的action)
       if: always()                    # 即使之前的构建步骤失败，也会上载构建产物
       uses: actions/upload-artifact@v4
