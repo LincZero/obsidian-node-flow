@@ -1,10 +1,20 @@
 # README
 
-## Obsidian版本的安装和编译
+## Obsidian版本的安装
 
 - 正常在社区商店下载
 - 正常在Github的该仓库下下载Release，并手动安装
 - 通过 BRAT 等方式安装
+
+## Obsidian版本的使用方式
+
+详见仓库README
+
+## Obsidian版本的编译
+
+```bash
+npm run ob:build
+```
 
 ## 项目创建模板
 
@@ -100,11 +110,3 @@ X [ERROR] [plugin vue] Fail to resolve script type in H:\Git\Private\Group_Front
 意思是无法解析到vue文件里的script标签
 
 或者修改tsconfig.json文件，中添加js支持应该也行，但我现在想强制整个项目都要使用ts，就没这样做
-
-## Obsidian使用方式
-
-1. 代码块，类型为 `nodeflow-xxx`
-2. 文件后缀，类型为 `workflow_json` (对应 `nodeflow-comfyui`)
-3. 元数据，`tag`/`type` 为 `comfyui-json`
-
-详见仓库README

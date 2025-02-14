@@ -4,9 +4,11 @@
   "description": "Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes. json describes the chart, compared to screenshots, making it easier to modify later. The plugin is also compatible with blogs.",
   "main": "main.js",
   "scripts": {
-    "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-    "version": "node version-bump.mjs && git add manifest.json versions.json"
+    "ob:dev": "node ./esbuild.config.mjs",
+    "ob:build": "tsc -noEmit -skipLibCheck && node ./esbuild.config.mjs production",
+    "ob:version": "node version-bump.mjs && git add manifest.json versions.json",
+    "app:dev": "vite --config ./src/NodeFlowApp/vite.config.js",
+    "app:build": "vite build --config ./src/NodeFlowApp/vite.config.js"
   },
   "keywords": [
     "Obsidian",
