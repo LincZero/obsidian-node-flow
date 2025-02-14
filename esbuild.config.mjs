@@ -20,7 +20,7 @@ await esbuild.build({
     plugins: [
         Vue({ isProd: true }),
     ],
-    entryPoints: ['./src/main.ts'],
+    entryPoints: ['./src/NodeFlowObsidian/main.ts'],
     bundle: true,
     external: [
         'obsidian',
@@ -58,7 +58,7 @@ await esbuild.build({
 }).catch(() => process.exit(1));
 
 await esbuild.build({
-    entryPoints: ["./src/main.css"],
+    entryPoints: ["./src/NodeFlowObsidian/main.css"],
     outfile: "styles.css",
     watch: !prod, // 似乎若升级esbuild后不再支持
     bundle: true,

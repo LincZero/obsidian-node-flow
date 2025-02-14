@@ -1,6 +1,6 @@
 import { MarkdownView, Plugin, TFile } from "obsidian";
 import { MarkdownPostProcessorContext, WorkspaceLeaf } from "obsidian"
-import { nfSetting, factoryVueDom } from "./NodeFlow/index"
+import { nfSetting, factoryVueDom } from "../NodeFlow/index"
 import { NodeFlowViewFlag, NodeFlowView } from './NodeFlowView'
 import { NodeFlowFileViewFlag, NodeFlowFileView } from './NodeFlowFileView'
 
