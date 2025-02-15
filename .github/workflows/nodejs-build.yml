@@ -7,18 +7,25 @@ on:                           # 触发器，定义何时运行此工作流
     branches: [master]
     workflow_dispatch:        # 手动执行
 
-jobs:                         # 工作流
-  build:                      # 作业名
+jobs:                         # 多个作业
+  common-setup:               # 作业 - 通用部分
     runs-on: ubuntu-latest    # 环境 - 基于镜像
-    steps:                    # 作业步骤！
+    steps:                    # 多个步骤
     - uses: actions/checkout@v3   # 环境 - 检出代码 (使用的是官方提供的action)
     - name: Use Node.js           # 环境 - node环境 (使用的是官方提供的action)，Node.js版本
       uses: actions/setup-node@v3
       with:
         node-version: '20'
-    - run: npm ci                 # 脚本 - 安装依赖，npm ci代替npm install以获得更快的速度
-    - run: npm run ob:build       # 脚本 - 构建obsidian脚本
-    - name: Upload Build Artifact # 其他 - 保存构建产物 (使用的是官方提供的action)
+
+  build-obsidian:             # 作业 - ob构建部分
+    runs-on: ubuntu-latest
+    needs: common-setup
+    steps:
+    - name: Build
+      run: |
+          npm ci
+          npm run ob:build
+    - name: Upload Build Artifact
       if: always()                    # 即使之前的构建步骤失败，也会上载构建产物
       uses: actions/upload-artifact@v4
       with:
@@ -27,3 +34,21 @@ jobs:                         # 工作流
           main.js
           styles.css
           manifest.json
+
+  build-app:                  # 作业 - app构建部分
+    runs-on: ubuntu-latest
+    needs: common-setup
+    steps:
+    - name: Build
+      working-directory: ./src/NodeFlowApp/
+      run: |
+        # npm run app:build
+        npm ci
+        npm run build
+        > ./dist/.nojekyll
+    - name: Website Branch
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        # 这是文档部署到的分支名称
+        branch: gh-pages
+        folder: src/NodeFlowApp/dist

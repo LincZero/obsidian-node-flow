@@ -16,10 +16,12 @@ export default defineConfig({
   },
   root: path.resolve(__dirname, './'), // 确保 Vite 使用正确的根目录
   build: {
+    outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, './src/main.ts'),
-      },
+      // input: {
+      //   main: path.resolve(__dirname, './src/main.ts'),
+      // },
+      input: path.resolve(__dirname, './index.html'),
     },
   },
 });
