@@ -11,6 +11,7 @@ export default defineConfig({
       }
     }
   },
+  base: '/obsidian-node-flow/', // [!code] 临时，需要根据你要部署的位置进行修改
   server: {
     port: 3000
   },

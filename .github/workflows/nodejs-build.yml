@@ -48,12 +48,6 @@ jobs:
         npm ci
         npm run build
         > ./dist/.nojekyll
-    - name: Build - Add base # Insert base tag into HTML files
-      run: |
-        BASE_PATH="/obsidian-node-flow/"
-        for file in $(find ./dist -name "*.html"); do
-          sed -i "s|<head>|<head><base href=\"${BASE_PATH}\">|" $file
-        done
     - name: Build - Dist to Website Branch
       uses: JamesIves/github-pages-deploy-action@v4
       with:
