@@ -16,6 +16,7 @@
         v-model="writable_value"
         :rows="writable_value.split('\n').length"
         cols="20"
+        spellcheck="false"
       ></textarea>
     </div>
     <div style="height:0; clear: both;"></div>

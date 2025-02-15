@@ -8,6 +8,7 @@
       v-model="writable_value"
       :rows="writable_value.split('\n').length"
       cols="10"
+      spellcheck="false"
       @input="handleInput"
       ref="TextArea3"
     ></textarea>
