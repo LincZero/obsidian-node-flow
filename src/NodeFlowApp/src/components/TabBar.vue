@@ -1,10 +1,10 @@
 <template>
   <div class="main-bar menus-1">
-    <div class="menu-1" style="width: 150px; font-weight:bold; font-size: 16px; color: #7280e4;">NodeFlowApp</div>
+    <div class="menu-1" style="padding: 0 16px;; font-weight:bold; font-size: 16px; color: #7280e4;">NodeFlowApp</div>
     <div class="menu-1"
       @click.stop="clickedMenu=clickedMenu==='menuFile'?'':'menuFile'"
       @mouseover="clickedMenu=clickedMenu===''?'':'menuFile'">
-      文件
+      文件(F)
       <div class="menus-2" v-show="clickedMenu==='menuFile'">
         <div class="menu-2" @click="triggerFileInput">打开配置
           <input type="file" accept=".json" text="打开配置" ref="fileInputEl"/>
@@ -15,7 +15,7 @@
     <div class="menu-1"
       @click.stop="clickedMenu=clickedMenu==='menuEdit'?'':'menuEdit'"
       @mouseover="clickedMenu=clickedMenu===''?'':'menuEdit'">
-      编辑
+      编辑(E)
       <div class="menus-2" v-show="clickedMenu==='menuEdit'">
         <div class="menu-2">新增流</div>
         <div class="menu-2" disabled>编辑流</div>
@@ -24,12 +24,12 @@
     <div class="menu-1"
       @click.stop="clickedMenu=clickedMenu==='menuView'?'':'menuView'"
       @mouseover="clickedMenu=clickedMenu===''?'':'menuView'">
-      视图
+      视图(V)
       <div class="menus-2" v-show="clickedMenu==='menuView'">
         <div class="menu-2" @click="onClickSaveLayout">保存布局</div>
         <div class="menu-2" @click="onClickLoadLayout">加载布局</div>
         <div class="menu-2" @click="onClickInitLayoutMinRow">重置布局</div>
-        <hr>
+        <hr class="menu-2">
         <div class="menu-2" @click="onClickAddGlComponent('GoldenFlowEdit', '可视化编辑器')">可视化编辑器</div>
         <div class="menu-2" @click="onClickAddGlComponent('GoldenJsonEdit', 'Json编辑器')">json编辑器</div>
         <div class="menu-2" @click="onClickAddGlComponent('GoldenConsole', '控制台')">控制台</div>
@@ -42,14 +42,14 @@
     <div class="menu-1"
       @click.stop="clickedMenu=clickedMenu==='menuTool'?'':'menuTool'"
       @mouseover="clickedMenu=clickedMenu===''?'':'menuTool'">
-      工具
+      工具(T)
       <div class="menus-2" v-show="clickedMenu==='menuTool'">
       </div>
     </div>
     <div class="menu-1"
       @click.stop="clickedMenu=clickedMenu==='menuHelp'?'':'menuHelp'"
       @mouseover="clickedMenu=clickedMenu===''?'':'menuHelp'">
-      帮助
+      帮助(H)
       <div class="menus-2" v-show="clickedMenu==='menuHelp'">
         <div class="menu-2" @click="onClickAddGlComponent('GoldenDocs', '软件文档')">文档</div>
         <div class="menu-2" @click="console.log('暂无版本号')">版本信息</div>
@@ -120,7 +120,7 @@ import { prefinedLayouts } from "./goldenLayout/predefined-layouts"
 .main-bar.menus-1 {
   --bg-normal: #1f1f1f;   // 一块一块的块填充
   --bg-deep: #181818;     // 块的背景
-  --bg-light: #414141;    // 通常用来做描边
+  --bg-light: #414141;    // 通常用来做描边，同 bg-line/bg-bd
   --text-normal: #aeafad; // 正文
   --text-deep: #b4ba6e;   // 高亮
   --text-light: #6e6858;  // 忽视
@@ -140,53 +140,61 @@ import { prefinedLayouts } from "./goldenLayout/predefined-layouts"
 
   box-sizing: border-box;
   height: 28px;
-  border-bottom: solid 1px var(--bg-light);
   width: 100%;
-  background-color: var(--bgControl-normal);
   margin: 0;
+  border-bottom: solid 1px var(--bg-light);
+  background-color: var(--bgControl-normal);
 
   div, p {
     color: var(--text-normal);
   }
 
-  .menu-1, .menu-2{
-    &:hover{
-      background-color: var(--bg-light);
-    }
+  .menu-1:hover, .menu-2:hover{
+    background-color: var(--bg-light);
   }
-  .menu-1{
+  .menu-1 {
+    position: relative;
     display: inline;
     float: left;
-    width: 60px;
+    // width: 60px;
     height: 100%;
-    border-right: solid 1px var(--bg-light);
-    text-align: center;
     line-height: 26px;
+    padding: 0 9px;
 
-    &:hover{
+    font-size: 13px;
+    text-align: center;
+    // border-right: solid 1px var(--bg-light);
+
+    &:hover {
       cursor: pointer;
     }
 
-    .menus-2{
-      position: relative;
+    .menus-2 {
+      min-width: 220px;
+      position: absolute;
+      left: 0;
+      top: 27px;
+      // width: 230px;
       z-index: 2;
-      width: 230px;
-      background-color: var(--bgControl-normal);
-      border: 2px solid var(--bg-light);
+      background-color: var(--bg-normal);
+      border: 1px solid var(--bg-light);
+      border-radius: 8px; 
 
-      .menu-2{
+      .menu-2 {
+        padding: 0 24px;
+        white-space: pre;
         text-align: left;
-        padding-left: 30px;
-        &:first-child{
-          border-top: none;
-        }
-        // border-top: 1px solid var(--bg-light);
+      }
+      hr.menu-2 {
+        margin: 4.5px 0;
+        border: none;
+        border-bottom: solid 1px var(--bg-light);
       }
     }
   }
 
   // 标题
-  .file-title{
+  .file-title {
     float: left;
     width: calc(100% - 320px);
     p{
@@ -211,7 +219,7 @@ import { prefinedLayouts } from "./goldenLayout/predefined-layouts"
     margin: 0;
     line-height: 26px;
 
-    &[type="file"]{
+    &[type="file"] {
       // 这是一个隐身无大小的状态，不会直接点击而是通过方法模拟点击
       opacity: 0;
       width: 0px;
