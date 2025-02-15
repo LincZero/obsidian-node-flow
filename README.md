@@ -11,15 +11,16 @@
 
   允许使用轻量语法或从上述软件导出的Json描述了图表，该插件在Obsidian与VuePress博客中均可使用
 
-## Effect display (Partial) (效果展示 - 部分)
-
-![](./docs/image.png)
-
-## Docs
+## Docs (教程, 文档)
 
 Tutorials, online effects, use cases, and more (教程、在线效果、用例等)
 
-- [Online effects (在线效果)、demo](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html)
+- [Online effects (在线效果)、demo](https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/README.show.html), Vuepress Version
+- [Online interaction (在线效果2、在线交互)](https://linczero.github.io/obsidian-node-flow/), App Version
+
+## Effect display (Partial) (效果展示 - 部分)
+
+![](./docs/image.png)
 
 ## Usage
 
