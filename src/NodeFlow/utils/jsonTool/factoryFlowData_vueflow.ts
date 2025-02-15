@@ -24,7 +24,7 @@ const testData_vueflow = {
   ]
 }
 
-const testData_vueflow_withoutPos = {
+export const testData_vueflow_withoutPos = {
   nodes: [
     {
       id: '1',
@@ -96,7 +96,7 @@ const testData_vueflow_withoutPos = {
   ]
 }
 
-const testData_vueflow_customNode = {
+export const testData_vueflow_customNode = {
   nodes: [
     {
       id: '1',

@@ -2,32 +2,48 @@
 import { ref, computed, watch, provide } from 'vue'
 
 import { factoryFlowData } from '../../NodeFlow/utils/jsonTool/factoryFlowData'
-import { testData_listitem2 } from '../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
 import NodeFlowContainerS from '../../NodeFlow/component/container/NodeFlowContainerS.vue';
 
-const jsonType = ref<string>("nodeflow-listitem")
-const mdStr = ref<string>(testData_listitem2) // demo
-
-const componentKey = ref(0)
-const result = computed(() => {
-  return factoryFlowData(jsonType.value, mdStr.value)
+// 1.1 节点流数据 - 预设
+import { testData_listitem, testData_listitem2 } from '../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
+import { testData_obcanvas } from '../../NodeFlow/utils/jsonTool/factoryFlowData_obcanvas'
+import { testData_vueflow_withoutPos, testData_vueflow_customNode } from '../../NodeFlow/utils/jsonTool/factoryFlowData_vueflow'
+import { testData_list } from '../../NodeFlow/utils/jsonTool/factoryFlowData_list'
+import { testData_itemData } from '../../NodeFlow/utils/jsonTool/factoryFlowData_item'
+const nfData_enum = computed(() => {
+  return [
+    { 'name': 'nodeflow-listitem-demo1', 'type': 'nodeflow-listitem', 'content': testData_listitem },
+    { 'name': 'nodeflow-listitem-demo2', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
+    { 'name': 'nodeflow-obcanvas-demo', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
+    { 'name': 'nodeflow-vueflow-demo', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },
+    { 'name': 'nodeflow-vueflow-demo', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_customNode, null, 2) },
+    { 'name': 'nodeflow-list-demo', 'type': 'nodeflow-list', 'content': testData_list },
+    { 'name': 'nodeflow-item-demo', 'type': 'nodeflow-item', 'content': JSON.stringify(testData_itemData, null, 2) },
+  ]
 })
-const ref_result = ref(result.value.data)
-watch(result, (newResult) => {
+function onSelect(event: any) {
+  const index = event.target.value
+  nfData_type.value = nfData_enum.value[index].type
+  nfData_rawContent.value = nfData_enum.value[index].content
+}
+
+// 1.2 节点流数据 - 类型
+const nfData_type = ref<string>("nodeflow-listitem")
+
+// 1.3 节点流数据 - 内容
+const componentKey = ref(0) // 用于强制刷新
+const nfData_rawContent = ref<string>(testData_listitem2) // demo
+const nfData_resultContent_ = computed(() => {
+  return factoryFlowData(nfData_type.value, nfData_rawContent.value)
+})
+const nfData_resultContent = ref(nfData_resultContent_.value.data)
+watch(nfData_resultContent_, (newResult) => {
   console.log("[debug] update")
-  ref_result.value = newResult.data
+  nfData_resultContent.value = newResult.data
   componentKey.value += 1
 }, { immediate: true })
 
-const enum_data = computed(() => {
-  return {
-    "nodeflow-listitem-demo1": "nodeflow-listitem-demo1",
-    "nodeflow-listitem-demo2": "nodeflow-listitem-demo2",
-  }
-})
-
 import TabBar from './components/TabBar.vue';
-
 import GoldenLayout from './components/goldenLayout/GoldenLayout.vue'
 import { prefinedLayouts } from './components/goldenLayout/predefined-layouts'
 const GLayoutRootRef = ref(null); // Golden-Layout
@@ -45,11 +61,11 @@ provide("LAYOUT", GLayoutRootRef);
     <template #JsonEditor>
       <div class="json-editor">
         <div class="item">预设：</div>
-        <select class="item">
-          <option v-for="item in enum_data" :value="item">{{ item }}</option>
+        <select class="item" @change="onSelect" value="1">
+          <option v-for="(item, index) in nfData_enum" :value="index">{{ item.name }}</option>
         </select>
-        <input class="item" v-model="jsonType"></input>
-        <textarea spellcheck="false" class="item" v-model="mdStr"></textarea>
+        <input class="item" v-model="nfData_type"></input>
+        <textarea spellcheck="false" class="item" v-model="nfData_rawContent"></textarea>
         <!-- TODO: pre，shiki、prismjs、highlight.js -->
         <!-- <pre spellcheck="false" class="item">
           <code
@@ -65,10 +81,10 @@ provide("LAYOUT", GLayoutRootRef);
       <!-- 用key进行强制刷新 -->
       <NodeFlowContainerS
         :key="componentKey"
-        :rawData="mdStr"
-        :mdData="`\`\`\`${jsonType}\n${mdStr}\n\`\`\`\n`"
-        :jsonType="jsonType"
-        :jsonData="ref_result"
+        :rawData="nfData_rawContent"
+        :mdData="`\`\`\`${nfData_type}\n${nfData_rawContent}\n\`\`\`\n`"
+        :jsonType="nfData_type"
+        :jsonData="nfData_resultContent"
         :fn_newView="async ()=>{}"
         :fn_save="()=>{}"
         :isMini="false"

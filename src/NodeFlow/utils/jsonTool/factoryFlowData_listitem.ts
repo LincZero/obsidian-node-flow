@@ -378,7 +378,6 @@ export const testData_listitem2 =
     - 空节点i, i:item-default, 
     - 空节点o, o:item-default, 
     - color, value:item-color, #0ff
-    - a, value:item-default, 
   - 运行二
     - FlowDelay:延时, io:item-flowdelay, 2000
     - 空节点i, i:item-default, 

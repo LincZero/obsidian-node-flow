@@ -42,11 +42,6 @@ const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConne
 
 // 流程控制 - 最开始
 const debugConsole_start = async () => {
-  try {
-    eval(props.data.value);
-  } catch (e) {
-    console.error("eval error. str:" + props.data.value + ", error:", e)
-  }
   _useNodesData.value.data.isRunning = true; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 
@@ -55,9 +50,9 @@ const debugConsole = async () => {
   // 该节点的操作
   // ... 其他操作 // [!code]
   try { // [!code]
-    // eval(props.data.value)
-    // const func = new Function(props.data.value);
-    // func();
+    // eval(props.data.value) // 建议优先用 new Function 而非 eval
+    const func = new Function(props.data.value);
+    func();
     console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
   } catch (error) {
     console.error(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} error:`, error);

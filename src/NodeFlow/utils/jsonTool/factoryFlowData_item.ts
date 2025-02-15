@@ -23,7 +23,7 @@ export function factoryFlowData_item(parsedData:any|string): {code: number, msg:
   return { code: 0, msg: "", data: parsedData}
 }
 
-const testData_itemData = {
+export const testData_itemData = {
   "nodes": [
     {
       "id": "6",
