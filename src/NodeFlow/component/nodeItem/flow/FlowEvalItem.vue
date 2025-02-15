@@ -25,10 +25,6 @@ const props = defineProps<{
   data: any,
 }>();
 if (!props.data.value) props.data.value = "console.log('debug output')"; // [!code]
-const writable_value = computed({
-  get: () => props.data.value,
-  set: (value) => { props.data.value = value },
-})
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
@@ -46,6 +42,11 @@ const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConne
 
 // 流程控制 - 最开始
 const debugConsole_start = async () => {
+  try {
+    eval(props.data.value);
+  } catch (e) {
+    console.error("eval error. str:" + props.data.value + ", error:", e)
+  }
   _useNodesData.value.data.isRunning = true; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 

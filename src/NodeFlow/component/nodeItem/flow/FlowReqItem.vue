@@ -14,7 +14,7 @@
     <div class="node-item-value2">
       <NFTextArea :data="data"></NFTextArea>
       <div style="height:0; clear: both;"></div>
-      <textarea v-if="resp_str.length > 0">{{ resp_str }}</textarea>
+      <NFTextArea v-if="resp_str.length > 0" :data="{'value': resp_str}"></NFTextArea>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -27,10 +27,6 @@ const props = defineProps<{
   data: any,
 }>();
 if (!props.data.value) props.data.value = 'https://httpbin.org/get'; // [!code]
-const writable_value = computed({
-  get: () => props.data.value,
-  set: (value) => { props.data.value = value },
-})
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
@@ -57,27 +53,34 @@ let resp_str = ref('')
 const debugConsole = async () => {
   // 该节点的操作
   // ... 其他操作 // [!code]
-  const resp = await request(props.data.value, 'GET', undefined, undefined)
-  
-  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:\n`, resp);
+  try {
+    const resp = await request(props.data.value, 'GET', undefined, undefined)
+    
+    console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:\n`, resp);
 
-  // 检查是否正常响应
-  if (resp.status != 200) { // resp.ok // TODO，fetch版本应该用ok，ob版本有空再调试
-    resp_str.value = "warning: ok/status:" + resp.status.toString()
-    _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
-    return false
-  }
+    // 检查是否正常响应
+    if (resp.status != 200) { // resp.ok // TODO，fetch版本应该用ok，ob版本有空再调试
+      resp_str.value = "warning: ok/status:" + resp.status.toString()
+      _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+      return false
+    }
 
-  // 检查返回值是否json，并解析
-  if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
-    resp_str.value = JSON.stringify(resp.json, null, 2)
-    _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
-  } else if (typeof resp.json == 'function') { // @env 其他环境版本 (fetch)
-    const resp_json = await resp.json();
-    resp_str.value = JSON.stringify(resp_json, null, 2)
-    _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
-  } else {
-    resp_str.value = 'warning: without json'
+    // 检查返回值是否json，并解析
+    if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
+      resp_str.value = JSON.stringify(resp.json, null, 2)
+      _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+    } else if (typeof resp.json == 'function') { // @env 其他环境版本 (fetch)
+      const resp_json = await resp.json();
+      resp_str.value = JSON.stringify(resp_json, null, 2)
+      _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+    } else {
+      resp_str.value = 'warning: without json'
+      _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+      return false
+    }
+  } catch (e) {
+    console.error('error request:', e)
+    resp_str.value = '[error]'
     _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
     return false
   }

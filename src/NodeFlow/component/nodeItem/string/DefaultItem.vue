@@ -1,7 +1,7 @@
 <!-- 默认项 -->
 
 <template>
-  <div ref="TextArea2" :class="'default-item  node-item-slot ' + props.data.refType + (writable_value?' has-value':'')">
+  <div ref="TextArea2" :class="'default-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <NFTextArea :data="data" :isHideBorder="true"></NFTextArea>
     <div style="height:0; clear: both;"></div>
@@ -15,12 +15,6 @@ import { computed } from 'vue';
 const props = defineProps<{
   data: any
 }>()
-
-// 可写属性
-const writable_value = computed({
-  get: () => props.data.value,
-  set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
-})
 </script>
 
 <style scoped>

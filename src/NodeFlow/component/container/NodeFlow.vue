@@ -145,7 +145,7 @@ function pasteSelected(array: any) {
 let cache_selected = ref<string[]>([]);
 let cache_copyed = ref<string[]>([]);
 const ctrl_d = (event: any) => {
-  // 注意：这里暂时使用内部剪切版，无法跨画布传输
+  // 注意：TODO 这里暂时使用内部剪切版，无法跨画布传输
   // 注意：要打开编辑模式 (显示控制面板) 才允许快捷键，避免冲突
   if (!props.isShowControls) return;
   if (event.ctrlKey && event.key === 'd') {

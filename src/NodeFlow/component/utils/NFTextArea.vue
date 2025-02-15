@@ -27,7 +27,7 @@ const writable_value = computed({
 })
 
 // 自动调整高度。当大于初始的(rows、cols值)时，才会(出现overflow然后)撑开
-// 存在问题：只能变大不能变小
+// 注意：必须在nextTick里执行，否则存在问题：变大正常，变小则总多一行
 function autoSize(el:HTMLElement) {
   if (!el) { return }
   el.style.height = 'auto';
@@ -45,13 +45,14 @@ function autoSize(el:HTMLElement) {
 }
 const TextArea3 = ref(null)
 onMounted(()=>{
-  autoSize(TextArea3.value)
   nextTick(() => {
     autoSize(TextArea3.value)
   })
 })
 function handleInput(e:any) {
-  autoSize(e.target)
+  nextTick(() => {
+    autoSize(e.target)
+  })
 }
 </script>
 
@@ -71,13 +72,14 @@ function handleInput(e:any) {
 
 <style scoped>
 textarea.nf-textarea {
+  max-width: 600px;
+  max-height: 900px;
+  overflow: auto;
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
   margin: 0;
   padding: 0 12px;
   
-  /* overflow: auto; */
-  overflow: hidden;
   white-space: pre;
   resize: none; /* 禁止用户手动调整大小 */
   border-radius: 12px;
