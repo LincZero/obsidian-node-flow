@@ -4,6 +4,32 @@ import { nfSetting, factoryVueDom } from "../NodeFlow/index"
 import { NodeFlowViewFlag, NodeFlowView } from './NodeFlowView'
 import { NodeFlowFileViewFlag, NodeFlowFileView } from './NodeFlowFileView'
 
+// 适配器
+// @env [环境] md渲染, obsidian版本
+import { MarkdownRenderChild, MarkdownRenderer } from 'obsidian'
+nfSetting.fn_renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): void => {
+  el.classList.add("markdown-rendered")
+  const mdrc: MarkdownRenderChild = new MarkdownRenderChild(el);
+  if (ctx) ctx.addChild(mdrc);
+  else if (nfSetting.ctx) nfSetting.ctx.addChild(mdrc);
+  // @ts-ignore 新接口，但旧接口似乎不支持
+  MarkdownRenderer.render(nfSetting.app, markdown, el, nfSetting.app.workspace.activeLeaf?.view?.file?.path??"", mdrc)
+})
+// @env [环境] http接口，obsidian版本 (obsidian有自己的http接口)
+import { requestUrl } from 'obsidian'
+nfSetting.fn_request = async (
+  url: string,
+  method: string | undefined,
+  headers: Record<string, string> | undefined,
+  body: string | ArrayBuffer | undefined 
+) => {
+  const responseData  = await requestUrl({ url, method, headers, body });
+  return responseData
+}
+// @env [环境] 新窗口中显示
+import { fn_newView } from './NodeFlowView'
+nfSetting.fn_newView = fn_newView
+
 // 设置
 interface NodeFlowPluginSettings {
   isDebug: boolean;

@@ -24,4 +24,5 @@
     "**/*.vue",
     "src/*.js"
   ],
+  "exclude": ["../NodeFlowObsidian/", "../NodeFlowVuepress/"]
 }

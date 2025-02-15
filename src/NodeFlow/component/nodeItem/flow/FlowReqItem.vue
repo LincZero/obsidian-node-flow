@@ -47,14 +47,14 @@ const debugConsole_start = async () => {
   _useNodesData.value.data.isRunning = true; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 
-import { request } from '../../../utils/main/setting'
+import { nfSetting } from '../../../utils/main/setting'
 let resp_str = ref('')
 // 流程控制 - 执行主要操作、触发下一节点
 const debugConsole = async () => {
   // 该节点的操作
   // ... 其他操作 // [!code]
   try {
-    const resp = await request(props.data.value, 'GET', undefined, undefined)
+    const resp = await nfSetting.fn_request(props.data.value, 'GET', undefined, undefined)
     
     console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} resp:\n`, resp);
 

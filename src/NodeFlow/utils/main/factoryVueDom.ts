@@ -3,9 +3,7 @@ import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue
 
 import { factoryFlowData } from '../jsonTool/factoryFlowData'
 
-// 非obsidian环境没有，需要注释掉引用该[文件(index.ts)]的相关代码。需要提供一个HTMLElement对象，允许异步
-import { fn_newView } from '../../../NodeFlowObsidian/NodeFlowView'
-import { MarkdownView } from 'obsidian';
+import { nfSetting } from '../../utils/main/setting'
 
 /// 在div内创建指定的 Vue UI
 export function factoryVueDom(
@@ -52,7 +50,7 @@ export function factoryVueDom(
       jsonType: jsonType,
       jsonData: result.data,
       fn_newView: async ()=>{ // 闭包
-        const targetEl: HTMLElement = await fn_newView()
+        const targetEl: HTMLElement = await nfSetting.fn_newView()
         mountVue(targetEl, false)
       },
       fn_save: fn_save,

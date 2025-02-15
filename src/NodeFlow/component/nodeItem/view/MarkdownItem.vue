@@ -18,8 +18,8 @@ import { onMounted, ref } from 'vue';
 const MdArea = ref()
 
 // md渲染 - 声明函数
-import { renderMarkdown } from '../../../utils/main/setting';
-let renderMarkdownFn: (markdown: string, el: HTMLElement, ctx?: any) => void = renderMarkdown
+import { nfSetting } from '../../../utils/main/setting';
+let renderMarkdownFn: (markdown: string, el: HTMLElement, ctx?: any) => void = nfSetting.fn_renderMarkdown
 
 // md渲染 - 执行
 onMounted(() => {
