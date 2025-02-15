@@ -11,13 +11,8 @@
       :style="'background:' + (_useNodesData.data.isRunning?'green;':'red;')">
     </div>
     <div style="height:0; clear: both;"></div>
-    <div class="node-item-value2" style="overflow-x: auto;">
-      <textarea
-        v-model="writable_value"
-        :rows="writable_value.split('\n').length"
-        cols="20"
-        spellcheck="false"
-      ></textarea>
+    <div class="node-item-value2">
+      <NFTextArea :data="data"></NFTextArea>
       <div style="height:0; clear: both;"></div>
       <textarea v-if="resp_str.length > 0">{{ resp_str }}</textarea>
     </div>
@@ -26,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import NFTextArea from '../../utils/NFTextArea.vue'
 import { ComputedRef, computed, ref, watch } from 'vue';
 const props = defineProps<{
   data: any,
@@ -124,8 +120,6 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
   width: 8px;
   margin: 8px 0 8px 9px;
 
-  padding: 2px 2px;
-  line-height: calc(100% - 4px);
   border-radius: 12px;
   border: solid 1px currentColor;
   cursor: pointer;

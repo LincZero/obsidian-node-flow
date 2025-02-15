@@ -107,7 +107,6 @@ const _useEdgesData1: ComputedRef<any> = useEdgesData(_getEdges[0]?.id)
 .debug-item .node-item-value>* * {
   box-sizing: border-box;
   height: calc(24px - 4px);
-  line-height: calc(100% - 4px);
   margin: 0;
   padding-top: 0;
   padding-bottom: 0;

@@ -86,7 +86,6 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
   width: 8px;
   margin: 8px 0 8px 9px;
 
-  padding: 2px 2px;
   line-height: calc(100% - 4px);
   border-radius: 12px;
   border: solid 1px currentColor;
