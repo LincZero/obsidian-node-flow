@@ -7,7 +7,7 @@ import NodeFlowContainerS from '../../NodeFlow/component/container/NodeFlowConta
 // 1.1 节点流数据 - 预设
 import { testData_listitem, testData_listitem2 } from '../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
 import { testData_obcanvas } from '../../NodeFlow/utils/jsonTool/factoryFlowData_obcanvas'
-import { testData_vueflow_withoutPos, testData_vueflow_customNode } from '../../NodeFlow/utils/jsonTool/factoryFlowData_vueflow'
+import { testData_vueflow, testData_vueflow_withoutPos, testData_vueflow_customNode } from '../../NodeFlow/utils/jsonTool/factoryFlowData_vueflow'
 import { testData_list } from '../../NodeFlow/utils/jsonTool/factoryFlowData_list'
 import { testData_itemData } from '../../NodeFlow/utils/jsonTool/factoryFlowData_item'
 const nfData_enum = computed(() => {
@@ -15,8 +15,9 @@ const nfData_enum = computed(() => {
     { 'name': 'nodeflow-listitem-demo1', 'type': 'nodeflow-listitem', 'content': testData_listitem },
     { 'name': 'nodeflow-listitem-demo2', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
     { 'name': 'nodeflow-obcanvas-demo', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
-    { 'name': 'nodeflow-vueflow-demo', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },
-    { 'name': 'nodeflow-vueflow-demo', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_customNode, null, 2) },
+    { 'name': 'nodeflow-vueflow-demo1', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow, null, 2) },
+    { 'name': 'nodeflow-vueflow-demo2', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },
+    { 'name': 'nodeflow-vueflow-demo3', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_customNode, null, 2) },
     { 'name': 'nodeflow-list-demo', 'type': 'nodeflow-list', 'content': testData_list },
     { 'name': 'nodeflow-item-demo', 'type': 'nodeflow-item', 'content': JSON.stringify(testData_itemData, null, 2) },
   ]

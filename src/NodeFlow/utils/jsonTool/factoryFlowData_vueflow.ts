@@ -7,10 +7,21 @@ export function factoryFlowData_vueflow(parsedData:any|string): {code: number, m
     else { return {code: -1, msg: "error demo: "+parsedData, data: {}}  }
   }
 
+  for (let item of parsedData["nodes"]) {
+    if (!item.hasOwnProperty("position")) {
+      item.position = { x: 0, y: 0 }
+    }
+    if (!item.hasOwnProperty("data")) {
+      item.data = { "label": "" }
+    }
+    if (!item.type) {
+      item.type = 'process'
+    }
+  }
   return {code: 0, msg: "", data: parsedData}
 }
 
-const testData_vueflow = {
+export const testData_vueflow = {
   "nodes": [
     {"id": "1", "type": "input", "position": {"x": 250, "y": 5}, "data": {"label": "Node 11"}},
     {"id": "2", "position": {"x": 100, "y": 100}, "data": {"label": "Node 12"}},
@@ -28,59 +39,37 @@ export const testData_vueflow_withoutPos = {
   nodes: [
     {
       id: '1',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '2',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '2a',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '2b',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '2c',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '2d',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '3',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '4',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '5',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '6',
-      position: { x: 0, y: 0 },
-      type: 'process',
     },
     {
       id: '7',
-      position: { x: 0, y: 0 },
-      type: 'process',
-    },
+    }
   ],
   edges: [
     { id: 'e1-2', source: '1', target: '2', type: 'animation', animated: true },
@@ -92,7 +81,7 @@ export const testData_vueflow_withoutPos = {
     { id: 'e3-7', source: '3', target: '4', type: 'animation', animated: true },
     { id: 'e4-5', source: '4', target: '5', type: 'animation', animated: true },
     { id: 'e5-6', source: '5', target: '6', type: 'animation', animated: true },
-    { id: 'e5-7', source: '5', target: '7', type: 'animation', animated: true },
+    { id: 'e5-7', source: '5', target: '7', type: 'animation', animated: true }
   ]
 }
 
@@ -109,7 +98,7 @@ export const testData_vueflow_customNode = {
       type: 'color-output',
       position: { x: 350, y: 114 },
       targetPosition: 'left',
-    },
+    }
   ],
   edges: [
     {
@@ -121,6 +110,6 @@ export const testData_vueflow_customNode = {
       style: {
         stroke: '#6F3381',
       },
-    },
+    }
   ]
 }
