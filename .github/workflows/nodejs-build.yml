@@ -41,9 +41,10 @@ jobs:
       with:
         node-version: '20'
     - name: Build
-      working-directory: ./src/NodeFlowApp/
       run: |
         # npm run app:build
+        npm ci
+        cd ./src/NodeFlowApp/
         npm ci
         npm run build
         > ./dist/.nojekyll
