@@ -277,7 +277,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
             id: ll_content[0][0],
             name: ll_content[0][1]??ll_content[0][0],
             parentId: "", parent: null,
-            value: ll_content[2]?ll_content[2][0]:"",
+            value: l_content[2] ? l_content[2].trim() : "", // 这里不要被 `:` 切分，有可能是url来的
             items: []
           }
         }
