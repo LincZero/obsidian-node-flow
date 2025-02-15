@@ -14,7 +14,7 @@
     <div class="node-item-value2">
       <NFTextArea :data="data"></NFTextArea>
       <div style="height:0; clear: both;"></div>
-      <NFTextArea v-if="resp_str.length > 0" :data="{'value': resp_str}"></NFTextArea>
+      <NFTextArea v-if="resp_str.length > 0" :data="{'value': resp_str}" style="margin-top: 4px"></NFTextArea>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>

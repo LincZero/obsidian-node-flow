@@ -5,13 +5,14 @@
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div class="node-item-value"
       :style="'background:'+props.data.value+'; color:'+getHighContrastTextColor(props.data.value)">
-      {{ props.data.value }} 
+      <NFTextArea :data="data" :isHideBorder="true"></NFTextArea>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
 </template>
 
 <script setup lang="ts">
+import NFTextArea from '../../utils/NFTextArea.vue'
 const props = defineProps<{
   data: any
 }>();
@@ -54,7 +55,7 @@ function getHighContrastTextColor(hexColor: string) {
 .color-item .node-item-value {
   height: 24px;
 
-  padding: 2px 14px;
+  padding: 0;
   line-height: calc(24px - 4px);
   border-radius: 12px;
   border: solid 1px currentColor;

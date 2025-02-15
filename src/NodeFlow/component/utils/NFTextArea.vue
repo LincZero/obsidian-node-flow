@@ -72,7 +72,7 @@ function handleInput(e:any) {
 
 <style scoped>
 textarea.nf-textarea {
-  max-width: 600px;
+  max-width: 500px;
   max-height: 900px;
   overflow: auto;
   /* height: calc(24px - 4px); 可以被撑高*/
