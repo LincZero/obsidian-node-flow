@@ -37,39 +37,17 @@ export const testData_vueflow = {
 
 export const testData_vueflow_withoutPos = {
   nodes: [
-    {
-      id: '1',
-    },
-    {
-      id: '2',
-    },
-    {
-      id: '2a',
-    },
-    {
-      id: '2b',
-    },
-    {
-      id: '2c',
-    },
-    {
-      id: '2d',
-    },
-    {
-      id: '3',
-    },
-    {
-      id: '4',
-    },
-    {
-      id: '5',
-    },
-    {
-      id: '6',
-    },
-    {
-      id: '7',
-    }
+    { id: '1' },
+    { id: '2' },
+    { id: '2a' },
+    { id: '2b' },
+    { id: '2c' },
+    { id: '2d' },
+    { id: '3' },
+    { id: '4' },
+    { id: '5' },
+    { id: '6' },
+    { id: '7' }
   ],
   edges: [
     { id: 'e1-2', source: '1', target: '2', type: 'animation', animated: true },
