@@ -11,22 +11,20 @@ import { testData_obcanvas } from '../../../NodeFlow/utils/jsonTool/factoryFlowD
 import { testData_vueflow, testData_vueflow_withoutPos, testData_vueflow_customNode } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_vueflow'
 import { testData_list } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_list'
 import { testData_itemData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_item'
-const nfData_enum = computed(() => {
-  return [
-    { 'name': 'nodeflow-listitem-demo1', 'type': 'nodeflow-listitem', 'content': testData_listitem },
-    { 'name': 'nodeflow-listitem-demo2', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
-    { 'name': 'nodeflow-obcanvas-demo', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
-    { 'name': 'nodeflow-vueflow-demo1', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow, null, 2) },
-    { 'name': 'nodeflow-vueflow-demo2', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },
-    { 'name': 'nodeflow-vueflow-demo3', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_customNode, null, 2) },
-    { 'name': 'nodeflow-list-demo', 'type': 'nodeflow-list', 'content': testData_list },
-    { 'name': 'nodeflow-item-demo', 'type': 'nodeflow-item', 'content': JSON.stringify(testData_itemData, null, 2) },
-  ]
-})
+const nfData_enum = [
+  { 'name': 'nodeflow-listitem-demo1', 'type': 'nodeflow-listitem', 'content': testData_listitem },
+  { 'name': 'nodeflow-listitem-demo2', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
+  { 'name': 'nodeflow-obcanvas-demo', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
+  { 'name': 'nodeflow-vueflow-demo1', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow, null, 2) },
+  { 'name': 'nodeflow-vueflow-demo2', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },
+  { 'name': 'nodeflow-vueflow-demo3', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_customNode, null, 2) },
+  { 'name': 'nodeflow-list-demo', 'type': 'nodeflow-list', 'content': testData_list },
+  { 'name': 'nodeflow-item-demo', 'type': 'nodeflow-item', 'content': JSON.stringify(testData_itemData, null, 2) },
+]
 function onSelect(event: any) {
   const index = event.target.value
-  props.nfData.type.value = nfData_enum.value[index].type
-  props.nfData.rawContent.value = nfData_enum.value[index].content
+  props.nfData.type = nfData_enum[index].type
+  props.nfData.rawContent = nfData_enum[index].content
 }
 
 // 1.2 节点流数据 - 类型
