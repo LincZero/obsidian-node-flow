@@ -76,6 +76,7 @@ props.nfData.rawContent = ref<string>(testData_listitem2) // demo
     white-space: pre;
     overflow-x: auto;
     overflow-y: auto;
+    resize: none;
   }
 
   input, textarea, pre, div {

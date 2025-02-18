@@ -5,11 +5,11 @@
 <template>
   <div :class="'flowdelay-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <div class="node-item-value"
+    <!-- <div class="node-item-value"
       title="点击可以从此开启运行节点流程"
       @click="debugConsole_start()"
       :style="'background:' + (_useNodesData.data.isRunning?'green;':'red;')">
-    </div>
+    </div> -->
     <div style="height:0; clear: both;"></div>
     <div class="node-item-value2">
       <NFTextArea :data="data"></NFTextArea>

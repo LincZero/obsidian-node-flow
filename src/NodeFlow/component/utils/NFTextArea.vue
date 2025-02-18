@@ -74,13 +74,13 @@ function handleInput(e:any) {
 textarea.nf-textarea {
   max-width: 500px;
   max-height: 900px;
-  overflow: auto;
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
   margin: 0;
   padding: 0 12px;
   
   white-space: pre;
+  overflow: auto;
   resize: none; /* 禁止用户手动调整大小 */
   border-radius: 12px;
   

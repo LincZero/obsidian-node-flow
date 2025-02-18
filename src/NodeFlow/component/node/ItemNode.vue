@@ -36,6 +36,7 @@ Item类型的节点
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
+            <template #item-flowstart="props"><FlowStartItem :data="props.data"></FlowStartItem></template>
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
             <template #item-flowreq="props"><FlowReqItem :data="props.data"></FlowReqItem></template>
@@ -78,7 +79,8 @@ import DropdownItem from "../nodeItem/string/DropdownItem.vue"  // 下拉项
 import ColorItem from "../nodeItem/color/ColorItem.vue"         // 颜色项
 import MarkdownItem from "../nodeItem/view/MarkdownItem.vue"    // Markdown项
 import DebugItem from "../nodeItem/view/DebugItem.vue"          // 调试项
-import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项1
+import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项0
+import FlowStartItem from "../nodeItem/flow/FlowStartItem.vue"  // 流程控制项1
 import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项2
 import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项3
 import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制项4

@@ -3,7 +3,7 @@
 <template>
   <div ref="TextArea2" :class="'default-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <NFTextArea :data="data" :isHideBorder="true"></NFTextArea>
+    <NFTextArea class="node-item-value" :data="data" :isHideBorder="true"></NFTextArea>
     <div style="height:0; clear: both;"></div>
   </div>
 </template>

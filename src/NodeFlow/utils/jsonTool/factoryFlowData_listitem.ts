@@ -407,7 +407,8 @@ export const testData_listitem2 =
 export const testData_listitemST =
 `- nodes
   - ST模拟
-    - flow2:开始, o:item-flow
+    - 流程模板,, 开始
+    - flow2:开始, o:item-flowstart
   - 本地机器
     - 机器, o
     - 地址,, 0.0.0.0
@@ -417,11 +418,12 @@ export const testData_listitemST =
     - 地址,, 127.0.0.1
     - 端口,, 8811
   - 0001:TCP连接
+    - 流程模板,, 客户端
+    - flow1:触发, i:item-flow
+    - flow2:连接成功, o:item-flow
     - 机器(本地), i
     - 机器(对端), i
     - 通道, o, 0001
-    - flow1:触发, i:item-flow
-    - flow2:连接成功, o:item-flow
     - 通道类型,, tcp
     - 版本,, 自动
     - 读取大小,, -1
@@ -429,46 +431,50 @@ export const testData_listitemST =
     - 通知驱动,, 中心回调(libevent)
     - 驱动重复,, 1
   - 0002:注册包
-    - 通道, i, 0001
-    - 次数,, 1
-    - 写入内容,, {null4}{len4}{null16}\\
-{timestamp8}{str(register)76}
-    - 读取检查,, {any4}{len4}
+    - 流程模板,, 网络包
     - flow1:触发, i:item-flow
     - flow2:成功, o:item-flow
     - flow3:失败, o:item-flow
+    - 通道, i, 0001
+    - 次数,, 1
+    - 写入内容,, {null4}{len4}{null16}\\
+  {timestamp8}{str(register)76}
+    - 读取检查,, {any4}{len4}
   - 0003:心跳包
+    - 流程模板,, 网络包
+    - flow1:触发, i:item-flow
+    - flow2:完成, o:item-flow
+    - flow3:失败, o:item-flow
     - 通道, i, 0001
     - 次数,, -1
     - 写入内容,, {null4}{len4}{null16}
     - 读取检查,, {any4}{len4}{any32}\\
-{str(heartbeat)}
-    - flow1:触发, i:item-flow
-    - flow2:完成, o:item-flow
-    - flow3:失败, o:item-flow
+  {str(heartbeat)}
   - 0004:UDP连接
+    - 流程模板,, 客户端
+    - flow1:触发, i:item-flow
+    - flow2:连接成功, o:item-flow
     - 机器(本地), i
     - 机器(对端), i
     - 通道, o, 0004
-    - flow1:触发, i:item-flow
-    - flow2:连接成功, o:item-flow
     - 通道类型,, tcp
     - 版本,, 自动
     - 读写方式,, sendto/recvfrom
     - 通知驱动,, 轮询
     - 驱动重复,, 1
   - 0005:数据包
+    - 流程模板,, 网络包
+    - flow1:触发, i:item-flow
+    - flow2:成功, o:item-flow
+    - flow3:失败, o:item-flow
     - 通道, i, 0004
     - 次数,, -1
     - 间隔(ms),, -1
     - 速率(Mbps),, 2
     - 写入内容,, {statis0}{null4}
-    - 读取检查,, 
+    - 读取检查,, _
     - 发包驱动,, 独立线程
     - 驱动重复,, 1
-    - flow1:触发, i:item-flow
-    - flow2:成功, o:item-flow
-    - flow3:失败, o:item-flow
 - edges
   - 本地机器, 机器, 0001, 机器(本地)
   - 远程机器, 机器, 0001, 机器(对端)
