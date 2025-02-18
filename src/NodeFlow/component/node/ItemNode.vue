@@ -15,9 +15,9 @@ Item类型的节点
 -->
 
 <template>
-  <div class="item-node">
+  <div class="item-node" :class="{'item-item': isItem}">
     <!-- id项 -->
-    <div :v-show="id != ''" class="node-id">
+    <div v-show="id != ''" class="node-id">
       <div>#{{ id }}</div>
     </div>
     <div class="common-node node-main" :class="data.isRunning?'running':''" :aria-label="data.label">
@@ -30,7 +30,7 @@ Item类型的节点
       <div class="node-content">
         <div v-for="(item,index) in data.items" :class="'line node-item '+item.refType">
           <ItemNodeSlot :index="index" :item="item">
-            <template #item-item="props"><ItemNode :id="''" :data="props.data"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
+            <template #item-item="props"><ItemNode :id="props.data.id" :data="props.data" :is-item="true"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
             <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
             <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
@@ -58,15 +58,12 @@ Item类型的节点
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
 import { computed, ref } from 'vue';
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-  data: {
-    type: Object,
-    required: true,
-  },
+const props = withDefaults(defineProps<{
+  id: string,
+  data: any,
+  isItem?: boolean
+}>(), {
+  isItem: false
 })
 // 计算属性 (如果需要让输入输出socket同行显示，则需要用到。但会增加一些复杂度)
 const inputItems = computed(() => props.data.items.filter((item:any) => item.refType === 'input'));

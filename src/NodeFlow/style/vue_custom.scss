@@ -317,6 +317,10 @@
 
 //   ItemNode.vue (Scope) -------------------------------------------------------------------------------------
 .item-node {
+  & .item-item{ // 特殊，作为节点项的节点
+    margin: calc(8px + 20px) 0 8px;
+  }
+
   >.node-id {
     position: absolute;
     height: 0;

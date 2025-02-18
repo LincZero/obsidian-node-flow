@@ -327,6 +327,10 @@
   background-color: rgba(46, 70, 86, 0.25);
 }
 
+.item-node .item-item {
+  margin: calc(8px + 20px) 0 8px;
+}
+
 .item-node > .node-id {
   position: absolute;
   height: 0;
