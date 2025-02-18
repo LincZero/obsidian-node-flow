@@ -6,7 +6,7 @@ const props = defineProps<{
 }>();
 
 // 1.1 节点流数据 - 预设
-import { testData_listitem, testData_listitem2 } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
+import { testData_listitem, testData_listitem2, testData_listitemHttp } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
 import { testData_obcanvas } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_obcanvas'
 import { testData_vueflow, testData_vueflow_withoutPos, testData_vueflow_customNode } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_vueflow'
 import { testData_list } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_list'
@@ -14,6 +14,7 @@ import { testData_itemData } from '../../../NodeFlow/utils/jsonTool/factoryFlowD
 const nfData_enum = [
   { 'name': 'nodeflow-listitem-demo1', 'type': 'nodeflow-listitem', 'content': testData_listitem },
   { 'name': 'nodeflow-listitem-demo2', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
+  { 'name': 'nodeflow-listitem-demoHttp', 'type': 'nodeflow-listitem', 'content': testData_listitemHttp },
   { 'name': 'nodeflow-obcanvas-demo', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
   { 'name': 'nodeflow-vueflow-demo1', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow, null, 2) },
   { 'name': 'nodeflow-vueflow-demo2', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },

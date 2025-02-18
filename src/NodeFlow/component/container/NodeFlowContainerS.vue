@@ -103,12 +103,32 @@ function fn_printData(type:"mdData"|"rawData"|"jsonData") {
   console.log("Debug json:", data)
 }
 
+// 去除json递归 (去除parent字段)
+function removeParentField(oldJson: any): any {
+  if (Array.isArray(oldJson)) {
+    return oldJson.map(item => removeParentField(item));
+  } else if (typeof oldJson === 'object' && oldJson !== null) {
+    const newJson: any = {};
+    for (const key in oldJson) {
+      if (key !== 'parent') {
+        newJson[key] = removeParentField(oldJson[key]);
+      }
+    }
+    return newJson;
+  } else {
+    return oldJson;
+  }
+}
+
 //   按钮 - 拷贝到黏贴版
 function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
   let data: string
   if (type == "mdData") data = props.mdData
   else if (type == "rawData") data = props.rawData
-  else { const _rawData = computed(() => props.rawData || "error: get raw data error"); data = _rawData.value }
+  else {
+    const _rawData = computed(() => JSON.stringify(removeParentField(props.jsonData), null, 2));
+    data = _rawData.value
+  }
 
   navigator.clipboard.writeText(data).then(() => {
     console.log('Info: copy success');
@@ -133,6 +153,7 @@ function fn_saveChange () {
 
 //   按钮 - ZommArea (单手缩放、重置大小)
 import { useVueFlow } from '@vue-flow/core'
+import { stringify } from 'querystring';
 const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom } = useVueFlow()
 const zoomButton = ref()
 onMounted(() => {
