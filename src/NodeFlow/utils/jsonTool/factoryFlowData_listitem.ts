@@ -75,6 +75,7 @@ export function factoryFlowData_listitem(md:string): {code: number, msg: string,
   if (md.startsWith("demo")) {
     if (md == "demo") { md = testData_listitem }
     else if (md == "demo2") { md = testData_listitem2 }
+    else if (md == "demoST") { md = testData_listitemST }
     else { return {code: -1, msg: "error demo: "+md, data: {}}  }
   }
 
@@ -400,4 +401,85 @@ export const testData_listitem2 =
   - 运行一, Flow, 运行二, FlowDelay
   - 运行二, FlowDelay, 运行三, FlowReq
   - 运行一, 空节点o, 运行二, 空节点i
+`
+
+// 隐藏，仅自用
+export const testData_listitemST =
+`- nodes
+  - ST模拟
+    - flow2:开始, o:item-flow
+  - 本地机器
+    - 机器, o
+    - 地址,, 0.0.0.0
+    - 端口,, 0
+  - 远程机器
+    - 机器, o
+    - 地址,, 127.0.0.1
+    - 端口,, 8811
+  - 0001:TCP连接
+    - 机器(本地), i
+    - 机器(对端), i
+    - 通道, o, 0001
+    - flow1:触发, i:item-flow
+    - flow2:连接成功, o:item-flow
+    - 通道类型,, tcp
+    - 版本,, 自动
+    - 读取大小,, -1
+    - 读写方式,, bufferWirte/bufferRead
+    - 通知驱动,, 中心回调(libevent)
+    - 驱动重复,, 1
+  - 0002:注册包
+    - 通道, i, 0001
+    - 次数,, 1
+    - 写入内容,, {null4}{len4}{null16}\\
+{timestamp8}{str(register)76}
+    - 读取检查,, {any4}{len4}
+    - flow1:触发, i:item-flow
+    - flow2:成功, o:item-flow
+    - flow3:失败, o:item-flow
+  - 0003:心跳包
+    - 通道, i, 0001
+    - 次数,, -1
+    - 写入内容,, {null4}{len4}{null16}
+    - 读取检查,, {any4}{len4}{any32}\\
+{str(heartbeat)}
+    - flow1:触发, i:item-flow
+    - flow2:完成, o:item-flow
+    - flow3:失败, o:item-flow
+  - 0004:UDP连接
+    - 机器(本地), i
+    - 机器(对端), i
+    - 通道, o, 0004
+    - flow1:触发, i:item-flow
+    - flow2:连接成功, o:item-flow
+    - 通道类型,, tcp
+    - 版本,, 自动
+    - 读写方式,, sendto/recvfrom
+    - 通知驱动,, 轮询
+    - 驱动重复,, 1
+  - 0005:数据包
+    - 通道, i, 0004
+    - 次数,, -1
+    - 间隔(ms),, -1
+    - 速率(Mbps),, 2
+    - 写入内容,, {statis0}{null4}
+    - 读取检查,, 
+    - 发包驱动,, 独立线程
+    - 驱动重复,, 1
+    - flow1:触发, i:item-flow
+    - flow2:成功, o:item-flow
+    - flow3:失败, o:item-flow
+- edges
+  - 本地机器, 机器, 0001, 机器(本地)
+  - 远程机器, 机器, 0001, 机器(对端)
+  - 本地机器, 机器, 0004, 机器(本地)
+  - 远程机器, 机器, 0004, 机器(对端)
+  - 0001, 通道, 0002, 通道
+  - 0001, 通道, 0003, 通道
+  - 0004, 通道, 0005, 通道
+  - ST模拟, flow2, 0001, flow1
+  - 0001, flow2, 0002, flow1
+  - 0002, flow2, 0003, flow1
+  - 0003, flow2, 0004, flow1
+  - 0004, flow2, 0005, flow1
 `
