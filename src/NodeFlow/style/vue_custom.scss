@@ -346,10 +346,15 @@
     border-radius: 8px;
 
     & { box-shadow: 3px 3px 10px 2px #111; }
+    // &.none { box-shadow: 3px 3px 10px 2px #111; }
     &.running { box-shadow: 0 0 8px 3px green; }
-    &.none { box-shadow: 3px 3px 10px 2px #111; }
     &.error { box-shadow: 0 0 8px 3px red; }
-    &.over { box-shadow: 0 0 6px 1px cyan; } // 就续态 (运行结束/运行前) 的样式可以浅点
+    // &.over { box-shadow: 0 0 6px 1px cyan; } // 就续态 (运行结束/运行前) 的样式可以浅点
+    & .node-state { background-color: #666666; }
+    // &.none .node-state { background-color: #666666; }
+    &.running .node-state { background-color: green; }
+    &.error .node-state { background-color: red; }
+    &.over .node-state { background-color: cyan; } // 就续态 (运行结束/运行前) 的样式可以浅点
 
     >.node-title {
       height: 30px;
@@ -360,6 +365,12 @@
       border-radius: 8px 8px 0 0;
       color: #999999;
       background-color: rgba($color: #2e4656, $alpha: 0.75);
+    }
+    >.node-title>.node-state {
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      border-radius: 5px;
     }
     >.node-content {
       height: calc(100% - 30px);

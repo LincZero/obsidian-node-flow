@@ -23,7 +23,7 @@ Item类型的节点
     <div class="common-node node-main" :class="data.runState" :aria-label="data.label">
       <!-- 标题项 -->
       <div class="node-title">
-        <span style="display: inline-block; height: 10px; width: 10px; border-radius: 5px; background-color: #666666;"></span>
+        <span class="node-state" :title="'runState: '+data.runState"></span>
         <span style="display: inline-block; margin-left: 10px;">{{ data.hasOwnProperty('label')?data.label:data.hasOwnProperty('name')?data.name:data.id }}</span>
       </div>
       <!-- 项集 -->
