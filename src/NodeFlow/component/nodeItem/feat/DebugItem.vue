@@ -68,9 +68,10 @@ const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
-const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
 const sourceNodesId: string[] = Array.from(new Set(_useSourceConnections.value.map((connection:any) => connection.source)))
 const _useSourceNodesData: ComputedRef<any> = useNodesData(sourceNodesId)
+
+const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
 const targetNodesId: string[] = Array.from(new Set(_useTargetConnections.value.map((connection:any) => connection.target)))
 const _useTargetNodesData: ComputedRef<any> = useNodesData(targetNodesId)
 // const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
