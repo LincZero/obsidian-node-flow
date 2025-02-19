@@ -112,14 +112,6 @@ defineExpose({
   layoutGraph
 })
 
-//   功能 - 模拟运行流程树
-/*import { useRunProcess } from './useRunProcess'
-const { run, stop, reset, isRunning } = useRunProcess({ graph })
-async function ...() {
-  await stop()
-  reset(nodes.value)
-}*/
-
 //   功能 - copy and paste
 function pasteSelected(array: any) {
   for (let id of array.value) {

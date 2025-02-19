@@ -36,6 +36,7 @@ Item类型的节点
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
+            <template #item-feat="props"><FeatItem :data="props.data"></FeatItem></template>
             <template #item-flowstart="props"><FlowStartItem :data="props.data"></FlowStartItem></template>
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
@@ -70,12 +71,14 @@ const inputItems = computed(() => props.data.items.filter((item:any) => item.ref
 const outputItems = computed(() => props.data.items.filter((item:any) => item.refType === 'output'));
 const valueItems = computed(() => props.data.items.filter((item:any) => item.refType === 'value'));
 
+// ItemNode                                                     // 自包含节点项
 import ItemNodeSlot from "../nodeItem/ItemNodeSlot.vue"
 import DefaultItem from "../nodeItem/string/DefaultItem.vue"    // 默认项
 import DropdownItem from "../nodeItem/string/DropdownItem.vue"  // 下拉项
 import ColorItem from "../nodeItem/color/ColorItem.vue"         // 颜色项
 import MarkdownItem from "../nodeItem/view/MarkdownItem.vue"    // Markdown项
 import DebugItem from "../nodeItem/feat/DebugItem.vue"          // 调试项
+import FeatItem from "../nodeItem/feat/FeatItem.vue"            // 功能项
 import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项 - 空，不作为
 import FlowStartItem from "../nodeItem/flow/FlowStartItem.vue"  // 流程控制项 - 开始，有开始按钮
 import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项 - 延迟
