@@ -27,8 +27,8 @@ const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
-// TODO 这里会重复的
-const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConnections.value.map((connection:any) => connection.target))
+const targetNodesId: string[] = Array.from(new Set(_useTargetConnections.value.map((connection:any) => connection.target)))
+const _useTargetNodesData: ComputedRef<any> = useNodesData(targetNodesId)
 
 // 流程控制 - 执行主要操作、触发下一节点
 const debugConsole = async () => {

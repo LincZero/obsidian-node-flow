@@ -34,8 +34,8 @@ const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
-// TODO 这里会重复的
-const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConnections.value.map((connection:any) => connection.target))
+const targetNodesId: string[] = Array.from(new Set(_useTargetConnections.value.map((connection:any) => connection.target)))
+const _useTargetNodesData: ComputedRef<any> = useNodesData(targetNodesId)
 
 import { nfSetting } from '../../../utils/main/setting'
 let resp_str = ref('')

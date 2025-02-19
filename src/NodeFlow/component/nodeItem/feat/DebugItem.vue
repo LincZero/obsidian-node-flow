@@ -69,10 +69,11 @@ const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
 const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
-// TODO 这里会重复的，如果节点A有两个输入源都是节点B给的，会打印两次节点B
-const _useSourceNodesData: ComputedRef<any> = useNodesData(() => _useSourceConnections.value.map((connection:any) => connection.source))
-const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConnections.value.map((connection:any) => connection.target))
-const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
+const sourceNodesId: string[] = Array.from(new Set(_useSourceConnections.value.map((connection:any) => connection.source)))
+const _useSourceNodesData: ComputedRef<any> = useNodesData(sourceNodesId)
+const targetNodesId: string[] = Array.from(new Set(_useTargetConnections.value.map((connection:any) => connection.target)))
+const _useTargetNodesData: ComputedRef<any> = useNodesData(targetNodesId)
+// const _useTargetNode: object = useNode(_useTargetConnections.value[0]?.target)
 
 const _getEdges: GraphEdge[] = getConnectedEdges(_useNodeId)
 const _useEdgesData1: ComputedRef<any> = useEdgesData(_getEdges[0]?.id)
