@@ -15,7 +15,7 @@ export function factoryFlowData_item(parsedData:any|string): {code: number, msg:
       item.position = { x: 0, y: 0 }
     }
     if (!item.hasOwnProperty("valueType") || item.valueType == "") {
-      item.valueType = "item-default"
+      item.valueType = "item-string"
     }
     item.type = "item"
   }
@@ -36,14 +36,14 @@ export const testData_itemData = {
             "id": "01",
             "name": "null",
             "refType": "input",
-            "valueType": "item-default",
+            "valueType": "item-string",
             "value": ""
           },
           {
             "id": "02",
             "name": "null",
             "refType": "output",
-            "valueType": "item-default",
+            "valueType": "item-string",
             "value": ""
           },
           {
@@ -58,7 +58,7 @@ export const testData_itemData = {
             "name": "number",
             "refType": "input",
             // 可选 "ref": "", 用于指向传递过来的节点id和位置?
-            "valueType": "item-default",
+            "valueType": "item-string",
             "value": "123"
             // 可选 "widgetType": ""
           },
@@ -66,35 +66,35 @@ export const testData_itemData = {
             "id": "2",
             "name": "number",
             "refType": "output",
-            "valueType": "item-default",
+            "valueType": "item-string",
             "value": "456"
           },
           {
             "id": "3",
             "name": "vName",
             "refType": "value",
-            "valueType": "item-default",
+            "valueType": "item-string",
             "value": "vValue"
           },
           {
             "id": "4",
             "name": "clip",
             "refType": "input",
-            "valueType": "item-default",
+            "valueType": "item-string",
             "value": ""
           },
           {
             "id": "5",
             "name": "clip",
             "refType": "output",
-            "valueType": "item-default",
+            "valueType": "item-string",
             "value": ""
           },
           {
             "id": "6",
             "name": "selectName",
             "refType": "value",
-            "valueType": "item-dropdown",
+            "valueType": "item-enum",
             "value": "select1|select2|select3"
           },
           {

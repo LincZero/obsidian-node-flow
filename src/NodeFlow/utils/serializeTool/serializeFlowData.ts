@@ -35,7 +35,7 @@ function serializeFlowData_listitem(jsonData: any) {
     // Handle
     for (let socket of node.data.items) {
       newText += `    - ${socket.id}${socket.id==socket.name?'':':'+socket.name}, \
-${(socket.refType=='v'||socket.refType=='value')?'':socket.refType}${socket.valueType=='item-default'?'':':'+socket.valueType}\
+${(socket.refType=='v'||socket.refType=='value')?'':socket.refType}${socket.valueType=='item-string'?'':':'+socket.valueType}\
 ${(socket.value.trim()=='')?'':', '+socket.value}\n`
     }
   }

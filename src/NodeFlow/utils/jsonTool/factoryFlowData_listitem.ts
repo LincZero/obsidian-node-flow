@@ -276,7 +276,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
             type: 'socket',
             // @ts-ignore type类型不对
             refType: (ll_content[1]&&['i','input','o','output','v','value','io'].includes(ll_content[1][0]))?ll_content[1][0]:'value',
-            valueType: (ll_content[1]&&ll_content[1][1])?ll_content[1][1]:'item-default',
+            valueType: (ll_content[1]&&ll_content[1][1])?ll_content[1][1]:'item-string',
             id: ll_content[0][0],
             name: ll_content[0][1]??ll_content[0][0],
             parentId: '', parent: null,
@@ -375,7 +375,7 @@ export const testData_listitem = `\
     - v6:, :item-markdown, only value
       **v6-1**
       *v6-2*
-    - v7, :item-dropdown, option1|option2|option3
+    - v7, :item-enum, option1|option2|option3
     - v8 only name, 
     - v9, :item-item, l
       - only name2, i

@@ -31,8 +31,8 @@ Item类型的节点
         <div v-for="(item,index) in data.items" :class="'line node-item '+item.refType">
           <ItemNodeSlot :index="index" :item="item">
             <template #item-item="props"><ItemNode :id="props.data.id" :data="props.data" :is-item="true"></ItemNode></template> <!-- 特殊节点项，节点也是节点项 -->
-            <template #item-default="props"><DefaultItem :data="props.data"></DefaultItem></template>
-            <template #item-dropdown="props"><DropdownItem :data="props.data"></DropdownItem></template>
+            <template #item-string="props"><StringItem :data="props.data"></StringItem></template>
+            <template #item-enum="props"><EnumItem :data="props.data"></EnumItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
@@ -73,8 +73,8 @@ const valueItems = computed(() => props.data.items.filter((item:any) => item.ref
 
 // ItemNode                                                     // 自包含节点项
 import ItemNodeSlot from "../nodeItem/ItemNodeSlot.vue"
-import DefaultItem from "../nodeItem/string/DefaultItem.vue"    // 默认项
-import DropdownItem from "../nodeItem/string/DropdownItem.vue"  // 下拉项
+import StringItem from "../nodeItem/base/StringItem.vue"        // 字符串项/默认项
+import EnumItem from "../nodeItem/base/EnumItem.vue"            // 枚举项/下拉项
 import ColorItem from "../nodeItem/color/ColorItem.vue"         // 颜色项
 import MarkdownItem from "../nodeItem/view/MarkdownItem.vue"    // Markdown项
 import DebugItem from "../nodeItem/feat/DebugItem.vue"          // 调试项

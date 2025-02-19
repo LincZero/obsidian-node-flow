@@ -1,7 +1,7 @@
-<!-- 下拉项 -->
+<!-- 枚举项/下拉项 -->
 
 <template>
-  <div :class="'dropdown-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
+  <div :class="'enum-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div v-if="props.data.value" class="node-item-value" :style="'background:'+props.data.value">
       <select v-model="enum_current">
@@ -36,7 +36,7 @@ const enum_current = ref<string>(enum_data.value[0])
 </script>
 
 <style scoped>
-.dropdown-item {
+.enum-item {
   /* layout 20+2+2 */
   box-sizing: border-box;
   height: auto;
@@ -44,13 +44,13 @@ const enum_current = ref<string>(enum_data.value[0])
 
   padding: 0px 0px;
 }
-.dropdown-item .node-item-name {
+.enum-item .node-item-name {
   height: 24px;
 
   padding: 2px 0px;
   line-height: calc(24px - 4px);
 }
-.dropdown-item .node-item-value {
+.enum-item .node-item-value {
   height: 24px;
   padding: 0px 0px;
   
@@ -59,7 +59,7 @@ const enum_current = ref<string>(enum_data.value[0])
   box-shadow: none;
   background: none;
 }
-.dropdown-item .node-item-value select {
+.enum-item .node-item-value select {
   height: 100%;
   margin: 0;
   padding: 2px 4px 2px 10px;

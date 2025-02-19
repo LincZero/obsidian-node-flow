@@ -15,8 +15,8 @@
     :indexAttr="index"
     :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
     :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'target-'+index).toLowerCase().charCodeAt(0)%20"
-    :type-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default')"
-    :type-map-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
+    :type-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-string')"
+    :type-map-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-string').toLowerCase().charCodeAt(6)%20"
     type="target"
     :position="Position.Left" />
   <Handle
@@ -27,8 +27,8 @@
     :indexAttr="index"
     :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
     :nameMapAttr="(item.hasOwnProperty('id')?item['id']:'source-'+index).toLowerCase().charCodeAt(0)%20"
-    :type-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default')"
-    :type-map-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-default').toLowerCase().charCodeAt(6)%20"
+    :type-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-string')"
+    :type-map-attr="(item.hasOwnProperty('valueType')?item['valueType']:'item-string').toLowerCase().charCodeAt(6)%20"
     type="source"
     :position="Position.Right" />
   <slot :name="props.item.valueType" :id="props.item.id" :data="props.item"></slot>
