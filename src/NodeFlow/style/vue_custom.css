@@ -356,7 +356,26 @@
   height: 100%;
   width: 100%;
   border-radius: 8px;
+}
+
+.item-node > .node-main {
   box-shadow: 3px 3px 10px 2px #111;
+}
+
+.item-node > .node-main.running {
+  box-shadow: 0 0 8px 3px green;
+}
+
+.item-node > .node-main.none {
+  box-shadow: 3px 3px 10px 2px #111;
+}
+
+.item-node > .node-main.error {
+  box-shadow: 0 0 8px 3px red;
+}
+
+.item-node > .node-main.over {
+  box-shadow: 0 0 6px 1px cyan;
 }
 
 .item-node > .node-main > .node-title {

@@ -12,6 +12,7 @@
       <div><button @click="findStartNode">Get_StartNodes</button></div>
       <div><button @click="findRunList">Get_RunList</button></div>
       <div><button @click="startRunList">Start_RunList</button></div>
+      <div><button @click="clearAllNodesState">Clear_State</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -72,11 +73,17 @@ function findRunList() {
 /// 在 `findRunList` 的基础上，进行运行
 async function startRunList() {
   const runList = findRunList()
+  for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
   for (const nodeId of runList) {
     const data = findNode(nodeId).data
-    data.isRunning = true; updateNodeData(nodeId, data);
+    data.runState = 'running'; updateNodeData(nodeId, data);
     await new Promise(resolve => setTimeout(resolve, 500)); // delay
   }
+}
+
+/// 功能 - 清除所有节点的状态 (往往运行前需要这个)
+function clearAllNodesState() {
+  for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
 }
 </script>
 

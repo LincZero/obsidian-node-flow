@@ -344,7 +344,13 @@
     height: 100%;
     width: 100%;
     border-radius: 8px;
-    box-shadow: 3px 3px 10px 2px #111;
+
+    & { box-shadow: 3px 3px 10px 2px #111; }
+    &.running { box-shadow: 0 0 8px 3px green; }
+    &.none { box-shadow: 3px 3px 10px 2px #111; }
+    &.error { box-shadow: 0 0 8px 3px red; }
+    &.over { box-shadow: 0 0 6px 1px cyan; } // 就续态 (运行结束/运行前) 的样式可以浅点
+
     >.node-title {
       height: 30px;
       line-height: 30px;

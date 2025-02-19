@@ -27,7 +27,7 @@ import {
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
   useEdge, useVueFlow,
 } from '@vue-flow/core'
-const { updateNodeData, getConnectedEdges } = useVueFlow()
+const { updateNodeData, getConnectedEdges, nodes } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
@@ -37,7 +37,8 @@ const _useTargetNodesData: ComputedRef<any> = useNodesData(() => _useTargetConne
 
 // 流程控制 - 最开始
 const debugConsole_start = async () => {
-  _useNodesData.value.data.isRunning = true; updateNodeData(_useNodeId, _useNodesData.value.data);
+  for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
+  _useNodesData.value.data.runState = 'running'; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 
 // 流程控制 - 执行主要操作、触发下一节点
@@ -46,21 +47,20 @@ const debugConsole = async () => {
   // ... 其他操作 // [!code]
   await new Promise(resolve => setTimeout(resolve, 1000)); // delay 1000ms
   console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
-  _useNodesData.value.data.isRunning = false; updateNodeData(_useNodeId, _useNodesData.value.data);
+  _useNodesData.value.data.runState = 'over'; updateNodeData(_useNodeId, _useNodesData.value.data);
 
   // 然后尝试运行下一个节点的debugConsole
   if (_useTargetNodesData.value.length > 0) {
-    _useTargetNodesData.value[0].data.isRunning = true; updateNodeData(_useTargetNodesData.value[0].id, _useTargetNodesData.value[0].data);
+    _useTargetNodesData.value[0].data.runState = 'running'; updateNodeData(_useTargetNodesData.value[0].id, _useTargetNodesData.value[0].data);
   } else {
     console.log(`debugConsole, end`);
   } 
 };
 
 // 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
-_useNodesData.value.data['isRunning'] = false
-// let ref_isRunning = ref<boolean>(props.data['isRunning'])
-watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.isRunning
-  if (newVal.data.isRunning == true) {
+_useNodesData.value.data['runState'] = 'none'
+watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
+  if (newVal.data.runState == 'running') {
     debugConsole();
   }
 });
