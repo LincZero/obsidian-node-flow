@@ -1,4 +1,8 @@
-# README
+# 节点
+
+## 命名
+
+均以 `Node` 结尾
 
 ## ItemNode
 

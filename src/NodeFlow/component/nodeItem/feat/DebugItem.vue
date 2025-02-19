@@ -19,23 +19,25 @@
   <div :class="'debug-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div class="node-item-value">
-      <div><span>---TheNode-----</span></div>
+      <div><span>---The Node-----</span></div>
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
       <div><button @click="console.log(_useNode)">Node</button></div>
       <div><button @click="console.log(_useNodesData)">NodesData</button></div>
       <div><button @click="console.log(findNode(_useNodeId))">Node Fined</button></div>
       <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
-      <div><span>---TheHandle---</span></div>
+      <div><span>---The Handle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
-      <div><span>---OutNode-----</span></div>
+      <div><span>---Near Node----</span></div>
       <div><button @click="console.log(_useSourceNodesData)">SourceNodesData</button></div>
       <div><button @click="console.log(_useTargetNodesData)">TargetNodesData</button></div>
-      <div><span>---OutHandle---</span></div>
+      <div><span>---Near Handle--</span></div>
       <div><button @click="console.log(_useSourceConnections)">SourceConnections</button></div>
       <div><button @click="console.log(_useTargetConnections)">TargetConnections</button></div>
-      <div><span>---OutEdge-----</span></div>
+      <div><span>---Near Edge----</span></div>
       <div><button @click="console.log(_getEdges)">GetEdges</button></div>
       <div><button @click="console.log(_useEdgesData1)">EdgesData1</button></div>
+      <div><span>---All Node-----</span></div>
+      <div><button @click="console.log(nodes)">Nodes</button></div> <!--无嵌套结构-->
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -58,7 +60,7 @@ import {
   useEdgesData,
   type GraphEdge,
 } from '@vue-flow/core'
-const { updateNodeData, getConnectedEdges, findNode } = useVueFlow()
+const { getConnectedEdges, findNode, nodes } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)

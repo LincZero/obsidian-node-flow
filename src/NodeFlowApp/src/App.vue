@@ -24,7 +24,7 @@ const nfData_resultContent_ = computed(() => {
 })
 const nfData_resultContent = ref(nfData_resultContent_.value.data)
 watch(nfData_resultContent_, (newResult) => {
-  console.log("[debug] update")
+  console.log("[debug] json string changed, update view")
   nfData_resultContent.value = newResult.data
   componentKey.value += 1
 }, { immediate: true })

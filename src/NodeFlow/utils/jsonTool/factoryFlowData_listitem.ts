@@ -249,6 +249,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
          *   节点 `id(:name)?`
          *   接口 `id(:name), (i|o|v|""), (value)=""`
          *   线条 `from, from socket, to, to socket, (name)?`
+         *   特殊(节点项为节点的递归包含) `id(:name)`, 但缩进更大
          */
         let ll_content:string[][] = []
         const content = current_content
@@ -259,37 +260,51 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
         // 线
         if (ll_content[3]) {
           current_item.self_data = {
-            type: "edge",
-            id: ""+edge_id++,
-            parentId: "", parent: null,
+            type: 'edge',
+            id: ''+edge_id++,
+            parentId: '', parent: null,
             from_node: ll_content[0][0],
             from_socket: ll_content[1][0],
             to_node: ll_content[2][0],
             to_socket: ll_content[3][0],
-            name: ll_content[4]?ll_content[4][0]:"", // TODO 思考后续要不要为了语法统一性放最前面
+            name: ll_content[4]?ll_content[4][0]:'', // TODO 思考后续要不要为了语法统一性放最前面
           }
         }
         // socket
         else if (ll_content[1]) {
           current_item.self_data = {
-            type: "socket",
+            type: 'socket',
             // @ts-ignore type类型不对
-            refType: (ll_content[1]&&["i","input","o","output","v","value","io"].includes(ll_content[1][0]))?ll_content[1][0]:"value",
-            valueType: (ll_content[1]&&ll_content[1][1])?ll_content[1][1]:"item-default",
+            refType: (ll_content[1]&&['i','input','o','output','v','value','io'].includes(ll_content[1][0]))?ll_content[1][0]:'value',
+            valueType: (ll_content[1]&&ll_content[1][1])?ll_content[1][1]:'item-default',
             id: ll_content[0][0],
             name: ll_content[0][1]??ll_content[0][0],
-            parentId: "", parent: null,
-            value: l_content[2] ? l_content[2].trim() : "", // 这里不要被 `:` 切分，有可能是url来的
+            parentId: '', parent: null,
+            value: l_content[2] ? l_content[2].trim() : '', // 这里不要被 `:` 切分，有可能是url来的
+            items: []
+          }
+        }
+        // node-item (special)。node类型且不是根节点时，会转换为 (itemType为socket, valueType为item-item) 的节点项
+        else if (ll_content[0] && ll_content[0][0] != '' && current_level > 1) {
+          current_item.self_data = {
+            type: 'socket',
+            // @ts-ignore type类型不对
+            refType: 'v',
+            valueType: 'item-item',
+            id: ll_content[0][0],
+            name: ll_content[0][1]??ll_content[0][0],
+            parentId: '', parent: null,
+            value: '',
             items: []
           }
         }
         // node
-        else if (ll_content[0] && ll_content[0][0] != "") {
+        else if (ll_content[0] && ll_content[0][0] != '') {
           current_item.self_data = {
-            type: "node",
+            type: 'node',
             id: ll_content[0][0],
             name: ll_content[0][1]??ll_content[0][0],
-            parentId: "", parent: null,
+            parentId: '', parent: null,
             items: []
           }
         }
