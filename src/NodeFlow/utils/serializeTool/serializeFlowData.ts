@@ -25,6 +25,7 @@ function serializeFlowData_item(jsonData: any) {
 }
 
 // 暂时不支持嵌套nodeitem
+// 为了简化，默认值会忽略掉
 function serializeFlowData_listitem(jsonData: any) {
   let newText = ""
   newText += "- nodes\n"
@@ -33,7 +34,9 @@ function serializeFlowData_listitem(jsonData: any) {
     newText += `  - ${node.id}${node.id==node.data.label?'':':'+node.data.label}\n`
     // Handle
     for (let socket of node.data.items) {
-      newText += `    - ${socket.id}${socket.id==socket.name?'':':'+socket.name}, ${socket.refType=='v'?'':socket.refType}:${socket.valueType}, ${socket.value}\n`
+      newText += `    - ${socket.id}${socket.id==socket.name?'':':'+socket.name}, \
+${(socket.refType=='v'||socket.refType=='value')?'':socket.refType}${socket.valueType=='item-default'?'':':'+socket.valueType}\
+${(socket.value.trim()=='')?'':', '+socket.value}\n`
     }
   }
   newText += "- edges\n"

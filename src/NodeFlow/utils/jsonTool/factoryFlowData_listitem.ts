@@ -377,26 +377,26 @@ export const testData_listitem2 = `\
 - nodes
   - 运行一
     - Flow:空流程, io:item-flow, 
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i, 
+    - 空节点o, o, 
     - color, value:item-color, #0ff
   - 运行二
     - FlowDelay:延时, io:item-flowdelay, 2000
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i, 
+    - 空节点o, o, 
   - 运行三
     - FlowReq:Http请求, io:item-flowreq, 
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i, 
+    - 空节点o, o, 
   - 运行四
     - FlowEval:执行任意代码, io:item-floweval, console.log('debug output')
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i, 
+    - 空节点o, o, 
     - debug, value:item-debug, 
   - 运行三2:运行三
     - FlowReq:Http请求, io:item-flowreq, http://127.0.0.1:9863/test
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i, 
+    - 空节点o, o, 
 - edges
   - 运行三, FlowReq, 运行四, FlowEval
   - 运行一, Flow, 运行二, FlowDelay
@@ -495,36 +495,36 @@ export const testData_listitemST = `\
 export const testData_listitemHttp = `\
 - nodes
   - 运行一
-    - Flow:空流程, o:item-flowstart, 
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - Flow:空流程, o:item-flowstart
+    - 空节点i, i
+    - 空节点o, o
     - color, value:item-color, #0ff
   - 运行二
     - FlowDelay:延时, io:item-flowdelay, 2000
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i
+    - 空节点o, o
   - 运行三
     - FlowReq:Http请求, io:item-flowreq, 
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i
+    - 空节点o, o
   - 运行三2:运行三
     - flow1:Http请求, i:item-flow
     - flow2:成功, o:item-flow
     - flow3:失败, o:item-flow
     - str:web, i, http://127.0.0.1:9863/test
     - json1:请求, i, {}
-    - json:结果, o, 
+    - json:结果, o
   - 信息体
-    - json, o,
-    - 1,, 这里可以是一个可视化的json编辑器
+    - json, o
+    - 1, , 这里可以是一个可视化的json编辑器
   - 运行四
     - FlowEval:执行任意代码, io:item-floweval, console.log('debug output')
-    - 空节点i, i:item-default, 
-    - 空节点o, o:item-default, 
+    - 空节点i, i
+    - 空节点o, o
     - debug, value:item-debug, 
   - Json显示
-    - json, i,
-    - text: ,, {}TODO这个部分的内容不应该被保存
+    - json, i
+    - text:, , {}TODO这个部分的内容不应该被保存
 - edges
   - 信息体, json, 运行三2, json1
   - 运行一, Flow, 运行二, FlowDelay
