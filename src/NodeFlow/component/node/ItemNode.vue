@@ -75,12 +75,12 @@ import DefaultItem from "../nodeItem/string/DefaultItem.vue"    // 默认项
 import DropdownItem from "../nodeItem/string/DropdownItem.vue"  // 下拉项
 import ColorItem from "../nodeItem/color/ColorItem.vue"         // 颜色项
 import MarkdownItem from "../nodeItem/view/MarkdownItem.vue"    // Markdown项
-import DebugItem from "../nodeItem/view/DebugItem.vue"          // 调试项
-import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项0
-import FlowStartItem from "../nodeItem/flow/FlowStartItem.vue"  // 流程控制项1
-import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项2
-import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项3
-import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制项4
+import DebugItem from "../nodeItem/feat/DebugItem.vue"          // 调试项
+import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项 - 空，不作为
+import FlowStartItem from "../nodeItem/flow/FlowStartItem.vue"  // 流程控制项 - 开始，有开始按钮
+import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项 - 延迟
+import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项 - 网络请求
+import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制项 - 执行任意代码
 
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
