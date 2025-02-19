@@ -15,7 +15,7 @@ const nfData = ref<any>({
   rawContent: ""
 })
 
-// 1.4 节点流数据 - 解析
+// 节点流数据 - 解析
 import { factoryFlowData } from '../../NodeFlow/utils/jsonTool/factoryFlowData'
 import NodeFlowContainerS from '../../NodeFlow/component/container/NodeFlowContainerS.vue';
 const componentKey = ref(0) // 用于强制刷新
@@ -28,6 +28,11 @@ watch(nfData_resultContent_, (newResult) => {
   nfData_resultContent.value = newResult.data
   componentKey.value += 1
 }, { immediate: true })
+
+// 节点流数据 - 保存
+function fn_save (str: string): void {
+  nfData.value.rawContent = str
+}
 </script>
 
 <template>
@@ -53,7 +58,7 @@ watch(nfData_resultContent_, (newResult) => {
         :jsonType="nfData.type"
         :jsonData="nfData_resultContent"
         :fn_newView="async ()=>{}"
-        :fn_save="()=>{}"
+        :fn_save="fn_save"
         :isMini="false"
       ></NodeFlowContainerS>
     </template>

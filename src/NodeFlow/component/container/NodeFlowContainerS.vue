@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 // 自身属性、通用导入
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   rawData?: string,     // 仅打印用
   mdData?: string,      // 仅打印用
   jsonType?: string,    // 仅打印、序列化用
@@ -53,7 +53,13 @@ const props = defineProps<{
   isMini: boolean,
   fn_newView?: () => Promise<void>, // 在新视图中显示画布
   fn_save?: (str: string) => void,  // 保存
-}>()
+}>(), {
+  rawData: "",
+  mdData: "",
+  jsonType: "",
+  fn_newView: async ()=>{},
+  fn_save: ()=>{}
+})
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
 const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
