@@ -23,7 +23,7 @@ import { useNode, useVueFlow } from '@vue-flow/core'
 const { updateNodeData } = useVueFlow()
 if (!props.data.value) props.data.value = ''
 const writable_value = computed({
-  get: () => props.data.value,
+  get: () => props.data.cacheValue ?? props.data.value,
   set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
 })
 

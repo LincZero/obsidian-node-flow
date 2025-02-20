@@ -17,7 +17,7 @@ export function useFlowControl(thisId: string, _useSourceConnections: any, _useT
       let sourceValue = ""
       for (const item of sourceItems) {
         if (item.id == connection.sourceHandle) {
-          sourceValue = item.value
+          sourceValue = item.cacheValue ?? item.value // cahceView > defaultView(value)
           break
         }
       }
@@ -25,7 +25,7 @@ export function useFlowControl(thisId: string, _useSourceConnections: any, _useT
       const thisItems = thisNode.data.items
       for (const item of thisItems) {
         if (item.id == connection.targetHandle) {
-          item.value = sourceValue
+          item.cacheValue = sourceValue // cahceView > defaultView(value)
           break
         }
       }
