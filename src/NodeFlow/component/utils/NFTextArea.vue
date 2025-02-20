@@ -19,11 +19,9 @@ const props = withDefaults(defineProps<{
 })
 
 // 可写属性
-import { useNode, useVueFlow } from '@vue-flow/core'
-const { updateNodeData } = useVueFlow()
 if (!props.data.value) props.data.value = ''
 const writable_value = computed({
-  get: () => props.data.cacheValue ?? props.data.value,
+  get: () => props.data.value,
   set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
 })
 
@@ -67,6 +65,7 @@ function handleInput(e:any) {
     spellcheck="false"
     @input="handleInput"
     ref="TextArea3"
+    :title="'cacheValue: '+data.cacheValue"
   ></textarea>
 </template>
 

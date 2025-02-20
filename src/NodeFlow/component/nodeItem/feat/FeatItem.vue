@@ -9,10 +9,10 @@
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div class="node-item-value">
       <div><span>---All--------</span></div>
-      <div><button @click="findStartNode">Get_StartNodes</button></div>
-      <div><button @click="findRunList">Get_RunList</button></div>
-      <div><button @click="startRunList">Start_RunList</button></div>
-      <div><button @click="clearAllNodesState">Clear_State</button></div>
+      <div><button @click="findStartNode()">Get_StartNodes</button></div>
+      <div><button @click="orderRunList(findStartNode())">Get_RunList</button></div>
+      <div><button @click="startRunList()">Start_RunList</button></div>
+      <div><button @click="clearAllNodesState()">Clear_State</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -44,10 +44,9 @@ function findStartNode() {
   return startList
 }
 
-/// 功能 - 寻找运行队列
-/// 其实就是在 `findStartNode` 的基础上，把有 `流程节点项` 的节点顺序往后排序
-function findRunList() {
-  const oldList = findStartNode()
+/// 功能 - 排序运行队列
+/// 把有 `流程节点项` 的节点顺序往后排序
+function orderRunList(oldList: Set<string>) {
   const firstList = []
   const secondList = []
 
@@ -72,7 +71,7 @@ function findRunList() {
 /// 功能 - 开始运行队列
 /// 在 `findRunList` 的基础上，进行运行
 async function startRunList() {
-  const runList = findRunList()
+  const runList = orderRunList(findStartNode())
   for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
   for (const nodeId of runList) {
     const data = findNode(nodeId).data
