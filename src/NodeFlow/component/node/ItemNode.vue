@@ -37,8 +37,8 @@ Item类型的节点
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
             <template #item-feat="props"><FeatItem :data="props.data"></FeatItem></template>
+            <template #item-start="props"><StartItem :data="props.data"></StartItem></template>
             <template #item-fdefault="props"><FDefaultItem :data="props.data"></FDefaultItem></template>
-            <template #item-flowstart="props"><FlowStartItem :data="props.data"></FlowStartItem></template>
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
             <template #item-flowreq="props"><FlowReqItem :data="props.data"></FlowReqItem></template>
@@ -78,11 +78,11 @@ import StringItem from "../nodeItem/base/StringItem.vue"        // 字符串项/
 import EnumItem from "../nodeItem/base/EnumItem.vue"            // 枚举项/下拉项
 import ColorItem from "../nodeItem/color/ColorItem.vue"         // 颜色项
 import MarkdownItem from "../nodeItem/view/MarkdownItem.vue"    // Markdown项
-import DebugItem from "../nodeItem/feat/DebugItem.vue"          // 调试项
-import FeatItem from "../nodeItem/feat/FeatItem.vue"            // 功能项
+import DebugItem from "../nodeItem/feat/DebugItem.vue"          // 功能项 - 调试
+import FeatItem from "../nodeItem/feat/FeatItem.vue"            // 功能项 - 流程功能
+import StartItem from "../nodeItem/feat/StartItem.vue"          // 功能项 - 开始，有开始按钮
 import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项 - 空，不作为
 import FDefaultItem from "../nodeItem/flow/FDefaultItem.vue"    // 流程控制项 - 默认，没有flow类型项时的行为
-import FlowStartItem from "../nodeItem/flow/FlowStartItem.vue"  // 流程控制项 - 开始，有开始按钮
 import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项 - 延迟
 import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项 - 网络请求
 import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制项 - 执行任意代码

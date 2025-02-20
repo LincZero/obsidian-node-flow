@@ -414,14 +414,15 @@ export const testData_listitem2 = `\
     - 空节点i, i
     - 空节点o, o
   - t1
-    - flowStart, o:item-flowstart
+    - flowStart, :item-start
+    - fDefault, :item-fdefault
     - o, o, testData
   - t2
-    - fDefault, :item-fdefault, ffd
+    - fDefault, :item-fdefault
     - o, i, none
     - oo, o, test222
   - t3
-    - fDefault, :item-fdefault, ffd
+    - fDefault, :item-fdefault
     - o, i, none
     - , :item-debug
 - edges
@@ -439,7 +440,8 @@ export const testData_listitemRPC = `\
 - nodes
   - ST模拟
     - 流程模板,, 开始
-    - flow2:开始, o:item-flowstart
+    - flow2:开始, :item-start
+    - fDefault, :item-fdefault
   - 本地机器
     - 机器, o
     - 地址,, 0.0.0.0
@@ -525,7 +527,8 @@ export const testData_listitemRPC = `\
 export const testData_listitemHttp = `\
 - nodes
   - 运行一
-    - Flow:空流程, o:item-flowstart
+    - Flow:开始, o:item-start
+    - fDefault, :item-fdefault
     - 空节点i, i
     - 空节点o, o
     - color, value:item-color, #0ff
