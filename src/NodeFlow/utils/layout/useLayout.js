@@ -31,6 +31,7 @@ import { ref } from 'vue'
  */
 export function useLayout() {
   // 闭包环境 (这些变量会在每个返回的layout闭包实体中单独存一份，且因为layout闭包实体而延长生命周期)
+  // 而且 useVueFlow 要在 setup 阶段被运行
   const { findNode } = useVueFlow()
   const graph = ref(new dagre.graphlib.Graph())
   const previousDirection = ref('LR')

@@ -75,7 +75,7 @@ export function factoryFlowData_listitem(md:string): {code: number, msg: string,
   if (md.startsWith("demo")) {
     if (md == "demo") { md = testData_listitem }
     else if (md == "demo2") { md = testData_listitem2 }
-    else if (md == "demoST") { md = testData_listitemST }
+    else if (md == "demoRPC") { md = testData_listitemRPC }
     else if (md == "demoHttp") { md = testData_listitemHttp }
     else { return {code: -1, msg: "error demo: "+md, data: {}}  }
   }
@@ -391,37 +391,51 @@ export const testData_listitem = `\
 export const testData_listitem2 = `\
 - nodes
   - 运行一
-    - Flow:空流程, io:item-flow, 
-    - 空节点i, i, 
-    - 空节点o, o, 
-    - color, value:item-color, #0ff
+    - Flow:空流程, io:item-flow
+    - 空节点i, i
+    - 空节点o, o
+    - color, :item-color, #0ff
   - 运行二
     - FlowDelay:延时, io:item-flowdelay, 2000
-    - 空节点i, i, 
-    - 空节点o, o, 
+    - 空节点i, i
+    - 空节点o, o
   - 运行三
-    - FlowReq:Http请求, io:item-flowreq, 
-    - 空节点i, i, 
-    - 空节点o, o, 
+    - FlowReq:Http请求, io:item-flowreq, https://httpbin.org/get
+    - 空节点i, i
+    - 空节点o, o
   - 运行四
     - FlowEval:执行任意代码, io:item-floweval, console.log('debug output')
-    - 空节点i, i, 
-    - 空节点o, o, 
-    - debug, value:item-debug, 
-    - feat, value:item-feat, 
+    - 空节点i, i
+    - 空节点o, o
+    - debug, :item-debug
+    - feat, :item-feat
   - 运行三2:运行三
     - FlowReq:Http请求, io:item-flowreq, http://127.0.0.1:9863/test
-    - 空节点i, i, 
-    - 空节点o, o, 
+    - 空节点i, i
+    - 空节点o, o
+  - t1
+    - flowStart, o:item-flowstart
+    - o, o, testData
+  - t2
+    - fDefault, :item-fdefault, ffd
+    - o, i, none
+    - oo, o, test222
+  - t3
+    - fDefault, :item-fdefault, ffd
+    - o, i, none
+    - , :item-debug
 - edges
   - 运行三, FlowReq, 运行四, FlowEval
   - 运行一, Flow, 运行二, FlowDelay
   - 运行二, FlowDelay, 运行三, FlowReq
   - 运行一, 空节点o, 运行二, 空节点i
+  - t1, o, t2, o
+  - t2, oo, t3, o
+
 `
 
 // 隐藏，仅自用。用于某个应用软件
-export const testData_listitemST = `\
+export const testData_listitemRPC = `\
 - nodes
   - ST模拟
     - 流程模板,, 开始
@@ -531,6 +545,7 @@ export const testData_listitemHttp = `\
     - json1:请求, i, {}
     - json:结果, o
   - 信息体
+    - fdefault, :item-fdefault
     - json, o
     - 1, , 这里可以是一个可视化的json编辑器
   - 运行四
@@ -538,6 +553,9 @@ export const testData_listitemHttp = `\
     - 空节点i, i
     - 空节点o, o
     - debug, value:item-debug, 
+    - feat, value:item-feat, 
+  - 运行五
+    - FlowEval:执行任意代码, io:item-floweval, console.error('debug failed')
   - Json显示
     - json, i
     - text:, , {}TODO这个部分的内容不应该被保存
@@ -548,5 +566,6 @@ export const testData_listitemHttp = `\
   - 运行二, FlowDelay, 运行三, FlowReq
   - 运行三, FlowReq, 运行三2, flow1
   - 运行三2, flow2, 运行四, FlowEval
+  - 运行三2, flow3, 运行五, FlowEval
   - 运行三2, json, Json显示, json
 `

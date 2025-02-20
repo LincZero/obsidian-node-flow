@@ -4,6 +4,8 @@
 不以 Flow 开头是因为流程控制项是比数据项要慢触发的，依靠flow前缀来识别是否是标准的带流程控制的项
 
 而这个本质不是流程控制来的，是用来给没有流程控制项的节点一个默认行为的东西
+
+激发器：激发该节点的所有下级节点
 -->
 
 <template>
@@ -26,66 +28,22 @@ import {
   useNodeConnections,               // Near。注意: useHandleConnections API弃用，用useNodeConnections替代
   useVueFlow,
 } from '@vue-flow/core'
-const { updateNodeData, findNode } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
-
 const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
-const sourceNodesId: string[] = Array.from(new Set(_useSourceConnections.value.map((connection:any) => connection.source)))
-const _useSourceNodesData: ComputedRef<any> = useNodesData(sourceNodesId)
-
 const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
-const targetNodesId: string[] = Array.from(new Set(_useTargetConnections.value.map((connection:any) => connection.target)))
-const _useTargetNodesData: ComputedRef<any> = useNodesData(targetNodesId)
 
-// 流程控制 - 执行主要操作、触发下一节点
-const debugConsole = async () => {
-  // 该节点的操作
-  // ... 其他操作 // [!code]
-
-  // 获取上一个节点的值
-  // TODO
-  // 不过这里很烦，不能直接获取，要绕个大弯。有非常大的优化空间：
-  // 一是item的寻找速度可以优化，用key-value
-  for (const connection of _useSourceConnections.value) {
-    const sourceNode = findNode(connection.source)
-    const sourceItems = sourceNode.data.items
-    let sourceValue = ""
-    for (const item of sourceItems) {
-      if (item.id == connection.sourceHandle) {
-        console.log("ttt", item, item.value, item.id, item.valueType)
-        sourceValue = item.value
-        break
-      }
-    }
-
-    const thisNode = findNode(_useNodeId)
-    const thisItems = thisNode.data.items
-    for (const item of thisItems) {
-      if (item.id == connection.targetHandle) {
-        item.value = sourceValue
-        break
-      }
-    }
-  }
-  _useNodesData.value.data.runState = 'over'; updateNodeData(_useNodeId, _useNodesData.value.data);
-
-  // 然后尝试运行下一个节点的debugConsole
-  if (_useTargetNodesData.value.length > 0) {
-    _useTargetNodesData.value[0].data.runState = 'running'; updateNodeData(_useTargetNodesData.value[0].id, _useTargetNodesData.value[0].data);
-  } else {
-    console.log(`debugConsole, end`);
-  } 
-};
+// 流程控制 - 操作
+import { useFlowControl } from './useFlowControl'
+const flowControl = useFlowControl(_useNodeId, _useSourceConnections, _useTargetConnections)
 
 // 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
 _useNodesData.value.data['runState'] = 'none'
 watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   if (newVal.data.runState == 'running') {
-    debugConsole();
+    flowControl();
   }
 });
-
 </script>
 
 <style scoped>
@@ -113,3 +71,4 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   cursor: pointer;
 }
 </style>
+./useFlowControl

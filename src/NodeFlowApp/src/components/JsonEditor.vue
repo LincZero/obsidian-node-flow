@@ -12,15 +12,15 @@ import { testData_vueflow, testData_vueflow_withoutPos, testData_vueflow_customN
 import { testData_list } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_list'
 import { testData_itemData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_item'
 const nfData_enum = [
-  { 'name': 'nodeflow-listitem-demo1', 'type': 'nodeflow-listitem', 'content': testData_listitem },
-  { 'name': 'nodeflow-listitem-demo2', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
-  { 'name': 'nodeflow-listitem-demoHttp', 'type': 'nodeflow-listitem', 'content': testData_listitemHttp },
-  { 'name': 'nodeflow-obcanvas-demo', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
-  { 'name': 'nodeflow-vueflow-demo1', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow, null, 2) },
-  { 'name': 'nodeflow-vueflow-demo2', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },
-  { 'name': 'nodeflow-vueflow-demo3', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_customNode, null, 2) },
-  { 'name': 'nodeflow-list-demo', 'type': 'nodeflow-list', 'content': testData_list },
-  { 'name': 'nodeflow-item-demo', 'type': 'nodeflow-item', 'content': JSON.stringify(testData_itemData, null, 2) },
+  { 'name': 'listitem-nest', 'type': 'nodeflow-listitem', 'content': testData_listitem },
+  { 'name': 'listitem-http-old', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
+  { 'name': 'listitem-http-new', 'type': 'nodeflow-listitem', 'content': testData_listitemHttp },
+  { 'name': 'obcanvas', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
+  { 'name': 'vueflow', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow, null, 2) },
+  { 'name': 'vueflow-autoPos', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },
+  { 'name': 'vueflow-custom', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_customNode, null, 2) },
+  { 'name': 'list', 'type': 'nodeflow-list', 'content': testData_list },
+  { 'name': 'item-moreType', 'type': 'nodeflow-item', 'content': JSON.stringify(testData_itemData, null, 2) },
 ]
 function onSelect(event: any) {
   const index = event.target.value

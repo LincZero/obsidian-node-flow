@@ -24,8 +24,9 @@
       <div><span>---The Node-----</span></div>
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
       <div><button @click="console.log(_useNode)">Node</button></div>
+      <!-- Node Find 数据覆盖面上多于 NodesData -->
       <div><button @click="console.log(_useNodesData)">NodesData</button></div>
-      <div><button @click="console.log(findNode(_useNodeId))">Node Fined</button></div>
+      <div><button @click="console.log(findNode(_useNodeId))">Node Find</button></div>
       <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
       <div><span>---The Handle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
