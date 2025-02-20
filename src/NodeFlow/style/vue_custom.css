@@ -362,6 +362,10 @@
   box-shadow: 3px 3px 10px 2px #111;
 }
 
+.item-node > .node-main.ready {
+  box-shadow: 0 0 8px 3px lightgreen;
+}
+
 .item-node > .node-main.running {
   box-shadow: 0 0 8px 3px green;
 }
@@ -372,6 +376,10 @@
 
 .item-node > .node-main .node-state {
   background-color: #666666;
+}
+
+.item-node > .node-main.ready .node-state {
+  background-color: lightgreen;
 }
 
 .item-node > .node-main.running .node-state {

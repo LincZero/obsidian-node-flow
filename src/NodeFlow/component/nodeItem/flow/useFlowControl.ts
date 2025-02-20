@@ -13,9 +13,17 @@ export function useFlowControl(thisId: string, _useSourceConnections: any, _useT
     // 遍历所有连接线
     for (const connection of _useSourceConnections.value) {
       // 对端节点项的值
-      let sourceValue = ""
       const sourceNode = findNode(connection.source)
+      if (sourceNode.data.runState != 'over') { // 前面的节点没准备好，等待下一次被激活
+        console.warn(`#${thisId} 前面的 #${connection.source} 没准备好，等待再次被激发`)
+        // TODO 有线程冲突风险，一个方法是加个定时器待会再检查一下
+        // 好像不会变回none，好像updateNodeData重复赋值runState同一个值也会触发watch来着
+        // thisData.data.runState = 'ready'; updateNodeData(thisId, thisData.data);
+        // const thisData = findNode(thisId)
+        return
+      }
       const sourceItems = sourceNode.data.items
+      let sourceValue = ""
       for (const item of sourceItems) { // TODO socket值的获取很烦，不能直接获取，要绕个大弯。有非常大的优化空间。如item的寻找速度可以优化，用key-value
         if (item.id == connection.sourceHandle) {
           sourceValue = item.cacheValue ?? item.value // cahceView > defaultView(value)
@@ -35,8 +43,9 @@ export function useFlowControl(thisId: string, _useSourceConnections: any, _useT
     }
   
     // step2. 处理本节点
-    const result = await fn()
     const thisData = findNode(thisId)
+    thisData.data.runState = 'running'; updateNodeData(thisId, thisData.data);
+    const result = await fn()
     if (!result) {
       thisData.data.runState = 'error'; updateNodeData(thisId, thisData.data);
       return
@@ -50,7 +59,7 @@ export function useFlowControl(thisId: string, _useSourceConnections: any, _useT
     const targetNodesId: string[] = Array.from(new Set(_useTargetConnections.value.map((connection:any) => connection.target))) // 避免重复
     for (const nodeId of targetNodesId) {
       const data = findNode(nodeId).data
-      data.runState = 'running'; updateNodeData(nodeId, data);
+      data.runState = 'ready'; updateNodeData(nodeId, data);
     }
     if (targetNodesId.length == 0) {
       console.log(`flowControl, end`);

@@ -347,11 +347,13 @@
 
     & { box-shadow: 3px 3px 10px 2px #111; }
     // &.none { box-shadow: 3px 3px 10px 2px #111; }
+    &.ready { box-shadow: 0 0 8px 3px lightgreen; }
     &.running { box-shadow: 0 0 8px 3px green; }
     &.error { box-shadow: 0 0 8px 3px red; }
     // &.over { box-shadow: 0 0 6px 1px cyan; } // 就续态 (运行结束/运行前) 的样式可以浅点
     & .node-state { background-color: #666666; }
     // &.none .node-state { background-color: #666666; }
+    &.ready .node-state { background-color: lightgreen; }
     &.running .node-state { background-color: green; }
     &.error .node-state { background-color: red; }
     &.over .node-state { background-color: cyan; } // 就续态 (运行结束/运行前) 的样式可以浅点

@@ -9,8 +9,8 @@
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div class="node-item-value">
       <div><span>---All--------</span></div>
-      <div><button @click="findStartNode()">Get_StartNodes</button></div>
-      <div><button @click="orderRunList(findStartNode())">Get_RunList</button></div>
+      <div><button @click="console.log(findStartNode())">Get_StartNodes</button></div>
+      <div><button @click="console.log(orderRunList(findStartNode()))">Get_RunList</button></div>
       <div><button @click="startRunList()">Start_RunList</button></div>
       <div><button @click="clearAllNodesState()">Clear_State</button></div>
     </div>
@@ -40,7 +40,6 @@ function findStartNode() {
   for (const edge of edges.value) {
     startList.delete(edge.target)
   }
-  console.log("startList:", startList)
   return startList
 }
 
@@ -75,7 +74,7 @@ async function startRunList() {
   for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
   for (const nodeId of runList) {
     const data = findNode(nodeId).data
-    data.runState = 'running'; updateNodeData(nodeId, data);
+    data.runState = 'ready'; updateNodeData(nodeId, data);
     await new Promise(resolve => setTimeout(resolve, 500)); // delay
   }
 }

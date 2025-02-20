@@ -33,7 +33,7 @@ const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 // 流程控制 - 最开始
 const debugConsole_start = async () => {
   for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
-  _useNodesData.value.data.runState = 'running'; updateNodeData(_useNodeId, _useNodesData.value.data);
+  _useNodesData.value.data.runState = 'ready'; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 </script>
 
