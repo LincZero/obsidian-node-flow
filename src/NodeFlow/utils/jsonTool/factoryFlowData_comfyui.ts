@@ -125,7 +125,7 @@ export function factoryFlowData_comfyui(parsedData: any|string): {code: number, 
   }
 }
 
-const testData_comfyUI:object = {
+export const testData_comfyUI:object = {
   "last_node_id": 9,
   "last_link_id": 9,
   "nodes": [
@@ -375,7 +375,7 @@ const testData_comfyUI:object = {
   "version": 0.4
 }
 
-const testData_comfyUI2:object = {
+export const testData_comfyUI2:object = {
   "last_node_id": 103,
   "last_link_id": 127,
   "nodes": [

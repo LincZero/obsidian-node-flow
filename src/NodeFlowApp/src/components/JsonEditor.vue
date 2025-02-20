@@ -7,6 +7,7 @@ const props = defineProps<{
 
 // 1.1 节点流数据 - 预设
 import { testData_listitem, testData_listitem2, testData_listitemHttp } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
+import { testData_comfyUI, testData_comfyUI2 } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_comfyui'
 import { testData_obcanvas } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_obcanvas'
 import { testData_vueflow, testData_vueflow_withoutPos, testData_vueflow_customNode } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_vueflow'
 import { testData_list } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_list'
@@ -15,6 +16,8 @@ const nfData_enum = [
   { 'name': 'listitem-nest', 'type': 'nodeflow-listitem', 'content': testData_listitem },
   { 'name': 'listitem-http-old', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
   { 'name': 'listitem-http-new', 'type': 'nodeflow-listitem', 'content': testData_listitemHttp },
+  { 'name': 'comfyUI-1', 'type': 'nodeflow-comfyui', 'content': JSON.stringify(testData_comfyUI, null, 2) },
+  { 'name': 'comfyUI-2', 'type': 'nodeflow-comfyui', 'content': JSON.stringify(testData_comfyUI2, null, 2) },
   { 'name': 'obcanvas', 'type': 'nodeflow-obcanvas', 'content': JSON.stringify(testData_obcanvas, null, 2) },
   { 'name': 'vueflow', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow, null, 2) },
   { 'name': 'vueflow-autoPos', 'type': 'nodeflow-vueflow', 'content':  JSON.stringify(testData_vueflow_withoutPos, null, 2) },

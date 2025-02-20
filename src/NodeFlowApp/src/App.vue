@@ -82,6 +82,7 @@ html, body, #app {
   margin: 0;
   padding: 0;
   background-color: #313131;
+  color: #c9c9c9;
 }
 </style>
 
