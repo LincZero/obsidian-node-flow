@@ -26,14 +26,13 @@ if (!props.data.value) props.data.value = ''; // [!code]
 import {
   useNodeId, useNodesData,          // TheNode
   useNodeConnections,               // Near。注意: useHandleConnections API弃用，用useNodeConnections替代
-  useVueFlow,
 } from '@vue-flow/core'
 const _useNodeId: string = useNodeId()
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
-const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
-const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
 
 // 流程控制 - 操作
+const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
+const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
 import { useFlowControl } from './useFlowControl'
 const flowControl = useFlowControl(_useNodeId, _useSourceConnections, _useTargetConnections)
 

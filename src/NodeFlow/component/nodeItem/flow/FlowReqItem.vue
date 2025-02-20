@@ -25,24 +25,21 @@ if (!props.data.value) props.data.value = 'https://httpbin.org/get'; // [!code]
 
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
-  useNode, useNodeId, useNodesData, // TheNode
-  useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
-  useEdge, useVueFlow,
+  useNodeId, useNodesData,            // TheNode
+  useNodeConnections,                 // Near。注意: useHandleConnections API弃用，用useNodeConnections替代
+  useVueFlow
 } from '@vue-flow/core'
-const { updateNodeData, getConnectedEdges } = useVueFlow()
+const { updateNodeData } = useVueFlow()
 const _useNodeId: string = useNodeId()
-const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
-const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
-const targetNodesId: string[] = Array.from(new Set(_useTargetConnections.value.map((connection:any) => connection.target)))
-const _useTargetNodesData: ComputedRef<any> = useNodesData(targetNodesId)
 
+// 流程控制 - 操作
 import { nfSetting } from '../../../utils/main/setting'
 let resp_str = ref('')
-// 流程控制 - 执行主要操作、触发下一节点
-const debugConsole = async () => {
-  // 该节点的操作
-  // ... 其他操作 // [!code]
+const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
+const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
+import { useFlowControl } from './useFlowControl'
+const flowControl = useFlowControl(_useNodeId, _useSourceConnections, _useTargetConnections, async () => {
   try {
     const resp = await nfSetting.fn_request(props.data.value, 'GET', undefined, undefined)
     
@@ -51,43 +48,33 @@ const debugConsole = async () => {
     // 检查是否正常响应
     if (resp.status != 200) { // resp.ok // TODO，fetch版本应该用ok，ob版本有空再调试
       resp_str.value = "warning: ok/status:" + resp.status.toString()
-      _useNodesData.value.data.runState = 'error'; updateNodeData(_useNodeId, _useNodesData.value.data);
       return false
     }
 
     // 检查返回值是否json，并解析
     if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
       resp_str.value = JSON.stringify(resp.json, null, 2)
-      _useNodesData.value.data.runState = 'over'; updateNodeData(_useNodeId, _useNodesData.value.data);
+      return true
     } else if (typeof resp.json == 'function') { // @env 其他环境版本 (fetch)
       const resp_json = await resp.json();
       resp_str.value = JSON.stringify(resp_json, null, 2)
-      _useNodesData.value.data.runState = 'over'; updateNodeData(_useNodeId, _useNodesData.value.data);
+      return true
     } else {
       resp_str.value = 'warning: without json'
-      _useNodesData.value.data.runState = 'error'; updateNodeData(_useNodeId, _useNodesData.value.data);
       return false
     }
   } catch (e) {
     console.error('error request:', e)
     resp_str.value = '[error]'
-    _useNodesData.value.data.runState = 'error'; updateNodeData(_useNodeId, _useNodesData.value.data);
     return false
   }
-  
-  // 然后尝试运行下一个节点的debugConsole
-  if (_useTargetNodesData.value.length > 0) {
-    _useTargetNodesData.value[0].data.runState = 'running'; updateNodeData(_useTargetNodesData.value[0].id, _useTargetNodesData.value[0].data);
-  } else {
-    console.log('debugConsole, end');
-  } 
-};
+})
 
 // 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
 _useNodesData.value.data['runState'] = false
 watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   if (newVal.data.runState == 'running') {
-    debugConsole();
+    flowControl();
   }
 });
 

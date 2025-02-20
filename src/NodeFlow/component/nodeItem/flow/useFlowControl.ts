@@ -3,8 +3,8 @@ import { useVueFlow } from '@vue-flow/core'
 /**
  * 流程控制
  */
-export function useFlowControl(thisId: string, _useSourceConnections: any, _useTargetConnections: any) {
-  // 闭包。缓存需要在setup环境下执行获取的东西，并闭包
+export function useFlowControl(thisId: string, _useSourceConnections: any, _useTargetConnections: any, fn = async ()=>{ return true }) {
+  // 闭包。缓存需要在setup作用域下执行获取的东西 (使用了inject的use组合函数)，并闭包
   const { updateNodeData, findNode } = useVueFlow()
 
   return async function flowControl () {
@@ -32,7 +32,12 @@ export function useFlowControl(thisId: string, _useSourceConnections: any, _useT
     }
   
     // step2. 处理本节点
+    const result = await fn()
     const thisData = findNode(thisId)
+    if (!result) {
+      thisData.data.runState = 'error'; updateNodeData(thisId, thisData.data);
+      return
+    }
     thisData.data.runState = 'over'; updateNodeData(thisId, thisData.data);
   
     // step3. 处理后面节点
