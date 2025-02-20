@@ -237,7 +237,10 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
         children: [],
         self_data: null
       }
-      // 内联解析。根据value字符串解析成json，进行self_data填充
+      /**
+       * 内联解析。根据value字符串解析成json，进行self_data填充
+       * @return 如果是false，则跳过当前行
+       */
       function inline_parse(): boolean {
         /**
          * 先解析
@@ -308,7 +311,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
             items: []
           }
         }
-        // 不合法，可能在编辑中
+        // 不合法，但可能在编辑中 (刚开始打 `- ` 但还没打内容时)
         else {
           return false
         }
@@ -317,7 +320,10 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
         return true
       }
       const ret = inline_parse()
-      if (!ret) return {code: -1, msg: "error: inline parse fail", data: []}
+      if (!ret) {
+        console.error("error: inline parse fail. line:", current_index)
+        continue
+      }
 
       // change4: result_items & (parent's item)，结果 & (父容器的item项)
       {
@@ -442,7 +448,7 @@ export const testData_listitemRPC = `\
   - ST模拟
     - 流程模板,, 开始
     - flow2:开始, :item-start
-    - fDefault, :item-fdefault
+    - fDefault, o:item-fdefault
   - 本地机器
     - 机器, o
     - 地址,, 0.0.0.0
@@ -517,7 +523,7 @@ export const testData_listitemRPC = `\
   - 0001, 通道, 0002, 通道
   - 0001, 通道, 0003, 通道
   - 0004, 通道, 0005, 通道
-  - ST模拟, flow2, 0001, flow1
+  - ST模拟, fDefault, 0001, flow1
   - 0001, flow2, 0002, flow1
   - 0002, flow2, 0003, flow1
   - 0003, flow2, 0004, flow1
