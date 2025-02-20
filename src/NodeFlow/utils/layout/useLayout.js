@@ -37,12 +37,12 @@ export function useLayout() {
   const previousDirection = ref('LR')
 
   /** 
-   *  一个函数，原型为 (nodes: any, edges: any, direction: any) => any
+   * 一个函数，原型为 (nodes: any, edges: any, direction: any) => any
    * 输入节点、边、顺序后，会计算并返回新的节点位置
    * 
    * @param direction 方向，LR或其他
    */
-  function layout(nodes, edges, direction) {
+  function calcLayout(nodes, edges, direction) {
     // 更新闭包缓存
     // 我们创建一个新的图实例，以防一些节点/边被删除，否则dagre会表现得好像它们还在那里
     const dagreGraph = new dagre.graphlib.Graph()
@@ -58,7 +58,7 @@ export function useLayout() {
 
       // 如果你的布局需要节点的宽度和高度，你可以使用内部节点的dimensions属性 (`GraphNode` type)
       const graphNode = findNode(node.id)
-      dagreGraph.setNode(node.id, { width: graphNode?.dimensions?.width??150, height: graphNode?.dimensions?.height??50 })
+      dagreGraph.setNode(node.id, { width: graphNode?.dimensions?.width, height: graphNode?.dimensions?.height })
 
       // if (!graphNode) { console.warn("cannot find node by id: ", node.id) }
       // else { console.log("success find node by id: ", node.id, "w/h: ", graphNode?.dimensions?.width, graphNode?.dimensions?.height) }
@@ -83,8 +83,7 @@ export function useLayout() {
       }
     })
   }
-
-  return { layout }
+  return { calcLayout }
 }
 
 /**

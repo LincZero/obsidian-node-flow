@@ -55,6 +55,7 @@ import InteractionControls from '../utils/InteractionControls.vue'  // 控制画
 import { Background } from '@vue-flow/background'                   // 背景控制
 
 //   组件 - VueFlow，并准备节点数据 (解析JSON数据，在外面已经校验过一次了，这里大概率不会有问题)
+//   需要注意这里 jsonData 的改变不会主动引起 nodes 的改变! (除非用 deep watch，或对单个节点改变时可以用 updateNode)
 import { VueFlow } from '@vue-flow/core'
 import type { Node, Edge } from '@vue-flow/core' 
 let nodes = ref<Node[]>([]);
@@ -88,11 +89,11 @@ try {
 //   功能 - 自动布局模块
 import { nextTick } from 'vue'
 import { useLayout } from '../../utils/layout/useLayout'
-const { layout } = useLayout()
+const { calcLayout } = useLayout()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
-async function layoutGraph(direction: string) {
-  nodes.value = layout(nodes.value, edges.value, direction)
+async function refreshLayout(direction: string) {
+  nodes.value = calcLayout(nodes.value, edges.value, direction)
   const { fitView } = useVueFlow()
   nextTick(() => { fitView() })
 }
@@ -104,12 +105,12 @@ watch(isNodeInitialized, (newValue, oldValue) => {
       nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
       nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
     ) {
-      layoutGraph('LR')
+      refreshLayout('LR')
     }
   }
 });
 defineExpose({
-  layoutGraph
+  refreshLayout
 })
 
 //   功能 - copy and paste

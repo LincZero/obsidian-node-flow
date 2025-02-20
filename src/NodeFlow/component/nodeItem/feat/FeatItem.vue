@@ -71,7 +71,7 @@ function orderRunList(oldList: Set<string>) {
 /// 在 `findRunList` 的基础上，进行运行
 async function startRunList() {
   const runList = orderRunList(findStartNode())
-  for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
+  for (const node of nodes.value) { node.data.runState = 'none'; updateNodeData(node.id, node.data); } // fn_clearAllNodesState
   for (const nodeId of runList) {
     const data = findNode(nodeId).data
     data.runState = 'ready'; updateNodeData(nodeId, data);
@@ -81,7 +81,7 @@ async function startRunList() {
 
 /// 功能 - 清除所有节点的状态 (往往运行前需要这个)
 function clearAllNodesState() {
-  for (const node of nodes.value) { node.data.runState = 'none'; } // fn_clearAllNodesState
+  for (const node of nodes.value) { node.data.runState = 'none'; updateNodeData(node.id, node.data); } // fn_clearAllNodesState
 }
 </script>
 

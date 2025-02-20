@@ -61,21 +61,22 @@ const props = withDefaults(defineProps<{
   fn_save: ()=>{}
 })
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useVueFlow } from '@vue-flow/core'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
 const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
 const _isShowControls = ref(false)
 
-// 组件 - 节点画布
+// 组件 - 节点画布。会往这里传递一个布局方法
 import NodeFlow from './NodeFlow.vue'
 const RefChild = ref<{
-  layoutGraph: (direction: string)=>void,
+  refreshLayout: (direction: string)=>void,
 }>();
 
 // 组件 - 工具栏
 import DropdownButton from '../utils/dropdownButton.vue'
 
 //   按钮 - 自动调整顺序
-function fn_autoPos(position: string) { RefChild.value?.layoutGraph(position) }
+function fn_autoPos(position: string) { RefChild.value?.refreshLayout(position) }
 
 //   按钮 - 是否禁用滚动
 const isAllowScroll = ref(true);
@@ -158,7 +159,6 @@ function fn_saveChange () {
 }
 
 //   按钮 - ZommArea (单手缩放、重置大小)
-import { useVueFlow } from '@vue-flow/core'
 import { stringify } from 'querystring';
 const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom } = useVueFlow()
 const zoomButton = ref()
