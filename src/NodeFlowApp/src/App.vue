@@ -16,11 +16,15 @@ const nfData = ref<any>({
 })
 
 // 节点流数据 - 解析
-import { factoryFlowData } from '../../NodeFlow/utils/jsonTool/factoryFlowData'
+import { factoryFlowData, failedFlowData } from '../../NodeFlow/utils/jsonTool/factoryFlowData'
 import NodeFlowContainerS from '../../NodeFlow/component/container/NodeFlowContainerS.vue';
 const componentKey = ref(0) // 用于强制刷新
 const nfData_resultContent_ = computed(() => {
-  return factoryFlowData(nfData.value.type, nfData.value.rawContent)
+  let result = factoryFlowData(nfData.value.type, nfData.value.rawContent)
+  if (result.code != 0) {
+    result = failedFlowData(result.msg)
+  }
+  return result
 })
 const nfData_resultContent = ref(nfData_resultContent_.value.data)
 watch(nfData_resultContent_, (newResult) => {

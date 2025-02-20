@@ -15,15 +15,14 @@ const props = defineProps<{
 }>()
 
 // json数据处理
-import { factoryFlowData } from "./NodeFlow/index"
-const result = factoryFlowData(props.type, props.data.trim())
+import { factoryFlowData, failedFlowData } from "./NodeFlow/index"
+let result = factoryFlowData(props.type, props.data.trim())
 import { ref } from "vue";
 let jsonData = ref({})
-if (result.code == 0) {
-  jsonData.value = result.data
-} else {
-  jsonData.value = {nodes:[],edges:[]}
+if (result.code != 0) {
+  result = failedFlowData(result.msg)
 }
+jsonData.value = result.data
 
 // 组件 - 节点流画布
 import NodeFlowContainer from "./NodeFlow/component/container/NodeFlowContainerS.vue"

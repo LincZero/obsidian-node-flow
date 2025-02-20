@@ -1,7 +1,7 @@
 import { createApp, App as VueApp } from 'vue';
 import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue';
 
-import { factoryFlowData } from '../jsonTool/factoryFlowData'
+import { factoryFlowData, failedFlowData } from '../jsonTool/factoryFlowData'
 
 import { nfSetting } from '../../utils/main/setting'
 
@@ -23,24 +23,7 @@ export function factoryVueDom(
     let result: {code: number, msg: string, data: object}
     result = factoryFlowData(jsonType, mdStr)
     if (result.code != 0) {
-      result.data = {
-        "nodes": [
-          {
-            "id": "ERROR",
-            "position": {"x": 0, "y": 0},
-            "type": "common", // TODO 这样的话错误信息无法复制，后续应该改用listitem类型的节点，那个可以复制
-            "data": {
-              "label": "ERROR",
-              "inputs": [],
-              "outputs": [],
-              "values": [
-                { "id": "0", "name": "", "value": result.msg }
-              ],
-            }
-          },
-        ],
-        "edges": []
-      }
+      result = failedFlowData(result.msg)
     }
 
     // 根据新json生成节点流

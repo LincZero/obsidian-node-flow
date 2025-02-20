@@ -58,3 +58,27 @@ export function factoryFlowData(jsonType:string = "nodeflow-vueflow", json:strin
   if (!result.data.hasOwnProperty("edges")) { result.data.edges = [] }
   return result
 }
+
+// 用节点的方式来显示错误信息
+export function failedFlowData(msg: string): any {
+  return {
+    "data": {
+      "nodes": [
+        {
+          "id": "ERROR",
+          "position": {"x": 0, "y": 0},
+          "type": "common",
+          "data": {
+            "label": "ERROR",
+            "inputs": [],
+            "outputs": [],
+            "values": [
+              { "id": "0", "name": "", "value": msg }
+            ],
+          }
+        },
+      ],
+      "edges": []
+    }
+  }
+}
