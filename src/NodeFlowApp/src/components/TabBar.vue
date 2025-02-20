@@ -1,6 +1,6 @@
 <template>
   <div class="main-bar menus-1">
-    <div class="menu-1" style="padding: 0 16px;; font-weight:bold; font-size: 16px; color: #7280e4;">NodeFlowApp</div>
+    <div class="menu-1" style="padding: 0 16px;; font-weight:bold; font-size: 16px; color: #11b981;">NodeFlow App</div>
     <div class="menu-1"
       @click.stop="clickedMenu=clickedMenu==='menuFile'?'':'menuFile'"
       @mouseover="clickedMenu=clickedMenu===''?'':'menuFile'">
