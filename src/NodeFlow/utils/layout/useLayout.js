@@ -74,7 +74,7 @@ export function useLayout() {
 
     // step3. 同步dagre库位置数据回来 (这里不更新源数据，在外面自行更新)
     let max_rank = 0
-    const newNodes = nodes.map((node) => {
+    let newNodes = nodes.map((node) => {
       if (node.data.type == "group") return node // 跳过节点组
       
       const nodeWithPosition = dagreGraph.node(node.id)
@@ -87,84 +87,82 @@ export function useLayout() {
       }
     })
 
+    if (amend == 'none') return newNodes
+
     // step4. (new) 数据修正。rank的计算是对的，但xy的计算有问题。这里复用一下rank，然后我自己重算一下x, y
     // 强制LR布局
     // 如果画布分成了多个不相连的部分，没有判断这种情况并进行额外优化，效果会比较差
-    if (amend == 'none') return newNodes
-    let maxX = 0
-    const ranksep = 50 // x, 不同rank
-    const nodesep = 60 // y, 同rank。因为有id额外显示，这里稍大一点显示会更好
-    for (let currentRank=0; currentRank<max_rank+2; currentRank+=2) { // 遍历所有rank [0, max_rank, step2] 步进不知道为什么是2，很奇怪
+    const list_rankNodes = []
+    const list_maxY = []
+    const list_maxX = []
+    ;{
+      let maxX = 0
+      const ranksep = 50 // x, 不同rank
+      const nodesep = 60 // y, 同rank。因为有id额外显示，这里稍大一点显示会更好
+      for (let currentRank=0; currentRank<max_rank+2; currentRank+=2) { // 遍历所有rank [0, max_rank, step2] 步进不知道为什么是2，很奇怪
 
-      const currentRankNodes = [] // 仅用于给第二次遍历加速
-      let currentRankMaxX = 0
-      let currentRankMaxY = 0 - nodesep
-      for (const node of newNodes) { // 遍历同一rank下的所有节点，把这些节点加在一起看成一个有x,y属性的box
-        const dagreGraphNode = dagreGraph.node(node.id)
-        if (dagreGraphNode.rank != currentRank) continue
-
-        // x,y (左上对齐)
-        dagreGraph.x = maxX
-        dagreGraph.y = currentRankMaxY
-        node.position = { x: maxX, y: currentRankMaxY }
-
-        // currentBox
-        currentRankNodes.push(node)
-        if (dagreGraphNode.width > currentRankMaxX) currentRankMaxX = dagreGraphNode.width
-        currentRankMaxY += dagreGraphNode.height + nodesep
-      }
-      // (选用) x,y (再偏移为中心对齐)
-      if (amend == 'center') {
-        for (const node of currentRankNodes) {
+        const currentRankNodes = [] // 用于给后面的遍历加速
+        let currentRankMaxX = 0
+        let currentRankMaxY = 0 - nodesep
+        for (const node of newNodes) { // 遍历同一rank下的所有节点，把这些节点加在一起看成一个有x,y属性的box
           const dagreGraphNode = dagreGraph.node(node.id)
-          node.position = { x: maxX + (currentRankMaxX - dagreGraphNode.width)/2, y: node.position.y - currentRankMaxY/2 + 500 } // 500是避免位置太靠上
+          if (dagreGraphNode.rank != currentRank) continue
+
+          // x,y (左上对齐)
+          if (amend == 'center' || amend == 'top') {
+            dagreGraphNode.x = maxX
+            dagreGraphNode.y = currentRankMaxY
+          }
+          // TODO 如果比所有的源节点都高，那么下降为最高的那个源节点。从而形成更好的对齐
+          // if (amend == 'top') {
+          // }
+
+          // currentBox
+          currentRankNodes.push(node)
+          if (dagreGraphNode.width > currentRankMaxX) currentRankMaxX = dagreGraphNode.width
+          currentRankMaxY += dagreGraphNode.height + nodesep
         }
+        // (选用) x,y (再偏移为中心对齐)
+        if (amend == 'center') {
+          for (const node of currentRankNodes) {
+            dagreGraphNode.x = maxX + (currentRankMaxX - dagreGraphNode.width)/2  // x的修改是可选的
+            dagreGraphNode.y = node.position.y - currentRankMaxY/2 + 500          // 500是避免位置太靠上
+          }
+        }
+        maxX += currentRankMaxX + ranksep
+        list_rankNodes.push(currentRankNodes)
+        list_maxY.push(currentRankMaxY)
+        list_maxX.push(currentRankMaxX)
       }
-      maxX += currentRankMaxX + ranksep
     }
+
+    // step5. (new) 数据修正。针对多条流 (无交)、连线组对齐，进行优化
+    // 层次上分为：rank -> group -> node 三层
+    // 这一步不调整x轴，只调整y轴
+    // {
+    //   // 先生成高度顺序表 // 从高的rankBox开始 (而不是从元素多的rankBox开始，或从左开始)
+    //   const indices = list_maxY.map((_, index) => index + 1);
+    //   indices.sort((a, b) => list_maxY[b - 1] - list_maxY[a - 1]);
+      
+    //   for (let [index, toIndex] of indices.entries()) {
+    //     if (index == 0) continue
+    //     // for (m = list_rankNodes[toIndex])
+    //   }
+    // }
+
+    newNodes = nodes.map((node) => {
+      if (node.data.type == "group") return node // 跳过节点组
+      
+      const nodeWithPosition = dagreGraph.node(node.id)
+      return {
+        ...node,
+        targetPosition: (direction === 'LR') ? Position.Left : Position.Top,
+        sourcePosition: (direction === 'LR') ? Position.Right : Position.Bottom,
+        position: { x: nodeWithPosition.x, y: nodeWithPosition.y },
+      }
+    })
 
     return newNodes
   }
   return { calcLayout }
-}
-
-/**
- * 用于对节点组的排序进行补强
- */
-function layout2(nodes, edges, direction) {
-  // 更新闭包缓存
-  // 我们创建一个新的图实例，以防一些节点/边被删除，否则dagre会表现得好像它们还在那里
-  const dagreGraph = new dagre.graphlib.Graph()
-  dagreGraph.setDefaultEdgeLabel(() => ({}))
-  dagreGraph.setGraph({ rankdir: direction })
-  graph.value = dagreGraph
-  previousDirection.value = direction
-
-
-  // 1. 同步节点和线数据到dagre库
-  for (const node of nodes) {
-    // 如果你的布局需要节点的宽度和高度，你可以使用内部节点的dimensions属性 (`GraphNode` type)
-    const graphNode = findNode(node.id)
-    dagreGraph.setNode(node.id, { width: graphNode?.dimensions?.width??150, height: graphNode?.dimensions?.height??50 })
-
-    // if (!graphNode) { console.warn("cannot find node by id: ", node.id) }
-    // else { console.log("success find node by id: ", node.id, "w/h: ", graphNode?.dimensions?.width, graphNode?.dimensions?.height) }
-  }
-  for (const edge of edges) {
-    dagreGraph.setEdge(edge.source, edge.target)
-  }
-
-  // step2. dagre库自动布局
-  dagre.layout(dagreGraph)
-
-  // step3. 同步dagre库位置数据回来
-  return nodes.map((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id)
-    return {
-      ...node,
-      targetPosition: (direction === 'LR') ? Position.Left : Position.Top,
-      sourcePosition: (direction === 'LR') ? Position.Right : Position.Bottom,
-      position: { x: nodeWithPosition.x, y: nodeWithPosition.y },
-    }
-  })
 }
