@@ -32,7 +32,8 @@ const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 // 流程控制 - 最开始
 const debugConsole_start = async () => {
-  for (const node of nodes.value) { node.data.runState = 'none'; updateNodeData(node.id, node.data); } // fn_clearAllNodesState
+  // 局部开始不需要清空状态，有可能想保留一部分缓存不重新计算
+  // for (const node of nodes.value) { node.data.runState = 'none'; updateNodeData(node.id, node.data); } // fn_clearAllNodesState
   _useNodesData.value.data.runState = 'ready'; updateNodeData(_useNodeId, _useNodesData.value.data);
 }
 </script>
