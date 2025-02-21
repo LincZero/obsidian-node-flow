@@ -108,27 +108,44 @@ export function useLayout() {
           const dagreGraphNode = dagreGraph.node(node.id)
           if (dagreGraphNode.rank != currentRank) continue
 
-          // x,y (左上对齐)
-          if (amend == 'center') {
-            dagreGraphNode.x = maxX
-            dagreGraphNode.y = currentRankHeight
-          }
           // x,y (左上对齐 + 内部撑开)
           // 该步骤只调整y。如果比所有的源节点都高 (比y要小)，那么下降为最高的那个源节点 (自个大y)。从而形成更好的对齐
-          else if (amend == 'top') {
-            console.log('topppp')
-            let sourceMinY = null
+          if (amend == 'top') {
+            let sourceMinY = null // 有可能没有上游节点
             for (const edge of edges) {
               if (edge.target == node.id) {
                 const lastNode = dagreGraph.node(edge.source)
                 if (!sourceMinY) sourceMinY = lastNode.y
-                else if (lastNode.y < sourceMinY) sourceMinY = lastNode.y
+                else sourceMinY = Math.min(sourceMinY, lastNode.y)
               }
             }
 
             dagreGraphNode.x = maxX
             dagreGraphNode.y = currentRankHeight
-            if (sourceMinY && sourceMinY > dagreGraphNode.y) dagreGraphNode.y = sourceMinY
+            if (sourceMinY) dagreGraphNode.y = Math.max(sourceMinY, dagreGraphNode.y)
+          }
+          // x,y (中心对齐 + 内部撑开)
+          // TODO 可以再优化：例如上游节点再分出多个下游节点时。可以绑定成组再整体移动。但1->n和n->1混合时不好弄
+          else if (amend == 'center') {
+            let sourceMinY = null // 有可能没有上游节点。源节点中最靠上的那个的中心点
+            for (const edge of edges) {
+              if (edge.target == node.id) {
+                const lastNode = dagreGraph.node(edge.source)
+                if (!sourceMinY) sourceMinY = (lastNode.y + lastNode.height/2)
+                else sourceMinY = Math.min(sourceMinY, (lastNode.y + lastNode.height/2))
+              }
+            }
+
+            dagreGraphNode.x = maxX
+            dagreGraphNode.y = currentRankHeight
+            if (sourceMinY) {
+              if (currentRankHeight == 0) { // 同一rank的第一个元素有一个特权：高度可以突破0往上
+                dagreGraphNode.y = sourceMinY - dagreGraphNode.height/2
+              } else {
+                dagreGraphNode.y = Math.max(sourceMinY, (dagreGraphNode.y + dagreGraphNode.height/2)) - dagreGraphNode.height/2
+              }
+            }
+            console.log('对比中心点：', node.id, sourceMinY, dagreGraphNode.y + dagreGraphNode.height/2)
           }
 
           // currentBox
@@ -136,14 +153,16 @@ export function useLayout() {
           if (dagreGraphNode.width > currentRankWidth) currentRankWidth = dagreGraphNode.width
           currentRankHeight = dagreGraphNode.y + dagreGraphNode.height + nodesep
         }
-        // x,y (选用) (再偏移为中心对齐，不支持内部撑开)
-        if (amend == 'center') {
-          for (const node of currentRankNodes) {
-            const dagreGraphNode = dagreGraph.node(node.id)
-            dagreGraphNode.x = maxX + (currentRankWidth - dagreGraphNode.width)/2 // x的修改是可选的
-            dagreGraphNode.y = dagreGraphNode.y - currentRankHeight/2 + 500       // 500是避免位置太靠上
-          }
-        }
+
+        // x,y (弃用 ~~选用~~) (这个是不使用内部撑开时的用法)
+        // if (amend == 'center') {
+        //   for (const node of currentRankNodes) {
+        //     const dagreGraphNode = dagreGraph.node(node.id)
+        //     dagreGraphNode.x = maxX + (currentRankWidth - dagreGraphNode.width)/2 // x的修改是可选的
+        //     dagreGraphNode.y = dagreGraphNode.y - currentRankHeight/2 + 500       // 500是避免位置太靠上
+        //   }
+        // }
+
         if (currentRankHeight > nodesep) currentRankHeight -= nodesep
         maxX += currentRankWidth + ranksep
         list_rankNodes.push(currentRankNodes)
@@ -151,20 +170,6 @@ export function useLayout() {
         list_maxX.push(currentRankWidth)
       }
     }
-
-    // step5. (new) 数据修正。针对多条流 (无交)、连线组对齐，进行优化
-    // 层次上分为：rank -> group -> node 三层
-    // 这一步不调整x轴，只调整y轴
-    // {
-    //   // 先生成高度顺序表 // 从高的rankBox开始 (而不是从元素多的rankBox开始，或从左开始)
-    //   const indices = list_maxY.map((_, index) => index + 1);
-    //   indices.sort((a, b) => list_maxY[b - 1] - list_maxY[a - 1]);
-      
-    //   for (let [index, toIndex] of indices.entries()) {
-    //     if (index == 0) continue
-    //     // for (m = list_rankNodes[toIndex])
-    //   }
-    // }
 
     newNodes = nodes.map((node) => {
       if (node.data.type == "group") return node // 跳过节点组
