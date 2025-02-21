@@ -22,7 +22,7 @@
         <button class="nf-btn" @click="selectItem('Full screen', () => fn_fullScreen())">Full screen</button>
         <button class="nf-btn" @click="selectItem('New view', () => _fn_newView())">New view</button>
       </DropdownButton>
-      <DropdownButton class="nf-btn" :label="'LR layout (top)'" :fn="() => fn_autoPos('LR', 'top')" #default="{ selectItem }">
+      <DropdownButton class="nf-btn" :label="'LR layout (center)'" :fn="() => fn_autoPos('LR', 'center')" #default="{ selectItem }">
         <button class="nf-btn" @click="selectItem('LR layout', () => fn_autoPos('LR'))">LR layout</button>
         <button class="nf-btn" @click="selectItem('TB layout', () => fn_autoPos('TB'))">TB layout</button>
         <button class="nf-btn" @click="selectItem('LR layout (center)', () => fn_autoPos('LR', 'center'))">LR layout (center)</button>
@@ -36,9 +36,10 @@
         <button class="nf-btn" @click="selectItem('Copy md', () => fn_copyData('mdData'))">Copy md</button>
         <button class="nf-btn" @click="selectItem('Copy raw', () => fn_copyData('rawData'))">Copy raw</button>
       </DropdownButton>
-      <button class="nf-btn" @click="fn_switchAllowScroll()">Ex lock</button>
-      <button class="nf-btn" @click="fn_zoomInit()" ref="zoomButton"
+      <button class="nf-btn" @click="fn_initView()" title="点击时自动缩放移动画布">Init view</button>
+      <button class="nf-btn" @click="fn_initZoom()" ref="zoomButton"
         title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)">Zoom area</button>
+      <button class="nf-btn" @click="fn_switchAllowScroll()">Ex lock</button>
       <button class="nf-btn" @click="_isShowControls = !_isShowControls">Show Controls</button>
       <!-- TODO 修改成 "允许编辑和监听快捷键" 功能 -->
     </div>
@@ -160,9 +161,16 @@ function fn_saveChange () {
   }
 }
 
+//   按钮 - InitView
+function fn_initView() {
+  fitView({
+    offset: { x: 0, y: 0 }
+  })
+}
+
 //   按钮 - ZommArea (单手缩放、重置大小)
 import { stringify } from 'querystring';
-const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom } = useVueFlow()
+const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom, fitView } = useVueFlow()
 const zoomButton = ref()
 onMounted(() => {
   document.addEventListener('wheel', (event)=>{
@@ -180,7 +188,10 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('wheel', ()=>{})
 })
-function fn_zoomInit() {
+function fn_initZoom() {
+  fitView({
+    offset: { x: 0, y: 0 }
+  })
   zoomTo(1)
 }
 </script>
