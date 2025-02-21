@@ -22,7 +22,7 @@
         <button class="nf-btn" @click="selectItem('Full screen', () => fn_fullScreen())">Full screen</button>
         <button class="nf-btn" @click="selectItem('New view', () => _fn_newView())">New view</button>
       </DropdownButton>
-      <DropdownButton class="nf-btn" :label="'LR layout'" :fn="() => fn_autoPos('LR')" #default="{ selectItem }">
+      <DropdownButton class="nf-btn" :label="'LR layout (top)'" :fn="() => fn_autoPos('LR', 'top')" #default="{ selectItem }">
         <button class="nf-btn" @click="selectItem('LR layout', () => fn_autoPos('LR'))">LR layout</button>
         <button class="nf-btn" @click="selectItem('TB layout', () => fn_autoPos('TB'))">TB layout</button>
         <button class="nf-btn" @click="selectItem('LR layout (center)', () => fn_autoPos('LR', 'center'))">LR layout (center)</button>

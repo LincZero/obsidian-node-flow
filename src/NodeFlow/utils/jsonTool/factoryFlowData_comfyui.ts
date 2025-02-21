@@ -1,7 +1,8 @@
 /**
  * comfyui数据转通用节点流数据
  * 
- * TODO 需要注意，普通节点和群组，节点id和标题都是不在宽高尺寸里面的！当前是高度+30，y-30，的方式临时解决
+ * 需要注意：ComfyUI与其他节点不同，其节点和群组，节点id和标题都是不在宽高尺寸里面的！
+ * 数据转换时需要高度+30，y-30，反序列化时也要注意这点！
  */
 export function factoryFlowData_comfyui(parsedData: any|string): {code: number, msg: string, data: object} {
   // 使用demo数据

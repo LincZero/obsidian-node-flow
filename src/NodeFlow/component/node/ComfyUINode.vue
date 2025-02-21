@@ -44,7 +44,7 @@
         v-for="(item,index) in data.inputs"
         :key="index"
         :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
-        class="custom"
+        class="comfyui"
         :indexAttr="index"
         :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
         :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%20'
@@ -54,7 +54,7 @@
         v-for="(item,index) in data.outputs"
         :key="index"
         :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
-        class="custom"
+        class="comfyui"
         :indexAttr="index"
         :nameAttr='item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type'
         :nameMapAttr='(item.hasOwnProperty("label")?item.label:item.hasOwnProperty("name")?item.name:item.type).toLowerCase().charCodeAt(0)%20'
