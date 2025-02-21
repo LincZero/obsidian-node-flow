@@ -102,37 +102,53 @@ export function useLayout() {
       for (let currentRank=0; currentRank<max_rank+2; currentRank+=2) { // 遍历所有rank [0, max_rank, step2] 步进不知道为什么是2，很奇怪
 
         const currentRankNodes = [] // 用于给后面的遍历加速
-        let currentRankMaxX = 0
-        let currentRankMaxY = 0 - nodesep
+        let currentRankWidth = 0    // 同级盒宽度 (最终不含边距)
+        let currentRankHeight = 0   // 同级盒高度 (最终不含边距)
         for (const node of newNodes) { // 遍历同一rank下的所有节点，把这些节点加在一起看成一个有x,y属性的box
           const dagreGraphNode = dagreGraph.node(node.id)
           if (dagreGraphNode.rank != currentRank) continue
 
           // x,y (左上对齐)
-          if (amend == 'center' || amend == 'top') {
+          if (amend == 'center') {
             dagreGraphNode.x = maxX
-            dagreGraphNode.y = currentRankMaxY
+            dagreGraphNode.y = currentRankHeight
           }
-          // TODO 如果比所有的源节点都高，那么下降为最高的那个源节点。从而形成更好的对齐
-          // if (amend == 'top') {
-          // }
+          // x,y (左上对齐 + 内部撑开)
+          // 该步骤只调整y。如果比所有的源节点都高 (比y要小)，那么下降为最高的那个源节点 (自个大y)。从而形成更好的对齐
+          else if (amend == 'top') {
+            console.log('topppp')
+            let sourceMinY = null
+            for (const edge of edges) {
+              if (edge.target == node.id) {
+                const lastNode = dagreGraph.node(edge.source)
+                if (!sourceMinY) sourceMinY = lastNode.y
+                else if (lastNode.y < sourceMinY) sourceMinY = lastNode.y
+              }
+            }
+
+            dagreGraphNode.x = maxX
+            dagreGraphNode.y = currentRankHeight
+            if (sourceMinY && sourceMinY > dagreGraphNode.y) dagreGraphNode.y = sourceMinY
+          }
 
           // currentBox
           currentRankNodes.push(node)
-          if (dagreGraphNode.width > currentRankMaxX) currentRankMaxX = dagreGraphNode.width
-          currentRankMaxY += dagreGraphNode.height + nodesep
+          if (dagreGraphNode.width > currentRankWidth) currentRankWidth = dagreGraphNode.width
+          currentRankHeight = dagreGraphNode.y + dagreGraphNode.height + nodesep
         }
-        // (选用) x,y (再偏移为中心对齐)
+        // x,y (选用) (再偏移为中心对齐，不支持内部撑开)
         if (amend == 'center') {
           for (const node of currentRankNodes) {
-            dagreGraphNode.x = maxX + (currentRankMaxX - dagreGraphNode.width)/2  // x的修改是可选的
-            dagreGraphNode.y = node.position.y - currentRankMaxY/2 + 500          // 500是避免位置太靠上
+            const dagreGraphNode = dagreGraph.node(node.id)
+            dagreGraphNode.x = maxX + (currentRankWidth - dagreGraphNode.width)/2 // x的修改是可选的
+            dagreGraphNode.y = dagreGraphNode.y - currentRankHeight/2 + 500       // 500是避免位置太靠上
           }
         }
-        maxX += currentRankMaxX + ranksep
+        if (currentRankHeight > nodesep) currentRankHeight -= nodesep
+        maxX += currentRankWidth + ranksep
         list_rankNodes.push(currentRankNodes)
-        list_maxY.push(currentRankMaxY)
-        list_maxX.push(currentRankMaxX)
+        list_maxY.push(currentRankHeight)
+        list_maxX.push(currentRankWidth)
       }
     }
 
