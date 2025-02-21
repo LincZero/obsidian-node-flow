@@ -92,8 +92,8 @@ import { useLayout } from '../../utils/layout/useLayout'
 const { calcLayout } = useLayout()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
-async function refreshLayout(direction: string) {
-  nodes.value = calcLayout(nodes.value, edges.value, direction)
+async function refreshLayout(direction: string, amend='none') {
+  nodes.value = calcLayout(nodes.value, edges.value, direction, amend)
   const { fitView } = useVueFlow()
   nextTick(() => { fitView() })
 }

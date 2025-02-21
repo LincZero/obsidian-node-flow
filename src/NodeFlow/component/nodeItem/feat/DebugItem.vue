@@ -23,10 +23,12 @@
     <div class="node-item-value">
       <div><span>---The Node-----</span></div>
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
+      <div><span>Size: ({{ nodeFound.dimensions.width }} x {{ nodeFound.dimensions.height }})</span></div>
+      <div><span>Posi: ({{ nodeFound.position.x.toFixed(1) }}, {{ nodeFound.position.y.toFixed(1) }})</span></div>
       <div><button @click="console.log(_useNode)">Node</button></div>
       <!-- Node Find 数据覆盖面上多于 NodesData -->
       <div><button @click="console.log(_useNodesData)">NodesData</button></div>
-      <div><button @click="console.log(findNode(_useNodeId))">Node Find</button></div>
+      <div><button @click="console.log(nodeFound)">Node Find</button></div>
       <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
       <div><span>---The Handle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
@@ -65,6 +67,7 @@ import {
 } from '@vue-flow/core'
 const { getConnectedEdges, findNode, nodes } = useVueFlow()
 const _useNodeId: string = useNodeId()
+const nodeFound = findNode(_useNodeId)
 const _useNode: object = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 

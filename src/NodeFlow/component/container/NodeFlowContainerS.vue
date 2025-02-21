@@ -25,6 +25,7 @@
       <DropdownButton class="nf-btn" :label="'LR layout'" :fn="() => fn_autoPos('LR')" #default="{ selectItem }">
         <button class="nf-btn" @click="selectItem('LR layout', () => fn_autoPos('LR'))">LR layout</button>
         <button class="nf-btn" @click="selectItem('TB layout', () => fn_autoPos('TB'))">TB layout</button>
+        <button class="nf-btn" @click="selectItem('LR layout (center)', () => fn_autoPos('LR', 'center'))">LR layout (center)</button>
       </DropdownButton>
       <DropdownButton class="nf-btn" :label="'Copy md'" :fn="() => fn_copyData('mdData')" #default="{ selectItem }">
         <button class="nf-btn" @click="selectItem('Print json', () => fn_printData('jsonData'))">Print json</button>
@@ -69,14 +70,14 @@ const _isShowControls = ref(false)
 // 组件 - 节点画布。会往这里传递一个布局方法
 import NodeFlow from './NodeFlow.vue'
 const RefChild = ref<{
-  refreshLayout: (direction: string)=>void,
+  refreshLayout: (direction: string, amend: string)=>void,
 }>();
 
 // 组件 - 工具栏
 import DropdownButton from '../utils/dropdownButton.vue'
 
 //   按钮 - 自动调整顺序
-function fn_autoPos(position: string) { RefChild.value?.refreshLayout(position) }
+function fn_autoPos(position: string, amend='none') { RefChild.value?.refreshLayout(position, amend) }
 
 //   按钮 - 是否禁用滚动
 const isAllowScroll = ref(true);

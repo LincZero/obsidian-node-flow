@@ -33,35 +33,36 @@ export function useLayout() {
   // 闭包环境 (这些变量会在每个返回的layout闭包实体中单独存一份，且因为layout闭包实体而延长生命周期)
   // 而且 useVueFlow 要在 setup 阶段被运行
   const { findNode } = useVueFlow()
-  const graph = ref(new dagre.graphlib.Graph())
-  const previousDirection = ref('LR')
 
   /** 
    * 一个函数，原型为 (nodes: any, edges: any, direction: any) => any
    * 输入节点、边、顺序后，会计算并返回新的节点位置
    * 
-   * @param direction 方向，LR或其他
+   * @param direction 方向，`LR` 或其他
+   * @param amend 修正. 'none' 不生效，'center' 为重心对齐
    */
-  function calcLayout(nodes, edges, direction) {
-    // 更新闭包缓存
-    // 我们创建一个新的图实例，以防一些节点/边被删除，否则dagre会表现得好像它们还在那里
+  function calcLayout(nodes, edges, direction, amend='none') {
+    // step0. 准备
+    // 我们创建一个新的画布实例，以防一些节点/边被删除。并配置
     const dagreGraph = new dagre.graphlib.Graph()
     dagreGraph.setDefaultEdgeLabel(() => ({}))
-    dagreGraph.setGraph({ rankdir: direction })
-    graph.value = dagreGraph
-    previousDirection.value = direction
+    dagreGraph.setGraph({
+      rankdir: direction,   // 方向 (上一层往下一层的方向)
+      ranksep: 50,          // 节点间隔 (不同级)，default: 50
+      // align: 'DL',       // 对齐 (同一层的节点之间怎么对齐)，default: DR (LR rankdird)
+      nodesep: 60,          // 节点间隔 (同级节点之间)，default: 50
+    })
 
-
-    // 1. 同步节点和线数据到dagre库
+    // step1. 同步节点和线数据到dagre库画布
     for (const node of nodes) {
       if (node.data.type == "group") continue // 跳过节点组
-
-      // 如果你的布局需要节点的宽度和高度，你可以使用内部节点的dimensions属性 (`GraphNode` type)
-      const graphNode = findNode(node.id)
-      dagreGraph.setNode(node.id, { width: graphNode?.dimensions?.width, height: graphNode?.dimensions?.height })
-
-      // if (!graphNode) { console.warn("cannot find node by id: ", node.id) }
-      // else { console.log("success find node by id: ", node.id, "w/h: ", graphNode?.dimensions?.width, graphNode?.dimensions?.height) }
+      const nodeFound = findNode(node.id)
+      // 注意：可以使用内部节点的dimensions属性 (`GraphNode` type) 获取宽高
+      // 被嵌套的节点没有宽高尺寸
+      dagreGraph.setNode(node.id, { width: nodeFound?.dimensions?.width || 150, height: nodeFound?.dimensions?.height || 50 })
+      // console.log('node id w h:', node.id, nodeFound?.dimensions?.width, nodeFound?.dimensions?.height)
+      // if (!nodeFound) { console.warn("cannot find node by id: ", node.id) }
+      // else { console.log("success find node by id: ", node.id, "w/h: ", nodeFound?.dimensions?.width, nodeFound?.dimensions?.height) }
     }
     for (const edge of edges) {
       dagreGraph.setEdge(edge.source, edge.target)
@@ -69,12 +70,15 @@ export function useLayout() {
 
     // step2. dagre库自动布局
     dagre.layout(dagreGraph)
+    // console.log('dagre ', dagreGraph) // nodes {h w x y rank }, rank 是第几个level(rank)的意思
 
-    // step3. 同步dagre库位置数据回来
-    return nodes.map((node) => {
+    // step3. 同步dagre库位置数据回来 (这里不更新源数据，在外面自行更新)
+    let max_rank = 0
+    const newNodes = nodes.map((node) => {
       if (node.data.type == "group") return node // 跳过节点组
       
       const nodeWithPosition = dagreGraph.node(node.id)
+      if (nodeWithPosition.rank > max_rank) max_rank = nodeWithPosition.rank
       return {
         ...node,
         targetPosition: (direction === 'LR') ? Position.Left : Position.Top,
@@ -82,6 +86,43 @@ export function useLayout() {
         position: { x: nodeWithPosition.x, y: nodeWithPosition.y },
       }
     })
+
+    // step4. (new) 数据修正。rank的计算是对的，但xy的计算有问题。这里复用一下rank，然后我自己重算一下x, y
+    // 强制LR布局
+    if (amend == 'none') return newNodes
+    let maxX = 0
+    const ranksep = 50 // x, 不同rank
+    const nodesep = 60 // y, 同rank。因为有id额外显示，这里稍大一点显示会更好
+    for (let currentRank=0; currentRank<max_rank+2; currentRank+=2) { // 遍历所有rank [0, max_rank, step2] 步进不知道为什么是2，很奇怪
+
+      const currentRankNodes = [] // 仅用于给第二次遍历加速
+      let currentRankMaxX = 0
+      let currentRankMaxY = 0 - nodesep
+      for (const node of newNodes) { // 遍历同一rank下的所有节点，把这些节点加在一起看成一个有x,y属性的box
+        const dagreGraphNode = dagreGraph.node(node.id)
+        if (dagreGraphNode.rank != currentRank) continue
+
+        // x,y (左上对齐)
+        dagreGraph.x = maxX
+        dagreGraph.y = currentRankMaxY
+        node.position = { x: maxX, y: currentRankMaxY }
+
+        // currentBox
+        currentRankNodes.push(node)
+        if (dagreGraphNode.width > currentRankMaxX) currentRankMaxX = dagreGraphNode.width
+        currentRankMaxY += dagreGraphNode.height + nodesep
+      }
+      // (选用) x,y (再偏移为中心对齐)
+      if (amend == 'center') {
+        for (const node of currentRankNodes) {
+          const dagreGraphNode = dagreGraph.node(node.id)
+          node.position = { x: maxX + (currentRankMaxX - dagreGraphNode.width)/2, y: node.position.y - currentRankMaxY/2 }
+        }
+      }
+      maxX += currentRankMaxX + ranksep
+    }
+
+    return newNodes
   }
   return { calcLayout }
 }
