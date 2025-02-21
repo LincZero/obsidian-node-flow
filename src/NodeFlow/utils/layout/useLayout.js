@@ -89,6 +89,7 @@ export function useLayout() {
 
     // step4. (new) 数据修正。rank的计算是对的，但xy的计算有问题。这里复用一下rank，然后我自己重算一下x, y
     // 强制LR布局
+    // 如果画布分成了多个不相连的部分，没有判断这种情况并进行额外优化，效果会比较差
     if (amend == 'none') return newNodes
     let maxX = 0
     const ranksep = 50 // x, 不同rank
@@ -116,7 +117,7 @@ export function useLayout() {
       if (amend == 'center') {
         for (const node of currentRankNodes) {
           const dagreGraphNode = dagreGraph.node(node.id)
-          node.position = { x: maxX + (currentRankMaxX - dagreGraphNode.width)/2, y: node.position.y - currentRankMaxY/2 }
+          node.position = { x: maxX + (currentRankMaxX - dagreGraphNode.width)/2, y: node.position.y - currentRankMaxY/2 + 500 } // 500是避免位置太靠上
         }
       }
       maxX += currentRankMaxX + ranksep

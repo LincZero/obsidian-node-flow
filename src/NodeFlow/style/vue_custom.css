@@ -790,6 +790,8 @@
 .dd-button > .dd-button-menu > button {
   height: var(--dd-button-height);
   margin-bottom: 4px;
+  white-space: pre;
+  display: block;
 }
 
 .dd-button .fade-enter-active, .dd-button .fade-leave-active {

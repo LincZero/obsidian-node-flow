@@ -105,7 +105,7 @@ watch(isNodeInitialized, (newValue, oldValue) => {
       nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
       nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
     ) {
-      refreshLayout('LR')
+      refreshLayout('LR', 'top')
     }
   }
 });

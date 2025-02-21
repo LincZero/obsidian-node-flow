@@ -26,6 +26,7 @@
         <button class="nf-btn" @click="selectItem('LR layout', () => fn_autoPos('LR'))">LR layout</button>
         <button class="nf-btn" @click="selectItem('TB layout', () => fn_autoPos('TB'))">TB layout</button>
         <button class="nf-btn" @click="selectItem('LR layout (center)', () => fn_autoPos('LR', 'center'))">LR layout (center)</button>
+        <button class="nf-btn" @click="selectItem('LR layout (top)', () => fn_autoPos('LR', 'top'))">LR layout (top)</button>
       </DropdownButton>
       <DropdownButton class="nf-btn" :label="'Copy md'" :fn="() => fn_copyData('mdData')" #default="{ selectItem }">
         <button class="nf-btn" @click="selectItem('Print json', () => fn_printData('jsonData'))">Print json</button>

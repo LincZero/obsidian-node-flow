@@ -622,6 +622,8 @@
     >button {
       height: var(--dd-button-height);
       margin-bottom: 4px;
+      white-space: pre;
+      display: block;
     }
   }
 
