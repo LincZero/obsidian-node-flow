@@ -2,6 +2,7 @@
 
 <template>
   <div class="obcanvas-node" :type="data.type">
+    <div class="obcanvas-group" v-show="data.type == 'group'">{{ newData.value }}</div>
     <MarkdownItem v-show="data.type != 'group'" :data="newData"></MarkdownItem>
   </div>
 
@@ -48,7 +49,7 @@ import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
   /* padding:10px; */
   /* border-radius:10px; */
   /* background:#f5f5f5; */
-  display:flex;
+  /* display:flex; */
   /* flex-direction:column; */
   /* justify-content:space-between; */
   align-items:center;
@@ -73,7 +74,13 @@ import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
   background-color: #00a2db22;
 }
 
-.obcanvas-node .markdown-item {
+.obcanvas-node>div.obcanvas-group {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 10px;
+}
+.obcanvas-node>.markdown-item {
   width: 100%;
   height: 100%;
 }
