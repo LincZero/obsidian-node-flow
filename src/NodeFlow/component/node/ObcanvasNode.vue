@@ -65,13 +65,13 @@ import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
 
   /* ob */
   /* padding: 16px 24px; */
-  border: 1px solid currentColor;
+  border: 0.5px solid currentColor;
   border-radius:12px;
 }
 
 .obcanvas-node[type="group"] {
   /* background-color: rgba($color:#00a2db, $alpha:0.8); */
-  background-color: #00a2db22;
+  background-color: #00a2db10;
 }
 
 .obcanvas-node>div.obcanvas-group {
