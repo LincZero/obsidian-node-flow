@@ -50,7 +50,7 @@ import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
   /* justify-content:space-between; */
   align-items:center;
   /* gap:10px; */
-  max-width:250px;
+  /* max-width:250px; */
 
   flex-direction:row;
   flex-wrap:wrap;

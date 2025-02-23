@@ -16,12 +16,12 @@ export function factoryFlowData_obcanvas(parsedData:any|string): {code: number, 
         // 数据转移：
         id: item.id,
         position: { x: item.x, y: item.y },
+        width: item.width+'px',
         data: {
           label: (item.hasOwnProperty("text")) ? item.text :
             (item.hasOwnProperty("file")) ? item.file : "Error Type: " + item.type
         },
         // 数据舍弃：
-        // item.width
         // item.height
         // item.type == "text"
         // 数据新增：

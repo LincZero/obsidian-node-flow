@@ -30,6 +30,7 @@ onMounted(() => {
 
 <style scoped>
 .markdown-item {
+  width: 100%;
   box-sizing: border-box;
   min-height: 24px;
   height: auto;
