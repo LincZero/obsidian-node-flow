@@ -69,7 +69,6 @@ import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
 }
 
 .obcanvas-node[type="group"] {
-  z-index: -999;
   /* background-color: rgba($color:#00a2db, $alpha:0.8); */
   background-color: #00a2db22;
 }

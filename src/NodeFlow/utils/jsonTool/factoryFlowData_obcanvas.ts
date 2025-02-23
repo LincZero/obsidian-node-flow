@@ -27,6 +27,7 @@ export function factoryFlowData_obcanvas(parsedData:any|string): {code: number, 
         },
         // 数据新增：
         type: "obcanvas",
+        ...(item.type=='group' ? {style: {zIndex: '-1'}}: {}),
       });
     })
 
