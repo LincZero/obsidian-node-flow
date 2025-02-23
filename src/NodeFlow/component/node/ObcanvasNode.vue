@@ -1,8 +1,8 @@
 <!-- Obsidian专用的节点 -->
 
 <template>
-  <div class="obcanvas-node">
-    <MarkdownItem :data="newData"></MarkdownItem>
+  <div class="obcanvas-node" :type="data.type">
+    <MarkdownItem v-show="data.type != 'group'" :data="newData"></MarkdownItem>
   </div>
 
   <Handle id="left" type="target" :position="Position.Left" />
@@ -41,6 +41,9 @@ import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
 <style scoped>
 /** 注意，.vue-flow__node-obcanvas>.obcanvas-node 结构中，前者在该styles scoped作用域之外 */
 .obcanvas-node {
+  width: 100%;
+  height: 100%;
+
   /* border:1px solid #777; */
   /* padding:10px; */
   /* border-radius:10px; */
@@ -63,6 +66,17 @@ import MarkdownItem from '../nodeItem/view/MarkdownItem.vue';
   /* padding: 16px 24px; */
   border: 1px solid currentColor;
   border-radius:12px;
+}
+
+.obcanvas-node[type="group"] {
+  z-index: -999;
+  /* background-color: rgba($color:#00a2db, $alpha:0.8); */
+  background-color: #00a2db22;
+}
+
+.obcanvas-node .markdown-item {
+  width: 100%;
+  height: 100%;
 }
 
 .vue-flow__handle {

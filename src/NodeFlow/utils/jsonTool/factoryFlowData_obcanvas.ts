@@ -16,14 +16,15 @@ export function factoryFlowData_obcanvas(parsedData:any|string): {code: number, 
         // 数据转移：
         id: item.id,
         position: { x: item.x, y: item.y },
-        width: item.width+'px',
+        ...(item.width ? {width: item.width+'px'} : {}),
+        ...(item.height ? {height: item.height+'px'} : {}), // 通常只有group类型有高度
         data: {
-          label: (item.hasOwnProperty("text")) ? item.text :
-            (item.hasOwnProperty("file")) ? item.file : "Error Type: " + item.type
+          label: (item.hasOwnProperty("text")) ? item.text :  // type: text
+            (item.hasOwnProperty("file")) ? item.file :       // type: 
+            (item.hasOwnProperty("label")) ? item.label :     // type: group
+            "Error Type: " + item.type,
+          type: item.type,
         },
-        // 数据舍弃：
-        // item.height
-        // item.type == "text"
         // 数据新增：
         type: "obcanvas",
       });

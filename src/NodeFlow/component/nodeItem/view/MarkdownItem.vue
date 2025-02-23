@@ -28,6 +28,12 @@ onMounted(() => {
 })
 </script>
 
+<style>
+.markdown-item .markdown-rendered>div:first-child>* { /* mdit版 */
+  margin-top: 4px;
+}
+</style>
+
 <style scoped>
 .markdown-item {
   width: 100%;
