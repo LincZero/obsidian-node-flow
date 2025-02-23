@@ -145,7 +145,6 @@ export function useLayout() {
                 dagreGraphNode.y = Math.max(sourceMinY, (dagreGraphNode.y + dagreGraphNode.height/2)) - dagreGraphNode.height/2
               }
             }
-            console.log('对比中心点：', node.id, sourceMinY, dagreGraphNode.y + dagreGraphNode.height/2)
           }
 
           // currentBox

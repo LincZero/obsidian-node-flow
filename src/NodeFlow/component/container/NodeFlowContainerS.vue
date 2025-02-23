@@ -189,9 +189,6 @@ onUnmounted(() => {
   document.removeEventListener('wheel', ()=>{})
 })
 function fn_initZoom() {
-  fitView({
-    offset: { x: 0, y: 0 }
-  })
   zoomTo(1)
 }
 </script>
