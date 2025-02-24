@@ -57,7 +57,7 @@
       </div>
     </div>
 
-    <div class="file-title"><p>{{fileTitle}}</p></div>
+    <!-- <div class="file-title"><p>{{fileTitle}}</p></div> -->
 
     <!-- Right -->
     <div class="menu-1" style="padding: 0 28px 0 16px; font-weight:bold; font-size: 16px; float: right;">
@@ -165,6 +165,12 @@ import { prefinedLayouts } from "./goldenLayout/predefined-layouts"
 
   div, p {
     color: var(--text-normal);
+  }
+
+  a {
+    color: #eee;
+    text-decoration: none;
+    font-weight: normal;
   }
 
   .menu-1:hover, .menu-2:hover{
