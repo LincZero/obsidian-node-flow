@@ -15,7 +15,7 @@ Item类型的节点
 -->
 
 <template>
-  <div class="item-node" :class="{'item-item': isItem}">
+  <div class="item-node oo-style" :class="{'item-item': isItem}">
     <!-- id项 -->
     <div v-show="id != ''" class="node-id">
       <div>#{{ id }}</div>
