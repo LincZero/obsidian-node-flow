@@ -7,7 +7,7 @@
     "build": "vite build"
   },
   "author": "LincZero",
-  "license": "MIT",
+  "license": "GNU Affero General Public License v3.0",
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
     "sass": "^1.84.0",
