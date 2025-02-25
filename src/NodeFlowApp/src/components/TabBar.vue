@@ -74,6 +74,17 @@
     <div class="menu-1" style="padding: 0 16px; font-weight:bold; font-size: 16px; float: right;">
       <a href="https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/docs/zh/">在线文档</a>
     </div>
+    <div class="menu-1" style="padding: 0 16px; font-weight:bold; font-size: 16px; float: right"
+      @click.stop="clickedMenu=clickedMenu==='serialLinks'?'':'serialLinks'"
+      @mouseover="clickedMenu=clickedMenu===''?'':'serialLinks'">
+      其他在线
+      <div class="menus-2" v-show="clickedMenu==='serialLinks'">
+        <div class="menu-2"><a href="https://any-block.github.io/obsidian-any-block/">AnyBlock</a></div>
+        <div class="menu-2"><a href="https://linczero.github.io/obsidian-node-flow/">NodeFlow</a></div>
+        <div class="menu-2"><a href="https://linczero.github.io/obsidian-chat-view-qq/">ChatView</a></div>
+        <div></div>
+      </div>
+    </div>
   </div>
 </template>
 
