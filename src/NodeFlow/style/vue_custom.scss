@@ -475,7 +475,8 @@
     width: 100%;
     border-radius: 8px;
 
-    border: solid 1px currentColor; // [!code]
+    --border-color: rgba($color: #c9c9c9, $alpha: 0); // alpha为0时不使用边框
+    border: solid 1px var(--border-color); // [!code]
     & { box-shadow: 3px 3px 10px 2px #111; }
     // &.none { box-shadow: 3px 3px 10px 2px #111; }
     &.ready { box-shadow: 0 0 8px 3px lightgreen; }
@@ -528,17 +529,17 @@
           width: 9px;
           height: 9px;
           position: absolute;
-          top: 13px;
+          top: 12px;
           border: 0;
           border-radius: 50%;
 
           &.target {
             left: -10px; // [!code] left: -15px;
-            background: conic-gradient(transparent 0deg 180deg, #c9c9c9 180deg 360deg);
+            background: conic-gradient(transparent 0deg 180deg, var(--border-color) 180deg 360deg);
           }
           &.source {
             right: -10px; // [!code] right: -15px;
-            background: conic-gradient(#c9c9c9 0deg 180deg, transparent 180deg 360deg);
+            background: conic-gradient(var(--border-color) 0deg 180deg, transparent 180deg 360deg);
           }
 
           &::before {
@@ -565,17 +566,18 @@
           width: 8px;
           height: 8px;
           position: absolute;
+          top: 12px;
           border: none;
           border-radius: 0;
           &.target { // 左
-            background: conic-gradient(transparent 0deg 135deg, #c9c9c9 135deg 315deg, transparent 315deg 360deg); // 原左下
+            background: conic-gradient(transparent 0deg 135deg, var(--border-color) 135deg 315deg, transparent 315deg 360deg); // 原左下
             transform-origin: center;
-            transform: translate(-50%, -50%) rotate(45deg) !important; // 顺. 注意自带的translate样式会后执行并影响旋转，所以这里合并自带的样式并规定执行顺序
+            // transform: translate(-50%, -50%) rotate(45deg) !important; // 顺. 注意自带的translate样式会后执行并影响旋转，所以这里合并自带的样式并规定执行顺序
           }
           &.source { // 右
-            background: conic-gradient(transparent 0deg 45deg, #c9c9c9 45deg 225deg, transparent 225deg 360deg); // 原右下
+            background: conic-gradient(transparent 0deg 45deg, var(--border-color) 45deg 225deg, transparent 225deg 360deg); // 原右下
             transform-origin: center;
-            transform: translate(50%, -50%) rotate(-45deg) !important; // 逆. 注意自带的translate样式会后执行并影响旋转，所以这里合并自带的样式并规定执行顺序
+            // transform: translate(50%, -50%) rotate(-45deg) !important; // 逆. 注意自带的translate样式会后执行并影响旋转，所以这里合并自带的样式并规定执行顺序
           }
 
           &::before {
@@ -587,7 +589,7 @@
             right: 1px;
             content: "";
             z-index: 2;
-            background: lightblue;
+            background: white;
           }
         }
 

@@ -520,7 +520,8 @@
   height: 100%;
   width: 100%;
   border-radius: 8px;
-  border: solid 1px currentColor;
+  --border-color: rgba(201, 201, 201, 0);
+  border: solid 1px var(--border-color);
 }
 
 .item-node.oo-style > .node-main {
@@ -596,19 +597,19 @@
   width: 9px;
   height: 9px;
   position: absolute;
-  top: 13px;
+  top: 12px;
   border: 0;
   border-radius: 50%;
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
   left: -10px;
-  background: conic-gradient(transparent 0deg 180deg, #c9c9c9 180deg 360deg);
+  background: conic-gradient(transparent 0deg 180deg, var(--border-color) 180deg 360deg);
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
   right: -10px;
-  background: conic-gradient(#c9c9c9 0deg 180deg, transparent 180deg 360deg);
+  background: conic-gradient(var(--border-color) 0deg 180deg, transparent 180deg 360deg);
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle::before {
@@ -630,20 +631,19 @@
   width: 8px;
   height: 8px;
   position: absolute;
+  top: 12px;
   border: none;
   border-radius: 0;
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"].target {
-  background: conic-gradient(transparent 0deg 135deg, #c9c9c9 135deg 315deg, transparent 315deg 360deg);
+  background: conic-gradient(transparent 0deg 135deg, var(--border-color) 135deg 315deg, transparent 315deg 360deg);
   transform-origin: center;
-  transform: translate(-50%, -50%) rotate(45deg) !important;
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"].source {
-  background: conic-gradient(transparent 0deg 45deg, #c9c9c9 45deg 225deg, transparent 225deg 360deg);
+  background: conic-gradient(transparent 0deg 45deg, var(--border-color) 45deg 225deg, transparent 225deg 360deg);
   transform-origin: center;
-  transform: translate(50%, -50%) rotate(-45deg) !important;
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"]::before {
@@ -655,7 +655,7 @@
   right: 1px;
   content: "";
   z-index: 2;
-  background: lightblue;
+  background: white;
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot {
