@@ -14,8 +14,10 @@ import { computed, nextTick, onMounted, ref } from 'vue';
 const props = withDefaults(defineProps<{
   data: any,
   isHideBorder?: boolean
+  codeType?: string
 }>(), {
-  isHideBorder: false
+  isHideBorder: false,
+  codeType: ''
 })
 
 // 可写属性
@@ -53,10 +55,35 @@ function handleInput(e:any) {
     autoSize(e.target)
   })
 }
+
+// 代码高亮
+import Prism from "prismjs" // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
+import 'prismjs/components/prism-javascript'; // 高亮类型
+import "prismjs/themes/prism-okaidia.min.css" // 主题, okaidia和tomorrow都是不错黑夜主题
+// console.log('Prism', typeof Prism) // Prism哪怕用不上也要调用一下，不然会被优化掉 (很奇怪)
+function handleInput2(e:any) {
+  Prism.highlightElement(e.target); // 但这样会重置光标
+}
+function handleInput3(e:any) {}
+// function highlightCode() {
+//   Prism.highlightElement(this.$refs.codeBlock);
+// }
+// console.log(`!!${writable_value.value}!!`)
 </script>
 
 <template>
+  <!-- 这里加一个空pre就出现一堆警告……很奇怪 -->
+  <pre
+    v-if="codeType!=''"
+    class="nf-textarea"
+    :class="{'without-border' : isHideBorder}"
+    contenteditable="true"
+    @input="handleInput3"
+  >
+    <code :class="'language-'+codeType" v-html="writable_value"></code>
+  </pre>
   <textarea
+    v-if="codeType==''"
     class="nf-textarea"
     :class="{'without-border' : isHideBorder}"
     v-model="writable_value"
@@ -69,9 +96,8 @@ function handleInput(e:any) {
   ></textarea>
 </template>
 
-
 <style scoped>
-textarea.nf-textarea {
+.nf-textarea {
   max-width: 500px;
   max-height: 900px;
   /* height: calc(24px - 4px); 可以被撑高*/
@@ -84,12 +110,18 @@ textarea.nf-textarea {
   resize: none; /* 禁止用户手动调整大小 */
   border-radius: 12px;
   
-  background: #222222;
-  color: currentColor;
   border: solid 1px #616161;
 }
-textarea.nf-textarea.without-border {
+.nf-textarea:hover {
+  cursor: text;
+}
+.nf-textarea.without-border {
   border: none;
   background: none;
+}
+
+textarea.nf-textarea {
+  background: #222222;
+  color: currentColor;
 }
 </style>

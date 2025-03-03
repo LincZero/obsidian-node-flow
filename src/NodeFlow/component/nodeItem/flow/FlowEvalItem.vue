@@ -17,7 +17,7 @@ TODO
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div style="height:0; clear: both;"></div>
     <div class="node-item-value2">
-      <NFTextArea :data="data"></NFTextArea>
+      <NFTextArea :data="data" codeType="js"></NFTextArea>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>

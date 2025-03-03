@@ -411,7 +411,9 @@ export const testData_listitem2 = `\
     - 空节点i, i
     - 空节点o, o
   - 运行四
-    - FlowEval:执行任意代码, io:item-floweval, console.log('debug output')
+    - FlowEval:执行任意代码, io:item-floweval, var a = 2;
+let b = a;
+console.log('debug output 逗号 b')
     - 空节点i, i
     - 空节点o, o
     - debug, :item-debug
