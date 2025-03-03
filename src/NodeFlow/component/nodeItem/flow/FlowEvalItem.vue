@@ -1,5 +1,15 @@
 <!--
 流程控制项 - Eval
+
+TODO
+- 用 $id 来表示节点的值 !!!
+- 然后这里i/o类型好像是可以部分写错的，只影响：
+  1. 显示方便
+  2. 动画流向
+  3. 自动布局 (好像也不影响)
+  4. 激发下层节点
+- 本质上所有节flow类别的节点都能用eval来完成
+- FIX：val的内容要允许有逗号
 -->
 
 <template>
@@ -35,9 +45,14 @@ const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType:
 import { useFlowControl } from './useFlowControl'
 const flowControl = useFlowControl(_useNodeId, _useSourceConnections, _useTargetConnections, async ()=>{
   try {
-    // eval(props.data.value) // 建议优先用 new Function 而非 eval
-    const func = new Function(props.data.value);
-    func();
+    // 构建上下文对象 (传入给函数进行访问使用)
+    const context = {
+      socketData: props.data,
+      source: {},
+      target: {}
+    }
+    const func = new Function('ctx', props.data.value); // 优先用 new Function 而非 eval
+    func(context);
     console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
     return true
   } catch (error) {
