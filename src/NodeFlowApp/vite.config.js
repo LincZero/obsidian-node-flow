@@ -13,7 +13,7 @@ export default defineConfig({
   },
   base: '/obsidian-node-flow/', // [!code] 临时，需要根据你要部署的位置进行修改
   server: {
-    port: 3000
+    port: 3060
   },
   root: path.resolve(__dirname, './'), // 确保 Vite 使用正确的根目录
   build: {

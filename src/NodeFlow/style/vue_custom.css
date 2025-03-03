@@ -329,11 +329,11 @@
   background-color: rgba(46, 70, 86, 0.25);
 }
 
-.item-node .item-item {
+.item-node.comfyui-style .item-item {
   margin: calc(8px + 20px) 0 8px;
 }
 
-.item-node > .node-id {
+.item-node.comfyui-style > .node-id {
   position: absolute;
   height: 0;
   line-height: 20px;
@@ -341,7 +341,7 @@
   width: 100%;
 }
 
-.item-node > .node-id div {
+.item-node.comfyui-style > .node-id div {
   position: relative;
   bottom: 22px;
   right: 4px;
@@ -354,49 +354,49 @@
   border-radius: 6px;
 }
 
-.item-node > .node-main {
+.item-node.comfyui-style > .node-main {
   height: 100%;
   width: 100%;
   border-radius: 8px;
 }
 
-.item-node > .node-main {
+.item-node.comfyui-style > .node-main {
   box-shadow: 3px 3px 10px 2px #111;
 }
 
-.item-node > .node-main.ready {
+.item-node.comfyui-style > .node-main.ready {
   box-shadow: 0 0 8px 3px lightgreen;
 }
 
-.item-node > .node-main.running {
+.item-node.comfyui-style > .node-main.running {
   box-shadow: 0 0 8px 3px green;
 }
 
-.item-node > .node-main.error {
+.item-node.comfyui-style > .node-main.error {
   box-shadow: 0 0 8px 3px red;
 }
 
-.item-node > .node-main .node-state {
+.item-node.comfyui-style > .node-main .node-state {
   background-color: #666666;
 }
 
-.item-node > .node-main.ready .node-state {
+.item-node.comfyui-style > .node-main.ready .node-state {
   background-color: lightgreen;
 }
 
-.item-node > .node-main.running .node-state {
+.item-node.comfyui-style > .node-main.running .node-state {
   background-color: green;
 }
 
-.item-node > .node-main.error .node-state {
+.item-node.comfyui-style > .node-main.error .node-state {
   background-color: red;
 }
 
-.item-node > .node-main.over .node-state {
+.item-node.comfyui-style > .node-main.over .node-state {
   background-color: cyan;
 }
 
-.item-node > .node-main > .node-title {
+.item-node.comfyui-style > .node-main > .node-title {
   height: 30px;
   line-height: 30px;
   font-size: 14px;
@@ -406,14 +406,14 @@
   background-color: rgba(46, 70, 86, 0.75);
 }
 
-.item-node > .node-main > .node-title > .node-state {
+.item-node.comfyui-style > .node-main > .node-title > .node-state {
   display: inline-block;
   height: 10px;
   width: 10px;
   border-radius: 5px;
 }
 
-.item-node > .node-main > .node-content {
+.item-node.comfyui-style > .node-main > .node-content {
   height: calc(100% - 30px);
   padding: 4px 24px 16px;
   border-radius: 0 0 8px 8px;
@@ -421,14 +421,14 @@
   background-color: rgba(53, 53, 53, 0.75);
 }
 
-.item-node > .node-main > .node-content > .line.node-item {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item {
   position: relative;
   font-size: 12px;
   min-height: 24px;
   margin-bottom: 4px;
 }
 
-.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {
   border: none;
   box-sizing: border-box;
   width: 8px;
@@ -438,7 +438,7 @@
   transform: none;
 }
 
-.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"] {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"] {
   background: transparent;
   border-radius: 0;
   border-left: 9px solid white;
@@ -446,50 +446,242 @@
   border-bottom: 5px solid transparent;
 }
 
-.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
   float: left;
   left: -15px;
 }
 
-.item-node > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
   float: right;
   right: -15px;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot {
   width: 100%;
   box-sizing: border-box;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot div {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot div {
   box-sizing: border-box;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
   color: #aaaaaa;
   background: none;
   border: none;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
   color: #c9c9c9;
   background: none;
   border: none;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
   float: left;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
   float: right;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name, .item-node > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-name {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name, .item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-name {
   float: right;
 }
 
-.item-node > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value, .item-node > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-value {
+.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value, .item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-value {
+  float: left;
+}
+
+.item-node.oo-style .item-item {
+  margin: calc(8px + 20px) 0 8px;
+}
+
+.item-node.oo-style > .node-id {
+  position: absolute;
+  height: 0;
+  line-height: 20px;
+  font-size: 12px;
+  width: 100%;
+}
+
+.item-node.oo-style > .node-id div {
+  position: relative;
+  bottom: 22px;
+  right: 4px;
+  height: 20px;
+  line-height: 20px;
+  float: right;
+  padding: 0 6px;
+  background-color: #0f1f0f;
+  color: #c9c9c9;
+  border-radius: 6px;
+}
+
+.item-node.oo-style > .node-main {
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  border: solid 1px currentColor;
+}
+
+.item-node.oo-style > .node-main.ready {
+  box-shadow: 0 0 8px 3px lightgreen;
+}
+
+.item-node.oo-style > .node-main.running {
+  box-shadow: 0 0 8px 3px green;
+}
+
+.item-node.oo-style > .node-main.error {
+  box-shadow: 0 0 8px 3px red;
+}
+
+.item-node.oo-style > .node-main .node-state {
+  background-color: #666666;
+}
+
+.item-node.oo-style > .node-main.ready .node-state {
+  background-color: lightgreen;
+}
+
+.item-node.oo-style > .node-main.running .node-state {
+  background-color: green;
+}
+
+.item-node.oo-style > .node-main.error .node-state {
+  background-color: red;
+}
+
+.item-node.oo-style > .node-main.over .node-state {
+  background-color: cyan;
+}
+
+.item-node.oo-style > .node-main > .node-title {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  color: #999999;
+  background-color: rgba(46, 70, 86, 0.75);
+}
+
+.item-node.oo-style > .node-main > .node-title > .node-state {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 5px;
+}
+
+.item-node.oo-style > .node-main > .node-content {
+  height: calc(100% - 30px);
+  padding: 4px 10px 16px;
+  border-radius: 0 0 8px 8px;
+  color: #aaaaaa;
+  background-color: rgba(53, 53, 53, 0.75);
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item {
+  position: relative;
+  font-size: 12px;
+  min-height: 24px;
+  margin-bottom: 4px;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle {
+  border: none;
+  box-sizing: border-box;
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  top: 8px;
+  transform: none;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"] {
+  background: transparent;
+  border-radius: 0;
+  border-left: 9px solid white;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle[type-attr^="item-flow"]::before {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target {
+  float: left;
+  left: -14px;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.target::before {
+  display: block;
+  width: 9px;
+  height: 9px;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: -1;
+  border-radius: 50%;
+  content: "";
+  background: conic-gradient(transparent 0deg 180deg, #c9c9c9 180deg 360deg);
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source {
+  float: right;
+  right: -14px;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item .vue-flow__handle.node-item-handle.source::before {
+  display: block;
+  width: 9px;
+  height: 9px;
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  z-index: -1;
+  border-radius: 50%;
+  content: "";
+  background: conic-gradient(#c9c9c9 0deg 180deg, transparent 180deg 360deg);
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot div {
+  box-sizing: border-box;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  color: #aaaaaa;
+  background: none;
+  border: none;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  color: #c9c9c9;
+  background: none;
+  border: none;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  float: left;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  float: right;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-name, .item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-name {
+  float: right;
+}
+
+.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot.output .node-item-value, .item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot.o .node-item-value {
   float: left;
 }
 

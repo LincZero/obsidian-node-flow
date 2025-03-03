@@ -15,6 +15,7 @@ Item类型的节点
 -->
 
 <template>
+  <!-- .item-node.comfyui-style 和 .item-node.oo-style 两种风格 -->
   <div class="item-node oo-style" :class="{'item-item': isItem}">
     <!-- id项 -->
     <div v-show="id != ''" class="node-id">
