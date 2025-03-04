@@ -248,21 +248,21 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
          * 解析规则
          *   解析 `k(:v)?` 串，可以构成一个二维数组。相较于一维数组，可以对语法进行精简
          *   单行value不支持内容有逗号和冒号，多行才支持
-         * self格式
-         *   节点 `id(:name)?`
-         *   接口 `id(:name), (i|o|v|""), (value)=""`
+         * self格式 (按顺序判断)
          *   线条 `from, from socket, to, to socket, (name)?` 且必定单行
+         *   接口 `id(:name), (i|o|v|""), (value)=""`
+         *   节点 `id(:name)?`
          *   特殊(节点项为节点的递归包含) `id(:name)`, 但缩进更大
          */
         const content = current_content
-        const l_content2 = content.split("\n") // 多行必为socket项
+        const isOneLine = content.trimEnd().split("\n").length == 1 // 多行必不为edge项
         const l_content = content.split(",")
         let ll_content:string[][] = []
         for (let item of l_content) {
           ll_content.push(item.trim().split(":"))
         }
         // 线
-        if (ll_content[3] && l_content2.length == 1) {
+        if (ll_content[3] && isOneLine) {
           current_item.self_data = {
             type: 'edge',
             id: ''+edge_id++,
