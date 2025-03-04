@@ -34,18 +34,15 @@ if (!props.data.value) props.data.value = "console.log('debug output')"; // [!co
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
   useNodeId, useNodesData,          // TheNode
-  useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
 } from '@vue-flow/core'
 const _useNodeId: string = useNodeId()
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 // 流程控制 - 操作
-const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
-const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
 import { useFlowControl } from './useFlowControl'
-const flowControl = useFlowControl(_useNodeId, _useSourceConnections, _useTargetConnections, async ()=>{
+const flowControl = useFlowControl(async ()=>{
   try {
-    // 构建上下文对象 (传入给函数进行访问使用)
+    // 上下文对象 数据插入 (传入给函数进行访问使用)
     const context = {
       socketData: props.data,
       source: {},
@@ -53,6 +50,8 @@ const flowControl = useFlowControl(_useNodeId, _useSourceConnections, _useTarget
     }
     const func = new Function('ctx', props.data.value); // 优先用 new Function 而非 eval
     func(context);
+    // 上下文对象 数据取出 (插入取出处理，主要是封装和简化操作)
+    // TODO
     console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
     return true
   } catch (error) {

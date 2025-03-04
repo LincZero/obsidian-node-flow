@@ -26,20 +26,15 @@ if (!props.data.value) props.data.value = 'https://httpbin.org/get'; // [!code]
 // 需要注意：use组合函数里如果用了inject等，必须要在setup作用域下工作，所以我们要缓存一次变量
 import {
   useNodeId, useNodesData,            // TheNode
-  useNodeConnections,                 // Near。注意: useHandleConnections API弃用，用useNodeConnections替代
-  useVueFlow
 } from '@vue-flow/core'
-const { updateNodeData } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 // 流程控制 - 操作
 import { nfSetting } from '../../../utils/main/setting'
 let resp_str = ref('')
-const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
-const _useTargetConnections: ComputedRef<any> = useNodeConnections({ handleType: 'source' })
 import { useFlowControl } from './useFlowControl'
-const flowControl = useFlowControl(_useNodeId, _useSourceConnections, _useTargetConnections, async () => {
+const flowControl = useFlowControl(async () => {
   try {
     const resp = await nfSetting.fn_request(props.data.value, 'GET', undefined, undefined)
     
