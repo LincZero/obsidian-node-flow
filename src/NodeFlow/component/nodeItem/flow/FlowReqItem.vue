@@ -34,7 +34,7 @@ const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 import { nfSetting } from '../../../utils/main/setting'
 let resp_str = ref('')
 import { useFlowControl } from './useFlowControl'
-const flowControl = useFlowControl(async () => {
+const nfNode = useFlowControl(async () => {
   try {
     const resp = await nfSetting.fn_request(props.data.value, 'GET', undefined, undefined)
     
@@ -69,7 +69,7 @@ const flowControl = useFlowControl(async () => {
 _useNodesData.value.data['runState'] = false
 watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   if (newVal.data.runState == 'ready') {
-    flowControl();
+    nfNode.start();
   }
 });
 

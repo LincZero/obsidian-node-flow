@@ -31,13 +31,13 @@ const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 // 流程控制 - 操作
 import { useFlowControl } from './useFlowControl'
-const flowControl = useFlowControl()
+const nfNode = useFlowControl()
 
 // 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
 _useNodesData.value.data['runState'] = 'none'
 watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   if (newVal.data.runState == 'ready') {
-    flowControl();
+    nfNode.start();
   }
 });
 </script>

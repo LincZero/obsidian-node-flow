@@ -25,7 +25,7 @@ const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 // 流程控制 - 操作
 import { useFlowControl } from './useFlowControl'
-const flowControl = useFlowControl(async () => {
+const nfNode = useFlowControl(async () => {
   await new Promise(resolve => setTimeout(resolve, 1000)); // delay 1000ms
   console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
   return true
@@ -35,7 +35,7 @@ const flowControl = useFlowControl(async () => {
 _useNodesData.value.data['runState'] = 'none'
 watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   if (newVal.data.runState == 'ready') {
-    flowControl();
+    nfNode.start();
   }
 })
 </script>

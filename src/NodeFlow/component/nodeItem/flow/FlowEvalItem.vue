@@ -40,7 +40,7 @@ const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 // 流程控制 - 操作
 import { useFlowControl } from './useFlowControl'
-const flowControl = useFlowControl(async ()=>{
+const nfNode = useFlowControl(async ()=>{
   try {
     // 上下文对象 数据插入 (传入给函数进行访问使用)
     const context = {
@@ -64,7 +64,7 @@ const flowControl = useFlowControl(async ()=>{
 _useNodesData.value.data['runState'] = 'none'
 watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   if (newVal.data.runState == 'ready') {
-    flowControl();
+    nfNode.start();
   }
 });
 </script>
