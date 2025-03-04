@@ -464,10 +464,12 @@
 }
 
 .item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  box-sizing: border-box;
   float: left;
 }
 
 .item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  box-sizing: border-box;
   float: right;
 }
 
@@ -656,10 +658,12 @@
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
+  box-sizing: border-box;
   float: left;
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
+  box-sizing: border-box;
   float: right;
 }
 

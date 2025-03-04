@@ -183,7 +183,6 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
 
 <style scoped>
 .nf-textarea {
-  max-width: 500px;
   max-height: 900px;
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
@@ -205,11 +204,13 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
 }
 
 textarea.nf-textarea {
+  max-width: 500px;
   background: #222222;
   color: currentColor;
   border-radius: 12px;
 }
 pre.nf-textarea {
+  max-width: none;
   border-radius: 6px;
 }
 </style>

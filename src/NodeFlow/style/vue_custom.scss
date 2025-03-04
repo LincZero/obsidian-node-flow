@@ -428,8 +428,8 @@
           div { box-sizing: border-box; }
           
           // &.input, &.i 或默认
-          .node-item-name { float: left; }
-          .node-item-value { float: right; }
+          .node-item-name { box-sizing: border-box; float: left; }
+          .node-item-value { box-sizing: border-box; float: right; }
           &.output, &.o {
             .node-item-name { float: right; }
             .node-item-value { float: left; }
@@ -597,8 +597,8 @@
           div { box-sizing: border-box; }
           
           // &.input, &.i 或默认
-          .node-item-name { float: left; }
-          .node-item-value { float: right; }
+          .node-item-name { box-sizing: border-box; float: left; }
+          .node-item-value { box-sizing: border-box; float: right; }
           &.output, &.o {
             .node-item-name { float: right; }
             .node-item-value { float: left; }
