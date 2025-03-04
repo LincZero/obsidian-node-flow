@@ -77,7 +77,11 @@ export function factoryFlowData_listitem(md:string): {code: number, msg: string,
     else if (md == "demo2") { md = testData_listitem2 }
     else if (md == "demoRPC") { md = testData_listitemRPC }
     else if (md == "demoHttp") { md = testData_listitemHttp }
-    else { return {code: -1, msg: "error demo: "+md, data: {}}  }
+    else if (md == "demoFlow") { md = testData_listitemFlow }
+    else { return {code: -1, msg: `error demo: ${md}
+
+support: demo, demo2, demoRPC, demoHttp, demoFlow
+`, data: {}}  }
   }
 
   // step1
@@ -442,7 +446,35 @@ console.log('debug output', b, ctx)
   - 运行一, 空节点o, 运行二, 空节点i
   - t1, o, t2, o
   - t2, oo, t3, o
+`
 
+export const testData_listitemFlow = `\
+- nodes
+  - node1
+    - nflow, o
+  - node2
+    - nflow, o
+  - node3
+    - nflow, i
+    - 流程, :item-markdown, 
+(1) 先找起始节点，并自动激发
+(2) 当一个节点所有上游节点完成后，自动激发
+  - node4
+    - flow, o:item-flow
+  - node5
+    - nflow, o
+  - node6
+    - flow, i:item-flow
+    - nflow, i
+    - 流程, :item-markdown,
+(1) 先找起始节点，并自动激发。可优先激发非flow节点
+(2) 当一个节点所有上游非flow节点完成，且其中一个flow节点完成，自动激发
+(3) 仅运行某节点时，则步骤一调整为找到该节点对应所需的所有起始节点
+- edges
+  - node1, nflow, node3, nflow
+  - node2, nflow, node3, nflow
+  - node4, flow, node6, flow
+  - node5, nflow, node6, nflow
 `
 
 // 隐藏，仅自用。用于某个应用软件

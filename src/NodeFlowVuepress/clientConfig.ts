@@ -6,7 +6,10 @@ import MyVueFlow from "./MyVueFlow.vue";
 import { nfSetting } from "../NodeFlow/index"
 // @env [环境] md渲染, mdit版本
 import MarkdownIt from "markdown-it";
-const md = MarkdownIt()
+const md = new MarkdownIt({
+  html: true, // 启用 HTML 标签解析
+  breaks: true // 将换行符转换为 <br> 标签
+})
 nfSetting.fn_renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): void => {
   el.classList.add("markdown-rendered")
 

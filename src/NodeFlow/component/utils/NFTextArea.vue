@@ -74,12 +74,11 @@ const ref_pre = ref<HTMLElement|null>(null)
 const ref_code = ref<HTMLElement|null>(null)
 onMounted(async ()=>{
   await nextTick()
-  if (!ref_code.value) return
+  if (!ref_pre.value || !ref_code.value) return
   Prism.highlightElement(ref_code.value)
 })
 async function handlePreInput(e: Event) { // 这里不用e，假设必为ref_pre、ref_code，简化流程
-  if (!ref_pre.value) return
-  if (!ref_code.value) return
+  if (!ref_pre.value || !ref_code.value) return
 
   // 光标1 - 保存
   const savedPos = handlePreInput_saveCursorPosition(ref_pre.value)
