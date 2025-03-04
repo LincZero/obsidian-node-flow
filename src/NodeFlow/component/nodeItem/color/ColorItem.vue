@@ -58,7 +58,6 @@ function getHighContrastTextColor(hexColor: string) {
   padding: 0;
   line-height: calc(24px - 4px);
   border-radius: 12px;
-  border: solid 1px currentColor;
   cursor: pointer;
   margin-left: 4px;
 }

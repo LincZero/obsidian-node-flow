@@ -9,7 +9,7 @@
     <div class="node-item-value2">
       <NFTextArea :data="data"></NFTextArea>
       <div style="height:0; clear: both;"></div>
-      <NFTextArea v-if="resp_str.length > 0" :data="{'value': resp_str}" style="margin-top: 4px"></NFTextArea>
+      <NFTextArea v-if="resp_str.length > 0" :data="{'value': resp_str}" codeType="json" style="margin-top: 4px"></NFTextArea>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -95,7 +95,6 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   margin: 8px 0 8px 9px;
 
   border-radius: 12px;
-  border: solid 1px currentColor;
   cursor: pointer;
 }
 </style>

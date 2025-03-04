@@ -65,7 +65,6 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
   margin: 8px 0 8px 9px;
 
   border-radius: 12px;
-  border: solid 1px currentColor;
   cursor: pointer;
 }
 </style>

@@ -104,7 +104,6 @@ function clearAllNodesState() {
   /* padding: 2px 14px; */
   line-height: calc(24px - 4px);
   border-radius: 12px;
-  border: solid 1px currentColor;
 }
 
 .feat-item .node-item-value>* {

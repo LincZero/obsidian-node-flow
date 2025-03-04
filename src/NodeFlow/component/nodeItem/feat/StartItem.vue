@@ -59,7 +59,6 @@ const debugConsole_start = async () => {
 
   line-height: calc(100% - 4px);
   border-radius: 12px;
-  border: solid 1px currentColor;
   cursor: pointer;
 }
 </style>

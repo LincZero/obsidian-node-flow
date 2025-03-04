@@ -63,7 +63,8 @@ function handleInput(e:any) {
 
 // 代码高亮
 import Prism from "prismjs" // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
-import 'prismjs/components/prism-javascript'; // 高亮类型
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-json';
 import "prismjs/themes/prism-okaidia.min.css" // 主题, okaidia和tomorrow都是不错黑夜主题
 // console.log('Prism', typeof Prism) // Prism哪怕用不上也要调用一下，不然会被优化掉 (很奇怪)
 // 使用方法:

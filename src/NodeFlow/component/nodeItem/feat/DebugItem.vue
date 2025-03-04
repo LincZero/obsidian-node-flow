@@ -103,7 +103,6 @@ const _useEdgesData1: ComputedRef<any> = useEdgesData(_getEdges[0]?.id)
   /* padding: 2px 14px; */
   line-height: calc(24px - 4px);
   border-radius: 12px;
-  border: solid 1px currentColor;
 }
 
 .debug-item .node-item-value>* {

@@ -464,18 +464,6 @@
 }
 
 .item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
-  color: #aaaaaa;
-  background: none;
-  border: none;
-}
-
-.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
-  color: #c9c9c9;
-  background: none;
-  border: none;
-}
-
-.item-node.comfyui-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
   float: left;
 }
 
@@ -665,18 +653,6 @@
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot div {
   box-sizing: border-box;
-}
-
-.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {
-  color: #aaaaaa;
-  background: none;
-  border: none;
-}
-
-.item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-value {
-  color: #c9c9c9;
-  background: none;
-  border: none;
 }
 
 .item-node.oo-style > .node-main > .node-content > .line.node-item > .node-item-slot .node-item-name {

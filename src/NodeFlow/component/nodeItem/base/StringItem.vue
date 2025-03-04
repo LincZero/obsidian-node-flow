@@ -1,7 +1,19 @@
-<!-- 字符串项/默认项 -->
+<!-- 字符串项/默认项
+
+调试测试:
+    - 多行md, :item-markdown, # 多行md1
+多行md2
+   - 多行str, :item-string, 多行str1
+多行str2
+   - 仅name,,
+   - 仅value:,, 仅value
+   - 都有,, 都有
+-->
 
 <template>
-  <div ref="TextArea2" :class="'string-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
+  <div ref="TextArea2"
+    class="string-item  node-item-slot"
+    :class="{...props.data.refType, 'has-value': props.data.value != '', 'mulline-value': props.data.value.includes('\n') }">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <NFTextArea class="node-item-value" :data="data" :isHideBorder="true"></NFTextArea>
     <div style="height:0; clear: both;"></div>
@@ -18,51 +30,51 @@ const props = defineProps<{
 </script>
 
 <style scoped>
+/* string, md共用. 主要是根据value的不同有三种样式 */
 .string-item {
-  /* layout */
   box-sizing: border-box;
   min-height: 24px;
   height: auto;
 
   padding: 2px 0px;
 }
-.string-item.has-value {
+.string-item .node-item-name { line-height: calc(24px - 4px); }
+.string-item .node-item-value { line-height: calc(24px - 4px); }
+/* 1. 无value */
+.string-item:not(.has-value) {
+  background: none;
+  border: 0;
+}
+ /* 2. 单行value */
+.string-item.has-value:not(.mulline-value) {
   padding: 1px 0;
+  background-color: #222222;
   border: solid 1px #616161;
   border-radius: 13px;
+}
+.string-item.has-value:not(.mulline-value) .node-item-name { padding: 0 12px; }
+.string-item.has-value:not(.mulline-value) .node-item-value { margin-left: 4px; }
+/* 3. 多行value */
+.string-item.has-value.mulline-value {
+  background: none;
+}
+.string-item.has-value.mulline-value .node-item-name {
+  float: none !important;
+}
+.string-item.has-value.mulline-value .node-item-value {
+  float: none !important;
   background-color: #222222;
+  border: solid 1px #616161;
+  border-radius: 13px;
 }
-.string-item.has-value .node-item-name { padding: 0 12px; }
-.string-item.has-value .node-item-value { padding: 0 12px; }
 
-.node-item-name {
-  /* height: calc(24px - 4px); 可以被撑高*/
-  line-height: calc(24px - 4px);
-}
-.node-item-value {
-  /* height: calc(24px - 4px); 可以被撑高*/
-  line-height: calc(24px - 4px);
-  margin: 0;
-  margin-left: 4px;
-}
-textarea.node-item-value {
-  /* overflow: auto; */
-  overflow: hidden;
-  white-space: pre;
-  resize: none; /* 禁止用户手动调整大小 */
-  border-radius: 12px;
-  line-height: 20px;
-}
+/* --- */
 
 /* 有i/o类型时 */
 .string-item .node-item-value { /* default/input/i */
   text-align: right;
-  margin-left: 8px;
-  margin-right: 0;
 }
 .string-item.output .node-item-value, .string-item.o .node-item-value {
   text-align: left;
-  margin-left: 0;
-  margin-right: 8px;
 }
 </style>

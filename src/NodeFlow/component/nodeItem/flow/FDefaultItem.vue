@@ -63,7 +63,6 @@ watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
 
   line-height: calc(100% - 4px);
   border-radius: 12px;
-  border: solid 1px currentColor;
   cursor: pointer;
 }
 </style>
