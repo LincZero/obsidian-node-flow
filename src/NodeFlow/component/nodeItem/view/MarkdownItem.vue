@@ -41,7 +41,7 @@ onMounted(() => {
 /* string, md共用. 主要是根据value的不同有三种样式 */
 .markdown-item {
   box-sizing: border-box;
-  min-height: 24px;
+  min-height: 24px; /* (20+4+0)+4 */
   height: auto;
 
   padding: 2px 0px;
@@ -55,6 +55,7 @@ onMounted(() => {
 }
  /* 2. 单行value */
 .markdown-item.has-value:not(.mulline-value) {
+  height: 24px;
   padding: 1px 0;
   background-color: #222222;
   border: solid 1px #616161;
@@ -79,7 +80,6 @@ onMounted(() => {
 /* --- */
 
 .markdown-item .node-item-value {
-  box-sizing: border-box;
   padding: 0 12px;
 }
 </style>

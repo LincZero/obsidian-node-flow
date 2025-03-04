@@ -3,10 +3,11 @@
 
 特性：
 
-- 自适应： 高宽、换行、无需手动尺寸
-- 样式： 黑暗主题、代码高亮 (TODO)、取消拼写检查
+- 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
+- 样式： 黑暗主题、普通文本/代码高亮模式、取消拼写检查
 - TODO 多行拼接： 使用 `\` 结尾再换行，可以优化显示
-- TODO Tab键
+- TODO Tab键、Shift键
+- TODO 最末尾的空白行异常、中文输入异常
 -->
 
 <script setup lang="ts">
@@ -35,10 +36,11 @@ const writable_value = computed({
 function autoSize(el:HTMLElement) {
   if (!el) { return }
   el.style.height = 'auto';
-  if (el.scrollHeight) {
-    // 这里有个无理的东西，当只有一行时，值会偏大。预期20，实际25。在想是不是因为滚动条个上下两端的占位的原因
-    el.style.height = (el.scrollHeight<30 ? "20px" : el.scrollHeight + 'px');
-  }
+  // 废弃该逻辑，转而使用 "单行模式"
+  // 这里有个无理的东西，当只有一行时，值会偏大。预期20，实际25。在想是不是因为滚动条个上下两端的占位的原因
+  // if (el.scrollHeight) {
+  //   el.style.height = (el.scrollHeight<30 ? "20px" : el.scrollHeight + 'px');
+  // }
   el.style.width = 'auto';
   if (el.scrollWidth) {
     // 12是横向padding右侧的值
@@ -94,6 +96,7 @@ async function handlePreInput(e: Event) { // 这里不用e，假设必为ref_pre
   Prism.highlightElement(ref_code.value)
 
   // 光标2 - 恢复
+  // TODO fix bug，和这里无关，哪怕不恢复光标也会出现：代码块高度少一的问题。最后一个纯空行不予显示!
   if (savedPos) { handlePreInput_restoreCursorPosition(ref_pre.value, savedPos.start, savedPos.end) }
 }
 // 代码高亮 - 保存光标位置
@@ -156,7 +159,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       @input="handlePreInput"
       v-if="codeType!=''"
       class="nf-textarea"
-      :class="{'without-border' : isHideBorder}"
+      :class="{'without-border' : isHideBorder, 'mulline-value': props.data.value.includes('\n')}"
       contenteditable="true"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
@@ -172,7 +175,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       v-model="writable_value"
       v-if="codeType==''"
       class="nf-textarea"
-      :class="{'without-border' : isHideBorder}"
+      :class="{'without-border' : isHideBorder, 'mulline-value': props.data.value.includes('\n')}"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
       :rows="writable_value.split('\n').length"
@@ -183,6 +186,8 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
 
 <style scoped>
 .nf-textarea {
+  max-width: 500px;
+  box-sizing: border-box;
   max-height: 900px;
   /* height: calc(24px - 4px); 可以被撑高*/
   line-height: calc(24px - 4px);
@@ -204,13 +209,17 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
 }
 
 textarea.nf-textarea {
-  max-width: 500px;
   background: #222222;
   color: currentColor;
   border-radius: 12px;
 }
 pre.nf-textarea {
-  max-width: none;
   border-radius: 6px;
+}
+
+.nf-textarea:not(.mulline-value) {
+  height: 24px !important; /* (20+0+2)+4 单行模式下覆盖js的计算值 */
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 </style>
