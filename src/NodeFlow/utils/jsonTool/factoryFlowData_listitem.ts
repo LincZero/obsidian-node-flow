@@ -251,17 +251,18 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
          * self格式
          *   节点 `id(:name)?`
          *   接口 `id(:name), (i|o|v|""), (value)=""`
-         *   线条 `from, from socket, to, to socket, (name)?`
+         *   线条 `from, from socket, to, to socket, (name)?` 且必定单行
          *   特殊(节点项为节点的递归包含) `id(:name)`, 但缩进更大
          */
-        let ll_content:string[][] = []
         const content = current_content
+        const l_content2 = content.split("\n") // 多行必为socket项
         const l_content = content.split(",")
+        let ll_content:string[][] = []
         for (let item of l_content) {
           ll_content.push(item.trim().split(":"))
         }
         // 线
-        if (ll_content[3]) {
+        if (ll_content[3] && l_content2.length == 1) {
           current_item.self_data = {
             type: 'edge',
             id: ''+edge_id++,
@@ -283,7 +284,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
             id: ll_content[0][0],
             name: ll_content[0][1]??ll_content[0][0],
             parentId: '', parent: null,
-            value: l_content[2] ? l_content[2].trim() : '', // 这里不要被 `:` 切分，有可能是url来的
+            value: content.substring(l_content[0].length + l_content[1].length + 2).trimStart(), // 这里不要被 `:/,` 切分，有可能是url/代码来的
             items: []
           }
         }
@@ -411,9 +412,9 @@ export const testData_listitem2 = `\
     - 空节点i, i
     - 空节点o, o
   - 运行四
-    - FlowEval:执行任意代码, io:item-floweval, var a = 2;
-let b = a;
-console.log('debug output 逗号 b')
+    - FlowEval:执行任意代码, io:item-floweval, var a = 2
+let b = a
+console.log('debug output', b, ctx)
     - 空节点i, i
     - 空节点o, o
     - debug, :item-debug
