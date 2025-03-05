@@ -15,7 +15,6 @@
   
 <script setup lang="ts">
 import NFTextArea from '../../utils/NFTextArea.vue'
-import { ComputedRef, computed, ref, watch } from 'vue';
 const props = defineProps<{
   data: any,
 }>();
@@ -26,7 +25,6 @@ import {
   useNodeId, useNodesData,          // TheNode
 } from '@vue-flow/core'
 const _useNodeId: string = useNodeId()
-const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 // 流程控制 - 操作
 import { useFlowControl } from './useFlowControl'
@@ -35,14 +33,6 @@ const nfNode = useFlowControl(async () => {
   console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} delay:${props.data.value}`);
   return true
 })
-
-// 流程控制 - 钩子 (注意修改和监听的都是父节点的数据，而不是本handle的数据)
-_useNodesData.value.data['runState'] = 'none'
-watch(_useNodesData, (newVal, oldVal) => { // watch: props.data.runState
-  if (newVal.data.runState == 'ready') {
-    nfNode.start();
-  }
-});
 </script>
 
 <style scoped>

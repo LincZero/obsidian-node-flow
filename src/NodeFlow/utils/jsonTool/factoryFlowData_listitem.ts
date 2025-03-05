@@ -456,7 +456,7 @@ export const testData_listitemFlow = `\
     - nflow, o
   - node3
     - nflow, i
-    - 流程, :item-markdown, 
+    - 流程, :item-markdown,
 (1) 先找起始节点，并自动激发
 (2) 当一个节点所有上游节点完成后，自动激发
   - node4
@@ -470,6 +470,30 @@ export const testData_listitemFlow = `\
 (1) 先找起始节点，并自动激发。可优先激发非flow节点
 (2) 当一个节点所有上游非flow节点完成，且其中一个flow节点完成，自动激发
 (3) 仅运行某节点时，则步骤一调整为找到该节点对应所需的所有起始节点
+  - node7
+    - 一致性问题, :item-markdown, 
+## 节点数据分为两部分
++ 库必要部分
++ 节点私有数据
+
+## 需要关注一致性数据的有
++ 原序列化数据
+  + 内容: 节点私有数据
+  + 获取: 一般不获取
+  + 一致性: 无需关心。不实时保证，只有在初始化和保存后才和主数据一致
++ 主props.data
+  + 内容: 节点私有数据，所有组件共用一个对象
+  + 获取: 节点自己的通过prop中获取，否则通过vueflow里的方法获取
+  + 一致性: 恒一致
++ 库数据
+  + 内容: 节点私有数据+库必要部分，库中使用inject存储一个对象
+  + 获取: 通过vueflow里的方法获取
+  + 一致性: 恒一致。但节点私有数据没有watch depth，需要手动激发
++ 运算类
+  + 内容: 节点私有数据，每个节点/运行项有一个该对象
+  + 获取: 节点自己的通过setup作用域里创建的类对象获取，而类再通过vueflow里的方法获取
+  + 一致性: 无需关心。只有在开始运行时，才会一致
+    - debug, :item-debug
 - edges
   - node1, nflow, node3, nflow
   - node2, nflow, node3, nflow

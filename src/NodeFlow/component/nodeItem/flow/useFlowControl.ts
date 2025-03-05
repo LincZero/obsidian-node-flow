@@ -16,9 +16,11 @@ export function useFlowControl(fn = async ()=>{ return true }) {
 
 // 带控制的节点类
 // 
+// 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
+// 
 // 注意项
+// - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
 // - 控制附加、装饰类: 如果节点流像NodeFlow的V1.0版本那样是用于纯显示的，则可以去除对该类的依赖和使用
-// - use类: 需要在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
 // - 功能类、运行时类、RAII类: 仅控制流程，尽量不存储状态，避免需要维护一致性
 // 
 // 封装成类主要是为了：
@@ -28,6 +30,7 @@ class NFNode {
   // 静态的东西
   id: string
   fn: Function
+  private _useNodesData: ComputedRef<any>
   private _useSourceConnections: ComputedRef<any>
   private _useTargetConnections: ComputedRef<any>
   private updateNodeData: Function
@@ -42,16 +45,28 @@ class NFNode {
   constructor(id: string, fn: Function) {
     this.id = id
     this.fn = fn
+    this._useNodesData = useNodesData(this.id)
     this._useSourceConnections = useNodeConnections({ handleType: 'target' })
     this._useTargetConnections = useNodeConnections({ handleType: 'source' })
     const { updateNodeData, findNode } = useVueFlow()
     this.updateNodeData = updateNodeData
     this.findNode = findNode
+
+    // 流程控制 - 钩子 (注意修改和监听的都是节点的数据，而不是handle的数据)
+    this._useNodesData.value.data['runState'] = 'none'
+    watch(this._useNodesData, (newVal, oldVal) => { // watch: props.data.runState
+      if (newVal.data.runState == 'ready') {
+        this.start();
+      }
+    });
     
     console.log('>>> UseNFNode ' + this.id)
   }
 
+  // 被调用：主动触发或被动触发
   public async start() {
+    this.update()
+
     // step1. 处理上一节点
     this.start_dealLast()
   
@@ -68,6 +83,10 @@ class NFNode {
     // step3. 处理、激发下一个节点
     this.start_dealNext()
   }
+
+  // 更新数据，每次运行前都要调用，同步一致性
+  // TODO
+  public async update() {}
 
   // 处理上一节点
   // 获取上一个节点的值，遍历所有连接线
