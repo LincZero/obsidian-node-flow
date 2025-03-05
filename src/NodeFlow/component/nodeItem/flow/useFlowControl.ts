@@ -48,6 +48,7 @@ class NFNode {
   // 是将items转化为的更适合运行的版本: 
   // 1. 区分io (仅视觉使用时不区分target、source。仅当需要流程控制时才区分他们)
   // 2. 数组转对象，调用更快
+  // 3. 不同的环境使用不同的上下文。js可以用vue proxy，python等可以用object，走http需要精简则可以再提供精简版
   private ctx: { // 纯object。简化了ctx、用户脚本不与底层关联、易于操作
     targetValues: {[key:string]: object},
     sourceValues: {[key:string]: object},
@@ -95,6 +96,10 @@ class NFNode {
   // 清空、准备上下文对象
   public async start_ctxInit() {
     this.ctx = {
+      targetValues: {},
+      sourceValues: {},
+    }
+    this.ctx2 = {
       targetValues: {},
       sourceValues: {},
     }
@@ -157,7 +162,8 @@ class NFNode {
 
     // 将输出结果同步回去
     for (const [key, value] of Object.entries(this.ctx.targetValues)) {
-      this.ctx2.targetValues[key].value = value
+      const tmp = this.ctx2.targetValues[key]
+      if (tmp) tmp.value = value
     }
     thisData.data.runState = 'over'; this.updateNodeData(this.id, thisData.data);
   }
