@@ -16,7 +16,6 @@
 const props = defineProps<{
   data: any
 }>()
-console.log('mddd',props.data.value)
 import { onMounted, ref } from 'vue';
 const MdArea = ref()
 
@@ -79,7 +78,10 @@ onMounted(() => {
 
 /* --- */
 
-.markdown-item .node-item-value {
+.markdown-item.has-value.mulline-value .node-item-value {
+  padding: 12px;
+}
+.markdown-item.has-value:not(.mulline-value) .node-item-value {
   padding: 0 12px;
 }
 </style>

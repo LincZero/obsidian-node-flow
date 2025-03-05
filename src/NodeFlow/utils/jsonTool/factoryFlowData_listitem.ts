@@ -188,7 +188,7 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
       /**
        * no change current, 仅处理追加项
        * 
-       * 有几策略
+       * 有几个策略
        * 1. (旧选用) 先解析，发现非项再追加到项的value部分
        *    优点：一次遍历
        *    缺点：耦合较高，与self_data格式没解耦开
@@ -207,9 +207,9 @@ function factoryFlowData_list2nest(md: string): {code: number, msg: string, data
           current_index++;
           continue
         }
-        if (!next_exp[2]) { // 追加项
-          current_line += "\n" + next_exp[3]
-          current_content += "\n" + next_exp[3]
+        if (!next_exp[2]) { // 追加项 // TODO 不支持列表内换行对齐
+          current_line += "\n" + next_line
+          current_content += "\n" + next_line
           current_index++
           continue
         }
