@@ -3,14 +3,14 @@ import {
   useNodeId, useNodesData,          // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
 } from '@vue-flow/core'
-import { ComputedRef, computed, ref, watch } from 'vue';
+import { ComputedRef, computed, ref, unref, toRaw, watch } from 'vue';
 
 /**
  * 流程控制
  * 
  * 流程: 获取值 -> 执行回调函数 + 缓存值 -> 激发下一节点
  */
-export function useFlowControl(fn = async ()=>{ return true }) {
+export function useFlowControl(fn : (ctx:any)=>Promise<boolean> = async () => { return true }) {
   return new NFNode(useNodeId(), fn)
 }
 
@@ -26,23 +26,38 @@ export function useFlowControl(fn = async ()=>{ return true }) {
 // 封装成类主要是为了：
 // 1. 方便在中间插入自定义行为
 // 2. 方便evalItem中用户脚本的调用
+//
+// 流程
+// 1. setup作用域创建实例，自动注册watch
+// 2. 手动启动 start()
+//   1. 清空上下文 | start_ctxInit   | 重初始化 ctx
+//   2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
+//   3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
+//   4. 处理下游节点 | start_dealLast
 class NFNode {
   // 静态的东西
   id: string
-  fn: Function
+  private fn: (ctx: any) => Promise<boolean>;
   private _useNodesData: ComputedRef<any>
   private _useSourceConnections: ComputedRef<any>
   private _useTargetConnections: ComputedRef<any>
-  private updateNodeData: Function
-  private findNode: Function
+  private updateNodeData
+  private findNode
 
-  // 仅用于运行缓存
-  private thisNode: any
+  // 运行时参数，仅运行时能保证一致性
+  // 是将items转化为的更适合运行的版本: 
+  // 1. 区分io (仅视觉使用时不区分target、source。仅当需要流程控制时才区分他们)
+  // 2. 数组转对象，调用更快
+  private ctx: { // 纯object。简化了ctx、用户脚本不与底层关联、易于操作
+    targetValues: {[key:string]: object},
+    sourceValues: {[key:string]: object},
+  }
+  private ctx2: { // Proxy类型，用于将ctx内容的修改同步回去
+    targetValues: {[key:string]: any},
+    sourceValues: {[key:string]: any},
+  }
 
-  // 仅视觉使用时不区分target、source。仅当需要流程控制时才区分他们
-  // public: ctx
-
-  constructor(id: string, fn: Function) {
+  constructor(id: string, fn: (ctx: any) => Promise<boolean>) {
     this.id = id
     this.fn = fn
     this._useNodesData = useNodesData(this.id)
@@ -65,35 +80,48 @@ class NFNode {
 
   // 被调用：主动触发或被动触发
   public async start() {
-    this.update()
+    await this.start_ctxInit()
 
     // step1. 处理上一节点
-    this.start_dealLast()
+    await this.start_dealLast()
   
     // step2. 处理本节点
-    const thisData = this.findNode(this.id)
-    thisData.data.runState = 'running'; this.updateNodeData(this.id, thisData.data);
-    const result = await this.fn()
-    if (!result) {
-      thisData.data.runState = 'error'; this.updateNodeData(this.id, thisData.data);
-      return
-    }
-    thisData.data.runState = 'over'; this.updateNodeData(this.id, thisData.data);
+    await this.start_dealSelf()
   
     // step3. 处理、激发下一个节点
-    this.start_dealNext()
+    await this.start_dealNext()
   }
 
-  // 更新数据，每次运行前都要调用，同步一致性
-  // TODO
-  public async update() {}
+  // 清空、准备上下文对象
+  public async start_ctxInit() {
+    this.ctx = {
+      targetValues: {},
+      sourceValues: {},
+    }
+
+    const thisNode = this.findNode(this.id)
+    const thisItems = thisNode.data.items
+    for (const item of thisItems) {
+      if (item.refType == 'io') {
+        this.ctx.targetValues[item.id] = toRaw(item); this.ctx2.targetValues[item.id] = item
+        this.ctx.sourceValues[item.id] = toRaw(item); this.ctx2.sourceValues[item.id] = item
+      }
+      else if (item.refType == 'o' || item.refType == 'output') {
+        this.ctx.targetValues[item.id] = toRaw(item); this.ctx2.targetValues[item.id] = item
+      }
+      else {
+        this.ctx.sourceValues[item.id] = toRaw(item); this.ctx2.sourceValues[item.id] = item
+      }
+    }
+  }
 
   // 处理上一节点
   // 获取上一个节点的值，遍历所有连接线
   public async start_dealLast() {
     for (const connection of this._useSourceConnections.value) {
-      // 对端节点项的值
       const sourceNode = this.findNode(connection.source)
+
+      // 上游节点状态检查
       if (sourceNode.data.runState != 'over') { // 前面的节点没准备好，等待下一次被激活
         console.warn(`#${this.id} 前面的 #${connection.source} 没准备好，等待再次被激发`)
         // TODO 有线程冲突风险，一个方法是加个定时器待会再检查一下
@@ -102,25 +130,36 @@ class NFNode {
         // const thisData = findNode(this.id)
         return
       }
+
+      // 上游节点项的值获取
       const sourceItems = sourceNode.data.items
-      let sourceValue = ""
       for (const item of sourceItems) { // TODO socket值的获取很烦，不能直接获取，要绕个大弯。有非常大的优化空间。如item的寻找速度可以优化，用key-value
         if (item.id == connection.sourceHandle) {
-          sourceValue = item.cacheValue ?? item.value // cahceView > defaultView(value)
-          break
-        }
-      }
-
-      // 自身节点项的值
-      const thisNode = this.findNode(this.id)
-      const thisItems = thisNode.data.items
-      for (const item of thisItems) {
-        if (item.id == connection.targetHandle) {
-          item.cacheValue = sourceValue // cahceView > defaultView(value)
+          // 自身节点项的值
+          this.ctx.sourceValues[connection.targetHandle] = toRaw(item); this.ctx2.sourceValues[connection.targetHandle] = item
           break
         }
       }
     }
+  }
+
+  // 处理自身节点
+  public async start_dealSelf() {
+    const thisData = this.findNode(this.id)
+    thisData.data.runState = 'running'; this.updateNodeData(this.id, thisData.data);
+
+    // 执行自定义代码
+    const result = await this.fn(this.ctx)
+    if (!result) {
+      thisData.data.runState = 'error'; this.updateNodeData(this.id, thisData.data);
+      return
+    }
+
+    // 将输出结果同步回去
+    for (const [key, value] of Object.entries(this.ctx.targetValues)) {
+      this.ctx2.targetValues[key].value = value
+    }
+    thisData.data.runState = 'over'; this.updateNodeData(this.id, thisData.data);
   }
 
   // 处理、激发下一个节点

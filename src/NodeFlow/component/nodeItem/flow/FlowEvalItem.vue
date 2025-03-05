@@ -38,16 +38,10 @@ const _useNodeId: string = useNodeId()
 
 // 流程控制 - 操作
 import { useFlowControl } from './useFlowControl'
-const nfNode = useFlowControl(async ()=>{
+const nfNode = useFlowControl(async (ctx: any)=>{
   try {
-    // 上下文对象 数据插入 (传入给函数进行访问使用)
-    const context = {
-      socketData: props.data,
-      source: {},
-      target: {}
-    }
     const func = new Function('ctx', props.data.value); // 优先用 new Function 而非 eval
-    func(context);
+    func(ctx);
     // 上下文对象 数据取出 (插入取出处理，主要是封装和简化操作)
     // TODO
     console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
