@@ -20,10 +20,6 @@ const props = defineProps<{
   data: any,
 }>();
 if (!props.data.value) props.data.value = ''; // [!code]
-
-// 流程控制 - 操作
-import { useFlowControl } from './useFlowControl'
-const nfNode = useFlowControl()
 </script>
 
 <style scoped>
@@ -50,4 +46,3 @@ const nfNode = useFlowControl()
   cursor: pointer;
 }
 </style>
-./useFlowControl

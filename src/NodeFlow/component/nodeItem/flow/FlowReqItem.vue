@@ -32,8 +32,10 @@ const _useNodeId: string = useNodeId()
 // 流程控制 - 操作
 import { nfSetting } from '../../../utils/main/setting'
 let resp_str = ref('')
-import { useFlowControl } from './useFlowControl'
-const nfNode = useFlowControl(async () => {
+import { inject } from 'vue';
+import { type NFNode } from '../../utils/NFNode';
+const nfNode:NFNode = inject('nfNode');
+nfNode.fn = async () => {
   try {
     const resp = await nfSetting.fn_request(props.data.value, 'GET', undefined, undefined)
     
@@ -62,7 +64,7 @@ const nfNode = useFlowControl(async () => {
     resp_str.value = '[error]'
     return false
   }
-})
+}
 </script>
 
 <style scoped>

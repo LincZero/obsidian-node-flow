@@ -60,7 +60,7 @@ Item类型的节点
 
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import { computed, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
 const props = withDefaults(defineProps<{
   id: string,
   data: any,
@@ -91,4 +91,9 @@ import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制�
 // 是否有自定义socket，如果没有可能会添加默认的自定义socket
 const hasCustomHandle = ref(false)
 hasCustomHandle.value = props.data?.items?.length!=0
+
+// 流程控制
+import { NFNode } from '../utils/NFNode'
+const nfNode:NFNode = NFNode.useFactoryNFNode()
+provide('nfNode', nfNode)
 </script>

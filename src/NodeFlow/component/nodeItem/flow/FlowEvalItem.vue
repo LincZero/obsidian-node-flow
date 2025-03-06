@@ -37,8 +37,10 @@ import {
 const _useNodeId: string = useNodeId()
 
 // 流程控制 - 操作
-import { useFlowControl } from './useFlowControl'
-const nfNode = useFlowControl(async (ctx: any)=>{
+import { inject } from 'vue';
+import { type NFNode } from '../../utils/NFNode';
+const nfNode:NFNode = inject('nfNode');
+nfNode.fn = async (ctx: any)=>{
   try {
     const func = new Function('ctx', props.data.value); // 优先用 new Function 而非 eval
     func(ctx);
@@ -50,7 +52,7 @@ const nfNode = useFlowControl(async (ctx: any)=>{
     console.error(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} error:`, error);
     return false
   }
-})
+}
 </script>
 
 <style scoped>

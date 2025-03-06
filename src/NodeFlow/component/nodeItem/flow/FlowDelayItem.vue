@@ -27,12 +27,14 @@ import {
 const _useNodeId: string = useNodeId()
 
 // 流程控制 - 操作
-import { useFlowControl } from './useFlowControl'
-const nfNode = useFlowControl(async () => {
+import { inject } from 'vue';
+import { type NFNode } from '../../utils/NFNode';
+const nfNode:NFNode = inject('nfNode');
+nfNode.fn = async () => {
   await new Promise(resolve => setTimeout(resolve, props.data.value));
   console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} delay:${props.data.value}`);
   return true
-})
+}
 </script>
 
 <style scoped>

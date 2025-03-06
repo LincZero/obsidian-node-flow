@@ -5,15 +5,6 @@ import {
 } from '@vue-flow/core'
 import { ComputedRef, computed, ref, unref, toRaw, watch } from 'vue';
 
-/**
- * 流程控制
- * 
- * 流程: 获取值 -> 执行回调函数 + 缓存值 -> 激发下一节点
- */
-export function useFlowControl(fn : (ctx:any)=>Promise<boolean> = async () => { return true }) {
-  return new NFNode(useNodeId(), fn)
-}
-
 // 带控制的节点类
 // 
 // 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
@@ -34,15 +25,15 @@ export function useFlowControl(fn : (ctx:any)=>Promise<boolean> = async () => { 
 //   2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
 //   3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
 //   4. 处理下游节点 | start_dealLast
-class NFNode {
+export class NFNode {
   // 静态的东西
-  nodeId: string
-  private fn: (ctx: any) => Promise<boolean>;
+  public readonly nodeId: string
+  public fn: (ctx: any) => Promise<boolean> = async () => { return true };
   private _useNodesData: ComputedRef<any>
   private _useSourceConnections: ComputedRef<any>
   private _useTargetConnections: ComputedRef<any>
-  private updateNodeData
-  private findNode
+  private readonly updateNodeData
+  private readonly findNode
 
   // 运行时参数，仅运行时能保证一致性
   // 是将items转化为的更适合运行的版本: 
@@ -51,20 +42,28 @@ class NFNode {
   // 3. 不同的环境使用不同的上下文。js可以用vue proxy，python等可以用object，走http需要较精简
   // 4. 不与ctx2引用同一对象，避免干扰ctx2的数据驱动，或者方便http io时使用
   //    不然ctx会产生一个没有数据驱动的变化并同步到ctx2，然后ctx2的变化会视为没有变化 (本质是代理拦截操作)，不引起数据驱动
+  // sourceValues全部就续 + targetFlowValues中至少一个就续，则激发自身
   public ctx: {
-    targetValues: {[key:string]: any},
     sourceValues: {[key:string]: any},
+    targetValues: {[key:string]: any},
+    sourceFlowValues: {[key:string]: any},
+    targetFlowValues: {[key:string]: any},
     check: Function
   }
   // Proxy类型，用于将ctx内容的修改同步回去
   private ctx2: {
-    targetValues: {[key:string]: any},
     sourceValues: {[key:string]: any},
+    targetValues: {[key:string]: any},
+    sourceFlowValues: {[key:string]: any},
+    targetFlowValues: {[key:string]: any},
   }
 
-  constructor(nodeId: string, fn: (ctx: any) => Promise<boolean>) {
+  public static useFactoryNFNode() {
+    return new NFNode(useNodeId())
+  }
+
+  private constructor(nodeId: string) {
     this.nodeId = nodeId
-    this.fn = fn
     this._useNodesData = useNodesData(this.nodeId)
     this._useSourceConnections = useNodeConnections({ handleType: 'target' })
     this._useTargetConnections = useNodeConnections({ handleType: 'source' })
