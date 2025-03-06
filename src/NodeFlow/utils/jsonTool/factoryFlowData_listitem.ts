@@ -435,6 +435,7 @@ console.log('debug output', b, ctx)
   - t2
     - fEval, :item-floweval,
 console.log('t2 ctx', ctx)
+ctx.check(ctx, ['i'], ['o'])
 ctx.targetValues['o'].cacheValue = ctx.targetValues['o'].value + ctx.sourceValues['i'].cacheValue
 console.log('    input i:', ctx.sourceValues['i'].value, ctx.sourceValues['i'].cacheValue)
 console.log('    output o:', ctx.targetValues['o'].value, ctx.targetValues['o'].cacheValue)

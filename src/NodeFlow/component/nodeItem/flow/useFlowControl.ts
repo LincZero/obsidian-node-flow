@@ -51,9 +51,10 @@ class NFNode {
   // 3. 不同的环境使用不同的上下文。js可以用vue proxy，python等可以用object，走http需要较精简
   // 4. 不与ctx2引用同一对象，避免干扰ctx2的数据驱动，或者方便http io时使用
   //    不然ctx会产生一个没有数据驱动的变化并同步到ctx2，然后ctx2的变化会视为没有变化 (本质是代理拦截操作)，不引起数据驱动
-  private ctx: {
+  public ctx: {
     targetValues: {[key:string]: any},
     sourceValues: {[key:string]: any},
+    check: Function
   }
   // Proxy类型，用于将ctx内容的修改同步回去
   private ctx2: {
@@ -82,6 +83,19 @@ class NFNode {
     console.log('>>> UseNFNode ' + this.nodeId)
   }
 
+  // 语法糖，用于检查需要的变量是否存在
+  // 判断ctx中是否都有这些变量，如有任意一个缺失，抛出错误
+  public static check(_ctx: any, source: [], target: []) {
+    const missingSourceValues = source.filter(key => !(key in _ctx.sourceValues));
+    if (missingSourceValues.length > 0) {
+      throw new Error(`Missing source values: ${missingSourceValues.join(', ')}`);
+    }
+    const missingTargetValues = target.filter(key => !(key in _ctx.targetValues));
+    if (missingTargetValues.length > 0) {
+      throw new Error(`Missing target values: ${missingTargetValues.join(', ')}`);
+    }
+  }
+
   // 被调用：主动触发或被动触发
   public async start() {
     await this.start_ctxInit()
@@ -101,6 +115,7 @@ class NFNode {
     this.ctx = {
       targetValues: {},
       sourceValues: {},
+      check: NFNode.check
     }
     this.ctx2 = {
       targetValues: {},
@@ -189,6 +204,10 @@ class NFNode {
   // - 可能有failed分支
   // - 下个节点要等待所有上游节点才能触发
   public async start_dealNext() {
+    if (this._useNodesData.value.data.runState != 'over') {
+      console.warn(`#${this.nodeId} 状态 ${this._useNodesData.value.data.runState}，停止向后激发`)
+      return
+    }
     const targetNodesId: string[] = Array.from(new Set(this._useTargetConnections.value.map((connection:any) => connection.target))) // 避免重复
     for (const nodeId of targetNodesId) {
       const data = this.findNode(nodeId).data

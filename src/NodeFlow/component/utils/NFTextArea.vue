@@ -24,14 +24,14 @@ const props = withDefaults(defineProps<{
 
 // 可写属性
 if (!props.data.value) props.data.value = ''
-import { useNodesData, useVueFlow } from '@vue-flow/core';
+import { useVueFlow } from '@vue-flow/core';
 const { findNode } = useVueFlow()
 const parentNode = findNode(props.data.parentId)
 const writable_value = computed({
   get: () => {
     let ret:string
     // 显示cacheValue的情况
-    if (parentNode.data.runState != 'none' && props.data.cacheValue) {
+    if (parentNode && parentNode.data.runState != 'none' && props.data.cacheValue) {
       ref_textArea?.value?.setAttribute('readOnly', '')
       ref_textArea?.value?.setAttribute('disable', '')
       ret = props.data.cacheValue
