@@ -23,7 +23,7 @@
     <template #node-item="props">
       <ItemNode :id="props.id" :data="props.data"></ItemNode>
     </template>
-    <InteractionControls v-if="!props.isMini || props.isShowControls"/>
+    <InteractionControls v-if="props.isShowControls"/>
   </VueFlow>
 </template>
 
@@ -140,7 +140,10 @@ let cache_copyed = ref<string[]>([]);
 const ctrl_d = (event: any) => {
   // 注意：TODO 这里暂时使用内部剪切版，无法跨画布传输
   // 注意：要打开编辑模式 (显示控制面板) 才允许快捷键，避免冲突
-  if (!props.isShowControls) return;
+  if (!props.isShowControls) {
+    console.warn('不允许在非全屏/不显示控制面板的情况下使用部分快捷键')
+    return;
+  }
   if (event.ctrlKey && event.key === 'd') {
     event.preventDefault();
     pasteSelected(cache_selected);

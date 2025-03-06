@@ -67,7 +67,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useVueFlow } from '@vue-flow/core'
 const _fn_newView = computed(() => props.fn_newView || fn_fullScreen); // 缺失则设置默认值，只读
 const _isMini = ref(props.isMini) // 缺失则设置默认值，可写
-const _isShowControls = ref(false)
+const _isShowControls = ref(!props.isMini)
 
 // 组件 - 节点画布。会往这里传递一个布局方法
 import NodeFlow from './NodeFlow.vue'
