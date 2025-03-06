@@ -39,7 +39,6 @@ Item类型的节点
             <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
             <template #item-feat="props"><FeatItem :data="props.data"></FeatItem></template>
             <template #item-start="props"><StartItem :data="props.data"></StartItem></template>
-            <template #item-fdefault="props"><FDefaultItem :data="props.data"></FDefaultItem></template>
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
             <template #item-flowreq="props"><FlowReqItem :data="props.data"></FlowReqItem></template>
@@ -83,7 +82,6 @@ import DebugItem from "../nodeItem/feat/DebugItem.vue"          // 功能项 - �
 import FeatItem from "../nodeItem/feat/FeatItem.vue"            // 功能项 - 流程功能
 import StartItem from "../nodeItem/feat/StartItem.vue"          // 功能项 - 开始，有开始按钮
 import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项 - 空，不作为
-import FDefaultItem from "../nodeItem/flow/FDefaultItem.vue"    // 流程控制项 - 默认，没有flow类型项时的行为
 import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项 - 延迟
 import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项 - 网络请求
 import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制项 - 执行任意代码

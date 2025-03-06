@@ -435,7 +435,6 @@ console.log('debug output', b, ctx)
     - 空节点i, i
     - 空节点o, o
   - t1
-    - fDefault, :item-fdefault
     - flowStart, :item-start
     - o, o, testData
   - t2
@@ -450,7 +449,6 @@ console.log('    output o:', ctx.targetValues['o'].value, ctx.targetValues['o'].
     - , :item-debug,
     - , :item-feat,
   - t3
-    - fDefault, :item-fdefault
     - i, i, none
 - edges
   - Http, FlowReq, 运行四, FlowEval
@@ -525,7 +523,6 @@ export const testData_listitemRPC = `\
   - ST模拟
     - 流程模板,, 开始
     - flow2:开始, :item-start
-    - fDefault, o:item-fdefault
   - 本地机器
     - 机器, o
     - 地址,, 0.0.0.0
@@ -612,7 +609,6 @@ export const testData_listitemHttp = `\
 - nodes
   - 运行一
     - Flow:开始, o:item-start
-    - fDefault, :item-fdefault
     - 空节点i, i
     - 空节点o, o
     - color, value:item-color, #0ff
@@ -632,7 +628,6 @@ export const testData_listitemHttp = `\
     - json1:请求, i, {}
     - json:结果, o
   - 信息体
-    - fdefault, :item-fdefault
     - json, o
     - 1, , 这里可以是一个可视化的json编辑器
   - 运行四
@@ -644,7 +639,6 @@ export const testData_listitemHttp = `\
   - 运行五
     - FlowEval:执行任意代码, io:item-floweval, console.error('debug failed')
   - Json显示
-    - fdefault, :item-fdefault
     - json, i, 运行成功后可悬浮查看结果
 - edges
   - 信息体, json, 运行三2, json1
