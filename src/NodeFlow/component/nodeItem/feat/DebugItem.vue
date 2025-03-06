@@ -25,11 +25,12 @@
       <div><span>useNodeId: {{ _useNodeId }}</span></div>
       <div><span>Size: ({{ nodeFound.dimensions.width }} x {{ nodeFound.dimensions.height }})</span></div>
       <div><span>Posi: ({{ nodeFound.position.x.toFixed(1) }}, {{ nodeFound.position.y.toFixed(1) }})</span></div>
+      <div><button @click="console.log(toRaw(data.parent.self_data))">Props</button></div>
       <div><button @click="console.log(_useNode)">Node</button></div>
       <!-- Node Find 数据覆盖面上多于 NodesData -->
       <div><button @click="console.log(_useNodesData)">NodesData</button></div>
       <div><button @click="console.log(nodeFound)">Node Find</button></div>
-      <div><button @click="console.log(_useNodesData.data.items)">listItem type use</button></div>
+      <div><button @click="fn_compare()">Compare</button></div>
       <div><span>---The Handle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
       <div><span>---Near Node----</span></div>
@@ -49,7 +50,7 @@
 </template>
   
 <script setup lang="ts">
-import { ComputedRef, computed, ref, watch } from 'vue';
+import { ComputedRef, computed, ref, toRaw, unref, watch } from 'vue';
 const props = defineProps<{
   // parent: any, // 父节点
   data: any,
@@ -68,7 +69,7 @@ import {
 const { getConnectedEdges, findNode, nodes } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const nodeFound = findNode(_useNodeId)
-const _useNode: object = useNode(useNodeId())
+const _useNode: any = useNode(useNodeId())
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })
@@ -82,6 +83,22 @@ const _useTargetNodesData: ComputedRef<any> = useNodesData(targetNodesId)
 
 const _getEdges: GraphEdge[] = getConnectedEdges(_useNodeId)
 const _useEdgesData1: ComputedRef<any> = useEdgesData(_getEdges[0]?.id)
+
+// 测试下来是，items都保证一致性，但node层不一定能保证……
+function fn_compare() {
+    console.log('debug comp object\n',
+    toRaw(props.data.parent.self_data), // 1. items, name, id, parent, parentId, type
+    toRaw(_useNode.node.data),          // 2. items, label, runState, type
+    toRaw(unref(_useNodesData).data),   // 3. items, label, runState, type
+    toRaw(nodeFound.data),              // 4. items, label, runState, type
+    Object.is(toRaw(props.data.parent.self_data), toRaw(_useNode.node.data)), // false
+    Object.is(toRaw(_useNode.node.data), toRaw(unref(_useNodesData).data)),   // true
+    Object.is(toRaw(unref(_useNodesData).data), toRaw(nodeFound.data)),       // true
+    Object.is(toRaw(props.data.parent.self_data.items), toRaw(_useNode.node.data.items)), // true
+    Object.is(toRaw(_useNode.node.data.items), toRaw(unref(_useNodesData).data.items)),   // true
+    Object.is(toRaw(unref(_useNodesData).data.items), toRaw(nodeFound.data.items)),       // true
+  )
+}
 </script>
 
 <style scoped>

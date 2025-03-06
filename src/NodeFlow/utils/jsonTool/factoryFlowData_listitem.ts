@@ -416,7 +416,8 @@ export const testData_listitem2 = `\
     - 空节点i, i
     - 空节点o, o
   - 运行四
-    - FlowEval:执行任意代码, io:item-floweval, var a = 2
+    - FlowEval:执行任意代码, io:item-floweval,
+var a = 2
 let b = a
 console.log('debug output', b, ctx)
     - 空节点i, i
@@ -428,24 +429,28 @@ console.log('debug output', b, ctx)
     - 空节点i, i
     - 空节点o, o
   - t1
-    - flowStart, :item-start
     - fDefault, :item-fdefault
+    - flowStart, :item-start
     - o, o, testData
   - t2
-    - fDefault, :item-fdefault
-    - o, i, none
-    - oo, o, test222
+    - fEval, :item-floweval,
+console.log('t2 ctx', ctx)
+ctx.targetValues['o'].cacheValue = ctx.targetValues['o'].value + ctx.sourceValues['i'].cacheValue
+console.log('    input i:', ctx.sourceValues['i'].value, ctx.sourceValues['i'].cacheValue)
+console.log('    output o:', ctx.targetValues['o'].value, ctx.targetValues['o'].cacheValue)
+    - i, i, none
+    - o, o, test222
+    - , :item-debug,
   - t3
     - fDefault, :item-fdefault
-    - o, i, none
-    - , :item-debug
+    - i, i, none
 - edges
   - 运行三, FlowReq, 运行四, FlowEval
   - 运行一, Flow, 运行二, FlowDelay
   - 运行二, FlowDelay, 运行三, FlowReq
   - 运行一, 空节点o, 运行二, 空节点i
-  - t1, o, t2, o
-  - t2, oo, t3, o
+  - t1, o, t2, i
+  - t2, o, t3, i
 `
 
 export const testData_listitemFlow = `\
@@ -482,18 +487,23 @@ export const testData_listitemFlow = `\
   + 获取: 一般不获取
   + 一致性: 无需关心。不实时保证，只有在初始化和保存后才和主数据一致
 + 主props.data
-  + 内容: 节点私有数据，所有组件共用一个对象
+  + 内容: 节点私有数据，所有组件共用一个对象。无荣誉数据
+  + 优点：递归，有父子指针。不依赖底层的api，主导一致性地位
   + 获取: 节点自己的通过prop中获取，否则通过vueflow里的方法获取
-  + 一致性: 恒一致
+  + 一致性: (主导，变更入口。但实际上优势会直接改库数据……这里暂时有bug TODO) 恒一致
 + 库数据
   + 内容: 节点私有数据+库必要部分，库中使用inject存储一个对象
+  + 优点：有数据驱动。但data里的对象的变动，没有watch depth，要手动激发
   + 获取: 通过vueflow里的方法获取
-  + 一致性: 恒一致。但节点私有数据没有watch depth，需要手动激发
+  + 一致性: 恒一致
 + 运算类
   + 内容: 节点私有数据，每个节点/运行项有一个该对象
+  + 优点：有生命周期，能管控
   + 获取: 节点自己的通过setup作用域里创建的类对象获取，而类再通过vueflow里的方法获取
   + 一致性: 无需关心。只有在开始运行时，才会一致
     - debug, :item-debug
++ 界面类
+  + 特殊: 只要数据被驱动成功后，就和库数据一致。但若没有数据驱动，则与库数据产生不一致
 - edges
   - node1, nflow, node3, nflow
   - node2, nflow, node3, nflow
