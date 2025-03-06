@@ -48,18 +48,18 @@ class NFNode {
   // 是将items转化为的更适合运行的版本: 
   // 1. 区分io (仅视觉使用时不区分target、source。仅当需要流程控制时才区分他们)
   // 2. 数组转对象，调用更快
-  // 3. 不同的环境使用不同的上下文。js可以用vue proxy，python等可以用object，走http需要精简则可以再提供精简版
-  private ctx: { // 纯object。简化了ctx、用户脚本不与底层关联、易于操作
+  // 3. 不同的环境使用不同的上下文。js可以用vue proxy，python等可以用object，走http需要较精简
+  // 4. 不与ctx2引用同一对象，避免干扰ctx2的数据驱动，或者方便http io时使用
+  //    不然ctx会产生一个没有数据驱动的变化并同步到ctx2，然后ctx2的变化会视为没有变化 (本质是代理拦截操作)，不引起数据驱动
+  private ctx: {
     targetValues: {[key:string]: any},
     sourceValues: {[key:string]: any},
   }
   // Proxy类型，用于将ctx内容的修改同步回去
-  // WARNING 必须先修改ctx2，不然ctx会产生一个没有数据驱动的变化并同步到ctx2，然后ctx2的变化会视为没有变化 (本质是代理拦截操作)，不引起数据驱动
   private ctx2: {
     targetValues: {[key:string]: any},
     sourceValues: {[key:string]: any},
   }
-  private nodeFound: any
 
   constructor(nodeId: string, fn: (ctx: any) => Promise<boolean>) {
     this.nodeId = nodeId
@@ -109,15 +109,23 @@ class NFNode {
 
     const thisItems = this._useNodesData.value.data.items
     for (const item of thisItems) {
-      if (item.refType == 'io') {
-        this.ctx2.targetValues[item.id] = item; this.ctx.targetValues[item.id] = toRaw(item) // TODO 危险操作，toRaw后ctx的修改会绕过ctx2的数据拦截变化监听
-        this.ctx2.sourceValues[item.id] = item; this.ctx.sourceValues[item.id] = toRaw(item)
+      if (item.refType == 'o' || item.refType == 'output' || item.refType == 'io') {
+        this.ctx2.targetValues[item.id] = item;
+        this.ctx.targetValues[item.id] = {
+          id: item.id,
+          name: item.name,
+          value: item.value,
+          cacheValue: undefined,
+        }
       }
-      else if (item.refType == 'o' || item.refType == 'output') {
-        this.ctx2.targetValues[item.id] = item; this.ctx.targetValues[item.id] = toRaw(item)
-      }
-      else {
-        this.ctx2.sourceValues[item.id] = item; this.ctx.sourceValues[item.id] = toRaw(item)
+      if (item.refType != 'o' && item.refType != 'output') {
+        this.ctx2.sourceValues[item.id] = item;
+        this.ctx.sourceValues[item.id] = {
+          id: item.id,
+          name: item.name,
+          value: item.value,
+          cacheValue: undefined,
+        }
       }
     }
   }
@@ -164,10 +172,14 @@ class NFNode {
     }
 
     // 将输出结果同步回去
-    for (const [key, value] of Object.entries(this.ctx.targetValues)) {
+    for (const [key, item] of Object.entries(this.ctx.targetValues)) {
       const tmp = this.ctx2.targetValues[key]
-      // TODO
-      // if (tmp) tmp.value = value
+      if (tmp) {
+        tmp.id = item.id
+        tmp.name = item.name
+        tmp.value = item.value
+        tmp.cacheValue = item.cacheValue ?? item.value
+      }
     }
     thisData.data.runState = 'over'; this.updateNodeData(this.nodeId, thisData.data);
   }

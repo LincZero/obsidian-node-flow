@@ -441,6 +441,7 @@ console.log('    output o:', ctx.targetValues['o'].value, ctx.targetValues['o'].
     - i, i, none
     - o, o, test222
     - , :item-debug,
+    - , :item-feat,
   - t3
     - fDefault, :item-fdefault
     - i, i, none

@@ -69,7 +69,7 @@ import {
 const { getConnectedEdges, findNode, nodes } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const nodeFound = findNode(_useNodeId)
-const _useNode: any = useNode(useNodeId())
+const _useNode: any = useNode(_useNodeId)
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 
 const _useSourceConnections: ComputedRef<any> = useNodeConnections({ handleType: 'target' })

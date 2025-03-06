@@ -24,8 +24,27 @@ const props = withDefaults(defineProps<{
 
 // 可写属性
 if (!props.data.value) props.data.value = ''
+import { useNodesData, useVueFlow } from '@vue-flow/core';
+const { findNode } = useVueFlow()
+const parentNode = findNode(props.data.parentId)
 const writable_value = computed({
-  get: () => props.data.value,
+  get: () => {
+    let ret:string
+    // 显示cacheValue的情况
+    if (parentNode.data.runState != 'none' && props.data.cacheValue) {
+      ref_textArea?.value?.setAttribute('readOnly', '')
+      ref_textArea?.value?.setAttribute('disable', '')
+      ret = props.data.cacheValue
+    }
+    // 显示value的情况
+    else {
+      ref_textArea?.value?.removeAttribute('readOnly')
+      ref_textArea?.value?.removeAttribute('disable')
+      ret = props.data.value
+    }
+    autoSize(ref_textArea.value)
+    return ret
+  },
   set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
 })
 
@@ -49,7 +68,7 @@ function autoSize(el:HTMLElement) {
   // document.getElementsByName('del' + el.name)
   //   .forEach(value => value.style.marginTop = el.scrollHeight + 'px');
 }
-const ref_textArea = ref(null)
+const ref_textArea = ref<HTMLElement | null>(null)
 onMounted(()=>{
   nextTick(() => {
     autoSize(ref_textArea.value)
@@ -221,5 +240,11 @@ pre.nf-textarea {
   height: 24px !important; /* (20+0+2)+4 单行模式下覆盖js的计算值 */
   padding-top: 1px;
   padding-bottom: 1px;
+}
+.nf-textarea:disabled {
+  color: gray !important;
+}
+.nf-textarea:read-only {
+  color: gray !important;
 }
 </style>
