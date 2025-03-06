@@ -5,6 +5,14 @@ import {
 } from '@vue-flow/core'
 import { ComputedRef, computed, ref, unref, toRaw, watch } from 'vue';
 
+interface ctx_type {
+  sourceValues: {[key:string]: any},
+  targetValues: {[key:string]: any},
+  // sourceFlowValues: {[key:string]: any},
+  // targetFlowValues: {[key:string]: any},
+  check: Function
+}
+
 // 带控制的节点类
 // 
 // 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
@@ -28,7 +36,7 @@ import { ComputedRef, computed, ref, unref, toRaw, watch } from 'vue';
 export class NFNode {
   // 静态的东西
   public readonly nodeId: string
-  public fn: (ctx: any) => Promise<boolean> = async () => { return true };
+  public fn: (ctx: ctx_type) => Promise<boolean> = async () => { return true };
   private _useNodesData: ComputedRef<any>
   private _useSourceConnections: ComputedRef<any>
   private _useTargetConnections: ComputedRef<any>
@@ -43,19 +51,14 @@ export class NFNode {
   // 4. 不与ctx2引用同一对象，避免干扰ctx2的数据驱动，或者方便http io时使用
   //    不然ctx会产生一个没有数据驱动的变化并同步到ctx2，然后ctx2的变化会视为没有变化 (本质是代理拦截操作)，不引起数据驱动
   // sourceValues全部就续 + targetFlowValues中至少一个就续，则激发自身
-  public ctx: {
-    sourceValues: {[key:string]: any},
-    targetValues: {[key:string]: any},
-    sourceFlowValues: {[key:string]: any},
-    targetFlowValues: {[key:string]: any},
-    check: Function
-  }
+  
+  public ctx: ctx_type
   // Proxy类型，用于将ctx内容的修改同步回去
   private ctx2: {
     sourceValues: {[key:string]: any},
     targetValues: {[key:string]: any},
-    sourceFlowValues: {[key:string]: any},
-    targetFlowValues: {[key:string]: any},
+    // sourceFlowValues: {[key:string]: any},
+    // targetFlowValues: {[key:string]: any},
   }
 
   public static useFactoryNFNode() {
@@ -129,7 +132,7 @@ export class NFNode {
           id: item.id,
           name: item.name,
           value: item.value,
-          cacheValue: undefined,
+          cacheValue: item.value, // 如果没有上游节点，就是自身默认值
         }
       }
       if (item.refType != 'o' && item.refType != 'output') {
@@ -138,7 +141,7 @@ export class NFNode {
           id: item.id,
           name: item.name,
           value: item.value,
-          cacheValue: undefined,
+          cacheValue: item.value, // 如果没有上游节点，就是自身默认值
         }
       }
     }

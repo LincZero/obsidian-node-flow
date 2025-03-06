@@ -6,10 +6,6 @@
   <div :class="'flowdelay-item  node-item-slot ' + props.data.refType + (props.data.value?' has-value':'')">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div style="height:0; clear: both;"></div>
-    <div class="node-item-value2">
-      <NFTextArea :data="data"></NFTextArea>
-    </div>
-    <div style="height:0; clear: both;"></div>
   </div>
 </template>
   
@@ -30,9 +26,10 @@ const _useNodeId: string = useNodeId()
 import { inject } from 'vue';
 import { type NFNode } from '../../utils/NFNode';
 const nfNode:NFNode = inject('nfNode');
-nfNode.fn = async () => {
-  await new Promise(resolve => setTimeout(resolve, props.data.value));
-  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} delay:${props.data.value}`);
+nfNode.fn = async (ctx) => {
+  ctx.check(ctx, ['emit', 'time'], ['success'])
+  await new Promise(resolve => setTimeout(resolve, ctx.sourceValues['time'].cacheValue ));
+  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} delay:${ctx.sourceValues['time'].cacheValue}`);
   return true
 }
 </script>

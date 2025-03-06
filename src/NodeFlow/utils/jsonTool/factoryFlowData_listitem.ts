@@ -407,14 +407,20 @@ export const testData_listitem2 = `\
     - 空节点i, i
     - 空节点o, o
     - color, :item-color, #0ff
-  - 运行二
-    - FlowDelay:延时, io:item-flowdelay, 2000
-    - 空节点i, i
-    - 空节点o, o
-  - 运行三
-    - FlowReq:Http请求, io:item-flowreq, https://httpbin.org/get
-    - 空节点i, i
-    - 空节点o, o
+  - Delay
+    - FlowDelay:Delay延时模板, :item-flowdelay,
+    - emit, i:item-flow
+    - success, o:item-flow
+    - time, i, 2000
+  - Http
+    - FlowReq:Http请求模板, io:item-flowreq, 
+    - emit, i,
+    - url, i, https://httpbin.org/get
+    - success, o:item-flow,
+    - fail, o:item-flow,
+    - resp, o,
+  - HttpResp
+    - show, i,
   - 运行四
     - FlowEval:执行任意代码, io:item-floweval,
 var a = 2
@@ -447,12 +453,12 @@ console.log('    output o:', ctx.targetValues['o'].value, ctx.targetValues['o'].
     - fDefault, :item-fdefault
     - i, i, none
 - edges
-  - 运行三, FlowReq, 运行四, FlowEval
-  - 运行一, Flow, 运行二, FlowDelay
-  - 运行二, FlowDelay, 运行三, FlowReq
-  - 运行一, 空节点o, 运行二, 空节点i
+  - Http, FlowReq, 运行四, FlowEval
+  - 运行一, Flow, Delay, emit
+  - Delay, success, Http, FlowReq
   - t1, o, t2, i
   - t2, o, t3, i
+  - Http, resp, HttpResp, show
 `
 
 export const testData_listitemFlow = `\

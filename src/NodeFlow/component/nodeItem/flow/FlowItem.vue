@@ -25,7 +25,7 @@ const _useNodeId: string = useNodeId()
 import { inject } from 'vue';
 import { type NFNode } from '../../utils/NFNode';
 const nfNode:NFNode = inject('nfNode');
-nfNode.fn = async () => {
+nfNode.fn = async (ctx) => {
   await new Promise(resolve => setTimeout(resolve, 1000)); // delay 1000ms
   console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
   return true

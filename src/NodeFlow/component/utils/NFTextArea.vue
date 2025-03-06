@@ -5,6 +5,7 @@
 
 - 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
 - 样式： 黑暗主题、普通文本/代码高亮模式、取消拼写检查
+- 缓存显示： **不要直接用props.data**。会根据情况选择显示cacheValue还是defaultValue
 - TODO 多行拼接： 使用 `\` 结尾再换行，可以优化显示
 - TODO Tab键、Shift键
 - TODO 最末尾的空白行异常、中文输入异常
@@ -178,7 +179,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       @input="handlePreInput"
       v-if="codeType!=''"
       class="nf-textarea"
-      :class="{'without-border' : isHideBorder, 'mulline-value': props.data.value.includes('\n')}"
+      :class="{'without-border' : isHideBorder, 'mulline-value': writable_value.includes('\n')}"
       contenteditable="true"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
@@ -194,7 +195,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       v-model="writable_value"
       v-if="codeType==''"
       class="nf-textarea"
-      :class="{'without-border' : isHideBorder, 'mulline-value': props.data.value.includes('\n')}"
+      :class="{'without-border' : isHideBorder, 'mulline-value': writable_value.includes('\n')}"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
       :rows="writable_value.split('\n').length"
