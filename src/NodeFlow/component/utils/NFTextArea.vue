@@ -20,10 +20,10 @@ const props = withDefaults(defineProps<{
   codeType?: string
 }>(), {
   isHideBorder: false,
-  codeType: ''
+  codeType: 'json'
 })
 
-// 可写属性
+// 实际显示和可写属性
 if (!props.data.value) props.data.value = ''
 import { useVueFlow } from '@vue-flow/core';
 const { findNode } = useVueFlow()
@@ -32,7 +32,7 @@ const writable_value = computed({
   get: () => {
     let ret:string
     // 显示cacheValue的情况
-    if (parentNode && parentNode.data.runState != 'none' && props.data.cacheValue) {
+    if (parentNode && parentNode.data.runState != 'none' && props.data.cacheValue && props.data.value != '') {
       ref_textArea?.value?.setAttribute('readOnly', '')
       ref_textArea?.value?.setAttribute('disable', '')
       ret = props.data.cacheValue
@@ -43,7 +43,7 @@ const writable_value = computed({
       ref_textArea?.value?.removeAttribute('disable')
       ret = props.data.value
     }
-    autoSize(ref_textArea.value)
+    if(ref_textArea?.value) nextTick(() => { autoSize(ref_textArea.value) })
     return ret
   },
   set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
@@ -70,15 +70,12 @@ function autoSize(el:HTMLElement) {
   //   .forEach(value => value.style.marginTop = el.scrollHeight + 'px');
 }
 const ref_textArea = ref<HTMLElement | null>(null)
+const isMulLine = computed(() => writable_value.value.includes('\n'))
 onMounted(()=>{
-  nextTick(() => {
-    autoSize(ref_textArea.value)
-  })
+  nextTick(() => { autoSize(ref_textArea.value) })
 })
 function handleInput(e:any) {
-  nextTick(() => {
-    autoSize(e.target)
-  })
+  nextTick(() => { autoSize(e.target) })
 }
 
 // --------------------- pre code ----------------------------------
@@ -179,7 +176,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       @input="handlePreInput"
       v-if="codeType!=''"
       class="nf-textarea"
-      :class="{'without-border' : isHideBorder, 'mulline-value': writable_value.includes('\n')}"
+      :class="{'without-border' : isHideBorder, 'mulline-value': isMulLine}"
       contenteditable="true"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
@@ -195,7 +192,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       v-model="writable_value"
       v-if="codeType==''"
       class="nf-textarea"
-      :class="{'without-border' : isHideBorder, 'mulline-value': writable_value.includes('\n')}"
+      :class="{'without-border' : isHideBorder, 'mulline-value': isMulLine}"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
       :rows="writable_value.split('\n').length"

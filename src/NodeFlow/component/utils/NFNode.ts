@@ -188,7 +188,7 @@ export class NFNode {
       return
     }
 
-    // 将输出结果同步回去
+    // 将输出结果同步回去 (TODO 思考是否应该不要只遍历输出节点，万一想看一下呢？)
     for (const [key, item] of Object.entries(this.ctx.targetValues)) {
       const tmp = this.ctx2.targetValues[key]
       if (tmp) {

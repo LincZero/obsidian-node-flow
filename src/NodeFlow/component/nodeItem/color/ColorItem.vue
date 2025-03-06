@@ -5,7 +5,7 @@
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <div class="node-item-value"
       :style="'background:'+props.data.value+'; color:'+getHighContrastTextColor(props.data.value)">
-      <NFTextArea :data="data" :isHideBorder="true"></NFTextArea>
+      <NFTextArea :data="data" codeType="" :isHideBorder="true"></NFTextArea>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>

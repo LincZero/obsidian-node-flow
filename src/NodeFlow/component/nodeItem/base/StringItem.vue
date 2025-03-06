@@ -13,7 +13,7 @@
 <template>
   <div ref="TextArea2"
     class="string-item  node-item-slot"
-    :class="{...props.data.refType, 'has-value': props.data.value != '', 'mulline-value': props.data.value.includes('\n') }">
+    :class="{...props.data.refType, 'has-value': props.data.value != '', 'mulline-value': writable_value.includes('\n') }">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
     <NFTextArea class="node-item-value" :data="data" :isHideBorder="true"></NFTextArea>
     <div style="height:0; clear: both;"></div>
@@ -27,6 +27,26 @@ import { computed } from 'vue';
 const props = defineProps<{
   data: any
 }>()
+
+// 实际显示和可写属性
+import { useVueFlow } from '@vue-flow/core';
+const { findNode } = useVueFlow()
+const parentNode = findNode(props.data.parentId)
+const writable_value = computed({
+  get: () => {
+    let ret:string
+    // 显示cacheValue的情况
+    if (parentNode && parentNode.data.runState != 'none' && props.data.cacheValue && props.data.value != '') {
+      ret = props.data.cacheValue
+    }
+    // 显示value的情况
+    else {
+      ret = props.data.value
+    }
+    return ret
+  },
+  set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
+})
 </script>
 
 <style scoped>

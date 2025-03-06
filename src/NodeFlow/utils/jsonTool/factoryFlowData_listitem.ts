@@ -402,10 +402,9 @@ export const testData_listitem = `\
 export const testData_listitem2 = `\
 - nodes
   - 运行一
+    - 空模板,,
     - 开始, :item-start
-    - Flow:空流程, io:item-flow
-    - 空节点i, i
-    - 空节点o, o
+    - success, o
     - color, :item-color, #0ff
   - Delay
     - FlowDelay:Delay延时模板, :item-flowdelay,
@@ -413,14 +412,14 @@ export const testData_listitem2 = `\
     - success, o:item-flow
     - time, i, 2000
   - Http
-    - FlowReq:Http请求模板, io:item-flowreq, 
+    - FlowReq:Http请求模板, :item-flowreq, 
     - emit, i,
     - url, i, https://httpbin.org/get
     - success, o:item-flow,
     - fail, o:item-flow,
     - resp, o,
   - HttpResp
-    - show, i,
+    - show, i, _
   - 运行四
     - FlowEval:执行任意代码, io:item-floweval,
 var a = 2
@@ -451,9 +450,9 @@ console.log('    output o:', ctx.targetValues['o'].value, ctx.targetValues['o'].
   - t3
     - i, i, none
 - edges
-  - Http, FlowReq, 运行四, FlowEval
-  - 运行一, Flow, Delay, emit
-  - Delay, success, Http, FlowReq
+  - Http, success, 运行四, FlowEval
+  - 运行一, success, Delay, emit
+  - Delay, success, Http, emit
   - t1, o, t2, i
   - t2, o, t3, i
   - Http, resp, HttpResp, show
