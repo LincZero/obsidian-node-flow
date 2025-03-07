@@ -413,7 +413,7 @@ export const testData_listitem2 = `\
     - time, i, 2000
   - Http
     - FlowReq:Http请求模板, :item-flowreq, 
-    - emit, i,
+    - emit, i, item-flow
     - url, i, https://httpbin.org/get
     - success, o:item-flow,
     - fail, o:item-flow,
@@ -430,7 +430,7 @@ console.log('debug output', b, ctx)
     - debug, :item-debug
     - feat, :item-feat
   - 运行三2:运行三
-    - FlowReq:Http请求, io:item-flowreq, http://127.0.0.1:9863/test
+    - FlowReq:Http请求, io:item-flowreq,
     - 空节点i, i
     - 空节点o, o
   - t1
@@ -606,46 +606,37 @@ export const testData_listitemRPC = `\
 // 隐藏，仅自用
 export const testData_listitemHttp = `\
 - nodes
-  - 运行一
+  - Start
     - Flow:开始, o:item-start
-    - 空节点i, i
-    - 空节点o, o
     - color, value:item-color, #0ff
-  - 运行二
-    - FlowDelay:延时, io:item-flowdelay, 2000
-    - 空节点i, i
-    - 空节点o, o
-  - 运行三
-    - FlowReq:Http请求, io:item-flowreq, 
-    - 空节点i, i
-    - 空节点o, o
-  - 运行三2:运行三
+  - Delay
+    - FlowDelay:延时, io:item-flowdelay, 
+    - time, i, 2000
+  - Http
     - flow1:Http请求, i:item-flow
     - flow2:成功, o:item-flow
     - flow3:失败, o:item-flow
-    - str:web, i, http://127.0.0.1:9863/test
+    - url, i, http://127.0.0.1:9863/test
     - json1:请求, i, {}
-    - json:结果, o
-  - 信息体
+    - resp, o
+  - ShowResp
     - json, o
     - 1, , 这里可以是一个可视化的json编辑器
   - 运行四
-    - FlowEval:执行任意代码, io:item-floweval, console.log('debug output')
+    - FlowEval:执行任意代码, io:item-floweval
     - 空节点i, i
     - 空节点o, o
     - debug, value:item-debug, 
     - feat, value:item-feat, 
   - 运行五
-    - FlowEval:执行任意代码, io:item-floweval, console.error('debug failed')
+    - FlowEval:执行任意代码, io:item-floweval
   - Json显示
     - json, i, 运行成功后可悬浮查看结果
 - edges
-  - 信息体, json, 运行三2, json1
-  - 运行一, Flow, 运行二, FlowDelay
-  - 运行一, 空节点o, 运行二, 空节点i
-  - 运行二, FlowDelay, 运行三, FlowReq
-  - 运行三, FlowReq, 运行三2, flow1
-  - 运行三2, flow2, 运行四, FlowEval
-  - 运行三2, flow3, 运行五, FlowEval
-  - 运行三2, json, Json显示, json
+  - ShowResp, json, Http, json1
+  - Start, Flow, Delay, FlowDelay
+  - Delay, FlowDelay, Http, flow1
+  - Http, flow2, 运行四, FlowEval
+  - Http, flow3, 运行五, FlowEval
+  - Http, resp, Json显示, json
 `

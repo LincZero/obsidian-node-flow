@@ -19,9 +19,9 @@ nfSetting.fn_renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): v
 import { requestUrl } from 'obsidian'
 nfSetting.fn_request = async (
   url: string,
-  method: string | undefined,
-  headers: Record<string, string> | undefined,
-  body: string | ArrayBuffer | undefined 
+  method: string | undefined = 'GET',
+  headers: Record<string, string> | undefined = undefined,
+  body: string | ArrayBuffer | undefined = undefined 
 ) => {
   const responseData  = await requestUrl({ url, method, headers, body });
   return responseData

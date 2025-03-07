@@ -23,36 +23,41 @@ import { nfSetting } from '../../../utils/main/setting'
 // 流程控制 - 操作
 import { inject } from 'vue';
 import { type NFNode } from '../../utils/NFNode';
-const nfNode:NFNode = inject('nfNode');
+const nfNode: NFNode = inject('nfNode');
 nfNode.fn = async (ctx) => {
   try {
     ctx.check(ctx, ['emit', 'url'], ['success', 'fail', 'resp'])
-    const resp = await nfSetting.fn_request(ctx.sourceValues['url'].cacheValue, 'GET', undefined, undefined)
+    const resp = await nfSetting.fn_request( // TODO: 这里有两种方式：分开和总json。自动检测有无url，无则使用后者
+      ctx.sourceValues['url'].cacheValue,
+      ctx.sourceValues['method']?.cacheValue,
+      ctx.sourceValues['headers']?.cacheValue,
+      ctx.sourceValues['body']?.cacheValue,
+    )
     
     console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} url:${ctx.sourceValues['url'].cacheValue} resp:\n`, resp);
 
     // 检查是否正常响应
     if (resp.status != 200) { // resp.ok // TODO，fetch版本应该用ok，ob版本有空再调试
       ctx.targetValues['resp'].cacheValue = "warning: ok/status:" + resp.status.toString()
-      return false
+      ctx.targetValues['fail'].cacheValue = true; return false
     }
 
     // 检查返回值是否json，并解析
     if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
       ctx.targetValues['resp'].cacheValue = JSON.stringify(resp.json, null, 2)
-      return true
+      ctx.targetValues['success'].cacheValue = true; return true
     } else if (typeof resp.json == 'function') { // @env 其他环境版本 (fetch)
       const resp_json = await resp.json();
       ctx.targetValues['resp'].cacheValue = JSON.stringify(resp_json, null, 2)
-      return true
+      ctx.targetValues['success'].cacheValue = true; return true
     } else {
       ctx.targetValues['resp'].cacheValue = 'warning: without json'
-      return false
+      ctx.targetValues['fail'].cacheValue = true; return false
     }
   } catch (e) {
     console.error('error request:', e)
     ctx.targetValues['resp'].cacheValue = '[error]'
-    return false
+    ctx.targetValues['fail'].cacheValue = true; return false
   }
 }
 </script>

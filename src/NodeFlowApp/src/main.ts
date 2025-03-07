@@ -26,9 +26,9 @@ nfSetting.fn_renderMarkdown = ((markdown: string, el: HTMLElement, ctx?: any): v
 // @env [环境] http接口，其他环境版本。需要注意ob requestUrl和fetch的返回值不一样，前者还有一层status和json
 nfSetting.fn_request = async (
   url: string,
-  method: string | undefined,
-  headers: Record<string, string> | undefined,
-  body: string | ArrayBuffer | undefined 
+  method: string | undefined = 'GET',
+  headers: Record<string, string> | undefined = undefined,
+  body: string | ArrayBuffer | undefined = undefined 
 ) => {
   const responseData = await fetch(url, {method, headers, body});
   return responseData
