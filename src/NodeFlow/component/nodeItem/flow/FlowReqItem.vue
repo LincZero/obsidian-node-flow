@@ -43,18 +43,41 @@ nfNode.fn = async (ctx) => {
       ctx.targetValues['fail'].cacheValue = true; return false
     }
 
-    // 判断是哪个请求API
-    // TODO 要简化 要考虑没有json响应的情况
-    if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
-      ctx.targetValues['resp'].cacheValue = JSON.stringify(resp.json, null, 2)
-      ctx.targetValues['success'].cacheValue = true; return true
-    } else if (typeof resp.json == 'function') { // @env 其他环境版本 (fetch)
-      const resp_json = await resp.json();
-      ctx.targetValues['resp'].cacheValue = JSON.stringify(resp_json, null, 2)
-      ctx.targetValues['success'].cacheValue = true; return true
-    } else {
-      console.warn('nf resp without json:', resp)
-      ctx.targetValues['resp'].cacheValue = '[error] without json parse merthod'
+    // TODO 应该封装一下requestUrl和fetch的区别到统一的函数中，不要在这里处理区别
+
+    // 优先尝试解析JSON
+    try {
+      if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
+        ctx.targetValues['resp'].cacheValue = JSON.stringify(resp.json, null, 2)
+        ctx.targetValues['success'].cacheValue = true; return true
+      } else if (typeof resp.json == 'function') { // @env 其他环境版本 (fetch)
+        const resp_json = await resp.json();
+        ctx.targetValues['resp'].cacheValue = JSON.stringify(resp_json, null, 2)
+        ctx.targetValues['success'].cacheValue = true; return true
+      } else {
+        console.warn('without json parse merthod:', resp)
+        ctx.targetValues['resp'].cacheValue = '[error] without json parse merthod'
+        ctx.targetValues['fail'].cacheValue = true; return false
+      }
+    } catch (e) {}
+
+    // 非JSON的情况
+    try {
+      if (typeof resp.text === 'function') {      // @env Fetch环境
+        const textData = await resp.text()
+        ctx.targetValues['resp'].cacheValue = textData
+        ctx.targetValues['success'].cacheValue = true; return true
+      } else if (resp.body) {                     // @env Obsidian环境
+        const textData = typeof resp.body === 'string' ? resp.body : JSON.stringify(resp.body)
+        ctx.targetValues['resp'].cacheValue = textData
+        ctx.targetValues['success'].cacheValue = true; return true
+      } else {
+        console.warn('without text parse merthod:', resp)
+        ctx.targetValues['resp'].cacheValue = '[error] without text parse merthod'
+        ctx.targetValues['fail'].cacheValue = true; return false
+      }
+    } catch (e) {
+      ctx.targetValues['resp'].cacheValue = '[error] resp parse error'
       ctx.targetValues['fail'].cacheValue = true; return false
     }
   } catch (e) {

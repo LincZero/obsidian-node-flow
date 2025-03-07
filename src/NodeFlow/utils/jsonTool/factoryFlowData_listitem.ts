@@ -654,7 +654,7 @@ export const testData_listitemObsidian = `\
   - headers:这里填写你的Obsidian LocalRestAPI秘钥
     - 开始, :item-start
     - headers, o, {
-    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a",
+    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a"
 }
   - Delay
     - FlowDelay:Delay延时模板, :item-flowdelay, 0
@@ -686,7 +686,7 @@ export const testData_listitemObsidian = `\
     - emit, i:item-flow
     - url, i, https://127.0.0.1:27124/vault/ZTest/
     - headers, i, {
-    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a",
+    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a"
 }
     - success, o:item-flow
     - fail, o:item-flow
