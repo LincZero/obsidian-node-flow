@@ -30,19 +30,21 @@ nfNode.fn = async (ctx) => {
     const resp = await nfSetting.fn_request( // TODO: 这里有两种方式：分开和总json。自动检测有无url，无则使用后者
       ctx.sourceValues['url'].cacheValue,
       ctx.sourceValues['method']?.cacheValue,
-      ctx.sourceValues['headers']?.cacheValue,
+      ctx.sourceValues['headers']?.cacheValue ? JSON.parse(ctx.sourceValues['headers']?.cacheValue) : undefined,
       ctx.sourceValues['body']?.cacheValue,
     )
-    
-    console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} url:${ctx.sourceValues['url'].cacheValue} resp:\n`, resp);
+
+    console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
 
     // 检查是否正常响应
     if (resp.status != 200) { // resp.ok // TODO，fetch版本应该用ok，ob版本有空再调试
+      console.warn('nf resp status error:', resp)
       ctx.targetValues['resp'].cacheValue = "warning: ok/status:" + resp.status.toString()
       ctx.targetValues['fail'].cacheValue = true; return false
     }
 
-    // 检查返回值是否json，并解析
+    // 判断是哪个请求API
+    // TODO 要简化 要考虑没有json响应的情况
     if (typeof resp.json == 'object') {          // @env obsidian版本 (requestUrl)
       ctx.targetValues['resp'].cacheValue = JSON.stringify(resp.json, null, 2)
       ctx.targetValues['success'].cacheValue = true; return true
@@ -51,12 +53,13 @@ nfNode.fn = async (ctx) => {
       ctx.targetValues['resp'].cacheValue = JSON.stringify(resp_json, null, 2)
       ctx.targetValues['success'].cacheValue = true; return true
     } else {
-      ctx.targetValues['resp'].cacheValue = 'warning: without json'
+      console.warn('nf resp without json:', resp)
+      ctx.targetValues['resp'].cacheValue = '[error] without json parse merthod'
       ctx.targetValues['fail'].cacheValue = true; return false
     }
   } catch (e) {
     console.error('error request:', e)
-    ctx.targetValues['resp'].cacheValue = '[error]'
+    ctx.targetValues['resp'].cacheValue = '[error] see console for detail'
     ctx.targetValues['fail'].cacheValue = true; return false
   }
 }

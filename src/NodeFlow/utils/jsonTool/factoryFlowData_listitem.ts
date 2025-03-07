@@ -78,6 +78,7 @@ export function factoryFlowData_listitem(md:string): {code: number, msg: string,
     else if (md == "demoRPC") { md = testData_listitemRPC }
     else if (md == "demoHttp") { md = testData_listitemHttp }
     else if (md == "demoFlow") { md = testData_listitemFlow }
+    else if (md == "demoObsidian") { md = testData_listitemObsidian }
     else { return {code: -1, msg: `error demo: ${md}
 
 support: demo, demo2, demoRPC, demoHttp, demoFlow
@@ -413,7 +414,7 @@ export const testData_listitem2 = `\
     - time, i, 2000
   - Http
     - FlowReq:Http请求模板, :item-flowreq, 
-    - emit, i, item-flow
+    - emit, i:item-flow
     - url, i, https://httpbin.org/get
     - success, o:item-flow,
     - fail, o:item-flow,
@@ -639,4 +640,75 @@ export const testData_listitemHttp = `\
   - Http, flow2, 运行四, FlowEval
   - Http, flow3, 运行五, FlowEval
   - Http, resp, Json显示, json
+`
+
+export const testData_listitemObsidian = `\
+- nodes
+  - 运行一
+    - 空模板, 
+    - 开始, :item-start
+    - success, o
+    - color, :item-color, #0ff
+    - , :item-debug
+    - , :item-feat
+  - headers:这里填写你的Obsidian LocalRestAPI秘钥
+    - 开始, :item-start
+    - headers, o, {
+    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a",
+}
+  - Delay
+    - FlowDelay:Delay延时模板, :item-flowdelay, 0
+    - emit, i:item-flow
+    - success, o:item-flow
+    - time, i, 1000
+  - Http:Obsidian状态获取
+    - FlowReq:Http请求模板, :item-flowreq
+    - emit, i:item-flow
+    - url, i, https://127.0.0.1:27124/
+    - headers, i
+    - success, o:item-flow
+    - fail, o:item-flow
+    - resp, o, _
+  - Http2:获取当前文件内容
+    - FlowReq:Http请求模板, :item-flowreq
+    - emit, i:item-flow
+    - url, i, https://127.0.0.1:27124/active/
+    - headers, i, {
+    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a",
+    "accept": "application/vnd.olrapi.note+json"
+}
+    - method, i, GET
+    - success, o:item-flow
+    - fail, o:item-flow
+    - resp, o, 
+  - Http3:查看文件夹下包含的文件
+    - FlowReq:Http请求模板, :item-flowreq
+    - emit, i:item-flow
+    - url, i, https://127.0.0.1:27124/vault/ZTest/
+    - headers, i, {
+    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a",
+}
+    - success, o:item-flow
+    - fail, o:item-flow
+    - resp, o, _
+  - HttpResp
+    - show, i, _
+  - GetMd
+    - fEval, :item-floweval, 
+console.log('t2 ctx', ctx)
+ctx.check(ctx, ['i'], ['o'])
+const md = JSON.parse(ctx.sourceValues['i'].cacheValue)
+const result = md["content"]
+// console.log('md', result)
+ctx.targetValues['o'].cacheValue = result
+    - i, i
+    - o, o:item-markdown, 1234567
+- edges
+  - 运行一, success, Http, emit
+  - headers, headers, Http, headers
+  - Delay, success, Http2, emit
+  - Delay, success, Http3, emit
+  - Http, success, Delay, emit
+  - Http2, resp, HttpResp, show
+  - Http2, resp, GetMd, i
 `

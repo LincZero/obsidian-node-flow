@@ -185,7 +185,7 @@ export class NFNode {
     const result = await this.fn(this.ctx)
     if (!result) {
       thisData.data.runState = 'error'; this.updateNodeData(this.nodeId, thisData.data);
-      return
+      // return 出错 也要同步结果回去 (会有错误信息)
     }
 
     // 将输出结果同步回去 (TODO 思考是否应该不要只遍历输出节点，万一想看一下呢？)

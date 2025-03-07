@@ -3,9 +3,9 @@
 <template>
   <div
     class="markdown-item  node-item-slot"
-    :class="{...props.data.refType, 'has-value': props.data.value != '', 'mulline-value': props.data.value.includes('\n') }">
+    :class="{...props.data.refType, 'has-value': writable_value != '', 'mulline-value': writable_value.includes('\n') }">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <div v-if="props.data.value" class="node-item-value" ref="MdArea">
+    <div v-if="props.data.value" class="node-item-value" ref="MdArea" :title="data.cacheValue">
       <!-- 脚本填充内容 -->
     </div>
     <div style="height:0; clear: both;"></div>
@@ -16,8 +16,33 @@
 const props = defineProps<{
   data: any
 }>()
-import { onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 const MdArea = ref()
+
+// 实际显示和可写属性
+if (!props.data.value) props.data.value = ''
+import { useVueFlow } from '@vue-flow/core';
+const { findNode } = useVueFlow()
+const parentNode = findNode(props.data.parentId)
+const writable_value = computed({
+  get: () => {
+    let ret:string
+    // 显示cacheValue的情况
+    if (parentNode && parentNode.data.runState != 'none' && props.data.cacheValue && props.data.value != '') {
+      ret = props.data.cacheValue
+    }
+    // 显示value的情况
+    else {
+      ret = props.data.value
+    }
+    nextTick(() => { 
+      MdArea.value.innerHTML = ''
+      renderMarkdownFn(ret, MdArea.value as HTMLElement)
+    })
+    return ret
+  },
+  set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
+})
 
 // md渲染 - 声明函数
 import { nfSetting } from '../../../utils/main/setting';
@@ -26,7 +51,7 @@ let renderMarkdownFn: (markdown: string, el: HTMLElement, ctx?: any) => void = n
 // md渲染 - 执行
 onMounted(() => {
   if (!MdArea.value || !renderMarkdownFn) return
-  renderMarkdownFn(props.data.value, MdArea.value as HTMLElement)
+  renderMarkdownFn(writable_value.value, MdArea.value as HTMLElement)
 })
 </script>
 
@@ -78,6 +103,10 @@ onMounted(() => {
 
 /* --- */
 
+.markdown-item .node-item-value {
+  max-height: 900px;
+  overflow: auto;
+}
 .markdown-item.has-value.mulline-value .node-item-value {
   padding: 12px;
 }
