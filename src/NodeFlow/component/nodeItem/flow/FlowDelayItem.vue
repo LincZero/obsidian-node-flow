@@ -29,7 +29,7 @@ const nfNode:NFNode = inject('nfNode');
 nfNode.fn = async (ctx) => {
   ctx.check(ctx, ['emit', 'time'], ['success'])
   await new Promise(resolve => setTimeout(resolve, ctx.sourceValues['time'].cacheValue ));
-  console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} delay:${ctx.sourceValues['time'].cacheValue}`);
+  console.log(`debugConsole, #${_useNodeId}.${props.data.id} delay:${ctx.sourceValues['time'].cacheValue}`);
   return true
 }
 </script>

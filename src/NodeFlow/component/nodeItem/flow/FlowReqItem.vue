@@ -34,7 +34,7 @@ nfNode.fn = async (ctx) => {
       ctx.sourceValues['body']?.cacheValue,
     )
 
-    console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
+    console.log(`debugConsole, #${_useNodeId}.${props.data.id}`);
 
     // 检查是否正常响应
     if (resp.status != 200) { // resp.ok // TODO，fetch版本应该用ok，ob版本有空再调试
@@ -81,7 +81,7 @@ nfNode.fn = async (ctx) => {
       ctx.targetValues['fail'].cacheValue = true; return false
     }
   } catch (e) {
-    console.error('error request:', e)
+    console.error(`#${_useNodeId}.${props.data.id} error request:`, e)
     ctx.targetValues['resp'].cacheValue = '[error] see console for detail'
     ctx.targetValues['fail'].cacheValue = true; return false
   }

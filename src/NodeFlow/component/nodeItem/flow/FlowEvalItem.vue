@@ -46,10 +46,10 @@ nfNode.fn = async (ctx: any)=>{
     func(ctx);
     // 上下文对象 数据取出 (插入取出处理，主要是封装和简化操作)
     // TODO
-    console.log(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id}`);
+    console.log(`debugConsole, #${_useNodeId}.${props.data.id}`);
     return true
   } catch (error) {
-    console.error(`debugConsole, nodeId:${_useNodeId} handleId:${props.data.id} error:`, error);
+    console.log(`debugConsole, #${_useNodeId}.${props.data.id} error:`, error);
     return false
   }
 }

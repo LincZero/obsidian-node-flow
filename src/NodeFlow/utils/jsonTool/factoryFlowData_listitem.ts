@@ -673,10 +673,7 @@ export const testData_listitemObsidian = `\
     - FlowReq:Http请求模板, :item-flowreq
     - emit, i:item-flow
     - url, i, https://127.0.0.1:27124/active/
-    - headers, i, {
-    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a",
-    "accept": "application/vnd.olrapi.note+json"
-}
+    - headers, i, _
     - method, i, GET
     - success, o:item-flow
     - fail, o:item-flow
@@ -686,7 +683,7 @@ export const testData_listitemObsidian = `\
     - emit, i:item-flow
     - url, i, https://127.0.0.1:27124/vault/ZTest/
     - headers, i, {
-    "Authorization": "Bearer 16fabcf89804e315caaad92f16feb3ef3bfb59b7030655a3d4762ef9bae1842a"
+    "Authorization": "默认值能被输入节点覆盖"
 }
     - success, o:item-flow
     - fail, o:item-flow
@@ -702,10 +699,20 @@ const result = md["content"]
 // console.log('md', result)
 ctx.targetValues['o'].cacheValue = result
     - i, i
-    - o, o:item-markdown, 1234567
+    - o, o:item-markdown, _
+  - add_some
+    - fEval, :item-floweval, 
+ctx.check(ctx, ['i'], ['o'])
+const json = JSON.parse(ctx.sourceValues['i'].cacheValue)
+json["accept"] = "application/vnd.olrapi.note+json"
+ctx.targetValues['o'].cacheValue = JSON.stringify(json)
+    - i, i
+    - o, o:item-markdown, _
 - edges
   - 运行一, success, Http, emit
-  - headers, headers, Http, headers
+  - headers, headers, Http3, headers
+  - headers, headers, add_some, i
+  - add_some, o, Http2, headers
   - Delay, success, Http2, emit
   - Delay, success, Http3, emit
   - Http, success, Delay, emit

@@ -8,7 +8,9 @@
 - 缓存显示： **不要直接用props.data**。会根据情况选择显示cacheValue还是defaultValue
 - 节点流: nodrag class 保证聚焦编辑时不会被节点快捷键影响 (ctrl/shift/拖拽等)
 
-- TODO textare支持撤回，但pre-code不支持
+- TODO pre-code的一些bug
+  - textare支持撤回，但pre-code不支持
+  - 不支持输入法 (输入中文)
 - TODO 多行拼接： 使用 `\` 结尾再换行，可以优化显示
 - TODO Tab键、Shift键
 - TODO 最末尾的空白行异常、中文输入异常

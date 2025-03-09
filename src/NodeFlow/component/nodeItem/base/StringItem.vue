@@ -15,7 +15,7 @@
     class="string-item  node-item-slot"
     :class="{...props.data.refType, 'has-value': props.data.value != '', 'mulline-value': writable_value.includes('\n') }">
     <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <NFTextArea class="node-item-value" :data="data" codeType="" :isHideBorder="true"></NFTextArea>
+    <NFTextArea class="node-item-value" :data="data" codeType="json" :isHideBorder="true"></NFTextArea>
     <div style="height:0; clear: both;"></div>
   </div>
 </template>
