@@ -44,6 +44,7 @@
       <div><button @click="console.log(_useEdgesData1)">EdgesData1</button></div>
       <div><span>---All Node-----</span></div>
       <div><button @click="console.log(nodes)">Nodes</button></div> <!--无嵌套结构-->
+      <div><button @click="console.log('使用PrintJson功能')">PropsNodes</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>

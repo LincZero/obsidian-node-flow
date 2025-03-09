@@ -36,6 +36,7 @@ interface ctx_type {
 export class NFNode {
   // 静态的东西
   public readonly nodeId: string
+  public propData: any
   public fn: (ctx: ctx_type) => Promise<boolean> = async () => { return true };
   private _useNodesData: ComputedRef<any>
   private _useSourceConnections: ComputedRef<any>
@@ -61,12 +62,13 @@ export class NFNode {
     // targetFlowValues: {[key:string]: any},
   }
 
-  public static useFactoryNFNode() {
-    return new NFNode(useNodeId())
+  public static useFactoryNFNode(propData:any) {
+    return new NFNode(useNodeId(), propData)
   }
 
-  private constructor(nodeId: string) {
+  private constructor(nodeId: string, propData: any) {
     this.nodeId = nodeId
+    this.propData = propData
     this._useNodesData = useNodesData(this.nodeId)
     this._useSourceConnections = useNodeConnections({ handleType: 'target' })
     this._useTargetConnections = useNodeConnections({ handleType: 'source' })
@@ -184,13 +186,12 @@ export class NFNode {
 
   // 处理自身节点
   public async start_dealSelf(): Promise<boolean> {
-    const thisData = this.findNode(this.nodeId)
-    thisData.data.runState = 'running'; this.updateNodeData(this.nodeId, thisData.data);
+    this.propData.runState = 'running'; this.updateNodeData(this.nodeId, this.propData);
 
     // 执行自定义代码
     const result = await this.fn(this.ctx)
     if (!result) {
-      thisData.data.runState = 'error'; this.updateNodeData(this.nodeId, thisData.data);
+      this.propData.runState = 'error'; this.updateNodeData(this.nodeId, this.propData);
       // 不return，出错了也要同步结果回去 (会有错误信息)
     }
 
@@ -205,8 +206,8 @@ export class NFNode {
       }
     }
 
-    if (thisData.data.runState == 'error') return false
-    thisData.data.runState = 'over'; this.updateNodeData(this.nodeId, thisData.data);
+    if (this.propData.runState == 'error') return false
+    this.propData.runState = 'over'; this.updateNodeData(this.nodeId, this.propData);
     return true
   }
 
@@ -221,8 +222,8 @@ export class NFNode {
     }
     const targetNodesId: string[] = Array.from(new Set(this._useTargetConnections.value.map((connection:any) => connection.target))) // 避免重复
     for (const nodeId of targetNodesId) {
-      const data = this.findNode(nodeId).data
-      data.runState = 'ready'; this.updateNodeData(nodeId, data);
+      const data = this.findNode(nodeId).data // TODO 这里最好能获取到 propsData，不然可能有bug
+      data.runState = 'ready'; this.updateNodeData(nodeId, data); // 能监听到 ready->ready，watch newVal 允许用相等的值重复赋值
     }
     if (targetNodesId.length == 0) {
       console.log(`flowControl, end`);

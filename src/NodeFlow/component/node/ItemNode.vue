@@ -92,6 +92,6 @@ hasCustomHandle.value = props.data?.items?.length!=0
 
 // 流程控制
 import { NFNode } from '../utils/NFNode'
-const nfNode:NFNode = NFNode.useFactoryNFNode()
+const nfNode:NFNode = NFNode.useFactoryNFNode(props.data)
 provide('nfNode', nfNode)
 </script>
