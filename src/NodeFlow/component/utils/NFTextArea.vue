@@ -38,14 +38,16 @@ const writable_value = computed({
     let ret:string
     // 显示cacheValue的情况
     if (parentNode && parentNode.data.runState != 'none' && props.data.cacheValue && props.data.value != '') {
-      ref_textArea?.value?.setAttribute('readOnly', '')
-      ref_textArea?.value?.setAttribute('disable', '')
+      ;(ref_textArea.value ?? ref_pre.value)?.setAttribute('read-only', '')
+      ;(ref_textArea.value ?? ref_pre.value)?.setAttribute('disabled', '')
+      ;(ref_textArea.value ?? ref_pre.value)?.setAttribute('is-cache-value', 'true') // 上两个给浏览器看的，这个给class稳定选择的。pre标签用前两个似乎有bug
       ret = props.data.cacheValue
     }
     // 显示value的情况
     else {
-      ref_textArea?.value?.removeAttribute('readOnly')
-      ref_textArea?.value?.removeAttribute('disable')
+      ;(ref_textArea.value ?? ref_pre.value)?.removeAttribute('read-only')
+      ;(ref_textArea.value ?? ref_pre.value)?.removeAttribute('disabled')
+      ;(ref_textArea.value ?? ref_pre.value)?.setAttribute('is-cache-value', 'false') // 上两个给浏览器看的，这个给class稳定选择的。pre标签用前两个似乎有bug
       ret = props.data.value
     }
     if (ref_textArea?.value) nextTick(() => { autoSize(ref_textArea.value) })
@@ -175,7 +177,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
 </script>
 
 <template>
-  <div>
+  <div class="nf-textarea-p">
     <pre
       ref="ref_pre"
       @input="handlePreInput"
@@ -247,10 +249,31 @@ pre.nf-textarea {
   padding-top: 1px;
   padding-bottom: 1px;
 }
-.nf-textarea:disabled {
-  color: gray !important;
+
+/* 锁，标注显示为cacheValue而非cache的情况 */
+.nf-textarea:disabled, .nf-textarea:read-only, .nf-textarea[is-cache-value='true'] {
+  /* color: gray !important; */
 }
-.nf-textarea:read-only {
-  color: gray !important;
+.nf-textarea-p {
+  position: relative;
+  overflow: visible; /* 这里可显示，再往下要滚动 */
+}
+.nf-textarea:disabled::before, .nf-textarea:read-only::before, .nf-textarea[is-cache-value='true']::before {
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  position: absolute;
+  top: -7px;
+  right: -7px;
+
+  background: rgba(31, 139, 139, 0.8);
+  border-radius: 50%;
+  opacity: 0.8;
+  /* content: "L"; */
+  color: white;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='-1 -3 26 26' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='11' x='3' y='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+  text-align: center;
+  /* cursor: pointer; */
 }
 </style>
