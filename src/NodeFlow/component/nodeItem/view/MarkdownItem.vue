@@ -5,7 +5,7 @@
     class="markdown-item  node-item-slot"
     :class="{...props.data.refType, 'has-value': writable_value != '', 'mulline-value': writable_value.includes('\n') }">
     <span class="node-item-name" v-if="props.data.name">{{ props.data.name }}</span>
-    <div class="node-item-value nodrag" spellcheck="false" v-if="props.data.value" ref="MdArea" :title="data.cacheValue" contenteditable="true">
+    <div class="node-item-value nodrag nowhell" spellcheck="false" v-if="props.data.value" ref="MdArea" :title="data.cacheValue" contenteditable="true">
       <!-- 脚本填充内容 -->
     </div>
     <div style="height:0; clear: both;"></div>

@@ -48,7 +48,8 @@ const writable_value = computed({
       ref_textArea?.value?.removeAttribute('disable')
       ret = props.data.value
     }
-    if(ref_textArea?.value) nextTick(() => { autoSize(ref_textArea.value) })
+    if (ref_textArea?.value) nextTick(() => { autoSize(ref_textArea.value) })
+    if (ref_code.value) Prism.highlightElement(ref_code.value)
     return ret
   },
   set: (value) => { props.data.value = value }, // 不触发数据驱动则无需 return updateNodeData(props.id, props.data)
@@ -99,11 +100,10 @@ const ref_pre = ref<HTMLElement|null>(null)
 const ref_code = ref<HTMLElement|null>(null)
 onMounted(async ()=>{
   await nextTick()
-  if (!ref_pre.value || !ref_code.value) return
-  Prism.highlightElement(ref_code.value)
+  if (ref_code.value) Prism.highlightElement(ref_code.value)
 })
 async function handlePreInput(e: Event) { // 这里不用e，假设必为ref_pre、ref_code，简化流程
-  if (!ref_pre.value || !ref_code.value) return
+  if (!ref_code.value) return
 
   // 光标1 - 保存
   const savedPos = handlePreInput_saveCursorPosition(ref_pre.value)
@@ -180,7 +180,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       ref="ref_pre"
       @input="handlePreInput"
       v-if="codeType!=''"
-      class="nf-textarea nodrag"
+      class="nf-textarea nodrag nowhell"
       :class="{'without-border' : isHideBorder, 'mulline-value': isMulLine}"
       contenteditable="true"
       spellcheck="false"
@@ -196,7 +196,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       @input="handleInput"
       v-model="writable_value"
       v-if="codeType==''"
-      class="nf-textarea nodrag"
+      class="nf-textarea nodrag nowhell"
       :class="{'without-border' : isHideBorder, 'mulline-value': isMulLine}"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
