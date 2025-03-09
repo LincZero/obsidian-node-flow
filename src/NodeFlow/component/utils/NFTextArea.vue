@@ -7,6 +7,8 @@
 - 样式： 黑暗主题、普通文本/代码高亮模式、取消拼写检查
 - 缓存显示： **不要直接用props.data**。会根据情况选择显示cacheValue还是defaultValue
 - 节点流: nodrag class 保证聚焦编辑时不会被节点快捷键影响 (ctrl/shift/拖拽等)
+
+- TODO textare支持撤回，但pre-code不支持
 - TODO 多行拼接： 使用 `\` 结尾再换行，可以优化显示
 - TODO Tab键、Shift键
 - TODO 最末尾的空白行异常、中文输入异常
@@ -188,11 +190,11 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
         v-html="writable_value"></code><!--
     --></pre>
     <textarea
-      ref="ref_textArea nodrag"
+      ref="ref_textArea"
       @input="handleInput"
       v-model="writable_value"
       v-if="codeType==''"
-      class="nf-textarea"
+      class="nf-textarea nodrag"
       :class="{'without-border' : isHideBorder, 'mulline-value': isMulLine}"
       spellcheck="false"
       :title="'cacheValue: '+data.cacheValue"
@@ -235,6 +237,9 @@ pre.nf-textarea {
   border-radius: 6px;
 }
 
+.nf-textarea.mulline-value {
+  width: 100%;
+}
 .nf-textarea:not(.mulline-value) {
   height: 24px !important; /* (20+0+2)+4 单行模式下覆盖js的计算值 */
   padding-top: 1px;
