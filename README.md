@@ -1,5 +1,18 @@
 # NodeFlow
 
+> [!warning]
+> 
+> 近期重构中，以及增加功能效果，工作量较大，下一正式版本的 Release 需要等待较久
+> 
+> 将该项目的作用分为两大类：
+> 
+> - 节点式笔记
+>     - 用于记录节点式笔记，或者记录 comfyui/blender/ue4 等其他节点流软件的节点状况
+>     - 该功能完全依赖于视觉，节点没有运行功能
+> - 功能工作流 (new in V2.0.0)
+>     - 一些节点项，会为节点提供一些额外的功能。这些功能节点可以被运行起来
+>     - 开发设计上让该功能尽可能通用。目前着重于文本笔记、网络请求流程、AI文本等工作流场景的建设
+
 - en
 
   Render node streams like `ComfyUi`, `UE`, `Houdini`, `Blender`, etc., to make it easy to write relevant notes.
