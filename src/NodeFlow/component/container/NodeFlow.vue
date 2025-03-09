@@ -138,12 +138,31 @@ function pasteSelected(array: any) {
 let cache_selected = ref<string[]>([]);
 let cache_copyed = ref<string[]>([]);
 const ctrl_d = (event: any) => {
+  if (!event.ctrlKey) return
+  if (!['d', 'c', 'v'].includes(event.key)) return
+
   // 注意：TODO 这里暂时使用内部剪切版，无法跨画布传输
   // 注意：要打开编辑模式 (显示控制面板) 才允许快捷键，避免冲突
   if (!props.isShowControls) {
     console.warn('不允许在非全屏/不显示控制面板的情况下使用部分快捷键')
     return;
   }
+
+  // 判断区域
+  {
+    // 1. 检查焦点/目标元素是否在指定区域
+    const target = event.target as HTMLElement;
+    const isInNfNodeFlow = !!target.closest('.nf-node-flow'); // 检查 .nf-node-flow 区域
+    // 2. 检查是否在文本编辑状态
+    const tagName = target.tagName.toUpperCase();
+    const isInputOrTextarea = tagName === 'TEXTAREA' || tagName === 'INPUT';
+    const isContentEditable = target.isContentEditable;       // 通用可编辑元素，包括 'pre > code[contenteditable="true"]' 可编辑代码块
+    // 不满足区域条件 或 处于编辑状态时阻止操作
+    console.log('check area', target, isInNfNodeFlow, isInputOrTextarea, isContentEditable)
+    if (!isInNfNodeFlow || isInputOrTextarea || isContentEditable) return
+  }
+
+  // 快捷键功能
   if (event.ctrlKey && event.key === 'd') {
     event.preventDefault();
     pasteSelected(cache_selected);
