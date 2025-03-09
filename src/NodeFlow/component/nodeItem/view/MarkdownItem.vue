@@ -4,8 +4,8 @@
   <div
     class="markdown-item  node-item-slot"
     :class="{...props.data.refType, 'has-value': writable_value != '', 'mulline-value': writable_value.includes('\n') }">
-    <span v-if="props.data.name" class="node-item-name">{{ props.data.name }}</span>
-    <div v-if="props.data.value" class="node-item-value" ref="MdArea" :title="data.cacheValue">
+    <span class="node-item-name" v-if="props.data.name">{{ props.data.name }}</span>
+    <div class="node-item-value nodrag" spellcheck="false" v-if="props.data.value" ref="MdArea" :title="data.cacheValue" contenteditable="true">
       <!-- 脚本填充内容 -->
     </div>
     <div style="height:0; clear: both;"></div>
@@ -104,8 +104,12 @@ onMounted(() => {
 /* --- */
 
 .markdown-item .node-item-value {
-  max-height: 900px;
+  max-height: 700px;
+  max-width: 500px;
   overflow: auto;
+}
+.markdown-item .node-item-value:hover {
+  cursor: text;
 }
 .markdown-item.has-value.mulline-value .node-item-value {
   padding: 12px;
