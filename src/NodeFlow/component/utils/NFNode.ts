@@ -100,13 +100,18 @@ export class NFNode {
 
   // 被调用：主动触发或被动触发
   public async start() {
+    let ret: boolean;
+
+    // step0. 初始化，TODO 有多个上游节点时，这里不应该被重复调用
     await this.start_ctxInit()
 
     // step1. 处理上一节点
-    await this.start_dealLast()
+    ret = await this.start_dealLast()
+    if (!ret) return
   
     // step2. 处理本节点
-    await this.start_dealSelf()
+    ret = await this.start_dealSelf()
+    if (!ret) return
   
     // step3. 处理、激发下一个节点
     await this.start_dealNext()
@@ -149,7 +154,7 @@ export class NFNode {
 
   // 处理上一节点
   // 获取上一个节点的值，遍历所有连接线
-  public async start_dealLast() {
+  public async start_dealLast(): Promise<boolean> {
     for (const connection of this._useSourceConnections.value) {
       const sourceNode = this.findNode(connection.source)
 
@@ -160,7 +165,7 @@ export class NFNode {
         // 好像不会变回none，好像updateNodeData重复赋值runState同一个值也会触发watch来着
         // thisData.data.runState = 'ready'; updateNodeData(this.id, thisData.data);
         // const thisData = findNode(this.id)
-        return
+        return false
       }
 
       // 上游节点项的值获取
@@ -174,10 +179,11 @@ export class NFNode {
         }
       }
     }
+    return true
   }
 
   // 处理自身节点
-  public async start_dealSelf() {
+  public async start_dealSelf(): Promise<boolean> {
     const thisData = this.findNode(this.nodeId)
     thisData.data.runState = 'running'; this.updateNodeData(this.nodeId, thisData.data);
 
@@ -185,7 +191,7 @@ export class NFNode {
     const result = await this.fn(this.ctx)
     if (!result) {
       thisData.data.runState = 'error'; this.updateNodeData(this.nodeId, thisData.data);
-      // return 出错 也要同步结果回去 (会有错误信息)
+      // 不return，出错了也要同步结果回去 (会有错误信息)
     }
 
     // 将输出结果同步回去 (TODO 思考是否应该不要只遍历输出节点，万一想看一下呢？)
@@ -198,7 +204,10 @@ export class NFNode {
         tmp.cacheValue = item.cacheValue ?? item.value
       }
     }
+
+    if (thisData.data.runState == 'error') return false
     thisData.data.runState = 'over'; this.updateNodeData(this.nodeId, thisData.data);
+    return true
   }
 
   // 处理、激发下一个节点

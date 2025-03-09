@@ -21,7 +21,7 @@ Item类型的节点
     <div v-show="id != ''" class="node-id">
       <div>#{{ id }}</div>
     </div>
-    <div class="common-node node-main" :class="data.runState" :aria-label="data.label">
+    <div class="common-node node-main" :run-state="data.runState" :aria-label="data.label">
       <!-- 标题项 -->
       <div class="node-title">
         <span class="node-state" :title="'runState: '+data.runState"></span>
