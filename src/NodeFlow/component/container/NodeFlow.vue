@@ -5,6 +5,7 @@
 -->
 
 <template>
+  <!-- 主画布 -->
   <VueFlow
     class="nf-node-flow" 
     :nodes="nodes" :edges="edges"
@@ -14,7 +15,11 @@
     @edges-change="onEdgeChange"
     @nodes-initialized="isNodeInitialized=true">
     <!-- :pan-on-drag="[0,2]" -->
+
+    <!-- 背景 -->
     <Background style="background-color: #222222;" pattern-color="#191919" variant="lines" :gap="16" />
+
+    <!-- 自定义节点 -->
     <!-- 话说这里的设计很神奇。VueFlow先通过数据构造有自定义标签的插槽位置，然后再用具名插槽v-slot(简写#)把插槽内容进行插入/替换 -->
     <template #node-obcanvas="props"><ObcanvasNode :id="props.id" :data="props.data"/></template>
     <template #node-comfyui="props"><ComfyUINode :id="props.id" :data="props.data"/></template>
@@ -23,6 +28,7 @@
     <template #node-item="props">
       <ItemNode :id="props.id" :data="props.data"></ItemNode>
     </template>
+
     <InteractionControls v-if="props.isShowControls"/>
   </VueFlow>
 </template>

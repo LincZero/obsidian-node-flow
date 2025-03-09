@@ -6,6 +6,7 @@
 - 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
 - 样式： 黑暗主题、普通文本/代码高亮模式、取消拼写检查
 - 缓存显示： **不要直接用props.data**。会根据情况选择显示cacheValue还是defaultValue
+- 节点流: nodrag class 保证聚焦编辑时不会被节点快捷键影响 (ctrl/shift/拖拽等)
 - TODO 多行拼接： 使用 `\` 结尾再换行，可以优化显示
 - TODO Tab键、Shift键
 - TODO 最末尾的空白行异常、中文输入异常
@@ -175,7 +176,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       ref="ref_pre"
       @input="handlePreInput"
       v-if="codeType!=''"
-      class="nf-textarea"
+      class="nf-textarea nodrag"
       :class="{'without-border' : isHideBorder, 'mulline-value': isMulLine}"
       contenteditable="true"
       spellcheck="false"
@@ -187,7 +188,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
         v-html="writable_value"></code><!--
     --></pre>
     <textarea
-      ref="ref_textArea"
+      ref="ref_textArea nodrag"
       @input="handleInput"
       v-model="writable_value"
       v-if="codeType==''"
