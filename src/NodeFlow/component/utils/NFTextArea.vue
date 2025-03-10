@@ -264,8 +264,8 @@ pre.nf-textarea {
   height: 16px;
   line-height: 16px;
   position: absolute;
-  top: -7px;
-  right: -7px;
+  top: -6px;
+  right: -6px;
 
   background: rgba(31, 139, 139, 0.8);
   border-radius: 50%;

@@ -123,6 +123,10 @@ defineExpose({
 function pasteSelected(array: any) {
   for (let id of array.value) {
     const data = findNode(id)
+    if (!data) {
+      console.error('无法找到被选中的节点 #'+id)
+      return
+    }
     let count = 2
     while(true) {
       if (!findNode(id + count)) break
@@ -201,6 +205,8 @@ onUnmounted(() => {
  * 选择的线变为流动样式
  * 需要特别注意的是，最好修改props.jsonData而不是nodes和edges，特别是后者不能直接赋值
  * 
+ * 无需额外去执行 add/remove Nodes/Edges，因为这里是先发生这些事件时，再去监听修改propsData来保证一致性
+ * 
  * 注意区分：
  * - @edges-change      点击触发
  * - @edge-update       (不确定，一般不触发)
@@ -243,7 +249,7 @@ function onEdgeChange(changes: EdgeChange[]) {
     }
     // 删
     else if (change.type == "remove") {
-      props.jsonData.edges = props.jsonData.edges.filter((edge:any) => edge.id != change.id)
+      props.jsonData.edges = props.jsonData.edges.filter((edge:any) => edge.id != change.id); // removeEdges(change.id)
     }
     // console.log('onEdgeChange', change, edges.value, props.jsonData)
   }
@@ -277,7 +283,9 @@ function onNodeChange(changes: NodeChange[]) {
     }
     // 删
     else if (change.type == "remove") {
-      props.jsonData.nodes = props.jsonData.nodes.filter((node:any) => node.id != change.id)
+      // 不能操作嵌套节点，注意删除时要强制将其中被选择节点里删掉
+      props.jsonData.nodes = props.jsonData.nodes.filter((node:any) => node.id != change.id); // removeNodes(change.id)
+      cache_selected.value = cache_selected.value.filter(item => item !== change.id);
     }
   }
 }
