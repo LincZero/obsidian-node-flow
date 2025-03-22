@@ -21,7 +21,15 @@ await esbuild.build({
         Vue({ isProd: true }),
     ],
     entryPoints: ['./main.ts'],
+    outfile: 'main.js',
     bundle: true,
+    format: 'cjs',
+    watch: !prod, // 似乎若升级esbuild后不再支持
+    target: 'es2016',
+    logLevel: "info",
+    sourcemap: prod ? false : 'inline',
+    minify: prod ? true : false,
+    treeShaking: true,
     external: [
         'obsidian',
         'electron',
@@ -47,14 +55,6 @@ await esbuild.build({
         '@codemirror/tooltip',
         '@codemirror/view',
         ...builtins],
-    format: 'cjs',
-    watch: !prod, // 似乎若升级esbuild后不再支持
-    target: 'es2016',
-    logLevel: "info",
-    sourcemap: prod ? false : 'inline',
-    minify: prod ? true : false,
-    treeShaking: true,
-    outfile: 'main.js',
 }).catch(() => process.exit(1));
 
 await esbuild.build({
