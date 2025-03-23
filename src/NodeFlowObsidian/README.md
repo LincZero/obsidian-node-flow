@@ -13,7 +13,11 @@
 ## Obsidian版本的编译
 
 ```bash
-npm run ob:build
+npm run ob:build # 使用 esbuild + @the_tree/esbuild-plugin-vue3。可以处理vue，但无法处理vue中的scss。bug: https://github.com/pipe01/esbuild-plugin-vue3/issues/30
+
+# 或
+
+npm run ob:build2 # 使用 vite + @vitejs/plugin-vue + sass-embedded，可以处理vue，及vue里的scss
 ```
 
 ## 项目创建模板
