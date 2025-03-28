@@ -33,6 +33,9 @@ interface ctx_type {
 //   2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
 //   3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
 //   4. 处理下游节点 | start_dealLast
+//
+// TODO
+// 重构，重构为一个可以用于node服务端的结构，当用像express node作为后端时，保持逻辑一致性
 export class NFNode {
   // 静态的东西
   public readonly nodeId: string
@@ -120,7 +123,7 @@ export class NFNode {
   }
 
   // 清空、准备上下文对象
-  public async start_ctxInit() {
+  private async start_ctxInit() {
     this.ctx = {
       targetValues: {},
       sourceValues: {},
@@ -156,7 +159,7 @@ export class NFNode {
 
   // 处理上一节点
   // 获取上一个节点的值，遍历所有连接线
-  public async start_dealLast(): Promise<boolean> {
+  private async start_dealLast(): Promise<boolean> {
     for (const connection of this._useSourceConnections.value) {
       const sourceNode = this.findNode(connection.source)
 
@@ -185,7 +188,7 @@ export class NFNode {
   }
 
   // 处理自身节点
-  public async start_dealSelf(): Promise<boolean> {
+  private async start_dealSelf(): Promise<boolean> {
     this.propData.runState = 'running'; this.updateNodeData(this.nodeId, this.propData);
 
     // 执行自定义代码
@@ -215,7 +218,7 @@ export class NFNode {
   // TODO 不要激发全部的下层节点
   // - 可能有failed分支
   // - 下个节点要等待所有上游节点才能触发
-  public async start_dealNext() {
+  private async start_dealNext() {
     if (this._useNodesData.value.data.runState != 'over') {
       console.warn(`#${this.nodeId} 状态 ${this._useNodesData.value.data.runState}，停止向后激发`)
       return
