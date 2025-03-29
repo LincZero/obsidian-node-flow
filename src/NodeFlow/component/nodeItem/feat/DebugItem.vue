@@ -45,6 +45,7 @@
       <div><span>---All Node-----</span></div>
       <div><button @click="console.log(nodes)">Nodes</button></div> <!--无嵌套结构-->
       <div><button @click="console.log('使用PrintJson功能')">PropsNodes</button></div>
+      <div><button @click="console.log(getSelectedNodes)">SelectedNodes</button></div>
     </div>
     <div style="height:0; clear: both;"></div>
   </div>
@@ -67,7 +68,7 @@ import {
   useEdgesData,
   type GraphEdge,
 } from '@vue-flow/core'
-const { getConnectedEdges, findNode, nodes } = useVueFlow()
+const { getConnectedEdges, findNode, nodes, getSelectedNodes } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const nodeFound = findNode(_useNodeId)
 const _useNode: any = useNode(_useNodeId)

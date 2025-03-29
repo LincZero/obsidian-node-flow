@@ -9,6 +9,7 @@ const GLayoutRootRef = ref(null); // Golden-Layout
 provide("LAYOUT", GLayoutRootRef);
 
 import JsonEditor from './components/JsonEditor.vue';
+import NodeEditor from './components/NodeEditor.vue';
 
 const nfData = ref<any>({
   type: "",
@@ -65,6 +66,12 @@ function fn_save (str: string): void {
         :fn_save="fn_save"
         :isMini="false"
       ></NodeFlowContainerS>
+    </template>
+
+    <template #NodeEditor>
+      <NodeEditor
+        :nfData="nfData"
+      ></NodeEditor>
     </template>
   </golden-layout>
 </template>

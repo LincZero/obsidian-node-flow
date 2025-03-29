@@ -145,8 +145,8 @@ function pasteSelected(array: any) {
     addNodes(newData);
   }
 }
-let cache_selected = ref<string[]>([]);
-let cache_copyed = ref<string[]>([]);
+const cache_selected = ref<string[]>([]); // TODO 用 getSelectedNodes by useVueFlow 代替
+const cache_copyed = ref<string[]>([]);
 const ctrl_d = (event: any) => {
   if (!event.ctrlKey) return
   if (!['d', 'c', 'v'].includes(event.key)) return
@@ -196,6 +196,13 @@ onUnmounted(() => {
 // 5. 事件
 
 // 增删改查管理器 (仅动态环境需要，静态部署则不需要这部分) --------------------------
+
+import { useGlobalState } from '../../stores/stores.js'
+const { selected } = useGlobalState()
+watch(cache_selected, ()=>{
+  selected.value = cache_selected.value
+},
+{ deep: true }) // string数组，用deep watch比较合适
 
 /**
  * 事件 - 线状态变动

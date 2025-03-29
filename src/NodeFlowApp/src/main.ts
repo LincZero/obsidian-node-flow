@@ -34,4 +34,5 @@ nfSetting.fn_request = async (
   return responseData
 }
 
-createApp(App).mount('#app');
+const app = createApp(App)
+app.mount('#app')

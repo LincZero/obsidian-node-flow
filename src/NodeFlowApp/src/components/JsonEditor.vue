@@ -1,3 +1,5 @@
+<!-- 当前画布的节点对应的json编辑器 -->
+
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
