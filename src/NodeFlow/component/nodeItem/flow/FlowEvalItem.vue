@@ -36,21 +36,23 @@ import {
 } from '@vue-flow/core'
 const _useNodeId: string = useNodeId()
 
-// 流程控制 - 操作
+// 流程控制 - 操作 (如果是纯视觉，则无需这个部分)
 import { inject } from 'vue';
 import { type NFNode } from '../../utils/NFNode';
-const nfNode:NFNode = inject('nfNode');
-nfNode.fn = async (ctx: any)=>{
-  try {
-    const func = new Function('ctx', props.data.value); // 优先用 new Function 而非 eval
-    func(ctx);
-    // 上下文对象 数据取出 (插入取出处理，主要是封装和简化操作)
-    // TODO
-    console.log(`debugConsole, #${_useNodeId}.${props.data.id}`);
-    return true
-  } catch (error) {
-    console.log(`debugConsole, #${_useNodeId}.${props.data.id} error:`, error);
-    return false
+const nfNode:NFNode|undefined = inject('nfNode');
+if (nfNode) {
+  nfNode.fn = async (ctx: any)=>{
+    try {
+      const func = new Function('ctx', props.data.value); // 优先用 new Function 而非 eval
+      func(ctx);
+      // 上下文对象 数据取出 (插入取出处理，主要是封装和简化操作)
+      // TODO
+      console.log(`debugConsole, #${_useNodeId}.${props.data.id}`);
+      return true
+    } catch (error) {
+      console.log(`debugConsole, #${_useNodeId}.${props.data.id} error:`, error);
+      return false
+    }
   }
 }
 </script>

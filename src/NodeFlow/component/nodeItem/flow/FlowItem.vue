@@ -21,12 +21,14 @@ import {
 } from '@vue-flow/core'
 const _useNodeId: string = useNodeId()
 
-// 流程控制 - 操作
+// 流程控制 - 操作 (如果是纯视觉，则无需这个部分)
 import { inject } from 'vue';
 import { type NFNode } from '../../utils/NFNode';
-const nfNode:NFNode = inject('nfNode');
-// 特殊，暂时仅提供样式、不提供方法
-// TODO 这个文件应该要被删除，转而由IO类型完成
+const nfNode:NFNode|undefined = inject('nfNode');
+if (nfNode) {
+  // 特殊，暂时仅提供样式、不提供方法
+  // TODO 这个文件应该要被删除，转而由IO类型完成
+}
 </script>
 
 <style scoped>

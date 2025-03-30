@@ -90,8 +90,10 @@ import FlowEvalItem from "../nodeItem/flow/FlowEvalItem.vue"    // 流程控制�
 const hasCustomHandle = ref(false)
 hasCustomHandle.value = props.data?.items?.length!=0
 
-// 流程控制
+// 流程控制 (如果是纯视觉，则无需这个部分)
 import { NFNode } from '../utils/NFNode'
-const nfNode:NFNode = NFNode.useFactoryNFNode(props.data)
-provide('nfNode', nfNode)
+if (true) {
+  const nfNode:NFNode = NFNode.useFactoryNFNode(props.data)
+  provide('nfNode', nfNode)
+}
 </script>
