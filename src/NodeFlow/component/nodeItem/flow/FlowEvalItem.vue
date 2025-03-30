@@ -39,7 +39,7 @@ const _useNodeId: string = useNodeId()
 // 流程控制 - 操作 (如果是纯视觉，则无需这个部分)
 import { inject } from 'vue';
 import { type NFNode } from '../../utils/NFNode';
-const nfNode:NFNode|undefined = inject('nfNode');
+const nfNode:NFNode|undefined = inject('nfNode', undefined);
 if (nfNode) {
   nfNode.fn = async (ctx: any)=>{
     try {
