@@ -8,7 +8,7 @@
 
 <template>
   <Handle
-    v-if="item.refType === 'input' || item.refType === 'i' || item.refType === 'io'"
+    v-if="(item.refType === 'input' || item.refType === 'i' || item.refType === 'io') && isFlowEnv"
     class="node-item-handle"
     :id="item.hasOwnProperty('id')?item['id']:'target-'+index"
     :title="item.hasOwnProperty('id')?item['id']:'target-'+index"
@@ -20,7 +20,7 @@
     type="target"
     :position="Position.Left" />
   <Handle
-    v-if="item.refType === 'output' || item.refType === 'o' || item.refType === 'io'"
+    v-if="(item.refType === 'output' || item.refType === 'o' || item.refType === 'io') && isFlowEnv"
     class="node-item-handle"
     :id="item.hasOwnProperty('id')?item['id']:'source-'+index"
     :title="item.hasOwnProperty('id')?item['id']:'source-'+index"
@@ -46,4 +46,9 @@ const props = defineProps({
   },
 })
 import { Handle, Position } from '@vue-flow/core'
+
+// 是否在正确的作用域下
+import { useNodeId } from '@vue-flow/core'
+const id = useNodeId()
+const isFlowEnv:boolean = (id != '')
 </script>

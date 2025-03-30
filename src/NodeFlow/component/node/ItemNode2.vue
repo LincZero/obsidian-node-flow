@@ -1,17 +1,6 @@
 <!--
 Item类型的节点
-
-结构：
-- common-id
-- common-node
-  - node-title          标题
-  - node-content
-    - handle (可选)
-    - slot (节点项，可自定义)
-
-特点：
-- 节点也应该是节点项，但有一些不同
-- 作为节点项的节点没有位置的大小属性，也不在根data的nodes下，不归vueflow管。只是长得像节点但其实不是节点
+(非画布版本，原版本的基础上，去除了无法在非vueflow环境下直接显示的东西)
 -->
 
 <template>
@@ -36,22 +25,15 @@ Item类型的节点
             <template #item-enum="props"><EnumItem :data="props.data"></EnumItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
-            <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template>
+            <!-- <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template> -->
             <template #item-feat="props"><FeatItem :data="props.data"></FeatItem></template>
-            <template #item-start="props"><StartItem :data="props.data"></StartItem></template>
+            <!-- <template #item-start="props"><StartItem :data="props.data"></StartItem></template> -->
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
             <template #item-flowreq="props"><FlowReqItem :data="props.data"></FlowReqItem></template>
             <template #item-floweval="props"><FlowEvalItem :data="props.data"></FlowEvalItem></template>
           </ItemNodeSlot>
         </div>
-      </div>
-      <!-- Handle - 默认隐藏 -->
-      <div v-show="!hasCustomHandle" v-if="isFlowEnv">
-        <Handle id="l" class="default" type="target" :position="Position.Left" />
-        <Handle id="t" class="default" type="target" :position="Position.Top" />
-        <Handle id="r" class="default" type="source" :position="Position.Right" />
-        <Handle id="b" class="default" type="source" :position="Position.Bottom" />
       </div>
     </div>
   </div>
@@ -101,3 +83,9 @@ if (isFlowEnv) { // 表示useNodeId失效，当前不在vueflow组件作用域�
   provide('nfNode', nfNode)
 }
 </script>
+
+<style scoped>
+.item-node {
+  padding: 0 !important;
+}
+</style>

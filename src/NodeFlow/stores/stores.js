@@ -7,6 +7,13 @@ export const useGlobalState = createGlobalState(
   () => {
     const count = ref(0)
     const selected = ref(null)
-    return { count, selected }
+    const selected2 = ref(null)
+    const _useVueFlow = ref(null)
+    return { 
+      count,
+      selected,
+      selected2,
+      _useVueFlow
+    }
   }
 )

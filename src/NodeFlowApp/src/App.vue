@@ -69,9 +69,7 @@ function fn_save (str: string): void {
     </template>
 
     <template #NodeEditor>
-      <NodeEditor
-        :nfData="nfData"
-      ></NodeEditor>
+      <NodeEditor></NodeEditor>
     </template>
   </golden-layout>
 </template>

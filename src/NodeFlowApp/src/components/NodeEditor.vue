@@ -3,38 +3,51 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useNodesData, useVueFlow } from '@vue-flow/core'
+import ItemNode2 from '../../../NodeFlow/component/node/ItemNode2.vue'
+import { serializeFlowData } from '../../../NodeFlow/utils/serializeTool/serializeFlowData'
 
-// 事件 - 选中值改动
-const { getSelectedNodes, findNode } = useVueFlow()
-const nodes2 = getSelectedNodes
-let currentNode = ref<null|any>(null)
-function refreshCurrentNode() {
-  const nodes = getSelectedNodes
-  console.log('selected变动', nodes, nodes2, nodes.value, nodes2.value, getSelectedNodes.value, findNode(selected.value[0]))
-  if (nodes.value.length != 1) { currentNode.value=null; return }
-  currentNode.value = {
-    id: nodes.value[0].id,
-    data: nodes.value[0].data
-  }
-}
+// 全局存储部分
 import { useGlobalState } from '../../../NodeFlow/stores/stores.js'
-const { selected } = useGlobalState()
+const { selected, selected2, _useVueFlow } = useGlobalState()
 watch(selected, ()=>{
   refreshCurrentNode()
 },
 { deep: true }) // string数组，用deep watch比较合适
 
-const props = defineProps<{
-  nfData: any
-}>();
+// 事件 - 选中值改动
+const { getSelectedNodes, findNode } = _useVueFlow.value
+const nodes2 = getSelectedNodes
+const currentNode = ref<null|any>(null)
+const currentContent = ref<string>('')
+function refreshCurrentNode() {
+  if (_useVueFlow.value == undefined) return
+  // if (nodes.length != 1) { currentNode.value=null; return }
+  // currentNode.value = {
+  //   id: nodes.value[0].id,
+  //   data: nodes.value[0].data
+  // }
+  if (selected.value.length < 1) {
+    currentNode.value=null
+    currentContent.value = ''
+    return
+  }
+  currentNode.value = {
+    id: findNode(selected.value[0]).id,
+    data: findNode(selected.value[0]).data,
+  }
+  const result = serializeFlowData('nodeflow-listitem', {nodes: [currentNode.value], edges: []})
+  if (result.code == 0) currentContent.value = result.data
+  else currentContent.value = '[error] '+result.msg
+}
+
 </script>
 
 <template>
   <div class="node-editor">
-    <div><button @click="console.log(getSelectedNodes)">SelectedNodes</button></div>
-    <ItemNode v-if="currentNode!=null" :id="currentNode.id" :data="currentNode.data"></ItemNode>
-    <textarea spellcheck="false" class="item" v-model="nfData.rawContent"></textarea>
+    <div v-if="currentNode!=null" style="margin: 0 0 12px; padding: 0;">
+      <ItemNode2 :id="currentNode.id" :data="currentNode.data"></ItemNode2>
+    </div>
+    <textarea spellcheck="false" class="item" v-model="currentContent"></textarea>
   </div>
 </template>
 

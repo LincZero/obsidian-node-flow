@@ -197,13 +197,6 @@ onUnmounted(() => {
 
 // 增删改查管理器 (仅动态环境需要，静态部署则不需要这部分) --------------------------
 
-import { useGlobalState } from '../../stores/stores.js'
-const { selected } = useGlobalState()
-watch(cache_selected, ()=>{
-  selected.value = cache_selected.value
-},
-{ deep: true }) // string数组，用deep watch比较合适
-
 /**
  * 事件 - 线状态变动
  * 
@@ -307,6 +300,17 @@ function onNodeChange(changes: NodeChange[]) {
 // onConnectEnd((edge) => { //
 //   console.log('nodeItem onConnectEnd', edge)
 // })
+
+// 6. 向上传递到全局存储
+const { getSelectedNodes } = useVueFlow()
+import { useGlobalState } from '../../stores/stores.js'
+const { selected, _useVueFlow, selected2 } = useGlobalState()
+watch(cache_selected, ()=>{
+  selected.value = cache_selected.value
+},
+{ deep: true }) // string数组，用deep watch比较合适
+_useVueFlow.value = useVueFlow()
+selected2.value = getSelectedNodes
 </script>
 
 <style>
