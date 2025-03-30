@@ -35,8 +35,13 @@ function refreshCurrentNode() {
     id: findNode(selected.value[0]).id,
     data: findNode(selected.value[0]).data,
   }
+  // TODO 这里的类型不一定是nodeflow-listitem
   const result = serializeFlowData('nodeflow-listitem', {nodes: [currentNode.value], edges: []})
-  if (result.code == 0) currentContent.value = result.data
+  if (result.code == 0) {
+    let list = result.data.split('\n')
+    list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
+    currentContent.value = list.join('\n')+'\n'
+  }
   else currentContent.value = '[error] '+result.msg
 }
 

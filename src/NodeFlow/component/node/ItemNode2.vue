@@ -3,6 +3,13 @@ Item类型的节点
 (非画布版本，原版本的基础上，去除了无法在非vueflow环境下直接显示的东西)
 -->
 
+<style scoped>
+.item-node {
+  padding: 0 !important;
+  /* height: 100% !important; */
+}
+</style>
+
 <template>
   <!-- .item-node.comfyui-style 和 .item-node.oo-style 两种风格 -->
   <div class="item-node oo-style" :class="{'item-item': isItem}">
@@ -83,9 +90,3 @@ if (isFlowEnv) { // 表示useNodeId失效，当前不在vueflow组件作用域�
   provide('nfNode', nfNode)
 }
 </script>
-
-<style scoped>
-.item-node {
-  padding: 0 !important;
-}
-</style>

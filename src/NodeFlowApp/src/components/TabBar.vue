@@ -31,12 +31,9 @@
         <div class="menu-2" @click="onClickLoadLayout">加载布局</div>
         <div class="menu-2" @click="onClickInitLayoutMinRow">重置布局</div>
         <hr class="menu-2">
-        <div class="menu-2" @click="onClickAddGlComponent('GoldenFlowEdit', '可视化编辑器')">可视化编辑器</div>
-        <div class="menu-2" @click="onClickAddGlComponent('GoldenJsonEdit', 'Json编辑器')">json编辑器</div>
-        <div class="menu-2" @click="onClickAddGlComponent('GoldenConsole', '控制台')">控制台</div>
-        <div class="menu-2" @click="onClickAddGlComponent('GoldenChart', '统计图表')">统计图表</div>
-        <div class="menu-2" @click="onClickAddGlComponent('GoldenDocs', '软件文档')">文档页</div>
-        <div class="menu-2" @click="onClickAddGlComponent('GoldenNull', '无内容')">空白窗格</div>
+        <div class="menu-2" @click="onClickAddGlComponent('NodeEditor', '节点编辑器')">节点编辑器</div>
+        <div class="menu-2" @click="onClickAddGlComponent('JsonEditor', 'Json编辑器')">json编辑器</div>
+        <div class="menu-2" @click="onClickAddGlComponent('NodeFlow', '画布')">画布</div>
         <div></div>
       </div>
     </div>
@@ -52,7 +49,9 @@
       @mouseover="clickedMenu=clickedMenu===''?'':'menuHelp'">
       帮助(H)
       <div class="menus-2" v-show="clickedMenu==='menuHelp'">
-        <div class="menu-2" @click="onClickAddGlComponent('GoldenDocs', '软件文档')">文档</div>
+        <div class="menu-2">
+          <a target="_blank" href="https://linczero.github.io/MdNote_Public/ProductDoc/Plugin/NodeFlow/">文档</a>
+        </div>
         <div class="menu-2" @click="console.log('暂无版本号')">版本信息</div>
       </div>
     </div>
