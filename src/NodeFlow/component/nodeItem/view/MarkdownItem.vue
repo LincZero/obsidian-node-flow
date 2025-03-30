@@ -105,7 +105,7 @@ onMounted(() => {
 
 .markdown-item .node-item-value {
   max-height: 700px;
-  max-width: 500px;
+  /* max-width: 500px; */
   overflow: auto;
 }
 .markdown-item .node-item-value:hover {

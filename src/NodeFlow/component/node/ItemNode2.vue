@@ -5,8 +5,9 @@ Item类型的节点
 
 <style scoped>
 .item-node {
-  padding: 0 !important;
+  max-width: 100%;
   /* height: 100% !important; */
+  padding: 0 !important;
 }
 </style>
 

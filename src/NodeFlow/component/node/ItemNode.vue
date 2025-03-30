@@ -14,6 +14,12 @@ Item类型的节点
 - 作为节点项的节点没有位置的大小属性，也不在根data的nodes下，不归vueflow管。只是长得像节点但其实不是节点
 -->
 
+<style scoped>
+.item-node {
+  max-width: 520px;
+}
+</style>
+
 <template>
   <!-- .item-node.comfyui-style 和 .item-node.oo-style 两种风格 -->
   <div class="item-node oo-style" :class="{'item-item': isItem}">

@@ -210,7 +210,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
 
 <style scoped>
 .nf-textarea {
-  max-width: 500px;
+  /* max-width: 500px; */
   max-height: 700px;
   /* height: calc(24px - 4px); 可以被撑高*/
   box-sizing: border-box;
