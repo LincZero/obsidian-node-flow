@@ -44,6 +44,7 @@
       <div><button @click="console.log(_useEdgesData1)">EdgesData1</button></div>
       <div><span>---All Node-----</span></div>
       <div><button @click="console.log(nodes)">Nodes</button></div> <!--无嵌套结构-->
+      <div><button @click="console.log(nfNodes)">nfNodes</button></div> <!--无嵌套结构-->
       <div><button @click="console.log('使用PrintJson功能')">PropsNodes</button></div>
       <div><button @click="console.log(getSelectedNodes)">SelectedNodes</button></div>
     </div>
@@ -101,6 +102,12 @@ function fn_compare() {
     Object.is(toRaw(unref(_useNodesData).data.items), toRaw(nodeFound.data.items)),       // true
   )
 }
+
+// 
+import { inject } from 'vue';
+import { type NFNode } from '../../utils/NFNode';
+import { NFNodes } from '../../utils/NFNodes';
+const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
 </script>
 
 <style scoped>

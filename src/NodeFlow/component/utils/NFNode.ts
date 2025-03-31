@@ -7,7 +7,7 @@ import {
   useNodeId, useNodesData,          // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
 } from '@vue-flow/core'
-import { ComputedRef, computed, ref, unref, toRaw, watch } from 'vue';
+import { ComputedRef, computed, ref, unref, toRaw, watch, provide } from 'vue';
 
 interface ctx_type {
   sourceValues: {[key:string]: any},
@@ -76,6 +76,8 @@ export class NFNode {
   }
 
   private constructor(nodeId: string, propData: any) {
+    provide('nfNode', this)
+    
     this.nodeId = nodeId
     this.propData = propData
     this._useNodesData = useNodesData(this.nodeId)

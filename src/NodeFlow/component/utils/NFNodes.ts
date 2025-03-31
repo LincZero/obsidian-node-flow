@@ -1,7 +1,7 @@
 /**
  * NFNodes 类独占文件
  */
-import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref } from 'vue';
+import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide } from 'vue';
 import { factoryFlowData, failedFlowData } from '../../utils/jsonTool/factoryFlowData'
 import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue';
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
@@ -26,20 +26,29 @@ export class NFNodes {
   public componentKey: Ref<number> = ref(0) // 用于强制刷新
 
   constructor() {
-    // 节点流数据 - 解析
-    const nfData_ = computed(() => { // type、rawContent
+    provide('nfNodes', this)
+    
+    // 自动更新部分 // TODO 由于触发源是文本框，这里可以加上节流防抖的逻辑
+    watch(this.nfStr, (newVal) => {
       let result = factoryFlowData(this.type.value, this.nfStr.value)
       if (result.code != 0) {
         result = failedFlowData(result.msg)
       }
-      return result
-    })
-    this.nfData = ref(nfData_.value.data)
-    watch(nfData_, (newResult) => {
-      console.log("[debug] json string changed, update view")
-      this.nfData.value = newResult.data
+      this.nfData.value = result.data
       this.componentKey.value += 1
+      console.log("[auto update] string -> data")
     }, { immediate: true })
+
+    // 注意点：光标离开输入框后才能更新
+    // watch(this.nfData, (newVal)=>{  
+    //   const result = serializeFlowData(this.type.value, this.nfData.value)
+    //   if (result.code != 0) {
+    //     result.data = "无法保存修改:"+result.msg
+    //   }
+    //   this.nfStr.value = result.data
+    //   // TODO 可选: 可写环境的持久化保存、手动保存
+    //   console.log("[auto update] data -> string")
+    // }, {deep: true})
   }
 
   public get_mdData(): string {
