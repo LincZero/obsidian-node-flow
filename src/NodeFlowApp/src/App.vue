@@ -2,6 +2,7 @@
 import { ref, provide, computed, watch } from 'vue'
 
 import TabBar from './components/TabBar.vue';
+import NodeFlowContainerS from '../../NodeFlow/component/container/NodeFlowContainerS.vue';
 
 import GoldenLayout from './components/goldenLayout/GoldenLayout.vue'
 import { prefinedLayouts } from './components/goldenLayout/predefined-layouts'
@@ -11,32 +12,13 @@ provide("LAYOUT", GLayoutRootRef);
 import JsonEditor from './components/JsonEditor.vue';
 import NodeEditor from './components/NodeEditor.vue';
 
-const nfData = ref<any>({
-  type: "",
-  rawContent: ""
-})
-
-// 节点流数据 - 解析
-import { factoryFlowData, failedFlowData } from '../../NodeFlow/utils/jsonTool/factoryFlowData'
-import NodeFlowContainerS from '../../NodeFlow/component/container/NodeFlowContainerS.vue';
-const componentKey = ref(0) // 用于强制刷新
-const nfData_resultContent_ = computed(() => {
-  let result = factoryFlowData(nfData.value.type, nfData.value.rawContent)
-  if (result.code != 0) {
-    result = failedFlowData(result.msg)
-  }
-  return result
-})
-const nfData_resultContent = ref(nfData_resultContent_.value.data)
-watch(nfData_resultContent_, (newResult) => {
-  console.log("[debug] json string changed, update view")
-  nfData_resultContent.value = newResult.data
-  componentKey.value += 1
-}, { immediate: true })
+// 节点流数据
+import { NFNodes } from '../../NodeFlow/component/utils/NFNodes';
+const nfNodes = new NFNodes()
 
 // 节点流数据 - 保存
 function fn_save (str: string): void {
-  nfData.value.rawContent = str
+  nfNodes.rawContent.value = str
 }
 </script>
 
@@ -50,18 +32,18 @@ function fn_save (str: string): void {
   >
     <template #JsonEditor>
       <JsonEditor
-        :nfData="nfData"
+        :nfNodes="nfNodes"
       ></JsonEditor>
     </template>
     
     <template #NodeFlow>
       <!-- 用key进行强制刷新 -->
       <NodeFlowContainerS
-        :key="componentKey"
-        :rawData="nfData.rawContent"
-        :mdData="`\`\`\`${nfData.type}\n${nfData.rawContent}\n\`\`\`\n`"
-        :jsonType="nfData.type"
-        :jsonData="nfData_resultContent"
+        :key="nfNodes.componentKey.value"
+        :rawData="nfNodes.rawContent.value"
+        :mdData="`\`\`\`${nfNodes.type.value}\n${nfNodes.rawContent.value}\n\`\`\`\n`"
+        :jsonType="nfNodes.type.value"
+        :jsonData="nfNodes.ref_nfData_resultContent.value"
         :fn_newView="async ()=>{}"
         :fn_save="fn_save"
         :isMini="false"

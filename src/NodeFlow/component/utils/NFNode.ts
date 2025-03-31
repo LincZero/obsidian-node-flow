@@ -1,3 +1,7 @@
+/**
+ * NFNode 类独占文件
+ */
+
 import { useVueFlow } from '@vue-flow/core'
 import {
   useNodeId, useNodesData,          // TheNode
@@ -13,29 +17,31 @@ interface ctx_type {
   check: Function
 }
 
-// 带控制的节点类
-// 
-// 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
-// 
-// 注意项
-// - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
-// - 控制附加、装饰类: 如果节点流像NodeFlow的V1.0版本那样是用于纯显示的，则可以去除对该类的依赖和使用
-// - 功能类、运行时类、RAII类: 仅控制流程，尽量不存储状态，避免需要维护一致性
-// 
-// 封装成类主要是为了：
-// 1. 方便在中间插入自定义行为
-// 2. 方便evalItem中用户脚本的调用
-//
-// 流程
-// 1. setup作用域创建实例，自动注册watch
-// 2. 手动启动 start()
-//   1. 清空上下文 | start_ctxInit   | 重初始化 ctx
-//   2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
-//   3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
-//   4. 处理下游节点 | start_dealLast
-//
-// TODO
-// 重构，重构为一个可以用于node服务端的结构，当用像express node作为后端时，保持逻辑一致性
+/**
+ * 带控制的节点类
+ * 
+ * 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
+ * 
+ * 注意项
+ * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
+ * - 控制附加、装饰类: 如果节点流像NodeFlow的V1.0版本那样是用于纯显示的，则可以去除对该类的依赖和使用
+ * - 功能类、运行时类、RAII类: 仅控制流程，尽量不存储状态，避免需要维护一致性
+ * 
+ * 封装成类主要是为了：
+ * 1. 方便在中间插入自定义行为
+ * 2. 方便evalItem中用户脚本的调用
+ * 
+ * 流程
+ * 1. setup作用域创建实例，自动注册watch
+ * 2. 手动启动 start()
+ *   1. 清空上下文 | start_ctxInit   | 重初始化 ctx
+ *   2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
+ *   3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
+ *   4. 处理下游节点 | start_dealLast
+ * 
+ * TODO
+ * 重构，重构为一个可以用于node服务端的结构，当用像express node作为后端时，保持逻辑一致性
+ */
 export class NFNode {
   // 静态的东西
   public readonly nodeId: string

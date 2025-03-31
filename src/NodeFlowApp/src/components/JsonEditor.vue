@@ -3,8 +3,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes';
 const props = defineProps<{
-  nfData: any
+  nfNodes: NFNodes
 }>();
 
 // 1.1 节点流数据 - 预设
@@ -29,15 +30,15 @@ const nfData_enum = [
 ]
 function onSelect(event: any) {
   const index = event.target.value
-  props.nfData.type = nfData_enum[index].type
-  props.nfData.rawContent = nfData_enum[index].content
+  props.nfNodes.type.value = nfData_enum[index].type
+  props.nfNodes.rawContent.value = nfData_enum[index].content
 }
 
 // 1.2 节点流数据 - 类型
-props.nfData.type = ref<string>("nodeflow-listitem")
+props.nfNodes.type.value = "nodeflow-listitem"
 
 // 1.3 节点流数据 - 内容
-props.nfData.rawContent = ref<string>(testData_listitem2) // demo
+props.nfNodes.rawContent.value = testData_listitem2 // demo
 </script>
 
 <template>
@@ -46,8 +47,8 @@ props.nfData.rawContent = ref<string>(testData_listitem2) // demo
     <select class="item" @change="onSelect" value="1">
       <option v-for="(item, index) in nfData_enum" :value="index">{{ item.name }}</option>
     </select>
-    <input class="item" v-model="nfData.type"></input>
-    <textarea spellcheck="false" class="item" v-model="nfData.rawContent"></textarea>
+    <input class="item" v-model="nfNodes.type.value"></input>
+    <textarea spellcheck="false" class="item" v-model="nfNodes.rawContent.value"></textarea>
     <!-- TODO: pre，shiki、prismjs、highlight.js -->
     <!-- <pre spellcheck="false" class="item">
       <code

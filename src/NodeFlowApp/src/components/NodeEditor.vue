@@ -15,12 +15,11 @@ watch(selected, ()=>{
 { deep: true }) // string数组，用deep watch比较合适
 
 // 事件 - 选中值改动
-const { getSelectedNodes, findNode } = _useVueFlow.value
-const nodes2 = getSelectedNodes
 const currentNode = ref<null|any>(null)
-const currentContent = ref<string>('')
+const currentContent = ref<string>('(未选中，请在画布中选中节点)')
 function refreshCurrentNode() {
   if (_useVueFlow.value == undefined) return
+  const { getSelectedNodes, findNode } = _useVueFlow.value
   // if (nodes.length != 1) { currentNode.value=null; return }
   // currentNode.value = {
   //   id: nodes.value[0].id,
@@ -28,7 +27,7 @@ function refreshCurrentNode() {
   // }
   if (selected.value.length < 1) {
     currentNode.value=null
-    currentContent.value = ''
+    currentContent.value = '(未选中，请在画布中选中节点)'
     return
   }
   currentNode.value = {
