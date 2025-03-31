@@ -1,8 +1,6 @@
 <!-- 当前画布的节点对应的json编辑器 -->
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-
 import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes';
 const props = defineProps<{
   nfNodes: NFNodes
@@ -31,14 +29,14 @@ const nfData_enum = [
 function onSelect(event: any) {
   const index = event.target.value
   props.nfNodes.type.value = nfData_enum[index].type
-  props.nfNodes.rawContent.value = nfData_enum[index].content
+  props.nfNodes.nfStr.value = nfData_enum[index].content
 }
 
 // 1.2 节点流数据 - 类型
 props.nfNodes.type.value = "nodeflow-listitem"
 
 // 1.3 节点流数据 - 内容
-props.nfNodes.rawContent.value = testData_listitem2 // demo
+props.nfNodes.nfStr.value = testData_listitem2 // demo
 </script>
 
 <template>
@@ -48,7 +46,7 @@ props.nfNodes.rawContent.value = testData_listitem2 // demo
       <option v-for="(item, index) in nfData_enum" :value="index">{{ item.name }}</option>
     </select>
     <input class="item" v-model="nfNodes.type.value"></input>
-    <textarea spellcheck="false" class="item" v-model="nfNodes.rawContent.value"></textarea>
+    <textarea spellcheck="false" class="item" v-model="nfNodes.nfStr.value"></textarea>
     <!-- TODO: pre，shiki、prismjs、highlight.js -->
     <!-- <pre spellcheck="false" class="item">
       <code

@@ -12,7 +12,7 @@
     <!-- 主画布 -->
     <!-- TODO 有空捋一下这里，全屏这块有些代码应该抽离复用 -->
     <div :class="_isMini?'nf-shell-mini':'nf-shell-view'">
-      <NodeFlow ref="RefChild" :jsonData="jsonData" :isMini="_isMini" :isShowControls="_isShowControls"/>
+      <NodeFlow ref="RefChild" :jsonData="nfNodes.nfData.value" :isMini="_isMini" :isShowControls="_isShowControls"/>
     </div>
 
     <!-- 工具栏 -->
@@ -48,18 +48,13 @@
 
 <script setup lang="ts">
 // 自身属性、通用导入
+import { NFNodes } from '../utils/NFNodes'
 const props = withDefaults(defineProps<{
-  rawData?: string,     // 仅打印用
-  mdData?: string,      // 仅打印用
-  jsonType?: string,    // 仅打印、序列化用
-  jsonData: any,
+  nfNodes: NFNodes,
   isMini: boolean,
   fn_newView?: () => Promise<void>, // 在新视图中显示画布
   fn_save?: (str: string) => void,  // 保存
 }>(), {
-  rawData: "",
-  mdData: "",
-  jsonType: "",
   fn_newView: async ()=>{},
   fn_save: ()=>{}
 })
@@ -107,9 +102,9 @@ function fn_fullScreen() {
 //   按钮 - 展示json数据
 function fn_printData(type:"mdData"|"rawData"|"jsonData") {
   let data: any
-  if (type == "mdData") data = "\n" + props.mdData
-  else if (type == "rawData") data = "\n" + props.rawData
-  else data = props.jsonData
+  if (type == "mdData") data = "\n" + props.nfNodes.get_mdData()
+  else if (type == "rawData") data = "\n" + props.nfNodes.nfStr.value
+  else data = props.nfNodes.nfData.value
   console.log("Debug json:", data)
 }
 
@@ -133,10 +128,10 @@ function removeParentField(oldJson: any): any {
 //   按钮 - 拷贝到黏贴版
 function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
   let data: string
-  if (type == "mdData") data = props.mdData
-  else if (type == "rawData") data = props.rawData
+  if (type == "mdData") data = props.nfNodes.get_mdData()
+  else if (type == "rawData") data = props.nfNodes.nfStr.value
   else {
-    const _rawData = computed(() => JSON.stringify(removeParentField(props.jsonData), null, 2));
+    const _rawData = computed(() => JSON.stringify(removeParentField(props.nfNodes.nfData.value), null, 2));
     data = _rawData.value
   }
 
@@ -152,7 +147,7 @@ import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 const saveable = true; // [环境]仅obsidian等可写环境需要，vuepress这种非可写环境不需要
 function fn_saveChange () {
   if (!props.hasOwnProperty("jsonType") || !props.hasOwnProperty("fn_save")) return
-  const result = serializeFlowData(props.jsonType, props.jsonData)
+  const result = serializeFlowData(props.nfNodes.type.value, props.nfNodes.nfData.value)
   if (result.code == 0) {
     props.fn_save(result.data)
   }

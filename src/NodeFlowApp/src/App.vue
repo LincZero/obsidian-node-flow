@@ -18,7 +18,7 @@ const nfNodes = new NFNodes()
 
 // 节点流数据 - 保存
 function fn_save (str: string): void {
-  nfNodes.rawContent.value = str
+  nfNodes.nfStr.value = str
 }
 </script>
 
@@ -40,10 +40,7 @@ function fn_save (str: string): void {
       <!-- 用key进行强制刷新 -->
       <NodeFlowContainerS
         :key="nfNodes.componentKey.value"
-        :rawData="nfNodes.rawContent.value"
-        :mdData="`\`\`\`${nfNodes.type.value}\n${nfNodes.rawContent.value}\n\`\`\`\n`"
-        :jsonType="nfNodes.type.value"
-        :jsonData="nfNodes.ref_nfData_resultContent.value"
+        :nfNodes="nfNodes"
         :fn_newView="async ()=>{}"
         :fn_save="fn_save"
         :isMini="false"
