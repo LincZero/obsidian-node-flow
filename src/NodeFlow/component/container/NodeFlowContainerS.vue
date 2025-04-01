@@ -28,13 +28,13 @@
         <button class="nf-btn" @click="selectItem('LR layout (center)', () => fn_autoPos('LR', 'center'))">LR layout (center)</button>
         <button class="nf-btn" @click="selectItem('LR layout (top)', () => fn_autoPos('LR', 'top'))">LR layout (top)</button>
       </DropdownButton>
-      <DropdownButton class="nf-btn" :label="'Copy md'" :fn="() => fn_copyData('mdData')" #default="{ selectItem }">
-        <button class="nf-btn" @click="selectItem('Print json', () => fn_printData('jsonData'))">Print json</button>
-        <button class="nf-btn" @click="selectItem('Print md', () => fn_printData('mdData'))">Print md</button>
-        <button class="nf-btn" @click="selectItem('Print raw', () => fn_printData('rawData'))">Print raw</button>
-        <button class="nf-btn" @click="selectItem('Copy json', () => fn_copyData('jsonData'))">Copy json</button>
-        <button class="nf-btn" @click="selectItem('Copy md', () => fn_copyData('mdData'))">Copy md</button>
-        <button class="nf-btn" @click="selectItem('Copy raw', () => fn_copyData('rawData'))">Copy raw</button>
+      <DropdownButton class="nf-btn" :label="'Copy md'" :fn="() => nfNodes.fn_copyData('mdData')" #default="{ selectItem }">
+        <button class="nf-btn" @click="selectItem('Print json', () => nfNodes.fn_printData('jsonData'))">Print json</button>
+        <button class="nf-btn" @click="selectItem('Print md', () => nfNodes.fn_printData('mdData'))">Print md</button>
+        <button class="nf-btn" @click="selectItem('Print raw', () => nfNodes.fn_printData('rawData'))">Print raw</button>
+        <button class="nf-btn" @click="selectItem('Copy json', () => nfNodes.fn_copyData('jsonData'))">Copy json</button>
+        <button class="nf-btn" @click="selectItem('Copy md', () => nfNodes.fn_copyData('mdData'))">Copy md</button>
+        <button class="nf-btn" @click="selectItem('Copy raw', () => nfNodes.fn_copyData('rawData'))">Copy raw</button>
       </DropdownButton>
       <button class="nf-btn" @click="fn_initView()" title="点击时自动缩放移动画布">Init view</button>
       <button class="nf-btn" @click="fn_initZoom()" ref="zoomButton"
@@ -66,6 +66,7 @@ const _isShowControls = ref(!props.isMini)
 
 // 组件 - 节点画布。会往这里传递一个布局方法
 import NodeFlow from './NodeFlow.vue'
+import NodeFlowM from './NodeFlowM.vue'
 const RefChild = ref<{
   refreshLayout: (direction: string, amend: string)=>void,
 }>();
@@ -97,49 +98,6 @@ const CanFullScreen = ref()
 import { switchFullScreen } from "./fullScreen"
 function fn_fullScreen() {
   switchFullScreen(CanFullScreen.value, _isMini)
-}
-
-//   按钮 - 展示json数据
-function fn_printData(type:"mdData"|"rawData"|"jsonData") {
-  let data: any
-  if (type == "mdData") data = "\n" + props.nfNodes.get_mdData()
-  else if (type == "rawData") data = "\n" + props.nfNodes.nfStr.value
-  else data = props.nfNodes.nfData.value
-  console.log("Debug json:", data)
-}
-
-// 去除json递归 (去除parent字段)
-function removeParentField(oldJson: any): any {
-  if (Array.isArray(oldJson)) {
-    return oldJson.map(item => removeParentField(item));
-  } else if (typeof oldJson === 'object' && oldJson !== null) {
-    const newJson: any = {};
-    for (const key in oldJson) {
-      if (key !== 'parent') {
-        newJson[key] = removeParentField(oldJson[key]);
-      }
-    }
-    return newJson;
-  } else {
-    return oldJson;
-  }
-}
-
-//   按钮 - 拷贝到黏贴版
-function fn_copyData (type:"mdData"|"rawData"|"jsonData") {
-  let data: string
-  if (type == "mdData") data = props.nfNodes.get_mdData()
-  else if (type == "rawData") data = props.nfNodes.nfStr.value
-  else {
-    const _rawData = computed(() => JSON.stringify(removeParentField(props.nfNodes.nfData.value), null, 2));
-    data = _rawData.value
-  }
-
-  navigator.clipboard.writeText(data).then(() => {
-    console.log('Info: copy success');
-  }, () => {
-    console.error('Error: copy fail');
-  });
 }
 
 //   按钮 - 保存修改

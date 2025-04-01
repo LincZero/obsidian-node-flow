@@ -26,10 +26,6 @@ export class NFNodes {
   public nfData: Ref<any> = ref({nodes:[], edges:[]})
   public componentKey: Ref<number> = ref(0) // 用于强制刷新
 
-  // vueflow有关部分
-  nodes = ref<Node[]>([])
-  edges = ref<Edge[]>([])
-
   constructor() {
     provide('nfNodes', this)
     
@@ -67,6 +63,55 @@ export class NFNodes {
   // TODO 分自动存储和手动存储、是否持久化存储
   public save() {
   }
+
+  // 功能 - 展示json数据
+  public fn_printData(type:"mdData"|"rawData"|"jsonData") {
+    let data: any
+    if (type == "mdData") data = "\n" + this.get_mdData()
+    else if (type == "rawData") data = "\n" + this.nfStr.value
+    else data = this.nfData.value
+    console.log("Debug json:", data)
+  }
+
+  // 功能 - 拷贝到黏贴版
+  public fn_copyData (type:"mdData"|"rawData"|"jsonData") {
+    let data: string
+    if (type == "mdData") data = this.get_mdData()
+    else if (type == "rawData") data = this.nfStr.value
+    else {
+      const _rawData = computed(() => JSON.stringify(removeParentField(this.nfData.value), null, 2));
+      data = _rawData.value
+    }
+
+    navigator.clipboard.writeText(data).then(() => {
+      console.log('Info: copy success');
+    }, () => {
+      console.error('Error: copy fail');
+    });
+
+    // 去除json递归 (去除parent字段)
+    function removeParentField(oldJson: any): any {
+      if (Array.isArray(oldJson)) {
+        return oldJson.map(item => removeParentField(item));
+      } else if (typeof oldJson === 'object' && oldJson !== null) {
+        const newJson: any = {};
+        for (const key in oldJson) {
+          if (key !== 'parent') {
+            newJson[key] = removeParentField(oldJson[key]);
+          }
+        }
+        return newJson;
+      } else {
+        return oldJson;
+      }
+    }
+  }
+
+  // ---------------------- 与VueFlow有关接口 ----------------------
+  
+  // vueflow有关部分
+  nodes = ref<Node[]>([])
+  edges = ref<Edge[]>([])
 
   // TODO 检查响应是否正常
   public update_nodesAndEdges() {
