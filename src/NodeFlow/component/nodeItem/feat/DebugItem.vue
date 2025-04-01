@@ -30,6 +30,7 @@
       <!-- Node Find 数据覆盖面上多于 NodesData -->
       <div><button @click="console.log(_useNodesData)">NodesData</button></div>
       <div><button @click="console.log(nodeFound)">Node Find</button></div>
+      <div><button @click="console.log(nfNode)">NFNode</button></div>
       <div><button @click="fn_compare()">Compare</button></div>
       <div><span>---The Handle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
@@ -103,10 +104,11 @@ function fn_compare() {
   )
 }
 
-// 
+// 依赖注入的东西
 import { inject } from 'vue';
 import { type NFNode } from '../../utils/NFNode';
-import { NFNodes } from '../../utils/NFNodes';
+const nfNode:NFNode|undefined = inject('nfNode', undefined);
+import { type NFNodes } from '../../utils/NFNodes';
 const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
 </script>
 

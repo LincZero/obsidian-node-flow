@@ -12,7 +12,7 @@
     <!-- 主画布 -->
     <!-- TODO 有空捋一下这里，全屏这块有些代码应该抽离复用 -->
     <div :class="_isMini?'nf-shell-mini':'nf-shell-view'">
-      <NodeFlow ref="RefChild" :jsonData="nfNodes.nfData.value" :isMini="_isMini" :isShowControls="_isShowControls"/>
+      <NodeFlow ref="RefChild" :nfNodes="nfNodes" :jsonData="nfNodes.nfData.value" :isMini="_isMini" :isShowControls="_isShowControls"/>
     </div>
 
     <!-- 工具栏 -->

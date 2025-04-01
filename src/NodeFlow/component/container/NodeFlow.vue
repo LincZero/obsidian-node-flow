@@ -8,7 +8,7 @@
   <!-- 主画布 -->
   <VueFlow
     class="nf-node-flow" 
-    :nodes="nodes" :edges="edges"
+    :nodes="props.nfNodes.nodes.value" :edges="props.nfNodes.edges.value"
     :prevent-scrolling="true"
     fit-view-on-init
     @nodes-change="onNodeChange"
@@ -36,16 +36,16 @@
 <script setup lang="ts">
 // 1. 自身组件
 // 属性、通用导入
+import { NFNodes } from '../utils/NFNodes';
 const props = withDefaults(defineProps<{
-  jsonData?: any,
+  nfNodes: NFNodes,
   isShowControls?: boolean, // 强制显示控制面板
   isMini: boolean, // true为局部渲染，尽可能简化；false为在更大的独立视图中渲染，可以显示更多东西
 }>(), {
-  jsonData: {nodes:[], edges:[]},
   isShowControls: false
 })
+props.nfNodes.update_nodesAndEdges()
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { useNodesData, useVueFlow } from '@vue-flow/core'
 
 // 2. 子组件
 
@@ -63,17 +63,9 @@ import { Background } from '@vue-flow/background'                   // 背景控
 //   组件 - VueFlow，并准备节点数据 (解析JSON数据，在外面已经校验过一次了，这里大概率不会有问题)
 //   需要注意这里 jsonData 的改变不会主动引起 nodes 的改变! (除非用 deep watch，或对单个节点改变时可以用 updateNode)
 import { VueFlow } from '@vue-flow/core'
-import type { Node, Edge } from '@vue-flow/core' 
-let nodes = ref<Node[]>([]);
-let edges = ref<Edge[]>([]);
-try {
-  nodes = ref(props.jsonData.nodes);
-  edges = ref(props.jsonData.edges);
-} catch (error) {
-  console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(props.jsonData));
-}
 
 // 3. 全局设置
+import { useVueFlow } from '@vue-flow/core'
 {
   if (props.isMini) {
     const {
@@ -99,7 +91,7 @@ const { calcLayout } = useLayout()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
 async function refreshLayout(direction: string, amend='none') {
-  nodes.value = calcLayout(nodes.value, edges.value, direction, amend)
+  props.nfNodes.nodes.value = calcLayout(props.nfNodes.nodes.value, props.nfNodes.edges.value, direction, amend)
   const { fitView } = useVueFlow()
   nextTick(() => { fitView() })
 }
@@ -107,9 +99,9 @@ async function refreshLayout(direction: string, amend='none') {
 const isNodeInitialized = ref(false)
 watch(isNodeInitialized, (newValue, oldValue) => {
   if (oldValue==false && newValue==true) {
-    if (nodes.value.length>1 &&
-      nodes.value[0].position.x == 0 && nodes.value[0].position.y == 0 &&
-      nodes.value[1].position.x == 0 && nodes.value[1].position.y == 0
+    if (props.nfNodes.nodes.value.length>1 &&
+      props.nfNodes.nodes.value[0].position.x == 0 && props.nfNodes.nodes.value[0].position.y == 0 &&
+      props.nfNodes.nodes.value[1].position.x == 0 && props.nfNodes.nodes.value[1].position.y == 0
     ) {
       refreshLayout('LR', 'center')
     }
@@ -203,7 +195,7 @@ onUnmounted(() => {
  * on emit by <VueFlow @edge-change="onEdgeChange">
  * 
  * 选择的线变为流动样式
- * 需要特别注意的是，最好修改props.jsonData而不是nodes和edges，特别是后者不能直接赋值
+ * 需要特别注意的是，最好修改jsonData而不是nodes和edges，特别是后者不能直接赋值
  * 
  * 无需额外去执行 add/remove Nodes/Edges，因为这里是先发生这些事件时，再去监听修改propsData来保证一致性
  * 
@@ -236,7 +228,7 @@ function onEdgeChange(changes: EdgeChange[]) {
         "#8000ff", "#cc00ff", "#ff00e6", "#ff0099", "#ff004c"
       ]
       const nameMapAttr = change.item.targetHandle.toLowerCase().charCodeAt(0)%20;
-      props.jsonData.edges.push({
+      props.nfNodes.nfData.value.edges.push({
         id: change.item.id,
         style: {
           stroke: colors[nameMapAttr]
@@ -249,9 +241,9 @@ function onEdgeChange(changes: EdgeChange[]) {
     }
     // 删
     else if (change.type == "remove") {
-      props.jsonData.edges = props.jsonData.edges.filter((edge:any) => edge.id != change.id); // removeEdges(change.id)
+      props.nfNodes.nfData.value.edges = props.nfNodes.nfData.value.edges.filter((edge:any) => edge.id != change.id); // removeEdges(change.id)
     }
-    // console.log('onEdgeChange', change, edges.value, props.jsonData)
+    // console.log('onEdgeChange', change, edges.value, props.nfNodes.nfData.value)
   }
 }
 
@@ -274,7 +266,7 @@ function onNodeChange(changes: NodeChange[]) {
     // 增
     else if (change.type == "add" && change.hasOwnProperty("item")) {
       const data = findNode(change.item.id)
-      props.jsonData.nodes.push({
+      props.nfNodes.nfData.value.nodes.push({
         id: data.id,
         data: data.data,
         position: data.position,
@@ -284,7 +276,7 @@ function onNodeChange(changes: NodeChange[]) {
     // 删
     else if (change.type == "remove") {
       // 不能操作嵌套节点，注意删除时要强制将其中被选择节点里删掉
-      props.jsonData.nodes = props.jsonData.nodes.filter((node:any) => node.id != change.id); // removeNodes(change.id)
+      props.nfNodes.nfData.value.nodes = props.nfNodes.nfData.value.nodes.filter((node:any) => node.id != change.id); // removeNodes(change.id)
       cache_selected.value = cache_selected.value.filter(item => item !== change.id);
     }
   }

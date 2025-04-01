@@ -1,6 +1,7 @@
 /**
  * NFNodes 类独占文件
  */
+import type { Node, Edge } from '@vue-flow/core' 
 import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide } from 'vue';
 import { factoryFlowData, failedFlowData } from '../../utils/jsonTool/factoryFlowData'
 import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue';
@@ -22,8 +23,12 @@ import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 export class NFNodes {
   public type: Ref<string> = ref('')
   public nfStr: Ref<string> = ref('')
-  public nfData = ref(null)
+  public nfData: Ref<any> = ref({nodes:[], edges:[]})
   public componentKey: Ref<number> = ref(0) // 用于强制刷新
+
+  // vueflow有关部分
+  nodes = ref<Node[]>([])
+  edges = ref<Edge[]>([])
 
   constructor() {
     provide('nfNodes', this)
@@ -40,7 +45,7 @@ export class NFNodes {
     }, { immediate: true })
 
     // 注意点：光标离开输入框后才能更新
-    // watch(this.nfData, (newVal)=>{  
+    watch(this.nfData, (newVal)=>{
     //   const result = serializeFlowData(this.type.value, this.nfData.value)
     //   if (result.code != 0) {
     //     result.data = "无法保存修改:"+result.msg
@@ -48,7 +53,11 @@ export class NFNodes {
     //   this.nfStr.value = result.data
     //   // TODO 可选: 可写环境的持久化保存、手动保存
     //   console.log("[auto update] data -> string")
-    // }, {deep: true})
+
+      // this.update_nodesAndEdges()
+    }, {deep: true})
+
+    this.update_nodesAndEdges()
   }
 
   public get_mdData(): string {
@@ -57,5 +66,15 @@ export class NFNodes {
 
   // TODO 分自动存储和手动存储、是否持久化存储
   public save() {
+  }
+
+  // TODO 检查响应是否正常
+  public update_nodesAndEdges() {
+    try {
+      this.nodes.value = this.nfData.value.nodes
+      this.edges.value = this.nfData.value.edges
+    } catch (error) {
+      console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(this.nfStr));
+    }
   }
 }
