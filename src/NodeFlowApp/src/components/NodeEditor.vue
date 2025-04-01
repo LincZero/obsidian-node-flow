@@ -26,7 +26,7 @@ function refreshCurrentNode() {
   //   data: nodes.value[0].data
   // }
   if (selected.value.length < 1) {
-    currentNode.value=null
+    currentNode.value = null
     currentContent.value = '(未选中，请在画布中选中节点)'
     return
   }
