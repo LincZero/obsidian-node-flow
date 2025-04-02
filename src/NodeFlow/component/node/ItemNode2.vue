@@ -28,14 +28,20 @@ Item类型的节点
       <div class="node-content">
         <div v-for="(item,index) in data.items" :class="'line node-item '+item.refType">
           <ItemNodeSlot :index="index" :item="item">
-            <!-- <template #item-item="props"><ItemNode :id="props.data.id" :data="props.data" :is-item="true"></ItemNode></template> 特殊节点项，节点也是节点项 -->
+            <template #item-item="props">
+              <!-- <div>(此处不支持编辑嵌套ItemNode)</div> -->
+              <ItemNode2 :id="props.data.id" :data="props.data" :is-item="true"></ItemNode2>
+            </template>  <!-- 特殊节点项，节点也是节点项 -->
             <template #item-string="props"><StringItem :data="props.data"></StringItem></template>
             <template #item-enum="props"><EnumItem :data="props.data"></EnumItem></template>
             <template #item-color="props"><ColorItem :data="props.data"></ColorItem></template>
             <template #item-markdown="props"><MarkdownItem :data="props.data"></MarkdownItem></template>
-            <!-- <template #item-debug="props"><DebugItem :data="props.data"></DebugItem></template> -->
+            <template #item-debug="props">
+              <div>(此处不支持编辑DebugItem)</div>
+              <!-- <DebugItem :data="props.data"></DebugItem> -->
+            </template>
             <template #item-feat="props"><FeatItem :data="props.data"></FeatItem></template>
-            <!-- <template #item-start="props"><StartItem :data="props.data"></StartItem></template> -->
+            <template #item-start="props"><StartItem :data="props.data"></StartItem></template>
             <template #item-flow="props"><FlowItem :data="props.data"></FlowItem></template>
             <template #item-flowdelay="props"><FlowDelayItem :data="props.data"></FlowDelayItem></template>
             <template #item-flowreq="props"><FlowReqItem :data="props.data"></FlowReqItem></template>
@@ -74,7 +80,7 @@ import ColorItem from "../nodeItem/color/ColorItem.vue"         // 颜色项
 import MarkdownItem from "../nodeItem/view/MarkdownItem.vue"    // Markdown项
 // import DebugItem from "../nodeItem/feat/DebugItem.vue"       // 功能项 - 调试
 import FeatItem from "../nodeItem/feat/FeatItem.vue"            // 功能项 - 流程功能
-// import StartItem from "../nodeItem/feat/StartItem.vue"       // 功能项 - 开始，有开始按钮
+import StartItem from "../nodeItem/feat/StartItem.vue"          // 功能项 - 开始，有开始按钮
 import FlowItem from "../nodeItem/flow/FlowItem.vue"            // 流程控制项 - 空，不作为
 import FlowDelayItem from "../nodeItem/flow/FlowDelayItem.vue"  // 流程控制项 - 延迟
 import FlowReqItem from "../nodeItem/flow/FlowReqItem.vue"      // 流程控制项 - 网络请求
