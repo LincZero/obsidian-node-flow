@@ -29,8 +29,15 @@ export class NFNodes {
   constructor() {
     provide('nfNodes', this)
     
-    // 自动更新部分 // TODO 由于触发源是文本框，这里可以加上节流防抖的逻辑
+    // 自动更新 - 避免双向同步无限循环
+    // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
+    let isSyncFlag = true;
+
+    // 自动更新 - string -> data
+    // TODO 由于触发源是文本框，这里可以加上节流防抖的逻辑
     watch(this.nfStr, (newVal) => {
+      if (!isSyncFlag) { isSyncFlag = true; return }
+
       let result = factoryFlowData(this.type.value, this.nfStr.value)
       if (result.code != 0) {
         result = failedFlowData(result.msg)
@@ -40,20 +47,26 @@ export class NFNodes {
       console.log("[auto update] string -> data")
     }, { immediate: true })
 
+    // 自动更新 - data -> string
     // 注意点：光标离开输入框后才能更新
+    // TODO 这里只变更了nodes和edges……
     watch(this.nfData, (newVal)=>{
-    //   const result = serializeFlowData(this.type.value, this.nfData.value)
-    //   if (result.code != 0) {
-    //     result.data = "无法保存修改:"+result.msg
-    //   }
-    //   this.nfStr.value = result.data
-    //   // TODO 可选: 可写环境的持久化保存、手动保存
-    //   console.log("[auto update] data -> string")
+      console.log('this nfData 变更')
+      const result = serializeFlowData(this.type.value, this.nfData.value)
+      if (result.code != 0) {
+        result.data = "无法保存修改:"+result.msg
+        return
+      }
+      isSyncFlag = false;
+      this.nfStr.value = result.data
+      // TODO 可选: 可写环境的持久化保存、手动保存
+      console.log("[auto update] data -> string")
 
-      // this.update_nodesAndEdges()
+      this.update_nodesAndEdges()
+      isSyncFlag = true;
     }, {deep: true})
 
-    this.update_nodesAndEdges()
+    // watch(this.nodes)
   }
 
   public get_mdData(): string {
