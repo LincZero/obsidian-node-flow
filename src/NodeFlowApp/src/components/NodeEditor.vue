@@ -15,8 +15,37 @@ watch(selected, ()=>{
 { deep: true }) // string数组，用deep watch比较合适
 
 // 事件 - 选中值改动
+import { factoryFlowData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData';
 const currentNode = ref<null|any>(null)
-const currentContent = ref<string>('(未选中，请在画布中选中节点)')
+const _currentContent = ref<string>('(未选中，请在画布中选中节点)')
+const currentContent = computed({
+  get: () => { return _currentContent.value },
+  set: (newValue: string): void => {
+    _currentContent.value = newValue
+    if (!currentNode.value) return
+
+    // 更新到vueflow库
+    const { findNode, updateNodeData } = _useVueFlow.value
+    let list = newValue.split('\n')
+    list = list.map(line => { return '  '+line })
+    const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n`
+    // TODO 这里的类型不一定是nodeflow-listitem
+    let result = factoryFlowData('nodeflow-listitem', nodeStr)
+    if (result.code == 0 && result.data.nodes.length == 1) {
+      updateNodeData(currentNode.value.id, result.data.nodes[0].data)
+    } else {
+      console.error(`输入了错误节点.
+错误原因: ${result.code == 0} && ${result.data.nodes.length == 1}
+错误内容: ${nodeStr}`)
+    }
+
+    // 更新到currentNode
+    currentNode.value = {
+      id: findNode(selected.value[0]).id,
+      data: findNode(selected.value[0]).data,
+    }
+  }
+})
 function refreshCurrentNode() {
   if (_useVueFlow.value == undefined) return
   const { getSelectedNodes, findNode } = _useVueFlow.value
@@ -39,13 +68,17 @@ function refreshCurrentNode() {
   if (result.code == 0) {
     let list = result.data.split('\n')
     list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
-    currentContent.value = list.join('\n')+'\n'
+    currentContent.value = list.join('\n')
   }
-  else currentContent.value = '[error] '+result.msg
+  else {
+    currentNode.value = null
+    currentContent.value = `error,, [error] +${result.msg}`
+  }
 }
-
 </script>
 
+<!-- TODO 信息源改用nfNode代替，脱离对vueflow底层依赖 -->
+<!-- TODO 根据是否有选中对象，来看显示局部json还是全局json -->
 <template>
   <div class="node-editor">
     <div v-if="currentNode!=null" style="margin: 0 0 12px; padding: 0;">

@@ -13,7 +13,7 @@ import { factoryFlowData_listitem } from "./factoryFlowData_listitem"
  * @param jsonType 说明了第二个参数的结构类型
  * @param json 不一定是json，list版本的语法是纯文本
  */
-export function factoryFlowData(jsonType:string = "nodeflow-vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: object} {
+export function factoryFlowData(jsonType:string = "nodeflow-vueflow", json:string = "{nodes:[],edges:[]}"): {code: number, msg: string, data: any} {
   // 统一检查，json是否合法
   let parsedData: object|string;
   if (json.trim()=="") {
