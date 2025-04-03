@@ -14,7 +14,7 @@ watch(selected, ()=>{
 },
 { deep: true }) // string数组，用deep watch比较合适
 
-// 事件 - 选中值改动
+// 事件 - 选中值改动 string -> data
 import { factoryFlowData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData';
 const currentNode = ref<null|any>(null)
 const _currentContent = ref<string>('(未选中，请在画布中选中节点)')
@@ -32,10 +32,14 @@ const currentContent = computed({
     // TODO 这里的类型不一定是nodeflow-listitem
     let result = factoryFlowData('nodeflow-listitem', nodeStr)
     if (result.code == 0 && result.data.nodes.length == 1) {
-      // TODO fix bug 这里会导致有bug: save功能失效，NFNodes 的ref数据和vueflow的脱离，不再一致
-      // 当NodeEditor窗口存在时，无法检测到文本编辑等局部变更，仅检测到onNodeChange和onEdgeChange
-      // 仅NodeEditor窗口不存在，才正常
-      // updateNodeData(currentNode.value.id, result.data.nodes[0].data)
+      if (nfNodes) {
+        const node = nfNodes.findNode(currentNode.value.id)
+        console.log('findNode', currentNode.value.id, node)
+        // 注意点：
+        // 不能直接赋值 (地址复制)，要使用 Object.assign 来复制对象，以触发响应式更新
+        // 同理，vueflow的updateNodeData()方法也不能用
+        Object.assign(node.data, result.data.nodes[0].data)
+      }
     } else {
       console.error(`输入了错误节点.
 错误原因: ${result.code == 0} && ${result.data.nodes.length == 1}
@@ -78,6 +82,10 @@ function refreshCurrentNode() {
     currentContent.value = `error,, [error] +${result.msg}`
   }
 }
+
+import { inject } from 'vue';
+import { type NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
+const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
 </script>
 
 <!-- TODO 信息源改用nfNode代替，脱离对vueflow底层依赖 -->

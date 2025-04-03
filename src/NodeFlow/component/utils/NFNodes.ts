@@ -58,6 +58,7 @@ export class NFNodes {
       }
       isSyncFlag = false;
       this.nfStr.value = result.data;
+      isSyncFlag = true; // 加bug: 画布输入会脱离聚焦。不加bug: 文本输入两个字符才响应一次
       
       // TODO 可选: 可写环境的持久化保存、手动保存
       console.log("[auto update] data -> string")
@@ -131,5 +132,9 @@ export class NFNodes {
     } catch (error) {
       console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(this.nfStr));
     }
+  }
+
+  public findNode(id: string): null|any {
+    return this.nfData.value.nodes.find((node:any) => node.id === id) || null;
   }
 }
