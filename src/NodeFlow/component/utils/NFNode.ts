@@ -47,11 +47,6 @@ export class NFNode {
   public readonly nodeId: string
   public propData: any
   public fn: (ctx: ctx_type) => Promise<boolean> = async () => { return true };
-  private _useNodesData: ComputedRef<any>
-  private _useSourceConnections: ComputedRef<any>
-  private _useTargetConnections: ComputedRef<any>
-  private readonly updateNodeData
-  private readonly findNode
 
   // 运行时参数，仅运行时能保证一致性
   // 是将items转化为的更适合运行的版本: 
@@ -240,4 +235,12 @@ export class NFNode {
       console.log(`flowControl, end`);
     }
   }
+
+  // vueflow相关
+
+  private _useNodesData: ComputedRef<any>
+  private _useSourceConnections: ComputedRef<any>
+  private _useTargetConnections: ComputedRef<any>
+  private readonly updateNodeData
+  private readonly findNode
 }

@@ -32,7 +32,10 @@ const currentContent = computed({
     // TODO 这里的类型不一定是nodeflow-listitem
     let result = factoryFlowData('nodeflow-listitem', nodeStr)
     if (result.code == 0 && result.data.nodes.length == 1) {
-      updateNodeData(currentNode.value.id, result.data.nodes[0].data)
+      // TODO fix bug 这里会导致有bug: save功能失效，NFNodes 的ref数据和vueflow的脱离，不再一致
+      // 当NodeEditor窗口存在时，无法检测到文本编辑等局部变更，仅检测到onNodeChange和onEdgeChange
+      // 仅NodeEditor窗口不存在，才正常
+      // updateNodeData(currentNode.value.id, result.data.nodes[0].data)
     } else {
       console.error(`输入了错误节点.
 错误原因: ${result.code == 0} && ${result.data.nodes.length == 1}

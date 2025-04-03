@@ -31,6 +31,7 @@ export class NFNodes {
     
     // 自动更新 - 避免双向同步无限循环
     // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
+    // 使用方法: 向上传递时将值设置为false，即可拦截一次向上传递，拦截后会自动设回true
     let isSyncFlag = true;
 
     // 自动更新 - string -> data
@@ -48,8 +49,6 @@ export class NFNodes {
     }, { immediate: true })
 
     // 自动更新 - data -> string
-    // 注意点：光标离开输入框后才能更新
-    // TODO 这里只变更了nodes和edges……
     watch(this.nfData, (newVal)=>{
       console.log('this nfData 变更')
       const result = serializeFlowData(this.type.value, this.nfData.value)
@@ -58,15 +57,13 @@ export class NFNodes {
         return
       }
       isSyncFlag = false;
-      this.nfStr.value = result.data
+      this.nfStr.value = result.data;
+      
       // TODO 可选: 可写环境的持久化保存、手动保存
       console.log("[auto update] data -> string")
-
-      this.update_nodesAndEdges()
-      isSyncFlag = true;
+      
+      // this.update_nodesAndEdges()
     }, {deep: true})
-
-    // watch(this.nodes)
   }
 
   public get_mdData(): string {

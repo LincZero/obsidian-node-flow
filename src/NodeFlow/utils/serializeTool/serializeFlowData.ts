@@ -5,9 +5,9 @@ export function serializeFlowData (jsonType: string, jsonData: any): {code: numb
   else if (jsonType == "nodeflow-listitem") {
     return serializeFlowData_listitem(jsonData)
   }
-  else if (jsonType == "nodeflow-list") {
-    return serializeFlowData_listitem(jsonData) // listitem向下兼容list，这里用listitem的序列化程序就行了
-  }
+  // else if (jsonType == "nodeflow-list") {
+  //   return serializeFlowData_listitem(jsonData) // listitem向下兼容list，这里用listitem的序列化程序就行了 (并不，某个版本开始listitem根部用items代替inputs和outputs)
+  // }
   return { code: -1, msg: "No supported serialization in this jsonType: " + jsonType, data: ""}
 }
 
