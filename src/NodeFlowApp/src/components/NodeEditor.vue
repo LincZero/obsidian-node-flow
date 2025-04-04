@@ -2,7 +2,7 @@
 <!-- TODO BUG 话说在非VueFlow作用域下，似乎没办法使用 useVueFlow (感觉是因为VueFlow inject的原因) -->
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import ItemNode2 from '../../../NodeFlow/component/node/ItemNode2.vue'
 import { serializeFlowData } from '../../../NodeFlow/utils/serializeTool/serializeFlowData'
 
@@ -14,7 +14,12 @@ watch(selected, ()=>{
 },
 { deep: true }) // string数组，用deep watch比较合适
 
-// 事件 - 选中值改动 string -> data
+// 自动更新 - 避免双向同步无限循环
+// 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
+let flag_str2data = false;
+let flag_data2str = false;
+
+// 自动更新 - string -> data
 import { factoryFlowData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData';
 const currentNode = ref<null|any>(null)
 const _currentContent = ref<string>('(未选中，请在画布中选中节点)')
@@ -23,6 +28,11 @@ const currentContent = computed({
   set: (newValue: string): void => {
     _currentContent.value = newValue
     if (!currentNode.value) return
+
+    if (flag_data2str) { flag_data2str = false; return }
+    flag_str2data = true
+    nextTick(() => { flag_str2data = false; });
+    console.log("[auto update] string -> data")
 
     // 更新到vueflow库
     const { findNode, updateNodeData } = _useVueFlow.value
@@ -52,6 +62,32 @@ const currentContent = computed({
     }
   }
 })
+
+// 自动更新 - data -> string
+watch(currentNode, (newValue)=>{
+  if (!currentNode.value) return
+
+  if (flag_str2data) { flag_str2data = false; return }
+  flag_data2str = true;
+  nextTick(() => { flag_data2str = false; });
+  console.log("[auto update] data -> string")
+
+  // TODO 这里的类型不一定是nodeflow-listitem
+  const result = serializeFlowData('nodeflow-listitem', {nodes: [currentNode.value], edges: []})
+  if (result.code == 0) {
+    let list = result.data.split('\n')
+    list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
+    currentContent.value = list.join('\n')
+  }
+  else {
+    currentNode.value = null
+    currentContent.value = `error,, [error] +${result.msg}`
+  }
+}, {deep: true})
+
+// 自动更新 - selected change -> data
+// on selected change
+// 修改当前选中节点的内容
 function refreshCurrentNode() {
   if (_useVueFlow.value == undefined) return
   const { getSelectedNodes, findNode } = _useVueFlow.value
@@ -68,18 +104,7 @@ function refreshCurrentNode() {
   currentNode.value = {
     id: findNode(selected.value[0]).id,
     data: findNode(selected.value[0]).data,
-  }
-  // TODO 这里的类型不一定是nodeflow-listitem
-  const result = serializeFlowData('nodeflow-listitem', {nodes: [currentNode.value], edges: []})
-  if (result.code == 0) {
-    let list = result.data.split('\n')
-    list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
-    currentContent.value = list.join('\n')
-  }
-  else {
-    currentNode.value = null
-    currentContent.value = `error,, [error] +${result.msg}`
-  }
+  } 
 }
 
 import { inject } from 'vue';
