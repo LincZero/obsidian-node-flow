@@ -74,10 +74,10 @@ const RefChild = ref<{
 // 组件 - 工具栏
 import DropdownButton from '../utils/dropdownButton.vue'
 
-//   按钮 - 自动调整顺序
+// 按钮 - 自动调整顺序
 function fn_autoPos(position: string, amend='none') { RefChild.value?.refreshLayout(position, amend) }
 
-//   按钮 - 是否禁用滚动
+// #region 按钮 - 是否禁用滚动
 const isAllowScroll = ref(true);
 function fn_switchAllowScroll() {
   const exDiv1: HTMLElement|null = document.body // vuepress等使用
@@ -92,15 +92,17 @@ function fn_switchAllowScroll() {
     if (exDiv2) exDiv2.classList.remove("nf-style-overflow-hidden")
   }
 }
+// #endregion
 
-//   按钮 - 全屏
+// #region 按钮 - 全屏
 const CanFullScreen = ref()
 import { switchFullScreen } from "./fullScreen"
 function fn_fullScreen() {
   switchFullScreen(CanFullScreen.value, _isMini)
 }
+// #endregion
 
-//   按钮 - 保存修改
+// #region 按钮 - 保存修改
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 const saveable = true; // [环境]仅obsidian等可写环境需要，vuepress这种非可写环境不需要
 function fn_saveChange () {
@@ -114,15 +116,17 @@ function fn_saveChange () {
     console.error("无法保存修改", result)
   }
 }
+// #endregion
 
-//   按钮 - InitView
+// #region 按钮 - InitView
 function fn_initView() {
   fitView({
     offset: { x: 0, y: 0 }
   })
 }
+// #endregion
 
-//   按钮 - ZommArea (单手缩放、重置大小)
+// #region 按钮 - ZommArea (单手缩放、重置大小)
 import { stringify } from 'querystring';
 const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom, fitView } = useVueFlow()
 const zoomButton = ref()
@@ -145,6 +149,7 @@ onUnmounted(() => {
 function fn_initZoom() {
   zoomTo(1)
 }
+// #endregion
 </script>
 
 <style scoped>

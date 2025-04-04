@@ -64,7 +64,7 @@ import { Background } from '@vue-flow/background'                   // 背景控
 //   需要注意这里 jsonData 的改变不会主动引起 nodes 的改变! (除非用 deep watch，或对单个节点改变时可以用 updateNode)
 import { VueFlow } from '@vue-flow/core'
 
-// 3. 全局设置
+// #region 全局设置
 import { useVueFlow } from '@vue-flow/core'
 {
   if (props.isMini) {
@@ -81,10 +81,11 @@ import { useVueFlow } from '@vue-flow/core'
     onConnect((params) => addEdges(params))
   }
 }
+// #endregion
 
 // 4. 功能
 
-//   功能 - 自动布局模块
+// #region 功能 - 自动布局模块
 import { nextTick } from 'vue'
 import { useLayout } from '../../utils/layout/useLayout'
 const { calcLayout } = useLayout()
@@ -110,8 +111,11 @@ watch(isNodeInitialized, (newValue, oldValue) => {
 defineExpose({
   refreshLayout
 })
+// #endregion
 
-//   功能 - copy and paste
+// #region 功能 - copy and paste
+const cache_selected = ref<string[]>([]); // TODO 用 getSelectedNodes by useVueFlow 代替
+const cache_copyed = ref<string[]>([]);
 function pasteSelected(array: any) {
   for (let id of array.value) {
     const data = findNode(id)
@@ -137,8 +141,6 @@ function pasteSelected(array: any) {
     addNodes(newData);
   }
 }
-const cache_selected = ref<string[]>([]); // TODO 用 getSelectedNodes by useVueFlow 代替
-const cache_copyed = ref<string[]>([]);
 const ctrl_d = (event: any) => {
   if (!event.ctrlKey) return
   if (!['d', 'c', 'v'].includes(event.key)) return
@@ -184,29 +186,28 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('keydown', ctrl_d)
 })
+// #endregion
 
 // 5. 事件
 
 // 增删改查管理器 (仅动态环境需要，静态部署则不需要这部分) --------------------------
 
-/**
- * 事件 - 线状态变动
- * 
- * on emit by <VueFlow @edge-change="onEdgeChange">
- * 
- * 选择的线变为流动样式
- * 需要特别注意的是，最好修改jsonData而不是nodes和edges，特别是后者不能直接赋值
- * 
- * 无需额外去执行 add/remove Nodes/Edges，因为这里是先发生这些事件时，再去监听修改propsData来保证一致性
- * 
- * 注意区分：
- * - @edges-change      点击触发
- * - @edge-update       (不确定，一般不触发)
- * - @edge-mouse-enter  鼠标悬浮触发
- * - @edge-mouse-leave  鼠标离开悬浮触发
- * - @edge-mouse-move   鼠标悬浮移动时一直触发
- * - @edges-change      包括selectionChange、removeChange、addChange
- */
+// #region 事件 - 线状态变动
+// 
+// on emit by <VueFlow @edge-change="onEdgeChange">
+// 
+// 选择的线变为流动样式
+// 需要特别注意的是，最好修改jsonData而不是nodes和edges，特别是后者不能直接赋值
+// 
+// 无需额外去执行 add/remove Nodes/Edges，因为这里是先发生这些事件时，再去监听修改propsData来保证一致性
+// 
+// 注意区分：
+// - @edges-change      点击触发
+// - @edge-update       (不确定，一般不触发)
+// - @edge-mouse-enter  鼠标悬浮触发
+// - @edge-mouse-leave  鼠标离开悬浮触发
+// - @edge-mouse-move   鼠标悬浮移动时一直触发
+// - @edges-change      包括selectionChange、removeChange、addChange
 import type { EdgeChange, NodeChange, EdgeSelectionChange } from '@vue-flow/core'
 const {
   findEdge, updateEdgeData, addEdges, removeEdges,
@@ -246,12 +247,11 @@ function onEdgeChange(changes: EdgeChange[]) {
     // console.log('onEdgeChange', change, edges.value, props.nfNodes.nfData.value)
   }
 }
+// #endregion
 
-/**
- * 事件 - 节点状态变动
- * 
- * on emit by <VueFlow @nodes-change="onNodeChange">
- */
+// #region 事件 - 节点状态变动
+// 
+// on emit by <VueFlow @nodes-change="onNodeChange">
 function onNodeChange(changes: NodeChange[]) {
   for (const change of changes) {
     // 改
@@ -281,6 +281,7 @@ function onNodeChange(changes: NodeChange[]) {
     }
   }
 }
+// #endregion
 
 /**
  * 事件 - 其他，废弃
