@@ -9,17 +9,18 @@ import { serializeFlowData } from '../../../NodeFlow/utils/serializeTool/seriali
 // 全局存储部分
 import { useGlobalState } from '../../../NodeFlow/stores/stores.js'
 const { selected, selected2, _useVueFlow } = useGlobalState()
-watch(selected, ()=>{
-  refreshCurrentNode()
-},
-{ deep: true }) // string数组，用deep watch比较合适
 
-// 自动更新 - 避免双向同步无限循环
+import { inject } from 'vue';
+import { type NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
+const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
+
+// #region 自动更新 - 避免双向同步无限循环
 // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
 let flag_str2data = false;
 let flag_data2str = false;
+// #endregion
 
-// 自动更新 - string -> data
+// #region 自动更新 - string -> data
 import { factoryFlowData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData';
 const currentNode = ref<null|any>(null)
 const _currentContent = ref<string>('(未选中，请在画布中选中节点)')
@@ -62,8 +63,9 @@ const currentContent = computed({
     }
   }
 })
+// #endregion
 
-// 自动更新 - data -> string
+// #region 自动更新 - data -> string
 watch(currentNode, (newValue)=>{
   if (!currentNode.value) return
 
@@ -84,11 +86,12 @@ watch(currentNode, (newValue)=>{
     currentContent.value = `error,, [error] +${result.msg}`
   }
 }, {deep: true})
+// #endregion
 
-// 自动更新 - selected change -> data
+// #region 自动更新 - selected change -> data
 // on selected change
 // 修改当前选中节点的内容
-function refreshCurrentNode() {
+watch(selected, ()=>{
   if (_useVueFlow.value == undefined) return
   const { getSelectedNodes, findNode } = _useVueFlow.value
   // if (nodes.length != 1) { currentNode.value=null; return }
@@ -105,11 +108,9 @@ function refreshCurrentNode() {
     id: findNode(selected.value[0]).id,
     data: findNode(selected.value[0]).data,
   } 
-}
-
-import { inject } from 'vue';
-import { type NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
-const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
+},
+{ deep: true }) // string数组，用deep watch比较合适
+// #endregion
 </script>
 
 <!-- TODO 信息源改用nfNode代替，脱离对vueflow底层依赖 -->

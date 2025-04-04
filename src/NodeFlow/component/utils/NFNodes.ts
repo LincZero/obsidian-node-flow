@@ -29,12 +29,13 @@ export class NFNodes {
   constructor() {
     provide('nfNodes', this)
     
-    // 自动更新 - 避免双向同步无限循环
+    // #region 自动更新 - 避免双向同步无限循环
     // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
     let flag_str2data = false;
     let flag_data2str = false;
+    // #endregion
 
-    // 自动更新 - string -> data
+    // #region 自动更新 - string -> data
     // TODO 由于触发源是文本框，这里可以加上节流防抖的逻辑
     watch(this.nfStr, (newVal) => {
       if (flag_data2str) { flag_data2str = false; return }
@@ -49,8 +50,9 @@ export class NFNodes {
       this.nfData.value = result.data
       this.componentKey.value += 1
     }) // , { immediate: true }
+    // #endregion
 
-    // 自动更新 - data -> string
+    // #region 自动更新 - data -> string
     watch(this.nfData, (newVal)=>{
       if (flag_str2data) { flag_str2data = false; return }
       flag_data2str = true;
@@ -67,6 +69,7 @@ export class NFNodes {
       // TODO 可选: 可写环境的持久化保存、手动保存      
       // this.update_nodesAndEdges()
     }, {deep: true})
+    // #endregion
   }
 
   public get_mdData(): string {
