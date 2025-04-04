@@ -34,7 +34,6 @@ const currentContent = computed({
     if (result.code == 0 && result.data.nodes.length == 1) {
       if (nfNodes) {
         const node = nfNodes.findNode(currentNode.value.id)
-        console.log('findNode', currentNode.value.id, node)
         // 注意点：
         // 不能直接赋值 (地址复制)，要使用 Object.assign 来复制对象，以触发响应式更新
         // 同理，vueflow的updateNodeData()方法也不能用

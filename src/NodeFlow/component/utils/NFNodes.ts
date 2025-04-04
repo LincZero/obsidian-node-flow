@@ -2,7 +2,7 @@
  * NFNodes 类独占文件
  */
 import type { Node, Edge } from '@vue-flow/core' 
-import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide } from 'vue';
+import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide, nextTick } from 'vue';
 import { factoryFlowData, failedFlowData } from '../../utils/jsonTool/factoryFlowData'
 import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue';
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
@@ -31,38 +31,40 @@ export class NFNodes {
     
     // 自动更新 - 避免双向同步无限循环
     // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
-    // 使用方法: 向上传递时将值设置为false，即可拦截一次向上传递，拦截后会自动设回true
-    let isSyncFlag = true;
+    let flag_str2data = false;
+    let flag_data2str = false;
 
     // 自动更新 - string -> data
     // TODO 由于触发源是文本框，这里可以加上节流防抖的逻辑
     watch(this.nfStr, (newVal) => {
-      if (!isSyncFlag) { isSyncFlag = true; return }
-
+      if (flag_data2str) { flag_data2str = false; return }
+      flag_str2data = true
+      nextTick(() => { flag_str2data = false; });
+      console.log("[auto update] string -> data")
+      
       let result = factoryFlowData(this.type.value, this.nfStr.value)
       if (result.code != 0) {
         result = failedFlowData(result.msg)
       }
       this.nfData.value = result.data
       this.componentKey.value += 1
-      console.log("[auto update] string -> data")
-    }, { immediate: true })
+    }) // , { immediate: true }
 
     // 自动更新 - data -> string
     watch(this.nfData, (newVal)=>{
-      console.log('this nfData 变更')
+      if (flag_str2data) { flag_str2data = false; return }
+      flag_data2str = true;
+      nextTick(() => { flag_data2str = false; });
+      console.log("[auto update] data -> string")
+
       const result = serializeFlowData(this.type.value, this.nfData.value)
       if (result.code != 0) {
         result.data = "无法保存修改:"+result.msg
         return
       }
-      isSyncFlag = false;
       this.nfStr.value = result.data;
-      isSyncFlag = true; // 加bug: 画布输入会脱离聚焦。不加bug: 文本输入两个字符才响应一次
       
-      // TODO 可选: 可写环境的持久化保存、手动保存
-      console.log("[auto update] data -> string")
-      
+      // TODO 可选: 可写环境的持久化保存、手动保存      
       // this.update_nodesAndEdges()
     }, {deep: true})
   }
