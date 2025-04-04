@@ -94,11 +94,9 @@ watch(currentNode, (newValue)=>{
 watch(selected, ()=>{
   if (_useVueFlow.value == undefined) return
   const { getSelectedNodes, findNode } = _useVueFlow.value
-  // if (nodes.length != 1) { currentNode.value=null; return }
-  // currentNode.value = {
-  //   id: nodes.value[0].id,
-  //   data: nodes.value[0].data
-  // }
+  // console.log('selected改动---------', selected.value.length,
+  //   " - ", selected2.value.value.length,
+  //   " - ", getSelectedNodes.length)
   if (selected.value.length < 1) {
     currentNode.value = null
     currentContent.value = '(未选中，请在画布中选中节点)'

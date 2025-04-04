@@ -47,6 +47,11 @@ const props = withDefaults(defineProps<{
 props.nfNodes.update_nodesAndEdges()
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
+// 全局存储
+import { useGlobalState } from '../../stores/stores.js'
+const { selected, _useVueFlow, selected2 } = useGlobalState()
+_useVueFlow.value = useVueFlow()
+
 // 2. 子组件
 
 //   组件 - 自定义节点
@@ -114,8 +119,7 @@ defineExpose({
 // #endregion
 
 // #region 功能 - copy and paste
-const cache_selected = ref<string[]>([]); // TODO 用 getSelectedNodes by useVueFlow 代替
-const cache_copyed = ref<string[]>([]);
+const cache_copyed = ref<string[]>([]); // 缓存 `ctrl+c` 的节点
 function pasteSelected(array: any) {
   for (let id of array.value) {
     const data = findNode(id)
@@ -281,6 +285,17 @@ function onNodeChange(changes: NodeChange[]) {
     }
   }
 }
+// 选择状态变动
+// TODO 存储可以简化，用 getSelectedNodes by useVueFlow 代替
+const cache_selected = ref<string[]>([]); // 当前选择项
+const { getSelectedNodes } = useVueFlow()
+selected.value = cache_selected.value
+selected2.value = getSelectedNodes
+watch(cache_selected, ()=>{
+  selected.value = cache_selected.value
+  // selected2.value = getSelectedNodes
+},
+{ deep: true }) // string数组，用deep watch比较合适
 // #endregion
 
 /**
@@ -293,17 +308,6 @@ function onNodeChange(changes: NodeChange[]) {
 // onConnectEnd((edge) => { //
 //   console.log('nodeItem onConnectEnd', edge)
 // })
-
-// 6. 向上传递到全局存储
-const { getSelectedNodes } = useVueFlow()
-import { useGlobalState } from '../../stores/stores.js'
-const { selected, _useVueFlow, selected2 } = useGlobalState()
-watch(cache_selected, ()=>{
-  selected.value = cache_selected.value
-},
-{ deep: true }) // string数组，用deep watch比较合适
-_useVueFlow.value = useVueFlow()
-selected2.value = getSelectedNodes
 </script>
 
 <style>

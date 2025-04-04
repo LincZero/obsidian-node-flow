@@ -15,14 +15,21 @@ const miniRowConfig: LayoutConfig = {
 				// isClosable: false,
 				componentType: "JsonEditor",
 				componentState: undefined,
-				width: 25
+				width: 20
 			} as ComponentItemConfig,
 			{
 				type: "component",
-				title: "NodeFLow",
+				title: "画布",
 				header: { show: "top", popout: false },
 				componentType: "NodeFlow",
-				width: 75
+				width: 65
+			} as ComponentItemConfig,
+			{
+				type: "component",
+				title: "节点编辑器",
+				header: { show: "top", popout: false },
+				componentType: "NodeEditor",
+				width: 15
 			} as ComponentItemConfig
 		]
 	}
