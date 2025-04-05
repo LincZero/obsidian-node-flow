@@ -55,11 +55,11 @@ export class NFNodes {
         result = failedFlowData(result.msg)
       }
       // 恢复部分数据 (位置和状态沿用旧数据)
-      for (const node of result.data.nodes) {
-        for (const node2 of this.nfData.value.nodes) {
-          if (node2.id == node.id) {
-            node.position = node2.position
-            node.data.runState = node2.data.runState
+      for (const node_new of result.data.nodes) {
+        for (const node_old of this.nfData.value.nodes) {
+          if (node_old.id == node_new.id) {
+            node_new.position = node_old.position
+            node_new.data.runState = node_old.data.runState
             break
           }
         }
@@ -145,4 +145,7 @@ export class NFNodes {
   }
 
   // ---------------------- 与VueFlow有关接口 ----------------------
+
+  // 一些全局存储
+  public _useVueFlow: any|null = ref(null)
 }

@@ -6,7 +6,7 @@ import NodeEditor from './NodeEditor.vue'
 
 // 全局存储部分
 import { useGlobalState } from '../../../NodeFlow/stores/stores.js'
-const { selected, selected2, _useVueFlow } = useGlobalState()
+const { selected, selected2 } = useGlobalState()
 
 // #region 自动更新 - selected change -> selected_lenght
 import { ref, watch } from 'vue'

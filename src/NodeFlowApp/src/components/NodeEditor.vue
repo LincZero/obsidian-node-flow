@@ -8,7 +8,7 @@ import { serializeFlowData } from '../../../NodeFlow/utils/serializeTool/seriali
 
 // 全局存储部分
 import { useGlobalState } from '../../../NodeFlow/stores/stores.js'
-const { selected, selected2, _useVueFlow } = useGlobalState()
+const { selected, selected2 } = useGlobalState()
 
 import { inject } from 'vue';
 import { type NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
@@ -36,16 +36,14 @@ const currentContent = computed({
     console.log(`[auto update] [${currentNode.value.id}] string -> data`)
 
     // 更新到vueflow库
-    const { findNode, updateNodeData } = _useVueFlow.value
+    if (!nfNodes) { console.error(`nfNodes 数据丢失`); return }
+    if (!nfNodes._useVueFlow.value) { console.error(`nfNodes._useVueFlow 数据丢失`); return }
+    const { findNode, updateNodeData } = nfNodes._useVueFlow.value
     // 如果修改头尾和前置空格会导致内换行头部缺失字符
     // let list = newValue.split('\n')
     // list = list.map(line => { return '  '+line })
     // const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n` // TODO fix 不一定是这种形式，如有可能是json
     const nodeStr = newValue
-    if (!nfNodes) {
-      console.error(`nfNodes 数据丢失`)
-      return
-    }
     let result = factoryFlowData(nfNodes.nfType.value, nodeStr)
     if (result.code == 0 && result.data.nodes.length == 1) {
       const node = nfNodes.findNode(currentNode.value.id)
@@ -96,8 +94,8 @@ watch(currentNode, (newValue)=>{
 // on selected change
 // 修改当前选中节点的内容
 watch(selected, ()=>{
-  if (_useVueFlow.value == undefined) return
-  const { getSelectedNodes, findNode } = _useVueFlow.value
+  if (!nfNodes._useVueFlow.value) return
+  const { getSelectedNodes, findNode } = nfNodes._useVueFlow.value
   // console.log('selected改动---------', selected.value.length,
   //   " - ", selected2.value.value.length,
   //   " - ", getSelectedNodes.length)

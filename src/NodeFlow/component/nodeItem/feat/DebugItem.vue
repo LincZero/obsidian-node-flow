@@ -31,6 +31,7 @@
       <div><button @click="console.log(_useNodesData)">NodesData</button></div>
       <div><button @click="console.log(nodeFound)">Node Find</button></div>
       <div><button @click="console.log(nfNode)">NFNode</button></div>
+      <div><button @click="console.log(nfNodes.findNode(_useNodeId))">NFNodesFind</button></div>
       <div><button @click="fn_compare()">Compare</button></div>
       <div><span>---The Handle---</span></div>
       <div><button @click="console.log(data)">componentData</button></div>
@@ -91,16 +92,23 @@ const _useEdgesData1: ComputedRef<any> = useEdgesData(_getEdges[0]?.id)
 // 测试下来是，items都保证一致性，但node层不一定能保证……
 function fn_compare() {
     console.log('debug comp object\n',
-    toRaw(props.data.parent.self_data), // 1. items, name, id, parent, parentId, type
-    toRaw(_useNode.node.data),          // 2. items, label, runState, type
-    toRaw(unref(_useNodesData).data),   // 3. items, label, runState, type
-    toRaw(nodeFound.data),              // 4. items, label, runState, type
-    Object.is(toRaw(props.data.parent.self_data), toRaw(_useNode.node.data)), // false
-    Object.is(toRaw(_useNode.node.data), toRaw(unref(_useNodesData).data)),   // true
-    Object.is(toRaw(unref(_useNodesData).data), toRaw(nodeFound.data)),       // true
-    Object.is(toRaw(props.data.parent.self_data.items), toRaw(_useNode.node.data.items)), // true
-    Object.is(toRaw(_useNode.node.data.items), toRaw(unref(_useNodesData).data.items)),   // true
-    Object.is(toRaw(unref(_useNodesData).data.items), toRaw(nodeFound.data.items)),       // true
+    toRaw(_useNode.node),                 // 1. 20 items       | items, label, runState, type
+    toRaw(nodeFound),                     // 2. 20 items       | items, label, runState, type
+    toRaw(unref(_useNodesData)),          // 3. id, type, data | items, label, runState, type
+    toRaw(nfNodes.findNode(_useNodeId)),  // 4. 6 itmes, 假position | items, label, runState, type
+    toRaw(props.data.parent),             // 5. self, self_data, children | items, name, id, parent, parentId, type
+    '\n--- .\n',
+    Object.is(toRaw(_useNode.node), toRaw(nodeFound)),                              // true
+    Object.is(toRaw(_useNode.node), toRaw(nfNodes.findNode(_useNodeId))),           // false
+    Object.is(toRaw(_useNode.node), toRaw(unref(_useNodesData))),                   // false
+    Object.is(toRaw(_useNode.node), toRaw(props.data.parent)),                      // false
+    '\n--- .data\n',
+    Object.is(toRaw(_useNode.node.data), toRaw(nodeFound.data)),                    // true
+    Object.is(toRaw(_useNode.node.data), toRaw(nfNodes.findNode(_useNodeId).data)), // true
+    Object.is(toRaw(_useNode.node.data), toRaw(unref(_useNodesData).data)),         // true
+    Object.is(toRaw(_useNode.node.data), toRaw(props.data.parent.self_data)),       // false
+    '\n--- .data.items\n',
+    Object.is(toRaw(_useNode.node.data.items), toRaw(props.data.parent.self_data.items)), // true
   )
 }
 
