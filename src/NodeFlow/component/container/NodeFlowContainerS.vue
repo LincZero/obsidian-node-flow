@@ -28,6 +28,12 @@
         <button class="nf-btn" @click="selectItem('LR layout (center)', () => fn_autoPos('LR', 'center'))">LR layout (center)</button>
         <button class="nf-btn" @click="selectItem('LR layout (top)', () => fn_autoPos('LR', 'top'))">LR layout (top)</button>
       </DropdownButton>
+      <button class="nf-btn" @click="fn_initView()" title="点击时自动缩放移动画布">Init view</button>
+      <button class="nf-btn" @click="fn_initZoom()" ref="zoomButton"
+        title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)">Zoom area</button>
+      <button class="nf-btn" @click="fn_switchAllowScroll()">Ex lock</button>
+      <button class="nf-btn" @click="_isShowControls = !_isShowControls">Show Controls</button>
+      <!-- TODO 修改成 "允许编辑和监听快捷键" 功能 -->
       <DropdownButton class="nf-btn" :label="'Copy md'" :fn="() => nfNodes.fn_copyData('mdData')" #default="{ selectItem }">
         <button class="nf-btn" @click="selectItem('Print json', () => nfNodes.fn_printData('jsonData'))">Print json</button>
         <button class="nf-btn" @click="selectItem('Print md', () => nfNodes.fn_printData('mdData'))">Print md</button>
@@ -36,12 +42,6 @@
         <button class="nf-btn" @click="selectItem('Copy md', () => nfNodes.fn_copyData('mdData'))">Copy md</button>
         <button class="nf-btn" @click="selectItem('Copy raw', () => nfNodes.fn_copyData('rawData'))">Copy raw</button>
       </DropdownButton>
-      <button class="nf-btn" @click="fn_initView()" title="点击时自动缩放移动画布">Init view</button>
-      <button class="nf-btn" @click="fn_initZoom()" ref="zoomButton"
-        title="点击时缩放倍数设为一。悬浮并滚动时缩放 (方便单手不按住Ctrl操作)">Zoom area</button>
-      <button class="nf-btn" @click="fn_switchAllowScroll()">Ex lock</button>
-      <button class="nf-btn" @click="_isShowControls = !_isShowControls">Show Controls</button>
-      <!-- TODO 修改成 "允许编辑和监听快捷键" 功能 -->
     </div>
   </div>
 </template>
