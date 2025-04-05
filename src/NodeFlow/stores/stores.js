@@ -14,7 +14,6 @@ export const useGlobalState = createGlobalState(
       selected,
       selected2,
       _useVueFlow,
-      updateViewFlag,
     }
   }
 )

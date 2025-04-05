@@ -13,7 +13,7 @@
     fit-view-on-init
     @nodes-change="onNodeChange"
     @edges-change="onEdgeChange"
-    @nodes-initialized="refreshLayout('LR', 'center')">
+    @nodes-initialized="refreshLayout_ifable()">
     <!-- :pan-on-drag="[0,2]" -->
 
     <!-- 背景 -->
@@ -49,7 +49,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 // 全局存储
 import { useGlobalState } from '../../stores/stores.js'
-const { selected, _useVueFlow, selected2, updateViewFlag } = useGlobalState()
+const { selected, _useVueFlow, selected2 } = useGlobalState()
 _useVueFlow.value = useVueFlow()
 
 // 2. 子组件
@@ -71,20 +71,18 @@ import { VueFlow } from '@vue-flow/core'
 
 // #region 全局设置
 import { useVueFlow } from '@vue-flow/core'
-{
-  if (props.isMini) {
-    const {
-      zoomOnScroll,       // default true
-      zoomOnDoubleClick,  // default true
-      nodesConnectable,   // default true
-      onConnect,
-      addEdges,
-    } = useVueFlow();
-    zoomOnScroll.value = false;
-    zoomOnDoubleClick.value = false;
-    nodesConnectable.value = true;
-    onConnect((params) => addEdges(params))
-  }
+if (props.isMini) {
+  const {
+    zoomOnScroll,       // default true
+    zoomOnDoubleClick,  // default true
+    nodesConnectable,   // default true
+    onConnect,
+    addEdges,
+  } = useVueFlow();
+  zoomOnScroll.value = false;
+  zoomOnDoubleClick.value = false;
+  nodesConnectable.value = true;
+  onConnect((params) => addEdges(params))
 }
 // #endregion
 
@@ -96,23 +94,21 @@ import { useLayout } from '../../utils/layout/useLayout'
 const { calcLayout } = useLayout()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
-async function refreshLayout(direction: string, amend='none') {
+async function refreshLayout(direction:string='LR', amend:string='center') {
   props.nfNodes.nfData.value.nodes = calcLayout(props.nfNodes.nfData.value.nodes, props.nfNodes.nfData.value.edges, direction, amend)
   const { fitView } = useVueFlow()
   nextTick(() => { fitView() })
 }
-// 个别情况自动调用 (TODO BUG 暂时失效)
-watch(updateViewFlag, (newValue, oldValue) => {
-  // if (oldValue==false && newValue==true) {
-  if (props.nfNodes.nfData.value.nodes.length>1 &&
+// 个别情况自动调用、个别情况不自动调用 (TODO BUG 暂时失效)
+function refreshLayout_ifable(direction:string='LR', amend:string='center') {
+    if (props.nfNodes.nfData.value.nodes.length>1 &&
     props.nfNodes.nfData.value.nodes[0].position.x == 0 && props.nfNodes.nfData.value.nodes[0].position.y == 0 &&
     props.nfNodes.nfData.value.nodes[1].position.x == 0 && props.nfNodes.nfData.value.nodes[1].position.y == 0
   ) {
-    refreshLayout('LR', 'center')
+    refreshLayout(direction, amend)
   }
-  // }
-  updateViewFlag.value = false
-});
+}
+// watch(updateViewFlag, (newValue, oldValue) => {});
 defineExpose({
   refreshLayout
 })
