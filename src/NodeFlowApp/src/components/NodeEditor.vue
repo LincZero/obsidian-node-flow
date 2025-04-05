@@ -39,17 +39,18 @@ const currentContent = computed({
     const { findNode, updateNodeData } = _useVueFlow.value
     let list = newValue.split('\n')
     list = list.map(line => { return '  '+line })
-    const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n`
-    // TODO 这里的类型不一定是nodeflow-listitem
-    let result = factoryFlowData('nodeflow-listitem', nodeStr)
+    const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n` // TODO fix 不一定是这种形式，如有可能是json
+    if (!nfNodes) {
+      console.error(`nfNodes 数据丢失`)
+      return
+    }
+    let result = factoryFlowData(nfNodes.nfType.value, nodeStr)
     if (result.code == 0 && result.data.nodes.length == 1) {
-      if (nfNodes) {
-        const node = nfNodes.findNode(currentNode.value.id)
-        // 注意点：
-        // 不能直接赋值 (地址复制)，要使用 Object.assign 来复制对象，以触发响应式更新
-        // 同理，vueflow的updateNodeData()方法也不能用
-        Object.assign(node.data, result.data.nodes[0].data)
-      }
+      const node = nfNodes.findNode(currentNode.value.id)
+      // 注意点：
+      // 不能直接赋值 (地址复制)，要使用 Object.assign 来复制对象，以触发响应式更新
+      // 同理，vueflow的updateNodeData()方法也不能用
+      Object.assign(node.data, result.data.nodes[0].data)
     } else {
       console.error(`输入了错误节点.
 错误原因: ${result.code == 0} && ${result.data.nodes.length == 1}
@@ -74,8 +75,7 @@ watch(currentNode, (newValue)=>{
   nextTick(() => { flag_data2str = false; });
   console.log(`[auto update] [${currentNode.value.id}] data -> string`)
 
-  // TODO 这里的类型不一定是nodeflow-listitem
-  const result = serializeFlowData('nodeflow-listitem', {nodes: [currentNode.value], edges: []})
+  const result = serializeFlowData(nfNodes.nfType.value, {nodes: [currentNode.value], edges: []})
   if (result.code == 0) {
     let list = result.data.split('\n')
     list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
@@ -83,7 +83,7 @@ watch(currentNode, (newValue)=>{
   }
   else {
     currentNode.value = null
-    currentContent.value = `error,, [error] +${result.msg}`
+    currentContent.value = `- error,, [error] +${result.msg}`
   }
 }, {deep: true})
 // #endregion
