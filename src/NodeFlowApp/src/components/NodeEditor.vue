@@ -37,8 +37,8 @@ const currentContent = computed({
 
     // 更新到vueflow库
     if (!nfNodes) { console.error(`nfNodes 数据丢失`); return }
-    if (!nfNodes._useVueFlow.value) { console.error(`nfNodes._useVueFlow 数据丢失`); return }
-    const { findNode, updateNodeData } = nfNodes._useVueFlow.value
+    if (!nfNodes._useVueFlow) { console.error(`nfNodes._useVueFlow 数据丢失`); return }
+    const { findNode, updateNodeData } = nfNodes._useVueFlow
     // 如果修改头尾和前置空格会导致内换行头部缺失字符
     // let list = newValue.split('\n')
     // list = list.map(line => { return '  '+line })
@@ -94,8 +94,8 @@ watch(currentNode, (newValue)=>{
 // on selected change
 // 修改当前选中节点的内容
 watch(selected, ()=>{
-  if (!nfNodes._useVueFlow.value) return
-  const { getSelectedNodes, findNode } = nfNodes._useVueFlow.value
+  if (!nfNodes._useVueFlow) return
+  const { getSelectedNodes, findNode } = nfNodes._useVueFlow
   // console.log('selected改动---------', selected.value.length,
   //   " - ", selected2.value.value.length,
   //   " - ", getSelectedNodes.length)

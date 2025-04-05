@@ -50,7 +50,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 // 全局存储
 import { useGlobalState } from '../../stores/stores.js'
 const { selected, selected2 } = useGlobalState()
-props.nfNodes._useVueFlow.value = useVueFlow()
+props.nfNodes._useVueFlow = useVueFlow()
 
 // 2. 子组件
 
