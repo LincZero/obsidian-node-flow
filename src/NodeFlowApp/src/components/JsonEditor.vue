@@ -27,12 +27,12 @@ const nfData_enum = [
 ]
 function onSelect(event: any) {
   const index = event.target.value
-  nfNodes.type.value = nfData_enum[index].type
+  nfNodes.nfType.value = nfData_enum[index].type
   nfNodes.nfStr.value = nfData_enum[index].content
 }
 
 // 1.2 节点流数据 - 类型
-nfNodes.type.value = "nodeflow-listitem"
+nfNodes.nfType.value = "nodeflow-listitem"
 
 // 1.3 节点流数据 - 内容
 nfNodes.nfStr.value = testData_listitem2 // demo
@@ -44,7 +44,7 @@ nfNodes.nfStr.value = testData_listitem2 // demo
     <select class="item" @change="onSelect" value="1">
       <option v-for="(item, index) in nfData_enum" :value="index">{{ item.name }}</option>
     </select>
-    <input class="item" v-model="nfNodes.type.value"></input>
+    <input class="item" v-model="nfNodes.nfType.value"></input>
     <textarea spellcheck="false" class="item" v-model="nfNodes.nfStr.value"></textarea>
     <!-- TODO: pre，shiki、prismjs、highlight.js -->
     <!-- <pre spellcheck="false" class="item">

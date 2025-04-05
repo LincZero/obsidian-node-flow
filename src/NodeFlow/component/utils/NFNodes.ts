@@ -23,7 +23,7 @@ import { useGlobalState } from '../../stores/stores'
  * - 去除底层依赖，减少vueflow依赖
  */
 export class NFNodes {
-  public type: Ref<string> = ref('')
+  public nfType: Ref<string> = ref('')
   public nfStr: Ref<string> = ref('')
   public nfData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]})
   public componentKey: Ref<number> = ref(0) // 用于强制刷新
@@ -50,7 +50,7 @@ export class NFNodes {
       console.log("[auto update] [all] string -> data")
 
       // 新数据
-      let result = factoryFlowData(this.type.value, this.nfStr.value)
+      let result = factoryFlowData(this.nfType.value, this.nfStr.value)
       if (result.code != 0) {
         result = failedFlowData(result.msg)
       }
@@ -76,7 +76,7 @@ export class NFNodes {
       nextTick(() => { flag_data2str = false; });
       console.log("[auto update] [all] data -> string")
 
-      const result = serializeFlowData(this.type.value, this.nfData.value)
+      const result = serializeFlowData(this.nfType.value, this.nfData.value)
       if (result.code != 0) {
         result.data = "无法保存修改:"+result.msg
         return
@@ -90,7 +90,7 @@ export class NFNodes {
   }
 
   public get_mdData(): string {
-    return `\`\`\`${this.type.value}\n${this.nfStr.value}\n\`\`\`\n`
+    return `\`\`\`${this.nfType.value}\n${this.nfStr.value}\n\`\`\`\n`
   }
 
   // TODO 分自动存储和手动存储、是否持久化存储
