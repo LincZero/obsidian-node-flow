@@ -8,7 +8,7 @@
   <!-- 主画布 -->
   <VueFlow
     class="nf-node-flow" 
-    :nodes="props.nfNodes.nodes.value" :edges="props.nfNodes.edges.value"
+    :nodes="props.nfNodes.nfData.value.nodes" :edges="props.nfNodes.nfData.value.edges"
     :prevent-scrolling="true"
     fit-view-on-init
     @nodes-change="onNodeChange"
@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   isShowControls: false
 })
-props.nfNodes.update_nodesAndEdges()
+// props.nfNodes.update_nodesAndEdges()
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 // 全局存储
@@ -97,16 +97,16 @@ const { calcLayout } = useLayout()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
 async function refreshLayout(direction: string, amend='none') {
-  props.nfNodes.nodes.value = calcLayout(props.nfNodes.nodes.value, props.nfNodes.edges.value, direction, amend)
+  props.nfNodes.nfData.value.nodes = calcLayout(props.nfNodes.nfData.value.nodes, props.nfNodes.nfData.value.edges, direction, amend)
   const { fitView } = useVueFlow()
   nextTick(() => { fitView() })
 }
 // 个别情况自动调用 (TODO BUG 暂时失效)
 watch(updateViewFlag, (newValue, oldValue) => {
   // if (oldValue==false && newValue==true) {
-  if (props.nfNodes.nodes.value.length>1 &&
-    props.nfNodes.nodes.value[0].position.x == 0 && props.nfNodes.nodes.value[0].position.y == 0 &&
-    props.nfNodes.nodes.value[1].position.x == 0 && props.nfNodes.nodes.value[1].position.y == 0
+  if (props.nfNodes.nfData.value.nodes.length>1 &&
+    props.nfNodes.nfData.value.nodes[0].position.x == 0 && props.nfNodes.nfData.value.nodes[0].position.y == 0 &&
+    props.nfNodes.nfData.value.nodes[1].position.x == 0 && props.nfNodes.nfData.value.nodes[1].position.y == 0
   ) {
     refreshLayout('LR', 'center')
   }

@@ -25,7 +25,7 @@ import { useGlobalState } from '../../stores/stores'
 export class NFNodes {
   public type: Ref<string> = ref('')
   public nfStr: Ref<string> = ref('')
-  public nfData: Ref<any> = ref({nodes:[], edges:[]})
+  public nfData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]})
   public componentKey: Ref<number> = ref(0) // 用于强制刷新
   private calcLayout:any
 
@@ -48,7 +48,7 @@ export class NFNodes {
       if (flag_data2str) { flag_data2str = false; return }
       flag_str2data = true
       nextTick(() => { flag_str2data = false; });
-      console.log("[auto update] string -> data")
+      console.log("[auto update] [all] string -> data")
       
       let result = factoryFlowData(this.type.value, this.nfStr.value)
       if (result.code != 0) {
@@ -62,7 +62,7 @@ export class NFNodes {
       // 这里如果不update_nodesAndEdges，则无法更新
       // 如果加了，会误触发一次错误的自动布局
       // 然后可以再调用一次calcLayout修正，但这会导致无法维持原来的位置。position
-      this.update_nodesAndEdges()
+      // this.update_nodesAndEdges()
       updateViewFlag.value = true
     }) // , { immediate: true }
     // #endregion
@@ -72,7 +72,7 @@ export class NFNodes {
       if (flag_str2data) { flag_str2data = false; return }
       flag_data2str = true;
       nextTick(() => { flag_data2str = false; });
-      console.log("[auto update] data -> string")
+      console.log("[auto update] [all] data -> string")
 
       const result = serializeFlowData(this.type.value, this.nfData.value)
       if (result.code != 0) {
@@ -138,23 +138,9 @@ export class NFNodes {
     }
   }
 
-  // ---------------------- 与VueFlow有关接口 ----------------------
-  
-  // vueflow有关部分
-  nodes = ref<Node[]>([])
-  edges = ref<Edge[]>([])
-
-  // TODO 检查响应是否正常
-  public update_nodesAndEdges() {
-    try {
-      this.nodes.value = this.nfData.value.nodes
-      this.edges.value = this.nfData.value.edges
-    } catch (error) {
-      console.error('Failed to parse json:', error, "rawJson:", JSON.stringify(this.nfStr));
-    }
-  }
-
   public findNode(id: string): null|any {
     return this.nfData.value.nodes.find((node:any) => node.id === id) || null;
   }
+
+  // ---------------------- 与VueFlow有关接口 ----------------------
 }

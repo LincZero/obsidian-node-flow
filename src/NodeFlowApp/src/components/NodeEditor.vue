@@ -33,7 +33,7 @@ const currentContent = computed({
     if (flag_data2str) { flag_data2str = false; return }
     flag_str2data = true
     nextTick(() => { flag_str2data = false; });
-    console.log("[auto update] string -> data")
+    console.log(`[auto update] [${currentNode.value.id}] string -> data`)
 
     // 更新到vueflow库
     const { findNode, updateNodeData } = _useVueFlow.value
@@ -72,7 +72,7 @@ watch(currentNode, (newValue)=>{
   if (flag_str2data) { flag_str2data = false; return }
   flag_data2str = true;
   nextTick(() => { flag_data2str = false; });
-  console.log("[auto update] data -> string")
+  console.log(`[auto update] [${currentNode.value.id}] data -> string`)
 
   // TODO 这里的类型不一定是nodeflow-listitem
   const result = serializeFlowData('nodeflow-listitem', {nodes: [currentNode.value], edges: []})
