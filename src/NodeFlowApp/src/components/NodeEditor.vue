@@ -37,9 +37,11 @@ const currentContent = computed({
 
     // 更新到vueflow库
     const { findNode, updateNodeData } = _useVueFlow.value
-    let list = newValue.split('\n')
-    list = list.map(line => { return '  '+line })
-    const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n` // TODO fix 不一定是这种形式，如有可能是json
+    // 如果修改头尾和前置空格会导致内换行头部缺失字符
+    // let list = newValue.split('\n')
+    // list = list.map(line => { return '  '+line })
+    // const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n` // TODO fix 不一定是这种形式，如有可能是json
+    const nodeStr = newValue
     if (!nfNodes) {
       console.error(`nfNodes 数据丢失`)
       return
@@ -77,9 +79,11 @@ watch(currentNode, (newValue)=>{
 
   const result = serializeFlowData(nfNodes.nfType.value, {nodes: [currentNode.value], edges: []})
   if (result.code == 0) {
-    let list = result.data.split('\n')
-    list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
-    currentContent.value = list.join('\n')
+    currentContent.value = result.data
+    // 如果修改头尾和前置空格会导致内换行头部缺失字符
+    // let list = result.data.split('\n')
+    // list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
+    // currentContent.value = list.join('\n')
   }
   else {
     currentNode.value = null
