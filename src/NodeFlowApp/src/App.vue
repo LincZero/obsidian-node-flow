@@ -11,8 +11,9 @@ provide("LAYOUT", GLayoutRootRef);
 
 import JsonEditor from './components/JsonEditor.vue';
 import NodeEditor from './components/NodeEditor.vue';
+import AutoEditor from './components/AutoEditor.vue';
 
-// 节点流数据
+// 节点流数据 (必须，自动provide)
 import { NFNodes } from '../../NodeFlow/component/utils/NFNodes';
 const nfNodes = new NFNodes()
 
@@ -29,13 +30,7 @@ function fn_save (str: string): void {
     class="golden-layout main-golden"
     ref="GLayoutRootRef"
     :config="prefinedLayouts.miniRow"
-  >
-    <template #JsonEditor>
-      <JsonEditor
-        :nfNodes="nfNodes"
-      ></JsonEditor>
-    </template>
-    
+  > 
     <template #NodeFlow>
       <!-- 用key进行强制刷新 -->
       <NodeFlowContainerS
@@ -46,8 +41,16 @@ function fn_save (str: string): void {
       ></NodeFlowContainerS>
     </template>
 
+    <template #JsonEditor>
+      <JsonEditor></JsonEditor>
+    </template>
+
     <template #NodeEditor>
       <NodeEditor></NodeEditor>
+    </template>
+
+    <template #AutoEditor>
+      <AutoEditor></AutoEditor>
     </template>
   </golden-layout>
 </template>

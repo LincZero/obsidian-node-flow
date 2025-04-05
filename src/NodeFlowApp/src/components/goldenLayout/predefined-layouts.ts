@@ -10,27 +10,20 @@ const miniRowConfig: LayoutConfig = {
 		content: [
 			{
 				type: "component",
-				title: "文字编辑器",
+				title: "智能编辑器",
 				header: { show: "top", popout: false },
 				// isClosable: false,
-				componentType: "JsonEditor",
+				componentType: "AutoEditor",
 				componentState: undefined,
-				width: 20
+				width: 26
 			} as ComponentItemConfig,
 			{
 				type: "component",
 				title: "画布",
 				header: { show: "top", popout: false },
 				componentType: "NodeFlow",
-				width: 65
+				width: 74
 			} as ComponentItemConfig,
-			{
-				type: "component",
-				title: "节点编辑器",
-				header: { show: "top", popout: false },
-				componentType: "NodeEditor",
-				width: 15
-			} as ComponentItemConfig
 		]
 	}
 };

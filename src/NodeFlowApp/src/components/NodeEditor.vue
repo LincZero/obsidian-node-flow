@@ -129,6 +129,7 @@ watch(selected, ()=>{
   box-sizing: border-box;
   height: 100%;
   width: 100%;
+  overflow-y: auto;
   padding: 10px;
   >.item {
     width: 100%;
@@ -136,6 +137,7 @@ watch(selected, ()=>{
     margin: 0 0 4px 0;
   }
   >textarea.item {
+    min-height: 500px;
     line-height: 18px;
     font-size: 14px;
     // height: calc(100% - 150px);

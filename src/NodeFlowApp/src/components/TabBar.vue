@@ -31,9 +31,10 @@
         <div class="menu-2" @click="onClickLoadLayout">加载布局</div>
         <div class="menu-2" @click="onClickInitLayoutMinRow">重置布局</div>
         <hr class="menu-2">
+        <div class="menu-2" @click="onClickAddGlComponent('NodeFlow', '画布')">画布</div>
+        <div class="menu-2" @click="onClickAddGlComponent('AutoEditor', '智能编辑器')">智能编辑器</div>
         <div class="menu-2" @click="onClickAddGlComponent('NodeEditor', '节点编辑器')">节点编辑器</div>
         <div class="menu-2" @click="onClickAddGlComponent('JsonEditor', 'Json编辑器')">json编辑器</div>
-        <div class="menu-2" @click="onClickAddGlComponent('NodeFlow', '画布')">画布</div>
         <div></div>
       </div>
     </div>

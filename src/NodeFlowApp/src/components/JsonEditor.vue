@@ -1,10 +1,9 @@
 <!-- 当前画布的节点对应的json编辑器 -->
 
 <script setup lang="ts">
-import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes';
-const props = defineProps<{
-  nfNodes: NFNodes
-}>();
+import { inject } from 'vue';
+import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
+const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
 
 // 1.1 节点流数据 - 预设
 import { testData_listitem, testData_listitem2, testData_listitemHttp } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
@@ -28,15 +27,15 @@ const nfData_enum = [
 ]
 function onSelect(event: any) {
   const index = event.target.value
-  props.nfNodes.type.value = nfData_enum[index].type
-  props.nfNodes.nfStr.value = nfData_enum[index].content
+  nfNodes.type.value = nfData_enum[index].type
+  nfNodes.nfStr.value = nfData_enum[index].content
 }
 
 // 1.2 节点流数据 - 类型
-props.nfNodes.type.value = "nodeflow-listitem"
+nfNodes.type.value = "nodeflow-listitem"
 
 // 1.3 节点流数据 - 内容
-props.nfNodes.nfStr.value = testData_listitem2 // demo
+nfNodes.nfStr.value = testData_listitem2 // demo
 </script>
 
 <template>
@@ -65,6 +64,7 @@ props.nfNodes.nfStr.value = testData_listitem2 // demo
   box-sizing: border-box;
   height: 100%;
   width: 100%;
+  overflow-y: auto;
   padding: 10px;
   >.item {
     width: 100%;
@@ -72,6 +72,7 @@ props.nfNodes.nfStr.value = testData_listitem2 // demo
     margin: 0 0 4px 0;
   }
   >textarea.item {
+    min-height: 500px;
     line-height: 18px;
     font-size: 14px;
     // height: calc(100% - 150px);
