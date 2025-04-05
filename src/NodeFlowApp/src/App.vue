@@ -39,7 +39,6 @@ function fn_save (str: string): void {
     <template #NodeFlow>
       <!-- 用key进行强制刷新 -->
       <NodeFlowContainerS
-        :key="nfNodes.componentKey.value"
         :nfNodes="nfNodes"
         :fn_newView="async ()=>{}"
         :fn_save="fn_save"

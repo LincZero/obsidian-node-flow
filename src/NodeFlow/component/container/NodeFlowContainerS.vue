@@ -67,14 +67,14 @@ const _isShowControls = ref(!props.isMini)
 // 组件 - 节点画布。会往这里传递一个布局方法
 import NodeFlow from './NodeFlow.vue'
 import NodeFlowM from './NodeFlowM.vue'
-const RefChild = ref<{
-  refreshLayout: (direction: string, amend: string)=>void,
-}>();
 
 // 组件 - 工具栏
 import DropdownButton from '../utils/dropdownButton.vue'
 
 // 按钮 - 自动调整顺序
+const RefChild = ref<{
+  refreshLayout: (direction: string, amend: string)=>void,
+}>();
 function fn_autoPos(position: string, amend='none') { RefChild.value?.refreshLayout(position, amend) }
 
 // #region 按钮 - 是否禁用滚动

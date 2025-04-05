@@ -13,7 +13,7 @@
     fit-view-on-init
     @nodes-change="onNodeChange"
     @edges-change="onEdgeChange"
-    @nodes-initialized="isNodeInitialized=true">
+    @nodes-initialized="refreshLayout('LR', 'center')">
     <!-- :pan-on-drag="[0,2]" -->
 
     <!-- 背景 -->
@@ -49,7 +49,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 // 全局存储
 import { useGlobalState } from '../../stores/stores.js'
-const { selected, _useVueFlow, selected2 } = useGlobalState()
+const { selected, _useVueFlow, selected2, updateViewFlag } = useGlobalState()
 _useVueFlow.value = useVueFlow()
 
 // 2. 子组件
@@ -101,17 +101,17 @@ async function refreshLayout(direction: string, amend='none') {
   const { fitView } = useVueFlow()
   nextTick(() => { fitView() })
 }
-// 个别情况自动调用
-const isNodeInitialized = ref(false)
-watch(isNodeInitialized, (newValue, oldValue) => {
-  if (oldValue==false && newValue==true) {
-    if (props.nfNodes.nodes.value.length>1 &&
-      props.nfNodes.nodes.value[0].position.x == 0 && props.nfNodes.nodes.value[0].position.y == 0 &&
-      props.nfNodes.nodes.value[1].position.x == 0 && props.nfNodes.nodes.value[1].position.y == 0
-    ) {
-      refreshLayout('LR', 'center')
-    }
+// 个别情况自动调用 (TODO BUG 暂时失效)
+watch(updateViewFlag, (newValue, oldValue) => {
+  // if (oldValue==false && newValue==true) {
+  if (props.nfNodes.nodes.value.length>1 &&
+    props.nfNodes.nodes.value[0].position.x == 0 && props.nfNodes.nodes.value[0].position.y == 0 &&
+    props.nfNodes.nodes.value[1].position.x == 0 && props.nfNodes.nodes.value[1].position.y == 0
+  ) {
+    refreshLayout('LR', 'center')
   }
+  // }
+  updateViewFlag.value = false
 });
 defineExpose({
   refreshLayout

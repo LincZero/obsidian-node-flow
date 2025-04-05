@@ -6,6 +6,8 @@ import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide, nex
 import { factoryFlowData, failedFlowData } from '../../utils/jsonTool/factoryFlowData'
 import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue';
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
+import { useLayout } from '../../utils/layout/useLayout'
+import { useGlobalState } from '../../stores/stores'
 
 /**
  * 一个画布中的数据集
@@ -25,10 +27,15 @@ export class NFNodes {
   public nfStr: Ref<string> = ref('')
   public nfData: Ref<any> = ref({nodes:[], edges:[]})
   public componentKey: Ref<number> = ref(0) // 用于强制刷新
+  private calcLayout:any
 
   constructor() {
     provide('nfNodes', this)
-    
+
+    const { calcLayout } = useLayout()
+    this.calcLayout = calcLayout
+    const { updateViewFlag } = useGlobalState()
+
     // #region 自动更新 - 避免双向同步无限循环
     // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
     let flag_str2data = false;
@@ -47,8 +54,16 @@ export class NFNodes {
       if (result.code != 0) {
         result = failedFlowData(result.msg)
       }
-      this.nfData.value = result.data
-      this.componentKey.value += 1
+      // this.nfData.value = result.data
+      Object.assign(this.nfData.value, result.data) // 注意：不要更新位置和状态信息
+      
+      // 修正位置和自动布局问题
+      // TODO BUG
+      // 这里如果不update_nodesAndEdges，则无法更新
+      // 如果加了，会误触发一次错误的自动布局
+      // 然后可以再调用一次calcLayout修正，但这会导致无法维持原来的位置。position
+      this.update_nodesAndEdges()
+      updateViewFlag.value = true
     }) // , { immediate: true }
     // #endregion
 

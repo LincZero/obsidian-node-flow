@@ -9,10 +9,12 @@ export const useGlobalState = createGlobalState(
     const selected = ref(null)  // 自行维护的已选列表
     const selected2 = ref(null) // vueflow维护的已选列表 (之前有bug, 后来莫名其妙修好了)
     const _useVueFlow = ref(null)
-    return { 
+    let updateViewFlag = ref(false)
+    return {
       selected,
       selected2,
-      _useVueFlow
+      _useVueFlow,
+      updateViewFlag,
     }
   }
 )
