@@ -89,14 +89,18 @@
 </template>
 
 <script setup lang="ts">
+import { useNotification } from "@kyvg/vue3-notification";
+const { notify }  = useNotification()
+
 let GLayoutRootRef = inject<Ref<null|typeof GoldenLayout>>("LAYOUT"); // 布局数据
 let clickedMenu = ref(''); // 目前展开的菜单
-const fileInputEl = ref<HTMLInputElement|null>(null); // 打开文件的dom
 let fileTitle = ref('未保存*'); // 文件标题名
 
-const triggerFileInput = ()=>{if(fileInputEl.value){fileInputEl.value.click();}};
+// 打开配置
+const triggerFileInput = ()=>{ if (fileInputEl.value) {fileInputEl.value.click();} };
+const fileInputEl = ref<HTMLInputElement|null>(null); // 打开文件的dom
 
-// 点击外面关闭菜单栏展开
+// #region 点击外面关闭菜单栏展开
 const globalClickHandler = (event:any)=>{
   const insideMenu1 = event.target.closest('.menus-1');
   if (!insideMenu1) {
@@ -105,26 +109,28 @@ const globalClickHandler = (event:any)=>{
 }
 onMounted(()=>{
   document.addEventListener("click", globalClickHandler);
-  // onClickLoadLayout(); // 加载时加载一次布局（但似乎失败）
 })
 onBeforeUnmount(()=>{
   document.removeEventListener("click", globalClickHandler);
 })
+// #endregion
 
-// BEGIN 菜单Action
+// #region 菜单Action
 // 视图、布局 Golden-Layout
-const onClickInitLayoutMinRow = () => { // 重置布局
-    if (!GLayoutRootRef?.value) return;
-    GLayoutRootRef.value.loadGLLayout(prefinedLayouts.miniRow);
-};
 const onClickAddGlComponent = (s1:string, s2:string) => { // 往布局添加元素
     if (!GLayoutRootRef?.value) return;
     GLayoutRootRef.value.addGlComponent(s1, s2);
+};
+const onClickInitLayoutMinRow = () => { // 重置布局
+    if (!GLayoutRootRef?.value) return;
+    GLayoutRootRef.value.loadGLLayout(prefinedLayouts.miniRow);
+    notify({ title: "重置布局成功" }); // , text: "重置布局成功"
 };
 const onClickSaveLayout = () => { // 保存布局 (通过浏览器缓存)
 		if (!GLayoutRootRef?.value) return;
 		const config = GLayoutRootRef.value.getLayoutConfig();
 		localStorage.setItem("gl_config", JSON.stringify(config));
+    notify({ title: "保存布局成功" });
 };
 const onClickLoadLayout = () => { // 加载布局 (通过浏览器缓存)
 		const str = localStorage.getItem("gl_config");
@@ -132,12 +138,19 @@ const onClickLoadLayout = () => { // 加载布局 (通过浏览器缓存)
 		if (!GLayoutRootRef?.value) return;
 		const config = JSON.parse(str as string);
 		GLayoutRootRef.value.loadGLLayout(config);
+    notify({ title: "加载布局成功" });
 };
-// END 菜单Action
+// 加载时加载一次布局。可行，但会导致一条错误打印：Uncaught (in promise) TypeError: component is undefined
+// onMounted(()=>{
+//   nextTick(()=>{
+//     onClickLoadLayout();
+//   })
+// })
+// #endregion
 </script>
 
 <script lang="ts">
-import { ref, inject, onMounted, onBeforeUnmount, type Ref } from 'vue'
+import { inject, nextTick, onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
 import GoldenLayout from './goldenLayout/GoldenLayout.vue'
 // import { httpData, type responseInter } from '@/utils/http'
 // import { FLOWKEY } from '@/utils/interface'

@@ -35,8 +35,8 @@ nfSetting.fn_request = async (
 }
 
 const app = createApp(App)
-app.mount('#app')
 
-import { createApp } from 'vue'
 import Notifications from '@kyvg/vue3-notification'
 app.use(Notifications)
+
+app.mount('#app')
