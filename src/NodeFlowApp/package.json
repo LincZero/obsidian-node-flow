@@ -15,6 +15,7 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
+    "@kyvg/vue3-notification": "^3.4.1",
     "golden-layout": "^2.6.0",
     "markdown-it": "^14.1.0"
   }
