@@ -90,7 +90,7 @@ export class NFNode {
       }
     });
     
-    console.log('>>> UseNFNode ' + this.nodeId)
+    // console.log('>>> UseNFNode ' + this.nodeId)
   }
 
   // 语法糖，用于检查需要的变量是否存在

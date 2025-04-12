@@ -21,6 +21,12 @@ import { useGlobalState } from '../../stores/stores'
  * - Nodes的数组容器
  * - 自动管理普通对象(json)和响应式对象(refJson)的桥梁和适配
  * - 去除底层依赖，减少vueflow依赖
+ * 
+ * 数据项
+ * 可以将数据分类为以下几种
+ * - 存储/io同步类：包括io流程信息。指示了工作流的因果逻辑关系，必须的
+ * - 渲染类：包括位置和编辑状态等。前端才需要这些信息
+ * - 运行类：包括运行状态。只用来显示节点流而不运行，则无须这些数据
  */
 export class NFNodes {
   public nfType: Ref<string> = ref('')
