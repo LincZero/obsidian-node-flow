@@ -23,6 +23,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 
+import { useGlobalState } from '../../../NodeFlow/stores/stores'
+const { nfNodes } = useGlobalState()
+
 // #region 心跳检测
 const connect_status = ref<boolean>(false) // 是否处于连接状态中
 const connect_timer = ref<NodeJS.Timeout | null>(null) // 定时器
@@ -66,7 +69,7 @@ async function nodedata_put () {
     const response = await fetch('http://localhost:24052/nodedata', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({"test_key": "test_value"})
+      body: JSON.stringify({"data": nfNodes.value.nfStr})
     })
     if (response.ok) {
       response.json().then((val) => {
@@ -117,5 +120,8 @@ onUnmounted(() => {
   >div {
     line-height: 24px;
   }
+}
+pre {
+  overflow: auto
 }
 </style>

@@ -34,7 +34,8 @@
         <div class="menu-2" @click="onClickAddGlComponent('NodeFlow', '画布')">画布</div>
         <div class="menu-2" @click="onClickAddGlComponent('AutoEditor', '智能编辑器')">智能编辑器</div>
         <div class="menu-2" @click="onClickAddGlComponent('NodeEditor', '节点编辑器')">节点编辑器</div>
-        <div class="menu-2" @click="onClickAddGlComponent('JsonEditor', 'Json编辑器')">json编辑器</div>
+        <div class="menu-2" @click="onClickAddGlComponent('JsonEditor', 'Json编辑器')">Json编辑器</div>
+        <div class="menu-2" @click="onClickAddGlComponent('BackendConnector', '后端连接器')">后端连接器</div>
         <div></div>
       </div>
     </div>

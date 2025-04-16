@@ -37,6 +37,8 @@ export class NFNodes {
 
   constructor() {
     provide('nfNodes', this)
+    const { nfNodes } = useGlobalState()
+    nfNodes.value = this
 
     const { calcLayout } = useLayout()
     this.calcLayout = calcLayout
