@@ -71,7 +71,6 @@ async function nodedata_put () {
     if (response.ok) {
       response.json().then((val) => {
         nodedata_content.value = JSON.stringify(val, null, 2)
-        console.log('response nodedata2', JSON.stringify(val, null, 2))
       })
     } else {
       nodedata_content.value = ''
@@ -90,7 +89,6 @@ async function nodedata_get () {
     })
     if (response.ok) {
       response.json().then((val) => {
-        console.log('response nodedata2', val, response)
         nodedata_content.value = JSON.stringify(val, null, 2)
       })
     } else {
