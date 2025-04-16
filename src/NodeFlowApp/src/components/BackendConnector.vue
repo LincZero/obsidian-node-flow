@@ -25,14 +25,16 @@ const checkHeartbeat = async () => {
     const response = await fetch('http://localhost:24052/heartbeat')
     if (response.ok) {
       connect_status.value = true
+      response.json().then((val) => {
+        connect_content.value = JSON.stringify(val, null, 2)
+      })
     } else {
       connect_status.value = false
+      connect_content.value = ''
     }
-    response.json().then((val) => {
-      connect_content.value = JSON.stringify(val, null, 2)
-    })
   } catch (error) {
     connect_status.value = false
+    connect_content.value = '[error] ' + error
     console.error('Connection error:', error)
   }
 }
