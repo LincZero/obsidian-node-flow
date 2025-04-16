@@ -1,5 +1,9 @@
-// 全局状态存储器 (仅部分环境需要，部分环境不需要这部分)
-// (伪全局，一个nfNodes对应一个)
+/**
+ * 全局状态存储器 (仅部分环境需要，部分环境不需要这部分)
+ * 
+ * - 伪全局 (目前是这个，后面应该要修改成真全局)，一个nfNodes对应一个
+ * - 真全局
+ */
 
 import { createGlobalState } from '@vueuse/core'
 import { ref } from 'vue'

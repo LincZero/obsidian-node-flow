@@ -12,6 +12,7 @@ provide("LAYOUT", GLayoutRootRef);
 import JsonEditor from './components/JsonEditor.vue';
 import NodeEditor from './components/NodeEditor.vue';
 import AutoEditor from './components/AutoEditor.vue';
+import BackendConnector from './components/BackendConnector.vue';
 
 // 节点流数据 (必须，自动provide)
 import { NFNodes } from '../../NodeFlow/component/utils/NFNodes';
@@ -53,6 +54,10 @@ function fn_save (str: string): void {
 
     <template #AutoEditor>
       <AutoEditor></AutoEditor>
+    </template>
+
+    <template #BackendConnector>
+      <BackendConnector></BackendConnector>
     </template>
   </golden-layout>
 </template>
