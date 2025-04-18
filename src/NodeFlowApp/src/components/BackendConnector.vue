@@ -12,6 +12,16 @@
     <div><pre>{{ connect_content }}</pre></div>
     <div><h4>通用存储</h4></div>
     <div>
+      自动同步策略
+      <select v-model="nodedata_syncType">
+        <option value="no">不自动同步</option>
+        <option value="from">自动同步从后端</option>
+        <option value="to">自动同步到后端</option>
+      </select>
+    </div>
+    <br>
+    <div>
+      手动同步按钮
       <button @click="nodedata_put">存储当前json</button>
       <button @click="nodedata_get">获取当前json</button>
     </div>
@@ -21,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useGlobalState } from '../../../NodeFlow/stores/stores'
 const { nfNodes } = useGlobalState()
@@ -61,7 +71,6 @@ onUnmounted(() => {
 // #endregion
 
 // #region 节点流资源的REST API
-const nodedata_timer = ref<NodeJS.Timeout | null>(null) // 定时器
 const nodedata_content = ref<string>('')
 // 改
 async function nodedata_put () {
@@ -102,15 +111,33 @@ async function nodedata_get () {
     console.error('Connection error:', error)
   }
 }
-// 启动定时器
-onMounted(() => {
-  nodedata_timer.value = setInterval(nodedata_get, 1000) // 每N秒检测一次
-  nodedata_get()
+// #endregion
+
+// #region 节点流资源的REST API - 自动
+const nodedata_syncType = ref<'no'|'from'|'to'>('no')
+const nodedata_timer = ref<NodeJS.Timeout | null>(null) // 定时器
+// TODO 需要记得检查from/to切换时，是否会有bug
+watch(nodedata_syncType, () => {
+  if (nodedata_syncType.value == 'no') {
+    clearInterval(nodedata_timer.value)
+    nodedata_timer.value = null
+    return
+  }
+  else if (nodedata_syncType.value == 'from') {
+    nodedata_timer.value = setInterval(() => {
+      nodedata_get()
+    }, 1000)
+    return
+  }
+  else if (nodedata_syncType.value == 'to') {
+    nodedata_timer.value = setInterval(() => {
+      nodedata_put()
+    }, 1000)
+    return
+  }
+  else { console.error('nodedata_syncType 不可能为其他值') }
 })
-// 清除定时器
-onUnmounted(() => {
-  if (nodedata_timer.value) clearInterval(nodedata_timer.value)
-})
+onUnmounted(() => { nodedata_syncType.value = 'no' })
 // #endregion
 </script>
 
