@@ -25,7 +25,7 @@
       <button @click="nodedata_put">存储当前json</button>
       <button @click="nodedata_get">获取当前json</button>
     </div>
-    <div>后端值:</div>
+    <div>同步值:</div>
     <div><pre>{{ nodedata_content }}</pre></div>
   </div>
 </template>
@@ -73,12 +73,14 @@ onUnmounted(() => {
 // #region 节点流资源的REST API
 const nodedata_content = ref<string>('')
 // 改
-async function nodedata_put () {
+async function nodedata_put() {
   try {
     const response = await fetch('http://localhost:24052/nodedata', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({"data": nfNodes.value.nfStr})
+      body: JSON.stringify({
+        "data": nfNodes.value.nfStr
+      })
     })
     if (response.ok) {
       response.json().then((val) => {
@@ -93,7 +95,7 @@ async function nodedata_put () {
   }
 }
 // 查
-async function nodedata_get () {
+async function nodedata_get() {
   try {
     const response = await fetch('http://localhost:24052/nodedata', {
       method: 'GET',
@@ -102,9 +104,11 @@ async function nodedata_get () {
     if (response.ok) {
       response.json().then((val) => {
         nodedata_content.value = JSON.stringify(val, null, 2)
+        nfNodes.value.nfStr = val['data']
       })
     } else {
       nodedata_content.value = ''
+      // nfNodes.value.nfStr = // 失败则不变更
     }
   } catch (error) {
     nodedata_content.value = '[error] ' + error
@@ -121,6 +125,7 @@ watch(nodedata_syncType, () => {
   if (nodedata_syncType.value == 'no') {
     clearInterval(nodedata_timer.value)
     nodedata_timer.value = null
+    nodedata_content.value = ''
     return
   }
   else if (nodedata_syncType.value == 'from') {
@@ -149,6 +154,7 @@ onUnmounted(() => { nodedata_syncType.value = 'no' })
   }
 }
 pre {
-  overflow: auto
+  overflow: auto;
+  max-height: 500px;
 }
 </style>
