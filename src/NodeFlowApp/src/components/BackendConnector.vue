@@ -75,7 +75,7 @@ const nodedata_content = ref<string>('')
 // 改
 async function nodedata_put() {
   try {
-    const response = await fetch('http://localhost:24052/nodedata', {
+    const response = await fetch('http://localhost:24052/rest/' + 'nodedata', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -97,7 +97,7 @@ async function nodedata_put() {
 // 查
 async function nodedata_get() {
   try {
-    const response = await fetch('http://localhost:24052/nodedata', {
+    const response = await fetch('http://localhost:24052/rest/' + 'nodedata', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
