@@ -124,39 +124,38 @@ async function handlePreInput(e: Event) { // 这里不用e，假设必为ref_pre
   if (savedPos) { handlePreInput_restoreCursorPosition(ref_pre.value, savedPos.start, savedPos.end) }
 }
 // 代码高亮 - 保存光标位置
-function handlePreInput_saveCursorPosition(container: Node) {
+function handlePreInput_saveCursorPosition(container: Node): null|{start: number, end: number} {
   const selection = window.getSelection()
   if (!selection || selection.rangeCount === 0) return null
   
-  const range = selection.getRangeAt(0)
-  const preRange = document.createRange()
+  const range: Range = selection.getRangeAt(0)
+
+  // get start
+  const preRange: Range = document.createRange()
   preRange.selectNodeContents(container)
   preRange.setEnd(range.startContainer, range.startOffset)
   const start = preRange.toString().length
-  
+
   return {
     start,
     end: start + range.toString().length
   }
 }
 // 代码高亮 - 恢复光标位置
-function handlePreInput_restoreCursorPosition(container: Node, start: number, end: number) {
-  const selection = window.getSelection()
-  const range = document.createRange()
-  
+function handlePreInput_restoreCursorPosition(container: Node, start: number, end: number): void {
+  // get range
+  const range: Range = document.createRange()
   let charIndex = 0
   let foundStart = false
   let foundEnd = false
-
   function traverse(node: Node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      const nextIndex = charIndex + (node.nodeValue?.length || 0)
-      
-      if (!foundStart && start >= charIndex && start <= nextIndex) {
+    if (node.nodeType === Node.TEXT_NODE) { // pre/code is Node.ELEMENT_NODE, not inconformity
+      const nextIndex = charIndex + (node.nodeValue?.length ?? 0)
+      if (!foundStart && start >= charIndex && start <= nextIndex) { // start
         range.setStart(node, start - charIndex)
         foundStart = true
       }
-      if (foundStart && !foundEnd && end >= charIndex && end <= nextIndex) {
+      if (foundStart && !foundEnd && end >= charIndex && end <= nextIndex) { // end
         range.setEnd(node, end - charIndex)
         foundEnd = true
       }
@@ -169,8 +168,9 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       }
     }
   }
-
   traverse(container)
+
+  const selection = window.getSelection()
   selection?.removeAllRanges()
   selection?.addRange(range)
 }
