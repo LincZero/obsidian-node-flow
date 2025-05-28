@@ -123,18 +123,19 @@ const nodedata_timer = ref<NodeJS.Timeout | null>(null) // 定时器
 // TODO 需要记得检查from/to切换时，是否会有bug
 watch(nodedata_syncType, () => {
   if (nodedata_syncType.value == 'no') {
-    clearInterval(nodedata_timer.value)
-    nodedata_timer.value = null
+    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_content.value = ''
     return
   }
   else if (nodedata_syncType.value == 'from') {
+    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_timer.value = setInterval(() => {
       nodedata_get()
     }, 1000)
     return
   }
   else if (nodedata_syncType.value == 'to') {
+    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_timer.value = setInterval(() => {
       nodedata_put()
     }, 1000)
@@ -142,7 +143,13 @@ watch(nodedata_syncType, () => {
   }
   else { console.error('nodedata_syncType 不可能为其他值') }
 })
-onUnmounted(() => { nodedata_syncType.value = 'no' })
+onUnmounted(() => {
+  nodedata_syncType.value = 'no'
+  // 注意项：
+  // 在 JavaScript/TypeScript 中，定时器（setInterval/setTimeout）不会自动析构，这是由其底层设计机制决定的
+  // clearInterval保证立即而非闲时停止定时器 (并且此时也只是标识符覆盖，而非对象销毁)
+  if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+})
 // #endregion
 </script>
 
