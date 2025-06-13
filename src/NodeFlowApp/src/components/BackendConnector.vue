@@ -6,6 +6,10 @@
 
 <template>
   <div class="backend-connector">
+    <div>
+      <span>当前同步服务器</span>
+      <input v-model="ref_url" type="text" placeholder="http://localhost:24042/" />
+    </div>
     <div><h4>心跳状态</h4></div>
     <div>连接状态: {{ connect_status }}</div>
     <div>后端值:</div>
@@ -36,13 +40,15 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useGlobalState } from '../../../NodeFlow/stores/stores'
 const { nfNodes } = useGlobalState()
 
+const ref_url = ref<string>('http://localhost:24042/')
+
 // #region 心跳检测
 const connect_status = ref<boolean>(false) // 是否处于连接状态中
 const connect_timer = ref<NodeJS.Timeout | null>(null) // 定时器
 const connect_content = ref<string>('') // 后端返回的心跳内容
 async function checkHeartbeat () {
   try {
-    const response = await fetch('http://localhost:24052/heartbeat')
+    const response = await fetch(ref_url.value+'heartbeat')
     if (response.ok) {
       connect_status.value = true
       response.json().then((val) => {
@@ -54,7 +60,7 @@ async function checkHeartbeat () {
     }
   } catch (error) {
     connect_status.value = false
-    connect_content.value = '[error] ' + error
+    connect_content.value = `[ERROR] ${(new Date()).toString()} ${error}`
     console.error('Connection error:', error)
   }
 }
@@ -75,7 +81,7 @@ const nodedata_content = ref<string>('')
 // 改
 async function nodedata_put() {
   try {
-    const response = await fetch('http://localhost:24052/rest/' + 'nodedata', {
+    const response = await fetch(ref_url.value + 'rest/' + 'nodedata', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -97,7 +103,7 @@ async function nodedata_put() {
 // 查
 async function nodedata_get() {
   try {
-    const response = await fetch('http://localhost:24052/rest/' + 'nodedata', {
+    const response = await fetch(ref_url.value + 'rest/' + 'nodedata', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
