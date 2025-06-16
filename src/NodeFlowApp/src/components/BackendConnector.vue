@@ -48,7 +48,9 @@ const connect_timer = ref<NodeJS.Timeout | null>(null) // 定时器
 const connect_content = ref<string>('') // 后端返回的心跳内容
 async function checkHeartbeat () {
   try {
-    const response = await fetch(ref_url.value+'heartbeat')
+    const response = await fetch(ref_url.value+'heartbeat', {
+      credentials: 'include' // 支持 cookie 存写
+    })
     if (response.ok) {
       connect_status.value = true
       response.json().then((val) => {
@@ -60,7 +62,10 @@ async function checkHeartbeat () {
     }
   } catch (error) {
     connect_status.value = false
-    connect_content.value = `[ERROR] ${(new Date()).toString()} ${error}`
+    connect_content.value = `[ERROR]
+${(new Date()).toString()}
+${error}
+如为连接问题，请尝试修改正确的同步服务器，或自行部署。如使用 https://github.com/NestNode/RustDemo`
     console.error('Connection error:', error)
   }
 }
@@ -159,7 +164,7 @@ onUnmounted(() => {
 // #endregion
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .backend-connector {
   padding: 10px;
   >div {
@@ -169,5 +174,6 @@ onUnmounted(() => {
 pre {
   overflow: auto;
   max-height: 500px;
+  padding-bottom: 10px;
 }
 </style>
