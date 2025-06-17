@@ -49,7 +49,7 @@ const connect_content = ref<string>('') // 后端返回的心跳内容
 async function checkHeartbeat () {
   try {
     const response = await fetch(ref_url.value+'heartbeat', {
-      credentials: 'include' // 支持 cookie 存写
+      // credentials: 'include' // 支持 cookie 存写
     })
     if (response.ok) {
       connect_status.value = true
