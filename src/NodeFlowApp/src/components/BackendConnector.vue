@@ -16,18 +16,20 @@
     <div><pre>{{ connect_content }}</pre></div>
     <div><h4>通用存储</h4></div>
     <div>
-      自动同步策略
+      <span>自动同步策略</span>
       <select v-model="nodedata_syncType">
         <option value="no">不自动同步</option>
         <option value="from">自动同步从后端</option>
+        <option value="from2">自动同步从后端但不更新 (debug)</option>
+        <!-- <option value="from3">仅初始化时从后端同步 (default)</option> -->
         <option value="to">自动同步到后端</option>
       </select>
     </div>
     <br>
     <div>
-      手动同步按钮
-      <button @click="nodedata_put">存储当前json</button>
-      <button @click="nodedata_get">获取当前json</button>
+      <span>手动同步按钮</span>
+      <button @click="nodedata_put()">存储当前json</button>
+      <button @click="nodedata_get()">获取当前json</button>
     </div>
     <div>同步值:</div>
     <div><pre>{{ nodedata_content }}</pre></div>
@@ -95,7 +97,7 @@ async function nodedata_put() {
     })
     if (response.ok) {
       response.json().then((val) => {
-        nodedata_content.value = JSON.stringify(val, null, 2)
+        nodedata_content.value = val['data'] // JSON.stringify(val, null, 2)
       })
     } else {
       nodedata_content.value = ''
@@ -106,7 +108,7 @@ async function nodedata_put() {
   }
 }
 // 查
-async function nodedata_get() {
+async function nodedata_get(isUpdate = true) {
   try {
     const response = await fetch(ref_url.value + 'rest/' + 'nodedata', {
       method: 'GET',
@@ -114,8 +116,8 @@ async function nodedata_get() {
     })
     if (response.ok) {
       response.json().then((val) => {
-        nodedata_content.value = JSON.stringify(val, null, 2)
-        nfNodes.value.nfStr = val['data']
+        nodedata_content.value = val['data'] // JSON.stringify(val, null, 2)
+        if (isUpdate) nfNodes.value.nfStr = val['data']
       })
     } else {
       nodedata_content.value = ''
@@ -129,7 +131,7 @@ async function nodedata_get() {
 // #endregion
 
 // #region 节点流资源的REST API - 自动
-const nodedata_syncType = ref<'no'|'from'|'to'>('no')
+const nodedata_syncType = ref<string>('no')
 const nodedata_timer = ref<NodeJS.Timeout | null>(null) // 定时器
 // TODO 需要记得检查from/to切换时，是否会有bug
 watch(nodedata_syncType, () => {
@@ -142,6 +144,13 @@ watch(nodedata_syncType, () => {
     if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_timer.value = setInterval(() => {
       nodedata_get()
+    }, 1000)
+    return
+  }
+  else if (nodedata_syncType.value == 'from2') {
+    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+    nodedata_timer.value = setInterval(() => {
+      nodedata_get(false)
     }, 1000)
     return
   }
@@ -169,11 +178,19 @@ onUnmounted(() => {
   padding: 10px;
   >div {
     line-height: 24px;
+    span {
+      margin-right: 5px;
+    }
   }
 }
 pre {
   overflow: auto;
+  box-sizing: border-box;
   max-height: 500px;
-  padding-bottom: 10px;
+  min-height: 24px;
+
+  border: #616161 solid 1px;
+  border-radius: 10px;
+  padding: 2px 8px 10px;
 }
 </style>
