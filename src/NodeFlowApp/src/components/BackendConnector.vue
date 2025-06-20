@@ -19,9 +19,9 @@
       <span>自动同步策略</span>
       <select v-model="nodedata_syncType">
         <option value="no">不自动同步</option>
+        <option value="from3">仅初始化时从后端同步</option> <!--default-->
         <option value="from">自动同步从后端</option>
-        <option value="from2">自动同步从后端但不更新 (debug)</option>
-        <!-- <option value="from3">仅初始化时从后端同步 (default)</option> -->
+        <option value="from2">自动同步从后端但不更新 (debug)</option>        
         <option value="to">自动同步到后端</option>
       </select>
     </div>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, nextTick, watch } from 'vue'
 
 import { useGlobalState } from '../../../NodeFlow/stores/stores'
 const { nfNodes } = useGlobalState()
@@ -131,10 +131,10 @@ async function nodedata_get(isUpdate = true) {
 // #endregion
 
 // #region 节点流资源的REST API - 自动
-const nodedata_syncType = ref<string>('no')
+const nodedata_syncType = ref<string>('from3')
 const nodedata_timer = ref<NodeJS.Timeout | null>(null) // 定时器
 // TODO 需要记得检查from/to切换时，是否会有bug
-watch(nodedata_syncType, () => {
+function nodedata_syncInit() {
   if (nodedata_syncType.value == 'no') {
     if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_content.value = ''
@@ -154,6 +154,11 @@ watch(nodedata_syncType, () => {
     }, 1000)
     return
   }
+  else if (nodedata_syncType.value == 'from3') {
+    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+    nodedata_get()
+    return
+  }
   else if (nodedata_syncType.value == 'to') {
     if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_timer.value = setInterval(() => {
@@ -162,6 +167,10 @@ watch(nodedata_syncType, () => {
     return
   }
   else { console.error('nodedata_syncType 不可能为其他值') }
+}
+watch(nodedata_syncType, nodedata_syncInit)
+onMounted(() => {
+  nodedata_syncInit()
 })
 onUnmounted(() => {
   nodedata_syncType.value = 'no'
