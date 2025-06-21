@@ -24,6 +24,13 @@ const miniRowConfig: LayoutConfig = {
 				componentType: "NodeFlow",
 				width: 74
 			} as ComponentItemConfig,
+			{
+				type: "component",
+				title: "后端连接器",
+				header: { show: "top", popout: false },
+				componentType: "BackendConnector",
+				width: 20
+			} as ComponentItemConfig,
 		]
 	}
 };

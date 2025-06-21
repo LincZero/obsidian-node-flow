@@ -16,12 +16,12 @@
     <div><pre>{{ connect_content }}</pre></div>
     <div><h4>通用存储</h4></div>
     <div>
-      <span>自动同步策略</span>
+      <span>同步策略</span>
       <select v-model="nodedata_syncType">
         <option value="no">不自动同步</option>
         <option value="from3">仅初始化时从后端同步</option> <!--default-->
-        <option value="from">自动同步从后端</option>
-        <option value="from2">自动同步从后端但不更新 (debug)</option>        
+        <option value="from">自动从后端同步</option>
+        <option value="from2">自动从后端同步 但不更新</option> <!--debug-->
         <option value="to">自动同步到后端</option>
       </select>
     </div>
@@ -67,8 +67,12 @@ async function checkHeartbeat () {
     connect_content.value = `[ERROR]
 ${(new Date()).toString()}
 ${error}
-如为连接问题，请尝试修改正确的同步服务器，或自行部署。如使用 https://github.com/NestNode/RustDemo`
-    console.error('Connection error:', error)
+
+可能的情况:
+- 无后端模式 (合法，但网页刷新可能导致数据丢失，且只能使用前端的节点模块)
+- 与后端的连接问题存在问题，自行检查，或请尝试修改正确的同步服务或
+- 如果你没有适用的服务端，可自行部署。如参考 https://github.com/NestNode/ API`
+    console.error('Connection error:' + error)
   }
 }
 // 启动定时器
@@ -104,7 +108,7 @@ async function nodedata_put() {
     }
   } catch (error) {
     nodedata_content.value = '[error] ' + error
-    console.error('Connection error:', error)
+    console.error('Connection error:' + error)
   }
 }
 // 查
@@ -125,7 +129,7 @@ async function nodedata_get(isUpdate = true) {
     }
   } catch (error) {
     nodedata_content.value = '[error] ' + error
-    console.error('Connection error:', error)
+    console.error('Connection error:' + error)
   }
 }
 // #endregion
@@ -191,6 +195,13 @@ onUnmounted(() => {
       margin-right: 5px;
     }
   }
+}
+input {
+  // border: #616161 solid 1px;
+  border-radius: 6px;
+  padding: 0 4px;
+  // background: none;
+  // color: currentColor;
 }
 pre {
   overflow: auto;
