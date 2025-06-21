@@ -2,6 +2,8 @@
 负责与后端沟通的模块
 
 有心跳、SSE等机制
+
+TODO：应该有两个模块：一个是完全独立的后端连接器，可以创建多份。一个是记录当前连接了哪些后端。后者未做
 -->
 
 <template>
@@ -10,10 +12,12 @@
       <span>当前同步服务器</span>
       <input v-model="ref_url" type="text" placeholder="http://localhost:24042/" />
     </div>
+
     <div><h4>心跳状态</h4></div>
     <div>连接状态: {{ connect_status }}</div>
     <div>后端值:</div>
     <div><pre>{{ connect_content }}</pre></div>
+
     <div><h4>通用存储</h4></div>
     <div>
       <span>同步策略</span>
@@ -31,8 +35,11 @@
       <button @click="nodedata_put()">存储当前json</button>
       <button @click="nodedata_get()">获取当前json</button>
     </div>
-    <div>同步值:</div>
+    <div><span>同步值:</span></div>
     <div><pre>{{ nodedata_content }}</pre></div>
+
+    <div><h4>后端日志</h4></div>
+    <div><pre>(需后端支持日志传送功能，当前未支持)</pre></div>
   </div>
 </template>
 
@@ -188,7 +195,12 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .backend-connector {
-  padding: 10px;
+  box-sizing: border-box;
+  height: 100%;
+  
+  padding: 10px 10px 20px;
+  overflow-y: auto;
+
   >div {
     line-height: 24px;
     span {

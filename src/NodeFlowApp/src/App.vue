@@ -13,6 +13,7 @@ import JsonEditor from './components/JsonEditor.vue';
 import NodeEditor from './components/NodeEditor.vue';
 import AutoEditor from './components/AutoEditor.vue';
 import BackendConnector from './components/BackendConnector.vue';
+import NodeList from './components/NodeList.vue';
 
 // 节点流数据 (必须，自动provide)
 import { NFNodes } from '../../NodeFlow/component/utils/NFNodes';
@@ -58,6 +59,10 @@ function fn_save (str: string): void {
 
     <template #BackendConnector>
       <BackendConnector></BackendConnector>
+    </template>
+
+    <template #NodeList>
+      <NodeList></NodeList>
     </template>
   </golden-layout>
 </template>

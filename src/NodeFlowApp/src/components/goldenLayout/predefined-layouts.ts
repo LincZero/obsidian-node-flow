@@ -9,28 +9,39 @@ const miniRowConfig: LayoutConfig = {
 		type: ItemType.row,
 		content: [
 			{
-				type: "component",
+				type: ItemType.component,
 				title: "智能编辑器",
 				header: { show: "top", popout: false },
 				// isClosable: false,
 				componentType: "AutoEditor",
 				componentState: undefined,
-				width: 26
+				width: 26,
 			} as ComponentItemConfig,
 			{
-				type: "component",
+				type: ItemType.component,
 				title: "画布",
 				header: { show: "top", popout: false },
 				componentType: "NodeFlow",
-				width: 74
+				width: 74,
 			} as ComponentItemConfig,
 			{
-				type: "component",
-				title: "后端连接器",
-				header: { show: "top", popout: false },
-				componentType: "BackendConnector",
-				width: 20
-			} as ComponentItemConfig,
+				type: ItemType.stack,
+				width: 20,
+				content: [
+					{
+						type: ItemType.component,
+						title: "后端连接器",
+						header: { show: "top", popout: false },
+						componentType: "BackendConnector",
+					} as ComponentItemConfig,
+					{
+						type: ItemType.component,
+						title: "节点模板",
+						header: { show: "top", popout: false },
+						componentType: "NodeList",
+					} as ComponentItemConfig,
+				]
+			},
 		]
 	}
 };
