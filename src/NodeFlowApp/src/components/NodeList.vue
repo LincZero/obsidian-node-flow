@@ -24,7 +24,7 @@
       <div class="node-list-groupname">{{ k }}</div>
       <div v-for="(v2, k2) in v" :key="k2" class="node-list-item">
         <div>
-          <span class="node-list-name">{{ k2 }}</span>
+          <span class="node-list-name" @click="createNode(k2, v2)">{{ k2 }}</span>
         </div>
       </div>
     </div>
@@ -33,6 +33,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
+import { useGlobalState } from '../../../NodeFlow/stores/stores'
+const { nfNodes } = useGlobalState()
 
 // TODO 添加多个类型分组，如: 网络、常用脚本、等等
 const nodeList_frontEnd: object = {
@@ -57,6 +59,25 @@ console.log('debug output', b, ctx)
 const nodeList_group: object = {
   "frontEnd": nodeList_frontEnd,
   "localhost:24042(debug)": []
+}
+
+// TODO 当前仅 listitem 模式可用
+function createNode(k: string, v: string) {
+  console.log('开发中。createNode', k, v)
+
+  // nfNodes.value.nfData.nodes.push({
+  //   id: `node-${Date.now()}`,
+  //   type: 'item-listitem',
+  //   data: {
+  //     name: k,
+  //     value: v,
+  //     refType: 'diy', // diy, custom, item-listitem
+  //     runState: 'none', // none, running, done, error
+  //     cacheValue: ''
+  //   },
+  //   position: { x: 0, y: 0 },
+  //   style: { width: 200, height: 100 }
+  // })
 }
 </script>
 

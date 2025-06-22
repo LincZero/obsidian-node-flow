@@ -5,7 +5,7 @@ import JsonEditor from './JsonEditor.vue'
 import NodeEditor from './NodeEditor.vue'
 
 // 全局存储部分
-import { useGlobalState } from '../../../NodeFlow/stores/stores.js'
+import { useGlobalState } from '../../../NodeFlow/stores/stores'
 const { selected, selected2 } = useGlobalState()
 
 // #region 自动更新 - selected change -> selected_lenght

@@ -26,18 +26,17 @@ const miniRowConfig: LayoutConfig = {
 			} as ComponentItemConfig,
 			{
 				type: ItemType.stack,
+				header: { show: "right", popout: false },
 				width: 20,
 				content: [
 					{
 						type: ItemType.component,
 						title: "后端连接器",
-						header: { show: "top", popout: false },
 						componentType: "BackendConnector",
 					} as ComponentItemConfig,
 					{
 						type: ItemType.component,
 						title: "节点模板",
-						header: { show: "top", popout: false },
 						componentType: "NodeList",
 					} as ComponentItemConfig,
 				]

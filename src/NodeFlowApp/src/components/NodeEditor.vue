@@ -7,7 +7,7 @@ import ItemNode2 from '../../../NodeFlow/component/node/ItemNode2.vue'
 import { serializeFlowData } from '../../../NodeFlow/utils/serializeTool/serializeFlowData'
 
 // 全局存储部分
-import { useGlobalState } from '../../../NodeFlow/stores/stores.js'
+import { useGlobalState } from '../../../NodeFlow/stores/stores'
 const { selected, selected2 } = useGlobalState()
 
 import { inject } from 'vue';

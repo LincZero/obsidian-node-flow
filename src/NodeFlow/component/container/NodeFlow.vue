@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<{
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 // 全局存储
-import { useGlobalState } from '../../stores/stores.js'
+import { useGlobalState } from '../../stores/stores'
 const { selected, selected2 } = useGlobalState()
 props.nfNodes._useVueFlow = useVueFlow()
 

@@ -11,13 +11,14 @@
 
 import { createGlobalState } from '@vueuse/core'
 import { ref } from 'vue'
+import { NFNodes } from '../component/utils/NFNodes'
 
 export const useGlobalState = createGlobalState(
   () => {
     // TODO 选择对象可以简化去掉冗余，应该封装到 nfNodes 里
-    const selected = ref([])    // 自行维护的已选列表. type: ref<string[]>([])
-    const selected2 = ref(null) // vueflow维护的已选列表 (之前有bug, 后来莫名其妙修好了)
-    const nfNodes = ref()
+    const selected = ref<string[]>([])    // 自行维护的已选列表. type: ref<string[]>([])
+    const selected2 = ref<unknown>(null) // vueflow维护的已选列表 (之前有bug, 后来莫名其妙修好了)
+    const nfNodes = ref<NFNodes|null>(null)
     // const _useVueFlow = ref(null)
     // let updateViewFlag = ref(false)
     return {
