@@ -32,12 +32,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, reactive, computed, watch, nextTick } from 'vue'
 import { useGlobalState } from '../../../NodeFlow/stores/stores'
 const { nfNodes } = useGlobalState()
 
+// #region factory nodeList_group
+
+const nodeList_group = reactive<Record<string, Record<string, string>>>({})
+
 // TODO 添加多个类型分组，如: 网络、常用脚本、等等
-const nodeList_frontEnd: object = {
+const nodeList_frontEnd: Record<string, string> = {
   "diy": "",
 
   "http": `- Http
@@ -56,10 +60,35 @@ console.log('debug output', b, ctx)
 - debug, :item-debug
 - feat, :item-feat`
 }
-const nodeList_group: object = {
-  "frontEnd": nodeList_frontEnd,
-  "localhost:24042(debug)": []
-}
+nodeList_group["frontEnd"] = nodeList_frontEnd
+
+const urls = ref<string[]>(['http://localhost:24042/']) // TODO 应该由后端管理器提供。并且允许刷新提供值
+;(async () => {
+  const url = urls.value[0]
+  try {
+    const response = await fetch(url + 'nodelist', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    if (response.ok) {
+      response.json().then((val: string[]) => {
+        const new_val: Record<string, string> = {}
+        for (const item of val) {
+          new_val[item] = ''
+        }
+        nodeList_group[url] = new_val
+      })
+    } else {
+      nodeList_group[url] = {"get error": ""}
+      console.error('Get nodelist error from:' + url)
+    }
+  } catch (error) {
+    nodeList_group[url] = {"connection error": ""}
+    console.error('Connection error:' + error)
+  }
+})();
+
+// #endregion
 
 // TODO 当前仅 listitem 模式可用
 function createNode(k: string, v: string) {

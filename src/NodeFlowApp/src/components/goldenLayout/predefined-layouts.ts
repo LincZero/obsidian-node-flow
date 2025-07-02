@@ -32,6 +32,7 @@ const miniRowConfig: LayoutConfig = {
 					{
 						type: ItemType.component,
 						title: "后端连接器",
+						// icon: "fa fa-plug",
 						componentType: "BackendConnector",
 					} as ComponentItemConfig,
 					{
