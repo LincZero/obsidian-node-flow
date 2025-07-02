@@ -15,6 +15,11 @@
   前者拥有更高的灵活性，而后者拥有更好的易用性，更低的使用成本。
 - 兼容策略为:
   当选择节点类型为: `diy` / `custom` 时，则由节点列表进入 `节点项列表`
+
+服务器问题：注意区分：
+
+- 同步服务器：只能存在一个
+- 节点服务器：可以存在多个
 -->
 
 <!-- TODO：修改为多层node-list-group，像文件树那样 -->
@@ -27,6 +32,10 @@
           <span class="node-list-name" @click="createNode(k2, v2)">{{ k2 }}</span>
         </div>
       </div>
+    </div>
+    <div class="node-list-backend">
+      <span>服务器列表: (换行区分)</span>
+      <textarea v-model="urls" spellcheck="false" placeholder="http://localhost:24042/"></textarea>
     </div>
   </div>
 </template>
@@ -62,31 +71,40 @@ console.log('debug output', b, ctx)
 }
 nodeList_group["frontEnd"] = nodeList_frontEnd
 
-const urls = ref<string[]>(['http://localhost:24042/']) // TODO 应该由后端管理器提供。并且允许刷新提供值
-;(async () => {
-  const url = urls.value[0]
-  try {
-    const response = await fetch(url + 'nodelist', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-    if (response.ok) {
-      response.json().then((val: string[]) => {
-        const new_val: Record<string, string> = {}
-        for (const item of val) {
-          new_val[item] = ''
+const urls = ref<string>('http://localhost:24042/') // 换行区分多个url
+update_backend_source()
+watch(() => urls, () => {
+  update_backend_source()
+})
+function update_backend_source() {
+  for (let url of urls.value.split('\n')) {
+    if (url.trim() === '') continue // 跳过空行
+    nodeList_group[url] = {}
+    ;(async () => {
+      try {
+        const response = await fetch(url + 'nodelist', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        if (response.ok) {
+          response.json().then((val: string[]) => {
+            const new_val: Record<string, string> = {}
+            for (const item of val) {
+              new_val[item] = ''
+            }
+            nodeList_group[url] = new_val
+          })
+        } else {
+          nodeList_group[url] = {"(error: get error)": ""}
+          console.error('Get nodelist error from:' + url)
         }
-        nodeList_group[url] = new_val
-      })
-    } else {
-      nodeList_group[url] = {"get error": ""}
-      console.error('Get nodelist error from:' + url)
-    }
-  } catch (error) {
-    nodeList_group[url] = {"connection error": ""}
-    console.error('Connection error:' + error)
+      } catch (error) {
+        nodeList_group[url] = {"(error: connection error)": ""}
+        console.error('Connection error:' + error)
+      }
+    })();
   }
-})();
+}
 
 // #endregion
 
@@ -138,6 +156,21 @@ function createNode(k: string, v: string) {
     border-bottom: 1px solid currentColor;
     line-height: 22px;
     padding: 0 8px;
+  }
+
+  .node-list-backend {
+    margin-top: 50px;
+    textarea {
+      box-sizing: border-box;
+      width: 100%;
+      margin-top: 5px;
+      
+      border: 1px solid #616161;
+      padding: 4px 6px;
+      border-radius: 8px;
+      color: currentColor;
+      background: none;
+    }
   }
 }
 </style>
