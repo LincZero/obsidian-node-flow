@@ -16,12 +16,16 @@ import { useGlobalState } from '../../stores/stores'
  * ## 数据
  * 
  * 可以将数据分类为以下几种
+ * - 
  * - 存储/io同步类：包括io流程信息。指示了工作流的因果逻辑关系。
  *   必须的
  * - 渲染类：包括位置和编辑状态等。
  *   如只需要表示逻辑，而不需要自定义位置，则无需用到该部分
  * - 运行类：包括运行状态。
  *   如无需运行，仅显示使用，则无需用到该部分
+ * - 注意区分:
+ *   - 非运行使用 & 运行使用
+ *   - obj类 (节点集json) & 类使用 (包括obj中没有的额外信息/运行时信息)
  * 
  * ## 容器与元素
  * 
@@ -58,20 +62,27 @@ export class NFNodes {
 
   // #region 特殊函数
 
+  private constructor() {}
+
   public static useGetNFNodes(): NFNodes|undefined {
       return inject('nfNodes', undefined);
     }
 
   public static useFactoryNFNodes() {
-    const nfNodes = new NFNodes()
-    provide('nfNodes', nfNodes)
-    return nfNodes
+    const nfNodes_ = new NFNodes()
+
+    nfNodes_.init_auto_update()
+
+    provide('nfNodes', nfNodes_)
+
+    const { nfNodes } = useGlobalState()
+    nfNodes.value = nfNodes_
+
+    return nfNodes_
   }
 
-  private constructor() {
-    const { nfNodes } = useGlobalState()
-    nfNodes.value = this
-
+  /// 初始化自动更新相关的工作
+  private init_auto_update() {
     // #region 自动更新 - 避免双向同步无限循环
     // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
     let flag_str2data = false;

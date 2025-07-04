@@ -21,7 +21,7 @@ await esbuild.build({
         Vue({ isProd: true }),
     ],
     entryPoints: ['./main.ts'],
-    outfile: 'main.js',
+    outfile: '../../main.js',
     bundle: true,
     format: 'cjs',
     watch: !prod, // 似乎若升级esbuild后不再支持
@@ -64,4 +64,5 @@ await esbuild.build({
     bundle: true,
     allowOverwrite: true,
     minify: false,
+    outfile: '../../main.js',
 });

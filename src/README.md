@@ -26,3 +26,10 @@
   - 入口：直接使用一个vue组件作为入口
 - app
   - 入口：直接使用一个vue组件作为入口
+
+```bash
+pnpm install
+
+pnpm run ob:build
+pnpm run app:dev
+```

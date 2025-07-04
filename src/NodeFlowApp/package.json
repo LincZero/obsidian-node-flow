@@ -3,8 +3,8 @@
   "version": "1.1.0",
   "description": "",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "vite --config ./vite.config.js",
+    "build": "vite build --config ./vite.config.js"
   },
   "author": "LincZero",
   "license": "GNU Affero General Public License v3.0",

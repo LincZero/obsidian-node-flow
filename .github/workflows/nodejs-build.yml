@@ -13,14 +13,19 @@ jobs:
     steps:
     - name: Env - Checkout
       uses: actions/checkout@v4
-    - name: Env - Use Node.js         # 环境 - node环境 (使用的是官方提供的action)，Node.js版本
+    - name: Install pnpm          # 安装pnpm (如果你的 package.json::packageManager 字段没有设置，
+      uses: pnpm/action-setup@v4  #   则要在这里加上 with 版本)
+      with:
+        version: 10.10.0
+    - name: Env - Use Node.js     # 环境 - node环境 (使用的是官方提供的action)，Node.js版本
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
+        cache: pnpm
     - name: Build
       run: |
-          npm ci
-          npm run ob:build
+          pnpm install --frozen-lockfile
+          pnpm run ob:build
     - name: Upload Build Artifact
       if: always()                    # 即使之前的构建步骤失败，也会上载构建产物
       uses: actions/upload-artifact@v4
@@ -36,17 +41,21 @@ jobs:
     steps:
     - name: Env - Checkout
       uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.10.0
     - name: Env - Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
+        cache: pnpm
     - name: Build
       run: |
-        # npm run app:build
-        npm ci
+        # pnpm run app:build
+        pnpm install --frozen-lockfile
         cd ./src/NodeFlowApp/
-        npm ci
-        npm run build
+        pnpm run build
         > ./dist/.nojekyll
     - name: Build - Dist to Website Branch
       uses: JamesIves/github-pages-deploy-action@v4
