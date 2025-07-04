@@ -13,6 +13,8 @@ if you want to view the source, please visit the github repository of this plugi
 
 const prod = (process.argv[2] === 'production');
 process.env.NODE_ENV = 'production';
+
+// ts
 await esbuild.build({
     banner: {
         js: banner,
@@ -57,12 +59,12 @@ await esbuild.build({
         ...builtins],
 }).catch(() => process.exit(1));
 
+// css
 await esbuild.build({
     entryPoints: ["./main.css"],
-    outfile: "styles.css",
+    outfile: "../../styles.css",
     watch: !prod, // 似乎若升级esbuild后不再支持
     bundle: true,
     allowOverwrite: true,
     minify: false,
-    outfile: '../../main.js',
 });

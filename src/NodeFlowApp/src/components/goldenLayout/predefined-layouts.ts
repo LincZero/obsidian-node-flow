@@ -26,7 +26,7 @@ const miniRowConfig: LayoutConfig = {
 			} as ComponentItemConfig,
 			{
 				type: ItemType.stack,
-				header: { show: "right", popout: false },
+				header: { show: "top", popout: false },
 				width: 20,
 				content: [
 					{

@@ -1,6 +1,7 @@
 /**
  * NFNodes 类独占文件
  */
+
 import type { Node, Edge } from '@vue-flow/core' 
 import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide, nextTick, inject } from 'vue';
 import { factoryFlowData, failedFlowData } from '../../utils/jsonTool/factoryFlowData'
@@ -31,6 +32,7 @@ import { useGlobalState } from '../../stores/stores'
  * 
  * - 容器
  *   - provide/inject 方式
+ *   - useGlobalState() `import { createGlobalState } from '@vueuse/core'`
  * - 元素
  *   - (见下)
  * 
@@ -54,7 +56,7 @@ import { useGlobalState } from '../../stores/stores'
  * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
  */
 export class NFNodes {
-  public nfType: Ref<string> = ref('')
+  public nfType: Ref<string> = ref('') // 节点图类型
   public nfStr: Ref<string> = ref('')
   public nfData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]}) // 通过 VueFlow api 变更时能检测到
   // public componentKey: Ref<number> = ref(0) // 用于强制刷新
@@ -64,12 +66,19 @@ export class NFNodes {
 
   private constructor() {}
 
-  public static useGetNFNodes(): NFNodes|undefined {
-      return inject('nfNodes', undefined);
-    }
+  public static useGetNFNodes(): NFNodes|null {
+    // 来源一，多个 NFNodes 时适用
+    // return inject('nfNodes', null);
+
+    // 来源二，单 NFNodes 时适用，不要求后代中获取
+    const { nfNodes } = useGlobalState()
+    // 这里主要是往外传递类型判断会舍弃私有部分，但再传回来由于在类中又要求判断私有部分，所以要 as any
+    const nfNodes_: NFNodes|null = nfNodes.value as any
+    return nfNodes_
+  }
 
   public static useFactoryNFNodes() {
-    const nfNodes_ = new NFNodes()
+    const nfNodes_: NFNodes = new NFNodes()
 
     nfNodes_.init_auto_update()
 

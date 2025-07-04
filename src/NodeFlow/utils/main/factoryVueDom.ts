@@ -4,6 +4,7 @@ import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue
 import { factoryFlowData, failedFlowData } from '../jsonTool/factoryFlowData'
 
 import { nfSetting } from '../../utils/main/setting'
+import { NFNodes } from '../../component/utils/NFNodes';
 
 /// 在div内创建指定的 Vue UI
 export function factoryVueDom(
@@ -19,19 +20,13 @@ export function factoryVueDom(
 
   /// 将targetVue挂载到targetEl上
   function mountVue (targetEl:HTMLElement, _isMini:boolean) {
-    // 解析并转化json
-    let result: {code: number, msg: string, data: object}
-    result = factoryFlowData(jsonType, mdStr)
-    if (result.code != 0) {
-      result = failedFlowData(result.msg)
-    }
+    const nfNodes = NFNodes.useFactoryNFNodes()
+    nfNodes.nfType.value = jsonType
+    nfNodes.nfStr.value = mdStr
 
     // 根据新json生成节点流
-    const _app = createApp(NodeFlowContainerS, {
-      rawData: mdStr,
-      mdData: `\`\`\`${jsonType}\n${mdStr}\n\`\`\`\n`,
-      jsonType: jsonType,
-      jsonData: result.data,
+    const _app = createApp(NodeFlowContainerS, { // `<NodeFlowContainerS>` (检索型注释)
+      nfNodes: nfNodes,
       fn_newView: async ()=>{ // 闭包
         const targetEl: HTMLElement = await nfSetting.fn_newView()
         mountVue(targetEl, false)
