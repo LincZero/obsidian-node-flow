@@ -7,13 +7,13 @@ import {
   useNodeId, useNodesData,          // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
 } from '@vue-flow/core'
-import { ComputedRef, computed, ref, unref, toRaw, watch, provide, inject } from 'vue';
+import { ComputedRef, watch, provide, inject } from 'vue';
 
 interface ctx_type {
-  sourceValues: {[key:string]: any},
-  targetValues: {[key:string]: any},
-  // sourceFlowValues: {[key:string]: any},
-  // targetFlowValues: {[key:string]: any},
+  sourceValues: { [key:string]: any },
+  targetValues: { [key:string]: any },
+  // sourceFlowValues: { [key:string]: any },
+  // targetFlowValues: { [key:string]: any },
   check: Function
 }
 
@@ -91,9 +91,10 @@ interface ctx_type {
  */
 export class NFNode {
   // #region 静态的东西
+
   public readonly nodeId: string
   public propData: any
-  public fn: (ctx: ctx_type) => Promise<boolean> = async () => { return true };
+
   // #endregion
 
   // #region 特殊函数
@@ -131,8 +132,9 @@ export class NFNode {
 
   // #endregion
 
-  // #region 运行时内容
+  // #region 节点运行相关
 
+  // 注意:
   // 运行时参数，仅运行时能保证一致性
   // 是将items转化为的更适合运行的版本: 
   // 1. 区分io (仅视觉使用时不区分target、source。仅当需要流程控制时才区分他们)
@@ -143,17 +145,23 @@ export class NFNode {
   // sourceValues全部就续 + targetFlowValues中至少一个就续，则激发自身
   
   public ctx: ctx_type
-  // Proxy类型，用于将ctx内容的修改同步回去
+  /// Proxy类型，用于将ctx内容的修改同步回去
   private ctx2: {
-    sourceValues: {[key:string]: any},
-    targetValues: {[key:string]: any},
-    // sourceFlowValues: {[key:string]: any},
-    // targetFlowValues: {[key:string]: any},
+    sourceValues: { [key:string]: any },
+    targetValues: { [key:string]: any },
+    // sourceFlowValues: { [key:string]: any },
+    // targetFlowValues: { [key:string]: any },
   }
 
-  // 语法糖，用于检查需要的变量是否存在
-  // 判断ctx中是否都有这些变量，如有任意一个缺失，抛出错误
-  public static check(_ctx: any, source: [], target: []) {
+  public run_node: (ctx: ctx_type) => Promise<boolean> = async () => { return true }
+
+  /** 语法糖，用于检查需要的变量是否存在
+   * 
+   * 判断ctx中是否都有这些变量，如有任意一个缺失，抛出错误
+   * 
+   * 使用示例: `ctx.check(ctx, ['emit', 'time'], ['success'])`
+   */
+  public static check_io(_ctx: any, source: [], target: []) {
     const missingSourceValues = source.filter(key => !(key in _ctx.sourceValues));
     if (missingSourceValues.length > 0) {
       throw new Error(`Missing source values: ${missingSourceValues.join(', ')}`);
@@ -164,7 +172,7 @@ export class NFNode {
     }
   }
 
-  // 被调用：主动触发或被动触发
+  /// 被调用：主动触发或被动触发
   public async start() {
     let ret: boolean;
 
@@ -183,12 +191,12 @@ export class NFNode {
     await this.start_dealNext()
   }
 
-  // 清空、准备上下文对象
+  /// 清空、准备上下文对象
   private async start_ctxInit() {
     this.ctx = {
       targetValues: {},
       sourceValues: {},
-      check: NFNode.check
+      check: NFNode.check_io
     }
     this.ctx2 = {
       targetValues: {},
@@ -218,8 +226,8 @@ export class NFNode {
     }
   }
 
-  // 处理上一节点
-  // 获取上一个节点的值，遍历所有连接线
+  /// 处理上一节点
+  /// 获取上一个节点的值，遍历所有连接线
   private async start_dealLast(): Promise<boolean> {
     for (const connection of this._useSourceConnections.value) {
       const sourceNode = this.findNode(connection.source)
@@ -248,12 +256,12 @@ export class NFNode {
     return true
   }
 
-  // 处理自身节点
+  /// 处理自身节点
   private async start_dealSelf(): Promise<boolean> {
     this.propData.runState = 'running'; this.updateNodeData(this.nodeId, this.propData);
 
     // 执行自定义代码
-    const result = await this.fn(this.ctx)
+    const result = await this.run_node(this.ctx)
     if (!result) {
       this.propData.runState = 'error'; this.updateNodeData(this.nodeId, this.propData);
       // 不return，出错了也要同步结果回去 (会有错误信息)
@@ -275,10 +283,10 @@ export class NFNode {
     return true
   }
 
-  // 处理、激发下一个节点
-  // TODO 不要激发全部的下层节点
-  // - 可能有failed分支
-  // - 下个节点要等待所有上游节点才能触发
+  /// 处理、激发下一个节点
+  /// TODO 不要激发全部的下层节点
+  /// - 可能有failed分支
+  /// - 下个节点要等待所有上游节点才能触发
   private async start_dealNext() {
     if (this._useNodesData.value.data.runState != 'over') {
       console.warn(`#${this.nodeId} 状态 ${this._useNodesData.value.data.runState}，停止向后激发`)

@@ -26,7 +26,7 @@ const _useNodeId: string = useNodeId()
 import { NFNode } from '../../utils/NFNode';
 const nfNode = NFNode.useGetNFNode()
 if (nfNode) {
-  nfNode.fn = async (ctx) => {
+  nfNode.run_node = async (ctx) => {
     ctx.check(ctx, ['emit', 'time'], ['success'])
     await new Promise(resolve => setTimeout(resolve, ctx.sourceValues['time'].cacheValue ));
     console.log(`debugConsole, #${_useNodeId}.${props.data.id} delay:${ctx.sourceValues['time'].cacheValue}`);

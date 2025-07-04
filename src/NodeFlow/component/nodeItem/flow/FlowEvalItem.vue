@@ -40,7 +40,7 @@ const _useNodeId: string = useNodeId()
 import { NFNode } from '../../utils/NFNode';
 const nfNode = NFNode.useGetNFNode()
 if (nfNode) {
-  nfNode.fn = async (ctx: any)=>{
+  nfNode.run_node = async (ctx: any)=>{
     try {
       const func = new Function('ctx', props.data.value); // 优先用 new Function 而非 eval
       func(ctx);

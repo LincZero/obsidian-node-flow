@@ -24,7 +24,7 @@ import { nfSetting } from '../../../utils/main/setting'
 import { NFNode } from '../../utils/NFNode';
 const nfNode = NFNode.useGetNFNode()
 if (nfNode) {
-  nfNode.fn = async (ctx) => {
+  nfNode.run_node = async (ctx) => {
     try {
       ctx.check(ctx, ['emit', 'url'], ['success', 'fail', 'resp'])
       const resp = await nfSetting.fn_request( // TODO: 这里有两种方式：分开和总json。自动检测有无url，无则使用后者
