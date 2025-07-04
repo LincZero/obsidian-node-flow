@@ -19,8 +19,8 @@ const props = defineProps<{
   data: string,
 }>()
 import { NFNodes } from '../NodeFlow/component/utils/NFNodes';
-const nfNodes = new NFNodes()
-nfNodes.type.value = props.type??""
+const nfNodes = NFNodes.useFactoryNFNodes()
+nfNodes.nfType.value = props.type??""
 nfNodes.nfStr.value = props.data
 
 // json数据处理

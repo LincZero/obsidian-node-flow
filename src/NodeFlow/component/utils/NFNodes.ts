@@ -2,46 +2,75 @@
  * NFNodes 类独占文件
  */
 import type { Node, Edge } from '@vue-flow/core' 
-import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide, nextTick } from 'vue';
+import { ComputedRef, computed, ref, unref, toRaw, watch, type Ref, provide, nextTick, inject } from 'vue';
 import { factoryFlowData, failedFlowData } from '../../utils/jsonTool/factoryFlowData'
 import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue';
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 import { useLayout } from '../../utils/layout/useLayout'
 import { useGlobalState } from '../../stores/stores'
 
-/**
- * 一个画布中的数据集
+/** 节点集
  * 
- * 包括多个节点的相关数据
+ * 一个画布中的数据集，包括多个节点的相关数据
  * 
- * 注意项
- * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
+ * ## 数据
+ * 
+ * 可以将数据分类为以下几种
+ * - 存储/io同步类：包括io流程信息。指示了工作流的因果逻辑关系。
+ *   必须的
+ * - 渲染类：包括位置和编辑状态等。
+ *   如只需要表示逻辑，而不需要自定义位置，则无需用到该部分
+ * - 运行类：包括运行状态。
+ *   如无需运行，仅显示使用，则无需用到该部分
+ * 
+ * ## 容器与元素
+ * 
+ * - 容器
+ *   - provide/inject 方式
+ * - 元素
+ *   - (见下)
+ * 
+ * 注意: NFNodes 和 NFNode 并不完全是容器和元素的关系，NFNodes 的直接元素是响应式对象。
+ * 存储形式有响应式对象、str。但没有 NFNode
+ * 
+ * ## 功能
  * 
  * 功能项
+ * 
  * - Nodes的数组容器
  * - 自动管理普通对象(json)和响应式对象(refJson)的桥梁和适配
  * - 去除底层依赖，减少vueflow依赖
  * 
- * 数据项
- * 可以将数据分类为以下几种
- * - 存储/io同步类：包括io流程信息。指示了工作流的因果逻辑关系，必须的
- * - 渲染类：包括位置和编辑状态等。前端才需要这些信息
- * - 运行类：包括运行状态。只用来显示节点流而不运行，则无须这些数据
+ * 不具备的功能
+ * 
+ * - 节点的 '增删改查' 都封装在NFNode而非容器层中 (约束元素必然在容器中)
+ * 
+ * ## 注意项
+ * 
+ * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
  */
 export class NFNodes {
   public nfType: Ref<string> = ref('')
   public nfStr: Ref<string> = ref('')
-  public nfData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]})
-  public componentKey: Ref<number> = ref(0) // 用于强制刷新
-  private calcLayout:any
+  public nfData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]}) // 通过 VueFlow api 变更时能检测到
+  // public componentKey: Ref<number> = ref(0) // 用于强制刷新
+  // private calcLayout:any // 记录自动布局 const { calcLayout } = useLayout(); this.calcLayout = calcLayout
 
-  constructor() {
-    provide('nfNodes', this)
+  // #region 特殊函数
+
+  public static useGetNFNodes(): NFNodes|undefined {
+      return inject('nfNodes', undefined);
+    }
+
+  public static useFactoryNFNodes() {
+    const nfNodes = new NFNodes()
+    provide('nfNodes', nfNodes)
+    return nfNodes
+  }
+
+  private constructor() {
     const { nfNodes } = useGlobalState()
     nfNodes.value = this
-
-    const { calcLayout } = useLayout()
-    this.calcLayout = calcLayout
 
     // #region 自动更新 - 避免双向同步无限循环
     // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
@@ -108,8 +137,14 @@ export class NFNodes {
     // #endregion
   }
 
+  // #endregion
+
   public get_mdData(): string {
     return `\`\`\`${this.nfType.value}\n${this.nfStr.value}\n\`\`\`\n`
+  }
+
+  public findNode(id: string): null|any {
+    return this.nfData.value.nodes.find((node:any) => node.id === id) || null;
   }
 
   // TODO 分自动存储和手动存储、是否持久化存储
@@ -157,10 +192,6 @@ export class NFNodes {
         return oldJson;
       }
     }
-  }
-
-  public findNode(id: string): null|any {
-    return this.nfData.value.nodes.find((node:any) => node.id === id) || null;
   }
 
   // ---------------------- 与VueFlow有关接口 ----------------------

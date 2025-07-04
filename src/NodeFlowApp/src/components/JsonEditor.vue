@@ -1,9 +1,8 @@
 <!-- 当前画布的节点对应的json编辑器 -->
 
 <script setup lang="ts">
-import { inject } from 'vue';
 import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
-const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
+const nfNodes = NFNodes.useGetNFNodes();
 
 // 1.1 节点流数据 - 预设
 import { testData_listitem, testData_listitem2, testData_listitemHttp } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'

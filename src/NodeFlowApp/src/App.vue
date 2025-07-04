@@ -17,7 +17,7 @@ import NodeList from './components/NodeList.vue';
 
 // 节点流数据 (必须，自动provide)
 import { NFNodes } from '../../NodeFlow/component/utils/NFNodes';
-const nfNodes = new NFNodes()
+const nfNodes = NFNodes.useFactoryNFNodes()
 
 // 节点流数据 - 保存
 function fn_save (str: string): void {

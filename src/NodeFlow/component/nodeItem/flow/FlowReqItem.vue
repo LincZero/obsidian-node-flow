@@ -21,9 +21,8 @@ const _useNodeId: string = useNodeId()
 import { nfSetting } from '../../../utils/main/setting'
 
 // 流程控制 - 操作 (如果是纯视觉，则无需这个部分)
-import { inject } from 'vue';
-import { type NFNode } from '../../utils/NFNode';
-const nfNode: NFNode|undefined = inject('nfNode', undefined);
+import { NFNode } from '../../utils/NFNode';
+const nfNode = NFNode.useGetNFNode()
 if (nfNode) {
   nfNode.fn = async (ctx) => {
     try {

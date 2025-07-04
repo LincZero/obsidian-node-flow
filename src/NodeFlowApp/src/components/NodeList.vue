@@ -170,6 +170,7 @@ function createNode(k: string, v: string) {
       border-radius: 8px;
       color: currentColor;
       background: none;
+      resize: vertical;
     }
   }
 }

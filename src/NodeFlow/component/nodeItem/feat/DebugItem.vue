@@ -67,8 +67,8 @@ if (!props.data.value) props.data.value = '';
 import {
   useNode, useNodeId, useNodesData, // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
-  useEdge, useVueFlow,
-  useEdgesData,
+  useEdge, useEdgesData,
+  useVueFlow,
   type GraphEdge,
 } from '@vue-flow/core'
 const { getConnectedEdges, findNode, nodes, getSelectedNodes } = useVueFlow()
@@ -113,11 +113,10 @@ function fn_compare() {
 }
 
 // 依赖注入的东西
-import { inject } from 'vue';
-import { type NFNode } from '../../utils/NFNode';
-const nfNode:NFNode|undefined = inject('nfNode', undefined);
-import { type NFNodes } from '../../utils/NFNodes';
-const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
+import { NFNode } from '../../utils/NFNode';
+const nfNode = NFNode.useGetNFNode();
+import { NFNodes } from '../../utils/NFNodes';
+const nfNodes = NFNodes.useGetNFNodes();
 </script>
 
 <style scoped>

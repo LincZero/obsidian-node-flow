@@ -10,9 +10,8 @@ import { serializeFlowData } from '../../../NodeFlow/utils/serializeTool/seriali
 import { useGlobalState } from '../../../NodeFlow/stores/stores'
 const { selected, selected2 } = useGlobalState()
 
-import { inject } from 'vue';
-import { type NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
-const nfNodes:NFNodes|undefined = inject('nfNodes', undefined);
+import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
+const nfNodes = NFNodes.useGetNFNodes();
 
 // #region 自动更新 - 避免双向同步无限循环
 // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步

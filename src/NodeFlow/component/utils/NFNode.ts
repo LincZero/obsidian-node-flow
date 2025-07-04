@@ -7,7 +7,7 @@ import {
   useNodeId, useNodesData,          // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
 } from '@vue-flow/core'
-import { ComputedRef, computed, ref, unref, toRaw, watch, provide } from 'vue';
+import { ComputedRef, computed, ref, unref, toRaw, watch, provide, inject } from 'vue';
 
 interface ctx_type {
   sourceValues: {[key:string]: any},
@@ -17,62 +17,98 @@ interface ctx_type {
   check: Function
 }
 
-/**
- * 带控制的节点类
+/** 带控制的节点类
  * 
- * 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
+ * ## 数据
  * 
- * 注意项
- * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
- * - 控制附加、装饰类: 如果节点流像NodeFlow的V1.0版本那样是用于纯显示的，则可以去除对该类的依赖和使用
- * - 功能类、运行时类、RAII类: 仅控制流程，尽量不存储状态，避免需要维护一致性
+ * 可以将数据分类为以下几种
+ * - 存储/io同步类：包括io流程信息。指示了工作流的因果逻辑关系。
+ *   必须的
+ * - 渲染类：包括位置和编辑状态等。
+ *   如只需要表示逻辑，而不需要自定义位置，则无需用到该部分
+ * - 运行类：包括运行状态。
+ *   如无需运行，仅显示使用，则无需用到该部分
+ * 
+ * ## 功能 - 增删改查
+ * 
+ * (增删改查，自动管理容器 (约束元素必然在容器中)
+ * 
+ * > [!warning]
+ * > 其中，**禁止直接使用 vue-flow 库提供的任何的增删改查相关功能**，节点的增删改查必须使用NFNodes 或 NFNode 来完成。
+ * > 
+ * > 包括但不限于: 
+ * > 
+ * > - 从 `@vue-flow` 中获取的:
+ * >   - 查: useNode, useNodeId, useNodesData, useEdge, useEdgesData, ...
+ * >   - 改: 一些难以检测的赋值/更改操作
+ * > - 从 `useVueFlow` 中获取的:
+ * >     - findNode, updateNodeData, addNodes, removeNodes, nodes
+ * >     - findEdge, updateEdgeData, addEdges, removeEdges, edges
+ * >     - getConnectedEdges, getSelectedNodes
+ * >
+ * > 应定时搜索折叠东西，避免使用，以提高代码稳定性
+ * 
+ * 不过话说目前直接用 VueFlow 的增删改查功能也没啥问题，不知道为什么能捕获到变化
+ * 
+ * ## 容器与元素
+ * 
+ * - 容器
+ *   - provide/inject 方式
+ * 
+ * 注意: NFNodes 和 NFNode 并不完全是容器和元素的关系，NFNodes 的直接元素是响应式对象。
+ * 存储形式有响应式对象、str。但没有 NFNode
+ * 
+ * ## 功能 - 其他
  * 
  * 封装成类主要是为了：
  * 1. 方便在中间插入自定义行为
  * 2. 方便evalItem中用户脚本的调用
  * 
- * 流程
+ * ## 功能 - 动态部分, 运行流程
+ * 
  * 1. setup作用域创建实例，自动注册watch
  * 2. 手动启动 start()
- *   1. 清空上下文 | start_ctxInit   | 重初始化 ctx
- *   2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
- *   3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
- *   4. 处理下游节点 | start_dealLast
+ *     1. 清空上下文 | start_ctxInit   | 重初始化 ctx
+ *     2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
+ *     3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
+ *     4. 处理下游节点 | start_dealLast
+ * 
+ * ## 注意项
+ * 
+ * ~~依赖: 可在无 vueflow 依赖的环境下使用 (如非画布上的显示)~~ 无 vueflow 环境下目前的策略是不使用这里
  * 
  * TODO
- * 重构，重构为一个可以用于node服务端的结构，当用像express node作为后端时，保持逻辑一致性
+ * 
+ * 
+ * 
+ * 
+ * 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
+ * 
+ * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
+ * - 控制附加、装饰类: 如果节点流像NodeFlow的V1.0版本那样是用于纯显示的，则可以去除对该类的依赖和使用
+ * - 功能类、运行时类、RAII类: 仅控制流程，尽量不存储状态，避免需要维护一致性
+ * 
  */
 export class NFNode {
-  // 静态的东西
+  // #region 静态的东西
   public readonly nodeId: string
   public propData: any
   public fn: (ctx: ctx_type) => Promise<boolean> = async () => { return true };
+  // #endregion
 
-  // 运行时参数，仅运行时能保证一致性
-  // 是将items转化为的更适合运行的版本: 
-  // 1. 区分io (仅视觉使用时不区分target、source。仅当需要流程控制时才区分他们)
-  // 2. 数组转对象，调用更快
-  // 3. 不同的环境使用不同的上下文。js可以用vue proxy，python等可以用object，走http需要较精简
-  // 4. 不与ctx2引用同一对象，避免干扰ctx2的数据驱动，或者方便http io时使用
-  //    不然ctx会产生一个没有数据驱动的变化并同步到ctx2，然后ctx2的变化会视为没有变化 (本质是代理拦截操作)，不引起数据驱动
-  // sourceValues全部就续 + targetFlowValues中至少一个就续，则激发自身
-  
-  public ctx: ctx_type
-  // Proxy类型，用于将ctx内容的修改同步回去
-  private ctx2: {
-    sourceValues: {[key:string]: any},
-    targetValues: {[key:string]: any},
-    // sourceFlowValues: {[key:string]: any},
-    // targetFlowValues: {[key:string]: any},
+  // #region 特殊函数
+
+  public static useGetNFNode(): NFNode|undefined {
+    return inject('nfNode', undefined);
   }
 
   public static useFactoryNFNode(propData:any) {
-    return new NFNode(useNodeId(), propData)
+    const nfNode = new NFNode(useNodeId(), propData)
+    provide('nfNode', nfNode)
+    return nfNode
   }
 
   private constructor(nodeId: string, propData: any) {
-    provide('nfNode', this)
-    
     this.nodeId = nodeId
     this.propData = propData
     this._useNodesData = useNodesData(this.nodeId)
@@ -91,6 +127,28 @@ export class NFNode {
     });
     
     // console.log('>>> UseNFNode ' + this.nodeId)
+  }
+
+  // #endregion
+
+  // #region 运行时内容
+
+  // 运行时参数，仅运行时能保证一致性
+  // 是将items转化为的更适合运行的版本: 
+  // 1. 区分io (仅视觉使用时不区分target、source。仅当需要流程控制时才区分他们)
+  // 2. 数组转对象，调用更快
+  // 3. 不同的环境使用不同的上下文。js可以用vue proxy，python等可以用object，走http需要较精简
+  // 4. 不与ctx2引用同一对象，避免干扰ctx2的数据驱动，或者方便http io时使用
+  //    不然ctx会产生一个没有数据驱动的变化并同步到ctx2，然后ctx2的变化会视为没有变化 (本质是代理拦截操作)，不引起数据驱动
+  // sourceValues全部就续 + targetFlowValues中至少一个就续，则激发自身
+  
+  public ctx: ctx_type
+  // Proxy类型，用于将ctx内容的修改同步回去
+  private ctx2: {
+    sourceValues: {[key:string]: any},
+    targetValues: {[key:string]: any},
+    // sourceFlowValues: {[key:string]: any},
+    // targetFlowValues: {[key:string]: any},
   }
 
   // 语法糖，用于检查需要的变量是否存在
@@ -235,6 +293,8 @@ export class NFNode {
       console.log(`flowControl, end`);
     }
   }
+
+  // #endregion
 
   // vueflow相关
 
