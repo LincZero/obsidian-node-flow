@@ -55,7 +55,7 @@ jobs:
         # pnpm run app:build
         pnpm install --frozen-lockfile
         cd ./src/NodeFlowApp/
-        pnpm run build
+        pnpm build
         > ./dist/.nojekyll
     - name: Build - Dist to Website Branch
       uses: JamesIves/github-pages-deploy-action@v4

@@ -12,7 +12,8 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "sass": "^1.84.0",
     "sass-embedded": "^1.83.4",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vue": "^3.2.31"
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^3.4.1",
