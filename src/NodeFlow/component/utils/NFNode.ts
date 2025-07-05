@@ -7,7 +7,11 @@ import {
   useNodeId, useNodesData,          // TheNode
   useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
 } from '@vue-flow/core'
-import { ComputedRef, watch, provide, inject } from 'vue';
+import { ComputedRef, watch, provide, inject, nextTick, ref } from 'vue';
+
+import { factoryFlowData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData';
+import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
+import { NFNodes } from './NFNodes';
 
 interface ctx_type {
   sourceValues: { [key:string]: any },
@@ -58,9 +62,9 @@ interface ctx_type {
  * 
  * - 容器
  *   - provide/inject 方式
+ *   - NFNodes中
  * 
- * 注意: NFNodes 和 NFNode 并不完全是容器和元素的关系，NFNodes 的直接元素是响应式对象。
- * 存储形式有响应式对象、str。但没有 NFNode
+ * 是否存在严格为容器元素？是。像NodeEditor这种有副本的怎么说？ItemNode自内嵌怎么说？
  * 
  * ## 功能 - 其他
  * 
@@ -96,26 +100,49 @@ interface ctx_type {
 export class NFNode {
   // #region 静态的东西
 
-  public readonly nodeId: string
-  public propData: any
+  public readonly nodeId: string // 可 useNodeId()
+  public nfData = ref<any>() // type 同 findNode(selected.value[0]).data
+  public nfStr = ref<string>('')
+  private nfNodes: NFNodes|null = null
 
   // #endregion
 
   // #region 特殊函数
 
-  public static useGetNFNode(): NFNode|undefined {
-    return inject('nfNode', undefined);
+  public static useGetNFNode(id?: string): NFNode|null {
+    // 容器一
+    if (!id) {
+      let result = inject('nfNode', null);
+      if (result != null) {
+        return result
+      }
+    }
+
+    // 容器二
+    const nfNodes = NFNodes.useGetNFNodes()
+    const nfNode =  nfNodes?.nfNodes[id] ?? null
+    return nfNode
   }
 
-  public static useFactoryNFNode(propData:any) {
-    const nfNode = new NFNode(useNodeId(), propData)
+  public static useFactoryNFNode(id: string, propData:any) {
+    const nfNode = new NFNode(id, propData)
+    nfNode.init_auto_update()
+
+    // 容器一
     provide('nfNode', nfNode)
+
+    // 容器二
+    nfNode.nfNodes = NFNodes.useGetNFNodes()
+    if (nfNode.nfNodes) {
+      nfNode.nfNodes.nfNodes[nfNode.nodeId] = nfNode
+    }
+
     return nfNode
   }
 
   private constructor(nodeId: string, propData: any) {
     this.nodeId = nodeId
-    this.propData = propData
+    this.nfData.value = propData
     this._useNodesData = useNodesData(this.nodeId)
     this._useSourceConnections = useNodeConnections({ handleType: 'target' })
     this._useTargetConnections = useNodeConnections({ handleType: 'source' })
@@ -132,6 +159,70 @@ export class NFNode {
     });
     
     // console.log('>>> UseNFNode ' + this.nodeId)
+  }
+
+  private init_auto_update() {
+    // #region 自动更新 - 避免双向同步无限循环
+    // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
+    let flag_str2data = false;
+    let flag_data2str = false;
+    // #endregion
+
+    // #region 自动更新 - string -> data
+    watch(this.nfStr, (newVal) => {
+      if (flag_data2str) { flag_data2str = false; return }
+      flag_str2data = true
+      nextTick(() => { flag_str2data = false; });
+      console.log(`[auto update] [${this.nodeId}] string -> data`)
+
+      // 更新到vueflow库
+      if (!this.nfNodes) { console.error(`nfNodes 数据丢失`); return }
+      if (!this.nfNodes._useVueFlow) { console.error(`nfNodes._useVueFlow 数据丢失`); return }
+
+      // 如果修改头尾和前置空格会导致内换行头部缺失字符
+      // let list = newVal.split('\n')
+      // list = list.map(line => { return '  '+line })
+      // const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n` // TODO fix 不一定是这种形式，如有可能是json
+      const nodeStr = newVal
+      let result = factoryFlowData(this.nfNodes.nfType.value, nodeStr)
+      if (result.code == 0 && result.data.nodes.length == 1) {
+        const node = this.nfNodes.findNode(this.nodeId)
+        // 注意点：
+        // 不能直接赋值 (地址复制)，要使用 Object.assign 来复制对象，以触发响应式更新
+        // 同理，vueflow的updateNodeData()方法也不能用
+        // 更新到vueflow库
+        Object.assign(node.data, result.data.nodes[0].data)
+        // 更新到data
+        Object.assign(this.nfData.value, result.data.nodes[0].data)
+      } else {
+        console.error(`输入了错误节点.
+错误原因: ${result.code == 0} && ${result.data.nodes.length == 1}
+错误内容: ${nodeStr}`)
+      }
+    })
+    // #endregion
+
+    // #region 自动更新 - data -> string
+    watch(this.nfData, (newVal)=>{
+      if (flag_str2data) { flag_str2data = false; return }
+      flag_data2str = true;
+      nextTick(() => { flag_data2str = false; });
+      console.log(`[auto update] [${this.nodeId}] data -> string`)
+
+      // this.nfDate.value 未定义
+      const result = serializeFlowData(this.nfNodes.nfType.value, {nodes: [this.nfData.value], edges: []})
+      if (result.code == 0) {
+        this.nfStr.value = result.data
+        // 如果修改头尾和前置空格会导致内换行头部缺失字符
+        // let list = result.data.split('\n')
+        // list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
+        // currentContent.value = list.join('\n')
+      }
+      else {
+        this.nfStr.value = `- error,, [error] +${result.msg}`
+      }
+    }, {deep: true})
+    // #endregion
   }
 
   // #endregion
@@ -262,12 +353,12 @@ export class NFNode {
 
   /// 处理自身节点
   private async start_dealSelf(): Promise<boolean> {
-    this.propData.runState = 'running'; this.updateNodeData(this.nodeId, this.propData);
+    this.nfData.value.runState = 'running'; this.updateNodeData(this.nodeId, this.nfData);
 
     // 执行自定义代码
     const result = await this.run_node(this.ctx)
     if (!result) {
-      this.propData.runState = 'error'; this.updateNodeData(this.nodeId, this.propData);
+      this.nfData.value.runState = 'error'; this.updateNodeData(this.nodeId, this.nfData);
       // 不return，出错了也要同步结果回去 (会有错误信息)
     }
 
@@ -282,8 +373,8 @@ export class NFNode {
       }
     }
 
-    if (this.propData.runState == 'error') return false
-    this.propData.runState = 'over'; this.updateNodeData(this.nodeId, this.propData);
+    if (this.nfData.value.runState == 'error') return false
+    this.nfData.value.runState = 'over'; this.updateNodeData(this.nodeId, this.nfData);
     return true
   }
 

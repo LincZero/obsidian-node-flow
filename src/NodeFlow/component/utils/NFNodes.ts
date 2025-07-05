@@ -9,6 +9,7 @@ import NodeFlowContainerS from '../../component/container/NodeFlowContainerS.vue
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 import { useLayout } from '../../utils/layout/useLayout'
 import { useGlobalState } from '../../stores/stores'
+import { NFNode } from './NFNode';
 
 /** 节点集
  * 
@@ -36,9 +37,6 @@ import { useGlobalState } from '../../stores/stores'
  * - 元素
  *   - (见下)
  * 
- * 注意: NFNodes 和 NFNode 并不完全是容器和元素的关系，NFNodes 的直接元素是响应式对象。
- * 存储形式有响应式对象、str。但没有 NFNode
- * 
  * ## 功能
  * 
  * 功能项
@@ -59,6 +57,7 @@ export class NFNodes {
   public nfType: Ref<string> = ref('') // 节点图类型
   public nfStr: Ref<string> = ref('')
   public nfData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]}) // 通过 VueFlow api 变更时能检测到
+  public nfNodes: Record<string, NFNode> = {}
   // public componentKey: Ref<number> = ref(0) // 用于强制刷新
   // private calcLayout:any // 记录自动布局 const { calcLayout } = useLayout(); this.calcLayout = calcLayout
 
@@ -67,23 +66,29 @@ export class NFNodes {
   private constructor() {}
 
   public static useGetNFNodes(): NFNodes|null {
-    // 来源一，多个 NFNodes 时适用
-    // return inject('nfNodes', null);
-
-    // 来源二，单 NFNodes 时适用，不要求后代中获取
+    // 容器一，多个 NFNodes 时适用
+    let result = inject('nfNodes', null);
+    if (result != null) {
+      return result
+    }
+    
+    // 容器二，单 NFNodes 时适用，不要求后代中获取 (App的其他控件窗口适用)
+    // 这种方式的类型私有有问题，useGlobalState 存对象有问题
     const { nfNodes } = useGlobalState()
     // 这里主要是往外传递类型判断会舍弃私有部分，但再传回来由于在类中又要求判断私有部分，所以要 as any
     const nfNodes_: NFNodes|null = nfNodes.value as any
+    if (nfNodes == null) console.error('nfNodes in useGlobalState is null')
     return nfNodes_
   }
 
   public static useFactoryNFNodes() {
     const nfNodes_: NFNodes = new NFNodes()
-
     nfNodes_.init_auto_update()
 
+    // 容器一
     provide('nfNodes', nfNodes_)
 
+    // 容器二
     const { nfNodes } = useGlobalState()
     nfNodes.value = nfNodes_
 

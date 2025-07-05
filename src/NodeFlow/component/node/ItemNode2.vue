@@ -92,7 +92,9 @@ hasCustomHandle.value = props.data?.items?.length!=0
 
 // 流程控制 (如果是纯视觉，则无需这个部分)
 import { NFNode } from '../utils/NFNode'
-if (isFlowEnv) { // 表示useNodeId失效，当前不在vueflow组件作用域下。即节点不在画布中显示的情况
-  const nfNode:NFNode = NFNode.useFactoryNFNode(props.data)
+// isFlowEnv: 表示useNodeId失效，当前不在vueflow组件作用域下。即节点不在画布中显示的情况
+// isItem: 表示自内嵌的情况。NFNode是严格的容器内元素，子项不定义
+if (!props.isItem && isFlowEnv) {
+  const nfNode:NFNode = NFNode.useFactoryNFNode(id, props.data)
 }
 </script>

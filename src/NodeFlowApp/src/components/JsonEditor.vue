@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
-const nfNodes = NFNodes.useGetNFNodes();
+const nfNodes: NFNodes|null = NFNodes.useGetNFNodes(); // 有可能没有画布
 
 // 1.1 节点流数据 - 预设
 import { testData_listitem, testData_listitem2, testData_listitemHttp } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_listitem'
@@ -30,15 +30,17 @@ function onSelect(event: any) {
   nfNodes.nfStr.value = nfData_enum[index].content
 }
 
-// 1.2 节点流数据 - 类型
-nfNodes.nfType.value = "nodeflow-listitem"
+if (nfNodes != null) {
+  // 1.2 节点流数据 - 类型
+  nfNodes.nfType.value = "nodeflow-listitem"
 
-// 1.3 节点流数据 - 内容
-nfNodes.nfStr.value = testData_listitem2 // demo
+  // 1.3 节点流数据 - 内容
+  nfNodes.nfStr.value = testData_listitem2 // demo
+}
 </script>
 
 <template>
-  <div class="json-editor">
+  <div class="json-editor" v-if="nfNodes != null">
     <div class="item">预设：</div>
     <select class="item" @change="onSelect" value="1">
       <option v-for="(item, index) in nfData_enum" :value="index">{{ item.name }}</option>

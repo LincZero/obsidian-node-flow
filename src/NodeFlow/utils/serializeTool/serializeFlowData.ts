@@ -31,6 +31,7 @@ function serializeFlowData_listitem(jsonData: any) {
   newText += "- nodes\n"
   // Node
   for (let node of jsonData.nodes) {
+    console.log('nnnnnnnn node', node)
     newText += `  - ${node.id}${node.id==node.data.label?'':':'+node.data.label}\n`
     // Handle
     for (let socket of node.data.items) {
