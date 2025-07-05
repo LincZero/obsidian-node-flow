@@ -71,7 +71,7 @@ export class NFNodes {
     if (result != null) {
       return result
     }
-    
+
     // 容器二，单 NFNodes 时适用，不要求后代中获取 (App的其他控件窗口适用)
     // 这种方式的类型私有有问题，useGlobalState 存对象有问题
     const { nfNodes } = useGlobalState()
@@ -83,14 +83,15 @@ export class NFNodes {
 
   public static useFactoryNFNodes() {
     const nfNodes_: NFNodes = new NFNodes()
-    nfNodes_.init_auto_update()
 
+    // 容器处理，必须先处理容器再处理其他
     // 容器一
     provide('nfNodes', nfNodes_)
-
     // 容器二
     const { nfNodes } = useGlobalState()
     nfNodes.value = nfNodes_
+
+    nfNodes_.init_auto_update()
 
     return nfNodes_
   }

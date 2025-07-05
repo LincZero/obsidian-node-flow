@@ -126,16 +126,20 @@ export class NFNode {
 
   public static useFactoryNFNode(id: string, propData:any) {
     const nfNode = new NFNode(id, propData)
-    nfNode.init_auto_update()
 
+    // 容器处理，必须先处理容器再处理其他
     // 容器一
     provide('nfNode', nfNode)
-
     // 容器二
     nfNode.nfNodes = NFNodes.useGetNFNodes()
-    if (nfNode.nfNodes) {
-      nfNode.nfNodes.nfNodes[nfNode.nodeId] = nfNode
+    if (!nfNode.nfNodes) {
+      console.error('can\'t find nodes')
     }
+    nfNode.nfNodes.nfNodes[nfNode.nodeId] = nfNode
+
+    nfNode.data2str()
+
+    nfNode.init_auto_update()
 
     return nfNode
   }
@@ -209,20 +213,24 @@ export class NFNode {
       nextTick(() => { flag_data2str = false; });
       console.log(`[auto update] [${this.nodeId}] data -> string`)
 
-      // this.nfDate.value 未定义
-      const result = serializeFlowData(this.nfNodes.nfType.value, {nodes: [this.nfData.value], edges: []})
-      if (result.code == 0) {
-        this.nfStr.value = result.data
-        // 如果修改头尾和前置空格会导致内换行头部缺失字符
-        // let list = result.data.split('\n')
-        // list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
-        // currentContent.value = list.join('\n')
-      }
-      else {
-        this.nfStr.value = `- error,, [error] +${result.msg}`
-      }
+      this.data2str()
     }, {deep: true})
     // #endregion
+  }
+
+  private data2str() {
+    // this.nfDate.value 未定义
+    const result = serializeFlowData(this.nfNodes.nfType.value, {nodes: [{id: this.nodeId, data: this.nfData.value}], edges: []})
+    if (result.code == 0) {
+      this.nfStr.value = result.data
+      // 如果修改头尾和前置空格会导致内换行头部缺失字符
+      // let list = result.data.split('\n')
+      // list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
+      // currentContent.value = list.join('\n')
+    }
+    else {
+      this.nfStr.value = `- error,, [error] +${result.msg}`
+    }
   }
 
   // #endregion
