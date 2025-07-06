@@ -162,7 +162,7 @@ function handlePreInput_restoreCursorPosition(container: Node, start: number, en
       charIndex = nextIndex
     } 
     else {
-      for (const child of node.childNodes) {
+      for (const child of Array.from(node.childNodes)) {
         traverse(child)
         if (foundEnd) break
       }

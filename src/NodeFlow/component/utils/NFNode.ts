@@ -289,6 +289,7 @@ export class NFNode {
 
     // step1. 处理上一节点
     ret = await this.start_dealLast()
+    
     if (!ret) return
   
     // step2. 处理本节点
@@ -366,12 +367,14 @@ export class NFNode {
 
   /// 处理自身节点
   private async start_dealSelf(): Promise<boolean> {
-    this.nfData.value.runState = 'running'; this.updateNodeData(this.nodeId, this.nfData);
+    console.log('this._useNodesData.value.data1', this._useNodesData.value, this.nfData.value) // 这后面存在问题！data没掉了！nfData有问题，少了一层！
+    this.nfData.value.runState = 'running'; this.updateNodeData(this.nodeId, this.nfData.value);
+    console.log('this._useNodesData.value.data2', this._useNodesData.value, this.nfData.value)
 
     // 执行自定义代码
     const result = await this.run_node(this.ctx)
     if (!result) {
-      this.nfData.value.runState = 'error'; this.updateNodeData(this.nodeId, this.nfData);
+      this.nfData.value.runState = 'error'; this.updateNodeData(this.nodeId, this.nfData.value);
       // 不return，出错了也要同步结果回去 (会有错误信息)
     }
 
@@ -387,7 +390,7 @@ export class NFNode {
     }
 
     if (this.nfData.value.runState == 'error') return false
-    this.nfData.value.runState = 'over'; this.updateNodeData(this.nodeId, this.nfData);
+    this.nfData.value.runState = 'over'; this.updateNodeData(this.nodeId, this.nfData.value);
     return true
   }
 
