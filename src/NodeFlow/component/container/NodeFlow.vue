@@ -92,16 +92,16 @@ if (props.isMini) {
 import { nextTick } from 'vue'
 import { useLayout } from '../../utils/layout/useLayout'
 const { calcLayout } = useLayout()
+const { fitView } = useVueFlow()
 /// 封装: 调整节点位置 + 刷新视图
 /// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
 async function refreshLayout(direction:string='LR', amend:string='center') {
   props.nfNodes.nfData.value.nodes = calcLayout(props.nfNodes.nfData.value.nodes, props.nfNodes.nfData.value.edges, direction, amend)
-  const { fitView } = useVueFlow()
   nextTick(() => { fitView() })
 }
-// 个别情况自动调用、个别情况不自动调用 (TODO BUG 暂时失效)
+// 个别情况自动调用、个别情况不自动调用
 function refreshLayout_ifable(direction:string='LR', amend:string='center') {
-    if (props.nfNodes.nfData.value.nodes.length>1 &&
+  if (props.nfNodes.nfData.value.nodes.length>1 &&
     props.nfNodes.nfData.value.nodes[0].position.x == 0 && props.nfNodes.nfData.value.nodes[0].position.y == 0 &&
     props.nfNodes.nfData.value.nodes[1].position.x == 0 && props.nfNodes.nfData.value.nodes[1].position.y == 0
   ) {
