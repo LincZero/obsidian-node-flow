@@ -124,6 +124,11 @@ export class NFNode {
     return nfNode
   }
 
+  public static getNFNode(id: string, nfNodes: NFNodes): NFNode|null {
+    const nfNode =  nfNodes.nfNodes[id] ?? null
+    return nfNode
+  }
+
   public static useFactoryNFNode(id: string, propData:any) {
     const nfNode = new NFNode(id, propData)
 

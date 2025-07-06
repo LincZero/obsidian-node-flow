@@ -25,7 +25,6 @@ const { selected, selected2 } = useGlobalState()
 import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
 const nfNodes = NFNodes.useGetNFNodes();
 import { NFNode } from '../../../NodeFlow/component/utils/NFNode'
-
 let nfNode_current = ref<NFNode|null>(null)
 
 // #region 自动更新 - selected change -> data
@@ -45,7 +44,7 @@ function update_nfNode() {
   if (selected.value.length < 1) {
     nfNode_current.value = null
   } else {
-    nfNode_current.value = NFNode.useGetNFNode(selected.value[0]);
+    nfNode_current.value = NFNode.getNFNode(selected.value[0], nfNodes);
   }
 }
 // #endregion
