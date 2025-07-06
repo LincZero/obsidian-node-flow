@@ -26,7 +26,7 @@ function fn_save (str: string): void {
 </script>
 
 <template>
-  <notifications position="bottom right" speed="350" />
+  <notifications position="bottom right" :speed="350" />
 
   <TabBar class="main-nav"></TabBar>
 

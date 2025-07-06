@@ -36,6 +36,7 @@ nfSetting.fn_request = async (
 
 const app = createApp(App)
 
+// https://kyvg.github.io/vue3-notification/guide/installation.html
 import Notifications from '@kyvg/vue3-notification'
 app.use(Notifications)
 
