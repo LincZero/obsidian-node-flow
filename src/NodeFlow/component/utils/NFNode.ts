@@ -109,6 +109,7 @@ export class NFNode {
 
   // #region 特殊函数
 
+  /// 获取节点 - 画布中组件使用的版本
   public static useGetNFNode(id?: string): NFNode|null {
     // 容器一
     if (!id) {
@@ -124,12 +125,14 @@ export class NFNode {
     return nfNode
   }
 
+  /// 获取节点 - 非画布组件中使用的版本
   public static getNFNode(id: string, nfNodes: NFNodes): NFNode|null {
     const nfNode =  nfNodes.nfNodes[id] ?? null
     return nfNode
   }
 
-  public static useFactoryNFNode(id: string, propData:any) {
+  /// 生成节点 - 画布组件中使用的版本
+  public static useFactoryNFNode(id: string, propData:object) {
     const nfNode = new NFNode(id, propData)
 
     // 容器处理，必须先处理容器再处理其他
@@ -149,7 +152,40 @@ export class NFNode {
     return nfNode
   }
 
-  private constructor(nodeId: string, propData: any) {
+  /// 生成节点 - 非画布组件中使用的版本
+  public static factoryNFNode(id: string, propData:object|string, nfNodes: NFNodes, type?: string): NFNode|null {
+    if (id == "") id = nfNodes.create_newId()
+
+    // propData: string -> object
+    if (typeof propData == 'string') {
+      let result = factoryFlowData(type??nfNodes.nfType.value, propData)
+      if (result.code != 0) {
+        console.error(`无法创建节点.
+错误原因: ${result.code == 0}
+错误内容: ${propData}`)
+        return null
+      } else if (result.data.nodes.length != 1) {
+        console.error(`无法创建节点, 节点是复数: ${result.data.nodes.length}`)
+        return null
+      } else {
+        propData = result.data.nodes[0].data as object
+      }
+    }
+
+    const nfNode = new NFNode(id, propData)
+
+    // 容器处理，必须先处理容器再处理其他
+    nfNode.nfNodes = nfNodes
+    nfNode.nfNodes.nfNodes[nfNode.nodeId] = nfNode
+
+    nfNode.data2str()
+
+    nfNode.init_auto_update()
+
+    return nfNode
+  }
+
+  private constructor(nodeId: string, propData: object) {
     this.nodeId = nodeId
     this.nfData.value = propData
     this._useNodesData = useNodesData(this.nodeId)
@@ -194,7 +230,15 @@ export class NFNode {
       // const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n` // TODO fix 不一定是这种形式，如有可能是json
       const nodeStr = newVal
       let result = factoryFlowData(this.nfNodes.nfType.value, nodeStr)
-      if (result.code == 0 && result.data.nodes.length == 1) {
+      if (result.code != 0) {
+        console.error(`输入了错误节点.
+错误原因: ${result.code == 0}
+错误内容: ${nodeStr}`)
+        return
+      } else if (result.data.nodes.length != 1) {
+        console.error(`无法创建节点, 节点是复数: ${result.data.nodes.length}`)
+        return
+      } else {
         const node = this.nfNodes.findNode(this.nodeId)
         // 注意点：
         // 不能直接赋值 (地址复制)，要使用 Object.assign 来复制对象，以触发响应式更新
@@ -203,10 +247,6 @@ export class NFNode {
         Object.assign(node.data, result.data.nodes[0].data)
         // 更新到data
         Object.assign(this.nfData.value, result.data.nodes[0].data)
-      } else {
-        console.error(`输入了错误节点.
-错误原因: ${result.code == 0} && ${result.data.nodes.length == 1}
-错误内容: ${nodeStr}`)
       }
     })
     // #endregion

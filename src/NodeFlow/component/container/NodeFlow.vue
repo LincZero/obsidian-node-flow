@@ -123,14 +123,9 @@ function pasteSelected(array: any) {
       console.error('无法找到被选中的节点 #'+id)
       return
     }
-    let count = 2
-    while(true) {
-      if (!findNode(id + count)) break
-      // console.warn("continue find", count);
-      count++
-    }
+    const newId = props.nfNodes.create_newId(id)
     const newData = {
-      id: data.id + count,
+      id: newId,
       data: data.data,
       position: {
         x: data.position.x+100,

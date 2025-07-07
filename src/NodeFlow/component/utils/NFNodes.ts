@@ -165,6 +165,27 @@ export class NFNodes {
 
   // #endregion
 
+  /// 生成一个新的不冲突的节点id
+  /// @param baseId 如果有baseId，生成的新id的前缀为baseId
+  public create_newId(baseId?: string): string {
+    let count = 1
+    if (baseId) {
+      baseId = baseId + '-'
+     count = 2
+    } else {
+      baseId = ''
+    }
+
+    while(true) {
+      if (count > 1000) { // 避免死循环
+        throw new Error("create_newId: too many nodes: " + count);
+      }
+      if (!this.findNode(baseId + count)) return (baseId + count)
+      // console.warn("continue find", count);
+      count++
+    }
+  }
+
   public get_mdData(): string {
     return `\`\`\`${this.nfType.value}\n${this.nfStr.value}\n\`\`\`\n`
   }

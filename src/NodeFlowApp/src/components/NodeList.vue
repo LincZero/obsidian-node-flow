@@ -43,6 +43,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, nextTick } from 'vue'
 import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
+import { NFNode } from '../../../NodeFlow/component/utils/NFNode'
 const nfNodes = NFNodes.useGetNFNodes()
 
 // #region factory nodeList_group
@@ -108,24 +109,9 @@ function update_backend_source() {
 
 // #endregion
 
-// TODO 当前仅 listitem 模式可用
+// TODO 当前仅 listitem 模式可用。应该为不同的type提供不同的NodeList，或者不同的NodeList能归一化为同一类型
 function createNode(k: string, v: string) {
-  
-  console.log('开发中。createNode', k, v)
-
-  // nfNodes.nfData.nodes.push({
-  //   id: `node-${Date.now()}`,
-  //   type: 'item-listitem',
-  //   data: {
-  //     name: k,
-  //     value: v,
-  //     refType: 'diy', // diy, custom, item-listitem
-  //     runState: 'none', // none, running, done, error
-  //     cacheValue: ''
-  //   },
-  //   position: { x: 0, y: 0 },
-  //   style: { width: 200, height: 100 }
-  // })
+  const isSuccess = NFNode.factoryNFNode('', v, nfNodes, 'listitem')
 }
 </script>
 
@@ -157,6 +143,9 @@ function createNode(k: string, v: string) {
     border-bottom: 1px solid currentColor;
     line-height: 22px;
     padding: 0 8px;
+    .node-list-name {
+      cursor: pointer;
+    }
   }
 
   .node-list-backend {
