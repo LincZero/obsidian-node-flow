@@ -46,14 +46,14 @@ TODO：应该有两个模块：一个是完全独立的后端连接器，可以�
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, nextTick, watch } from 'vue'
 
-import { useGlobalState } from '../../../NodeFlow/stores/stores'
-const { nfNodes } = useGlobalState()
+import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
+const nfNodes = NFNodes.useGetNFNodes()
 
 const ref_url = ref<string>('http://localhost:24042/')
 
 // #region 心跳检测
 const connect_status = ref<boolean>(false) // 是否处于连接状态中
-const connect_timer = ref<NodeJS.Timeout | null>(null) // 定时器
+const connect_timer = ref<number | null>(null) // 定时器
 const connect_content = ref<string>('') // 后端返回的心跳内容
 async function checkHeartbeat () {
   try {
@@ -85,12 +85,12 @@ ${error}
 // 启动定时器
 onMounted(() => {
   // TODO 区分成功频率维护频率和失败重试频率
-  connect_timer.value = setInterval(checkHeartbeat, 1000) // 每N秒检测一次
+  connect_timer.value = window.setInterval(checkHeartbeat, 1000) // 每N秒检测一次
   checkHeartbeat()
 })
 // 清除定时器
 onUnmounted(() => {
-  if (connect_timer.value) clearInterval(connect_timer.value)
+  if (connect_timer.value) window.clearInterval(connect_timer.value)
 })
 // #endregion
 
@@ -103,7 +103,7 @@ async function nodedata_put() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        "data": nfNodes.value.nfStr
+        "data": nfNodes.nfStr.value
       })
     })
     if (response.ok) {
@@ -128,11 +128,11 @@ async function nodedata_get(isUpdate = true) {
     if (response.ok) {
       response.json().then((val) => {
         nodedata_content.value = val['data'] // JSON.stringify(val, null, 2)
-        if (isUpdate) nfNodes.value.nfStr = val['data']
+        if (isUpdate) nfNodes.nfStr.value = val['data']
       })
     } else {
       nodedata_content.value = ''
-      // nfNodes.value.nfStr = // 失败则不变更
+      // nfNodes.nfStr.value = // 失败则不变更
     }
   } catch (error) {
     nodedata_content.value = '[error] ' + error
@@ -143,36 +143,36 @@ async function nodedata_get(isUpdate = true) {
 
 // #region 节点流资源的REST API - 自动
 const nodedata_syncType = ref<string>('from3')
-const nodedata_timer = ref<NodeJS.Timeout | null>(null) // 定时器
+const nodedata_timer = ref<number | null>(null) // 定时器
 // TODO 需要记得检查from/to切换时，是否会有bug
 function nodedata_syncInit() {
   if (nodedata_syncType.value == 'no') {
-    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+    if (nodedata_timer.value !== null) { window.clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_content.value = ''
     return
   }
   else if (nodedata_syncType.value == 'from') {
-    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
-    nodedata_timer.value = setInterval(() => {
+    if (nodedata_timer.value !== null) { window.clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+    nodedata_timer.value = window.setInterval(() => {
       nodedata_get()
     }, 1000)
     return
   }
   else if (nodedata_syncType.value == 'from2') {
-    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
-    nodedata_timer.value = setInterval(() => {
+    if (nodedata_timer.value !== null) { window.clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+    nodedata_timer.value = window.setInterval(() => {
       nodedata_get(false)
     }, 1000)
     return
   }
   else if (nodedata_syncType.value == 'from3') {
-    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+    if (nodedata_timer.value !== null) { window.clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
     nodedata_get()
     return
   }
   else if (nodedata_syncType.value == 'to') {
-    if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
-    nodedata_timer.value = setInterval(() => {
+    if (nodedata_timer.value !== null) { window.clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+    nodedata_timer.value = window.setInterval(() => {
       nodedata_put()
     }, 1000)
     return
@@ -188,7 +188,7 @@ onUnmounted(() => {
   // 注意项：
   // 在 JavaScript/TypeScript 中，定时器（setInterval/setTimeout）不会自动析构，这是由其底层设计机制决定的
   // clearInterval保证立即而非闲时停止定时器 (并且此时也只是标识符覆盖，而非对象销毁)
-  if (nodedata_timer.value !== null) { clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
+  if (nodedata_timer.value !== null) { window.clearInterval(nodedata_timer.value); nodedata_timer.value = null; }
 })
 // #endregion
 </script>
