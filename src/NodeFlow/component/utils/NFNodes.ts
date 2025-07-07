@@ -166,23 +166,31 @@ export class NFNodes {
   // #endregion
 
   /// 生成一个新的不冲突的节点id
-  /// @param baseId 如果有baseId，生成的新id的前缀为baseId
+  /// @param baseId 如果有baseId，生成的新id的前缀为baseId。如果baseId本身不重复，返回baseId
   public create_newId(baseId?: string): string {
     let count = 1
-    if (baseId) {
-      baseId = baseId + '-'
-     count = 2
-    } else {
-      baseId = ''
-    }
 
-    while(true) {
-      if (count > 1000) { // 避免死循环
-        throw new Error("create_newId: too many nodes: " + count);
+    if (baseId) { // [baseId, baseId-2, ...]
+      while(true) {
+        if (count > 1000) { // 避免死循环
+          throw new Error("create_newId: too many nodes: " + count);
+        }
+        const newId = baseId + (count==1?'':'-'+count)
+        if (!this.findNode(newId)) return newId
+        // console.warn("continue find", count);
+        count++
       }
-      if (!this.findNode(baseId + count)) return (baseId + count)
-      // console.warn("continue find", count);
-      count++
+    } else { // [1, 2, ...]
+      baseId = ''
+      while(true) {
+        if (count > 1000) { // 避免死循环
+          throw new Error("create_newId: too many nodes: " + count);
+        }
+        const newId = baseId + count
+        if (!this.findNode(newId)) return newId
+        // console.warn("continue find", count);
+        count++
+      }
     }
   }
 

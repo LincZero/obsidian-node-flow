@@ -83,12 +83,9 @@ interface ctx_type {
  * 
  * ## 注意项
  * 
- * ~~依赖: 可在无 vueflow 依赖的环境下使用 (如非画布上的显示)~~ 无 vueflow 环境下目前的策略是不使用这里
+ * TODO: ~~依赖: 可在无 vueflow 依赖的环境下使用 (如非画布上的显示)~~ 无 vueflow 环境下目前的策略是不使用这里
  * 
- * TODO
- * 
- * 
- * 
+ * 创建时机：无法手动创建，暂时只能用vueflow api创建节点，然后自动创建NFNode实例
  * 
  * 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
  * 
@@ -152,37 +149,31 @@ export class NFNode {
     return nfNode
   }
 
-  /// 生成节点 - 非画布组件中使用的版本
-  public static factoryNFNode(id: string, propData:object|string, nfNodes: NFNodes, type?: string): NFNode|null {
-    if (id == "") id = nfNodes.create_newId()
-
+  // 生成节点 - 非画布组件中使用的版本
+  public static factoryNFNode(id: string, propData:any|string, nfNodes: NFNodes, type?: string): any|null {
     // propData: string -> object
     if (typeof propData == 'string') {
       let result = factoryFlowData(type??nfNodes.nfType.value, propData)
       if (result.code != 0) {
         console.error(`无法创建节点.
-错误原因: ${result.code == 0}
-错误内容: ${propData}`)
+错误原因: ${result.code}, ${result.msg}
+错误内容: \n${propData}`)
         return null
       } else if (result.data.nodes.length != 1) {
-        console.error(`无法创建节点, 节点是复数: ${result.data.nodes.length}`)
+        console.error(`无法创建节点.
+错误原因: 节点是复数: ${result.data.nodes.length}`)
         return null
       } else {
-        propData = result.data.nodes[0].data as object
+        propData = result.data.nodes[0] as object
       }
     }
+    propData.id = nfNodes.create_newId(propData.id) // 确保id重复
 
-    const nfNode = new NFNode(id, propData)
+    // const nfNode = new NFNode(id, propData) // 这里要use，用回vueflow的方法，间接创建NFNode
+    const { addNodes } = nfNodes._useVueFlow
+    const node = addNodes(propData)
 
-    // 容器处理，必须先处理容器再处理其他
-    nfNode.nfNodes = nfNodes
-    nfNode.nfNodes.nfNodes[nfNode.nodeId] = nfNode
-
-    nfNode.data2str()
-
-    nfNode.init_auto_update()
-
-    return nfNode
+    return node
   }
 
   private constructor(nodeId: string, propData: object) {
@@ -232,11 +223,12 @@ export class NFNode {
       let result = factoryFlowData(this.nfNodes.nfType.value, nodeStr)
       if (result.code != 0) {
         console.error(`输入了错误节点.
-错误原因: ${result.code == 0}
-错误内容: ${nodeStr}`)
+错误原因: ${result.code}, ${result.msg}
+错误内容: \n${nodeStr}`)
         return
       } else if (result.data.nodes.length != 1) {
-        console.error(`无法创建节点, 节点是复数: ${result.data.nodes.length}`)
+        console.error(`输入了错误节点.
+错误原因: 节点是复数: ${result.data.nodes.length}`)
         return
       } else {
         const node = this.nfNodes.findNode(this.nodeId)

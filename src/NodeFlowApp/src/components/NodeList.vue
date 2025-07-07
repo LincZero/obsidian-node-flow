@@ -54,21 +54,28 @@ const nodeList_group = reactive<Record<string, Record<string, string>>>({})
 const nodeList_frontEnd: Record<string, string> = {
   "diy": "",
 
-  "http": `- Http
-- FlowReq:Http请求模板, :item-flowreq
-- emit, i:item-flow
-- url, i, https://httpbin.org/get
-- success, o:item-flow
-- fail, o:item-flow
-- resp, o`,
+  "http": `\
+- nodes
+  - Http
+    - FlowReq:Http请求模板, :item-flowreq
+    - emit, i:item-flow
+    - url, i, https://httpbin.org/get
+    - success, o:item-flow
+    - fail, o:item-flow
+    - resp, o
+- edges`,
 
-  "eval": `- FlowEval:执行任意代码, io:item-floweval, var a = 2
+  "eval": `\
+- nodes
+  - Run
+    - FlowEval:执行任意代码, io:item-floweval, var a = 2
 let b = a
 console.log('debug output', b, ctx)
-- 空节点i, i
-- 空节点o, o
-- debug, :item-debug
-- feat, :item-feat`
+    - 空节点i, i
+    - 空节点o, o
+    - debug, :item-debug
+    - feat, :item-feat
+- edges`
 }
 nodeList_group["frontEnd"] = nodeList_frontEnd
 
@@ -111,7 +118,7 @@ function update_backend_source() {
 
 // TODO 当前仅 listitem 模式可用。应该为不同的type提供不同的NodeList，或者不同的NodeList能归一化为同一类型
 function createNode(k: string, v: string) {
-  const isSuccess = NFNode.factoryNFNode('', v, nfNodes, 'listitem')
+  const isSuccess = NFNode.factoryNFNode('', v, nfNodes, 'nodeflow-listitem')
 }
 </script>
 
