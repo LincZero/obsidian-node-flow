@@ -42,8 +42,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, nextTick } from 'vue'
-import { useGlobalState } from '../../../NodeFlow/stores/stores'
-const { nfNodes } = useGlobalState()
+import { NFNodes } from '../../../NodeFlow/component/utils/NFNodes'
+const nfNodes = NFNodes.useGetNFNodes()
 
 // #region factory nodeList_group
 
@@ -110,9 +110,10 @@ function update_backend_source() {
 
 // TODO 当前仅 listitem 模式可用
 function createNode(k: string, v: string) {
+  
   console.log('开发中。createNode', k, v)
 
-  // nfNodes.value.nfData.nodes.push({
+  // nfNodes.nfData.nodes.push({
   //   id: `node-${Date.now()}`,
   //   type: 'item-listitem',
   //   data: {
