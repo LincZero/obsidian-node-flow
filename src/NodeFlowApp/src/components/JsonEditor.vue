@@ -33,10 +33,14 @@ function onSelect(event: any) {
   }
   
   const index = event.target.value
-  nfNodes.nfType.value = nfData_enum[index].type
-  nfNodes.nfStr.value = nfData_enum[index].content
 
-  // TODO fix bug: JsonEdtior更换模板时，两个不同的节点图可能存在同id节点位置不变，导致位置不为0，不触发自动布局
+  // 更新节点集
+  // 注意点: JsonEdtior更换模板时，两个不同的节点图可能存在同id节点位置不变，导致位置不为0，不触发自动布局。所以要先清空，并等下一帧
+  nfNodes.nfData.value = { nodes: [], edges: [] }
+  nextTick(() => {
+    nfNodes.nfType.value = nfData_enum[index].type
+    nfNodes.nfStr.value = nfData_enum[index].content
+  })
 }
 
 if (nfNodes == null) {

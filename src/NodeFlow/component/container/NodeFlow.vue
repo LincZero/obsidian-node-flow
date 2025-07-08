@@ -89,10 +89,7 @@ if (props.isMini) {
 
 // 功能 - 自动布局模块
 function refreshLayout_ifable(direction:string='LR', amend:string='center') {
-  // nextTick(() => { props.nfNodes.autoSet_layout('LR', 'center', true) })
-  window.setTimeout(() => {
-    props.nfNodes.autoSet_layout('LR', 'center', true)
-  }, 1000); // 延时1秒，等待VueFlow初始化完成
+  nextTick(() => { props.nfNodes.autoSet_layout('LR', 'center', true) })
 }
 
 // #region 功能 - copy and paste

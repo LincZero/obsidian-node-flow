@@ -205,8 +205,8 @@ export class NFNodes {
         this.nfData.value.nodes[1].position.x == 0 && this.nfData.value.nodes[1].position.y == 0
       )) {
         console.log('Needn\'t auto set layout', this.nfData.value.nodes.length>1,
-          this.nfData.value.nodes[0].position.x, this.nfData.value.nodes[0].position.y,
-          this.nfData.value.nodes[1].position.x, this.nfData.value.nodes[1].position.y,
+          this.nfData.value.nodes[0].position.x == 0 && this.nfData.value.nodes[0].position.y,
+          this.nfData.value.nodes[1].position.x == 0 && this.nfData.value.nodes[1].position.y == 0
         )
         return
       }
