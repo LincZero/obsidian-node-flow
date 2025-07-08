@@ -26,7 +26,7 @@ import {
   useNodeId, useNodesData,
   useVueFlow,
 } from '@vue-flow/core'
-const { updateNodeData, getConnectedEdges, nodes } = useVueFlow()
+const { updateNodeData } = useVueFlow()
 const _useNodeId: string = useNodeId()
 const _useNodesData: ComputedRef<any> = useNodesData(_useNodeId)
 

@@ -149,8 +149,9 @@ export class NFNode {
     return nfNode
   }
 
-  // 生成节点 - 非画布组件中使用的版本
-  public static factoryNFNode(id: string, propData:any|string, nfNodes: NFNodes, type?: string): any|null {
+  /// 生成节点 - 非画布组件中使用的版本
+  /// @param type 如果propData是字符串，则需要指定type，如果没有则默认使用nfNodes中的类型
+  public static factoryNFNode(propData:any|string, nfNodes: NFNodes, type?: string): any|null {
     // propData: string -> object
     if (typeof propData == 'string') {
       let result = factoryFlowData(type??nfNodes.nfType.value, propData)

@@ -66,7 +66,6 @@ const _isShowControls = ref(!props.isMini)
 
 // 组件 - 节点画布。会往这里传递一个布局方法
 import NodeFlow from './NodeFlow.vue'
-import NodeFlowM from './NodeFlowM.vue'
 
 // 组件 - 工具栏
 import DropdownButton from '../utils/dropdownButton.vue'
@@ -127,7 +126,6 @@ function fn_initView() {
 // #endregion
 
 // #region 按钮 - ZommArea (单手缩放、重置大小)
-import { stringify } from 'querystring';
 const { zoomIn, zoomOut, zoomTo, setMinZoom, setMaxZoom, fitView } = useVueFlow()
 const zoomButton = ref()
 onMounted(() => {

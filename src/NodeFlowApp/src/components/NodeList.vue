@@ -118,7 +118,7 @@ function update_backend_source() {
 
 // TODO 当前仅 listitem 模式可用。应该为不同的type提供不同的NodeList，或者不同的NodeList能归一化为同一类型
 function createNode(k: string, v: string) {
-  const isSuccess = NFNode.factoryNFNode('', v, nfNodes, 'nodeflow-listitem')
+  const isSuccess = NFNode.factoryNFNode(v, nfNodes, 'nodeflow-listitem')
 }
 </script>
 

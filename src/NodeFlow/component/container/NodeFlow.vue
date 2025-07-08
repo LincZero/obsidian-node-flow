@@ -76,13 +76,10 @@ if (props.isMini) {
     zoomOnScroll,       // default true
     zoomOnDoubleClick,  // default true
     nodesConnectable,   // default true
-    onConnect,
-    addEdges,
   } = useVueFlow();
   zoomOnScroll.value = false;
   zoomOnDoubleClick.value = false;
   nodesConnectable.value = true;
-  onConnect((params) => addEdges(params))
 }
 // #endregion
 
@@ -115,6 +112,7 @@ defineExpose({
 // #endregion
 
 // #region 功能 - copy and paste
+import { NFNode } from '../utils/NFNode';
 const cache_copyed = ref<string[]>([]); // 缓存 `ctrl+c` 的节点
 function pasteSelected(array: any) {
   for (let id of array.value) {
@@ -133,7 +131,7 @@ function pasteSelected(array: any) {
       },
       type: data.type
     }
-    addNodes(newData);
+    NFNode.factoryNFNode(newData, props.nfNodes)
   }
 }
 const ctrl_d = (event: any) => {
@@ -205,8 +203,8 @@ onUnmounted(() => {
 // - @edges-change      包括selectionChange、removeChange、addChange
 import type { EdgeChange, NodeChange, EdgeSelectionChange } from '@vue-flow/core'
 const {
-  findEdge, updateEdgeData, addEdges, removeEdges,
-  findNode, updateNodeData, addNodes, removeNodes,
+  findEdge,
+  findNode,
 } = useVueFlow()
 function onEdgeChange(changes: EdgeChange[]) {
   for (const change of changes) {
