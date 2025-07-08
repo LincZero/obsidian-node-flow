@@ -45,12 +45,14 @@ const props = withDefaults(defineProps<{
   isShowControls: false
 })
 // props.nfNodes.update_nodesAndEdges()
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 // 全局存储
 import { useGlobalState } from '../../stores/stores'
 const { selected, selected2 } = useGlobalState()
 props.nfNodes._useVueFlow = useVueFlow()
+import { useLayout } from '../../utils/layout/useLayout';
+props.nfNodes._calcLayout = useLayout();
 
 // 2. 子组件
 
@@ -85,31 +87,13 @@ if (props.isMini) {
 
 // 4. 功能
 
-// #region 功能 - 自动布局模块
-import { nextTick } from 'vue'
-import { useLayout } from '../../utils/layout/useLayout'
-const { calcLayout } = useLayout()
-const { fitView } = useVueFlow()
-/// 封装: 调整节点位置 + 刷新视图
-/// 注意：首次调用必须在节点初始化以后，否则虽然能自动布局，但后续均无法获取节点大小
-async function refreshLayout(direction:string='LR', amend:string='center') {
-  props.nfNodes.nfData.value.nodes = calcLayout(props.nfNodes.nfData.value.nodes, props.nfNodes.nfData.value.edges, direction, amend)
-  nextTick(() => { fitView() })
-}
-// 个别情况自动调用、个别情况不自动调用
+// 功能 - 自动布局模块
 function refreshLayout_ifable(direction:string='LR', amend:string='center') {
-  if (props.nfNodes.nfData.value.nodes.length>1 &&
-    props.nfNodes.nfData.value.nodes[0].position.x == 0 && props.nfNodes.nfData.value.nodes[0].position.y == 0 &&
-    props.nfNodes.nfData.value.nodes[1].position.x == 0 && props.nfNodes.nfData.value.nodes[1].position.y == 0
-  ) {
-    refreshLayout(direction, amend)
-  }
+  // nextTick(() => { props.nfNodes.autoSet_layout('LR', 'center', true) })
+  window.setTimeout(() => {
+    props.nfNodes.autoSet_layout('LR', 'center', true)
+  }, 1000); // 延时1秒，等待VueFlow初始化完成
 }
-// watch(updateViewFlag, (newValue, oldValue) => {});
-defineExpose({
-  refreshLayout
-})
-// #endregion
 
 // #region 功能 - copy and paste
 import { NFNode } from '../utils/NFNode';

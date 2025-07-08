@@ -194,6 +194,30 @@ export class NFNodes {
     }
   }
 
+  /// 自动布局
+  /// @param calcLayout 通过该方式获取: `import { useLayout } from '../../utils/layout/useLayout'; const { calcLayout } = useLayout();`
+  /// @param isAble 如果为true, 则节点位置(0,0)时才进行自动布局
+  public autoSet_layout(direction:string='LR', amend:string='center', isAble?: boolean): void {
+
+    if (isAble) {
+      if (!(this.nfData.value.nodes.length>1 &&
+        this.nfData.value.nodes[0].position.x == 0 && this.nfData.value.nodes[0].position.y == 0 &&
+        this.nfData.value.nodes[1].position.x == 0 && this.nfData.value.nodes[1].position.y == 0
+      )) {
+        console.log('Needn\'t auto set layout', this.nfData.value.nodes.length>1,
+          this.nfData.value.nodes[0].position.x, this.nfData.value.nodes[0].position.y,
+          this.nfData.value.nodes[1].position.x, this.nfData.value.nodes[1].position.y,
+        )
+        return
+      }
+    }
+
+    const { calcLayout } = this._calcLayout
+    this.nfData.value.nodes = calcLayout(this.nfData.value.nodes, this.nfData.value.edges, direction, amend)
+    const { fitView } = this._useVueFlow
+    nextTick(() => { fitView() })
+  }
+
   public get_mdData(): string {
     return `\`\`\`${this.nfType.value}\n${this.nfStr.value}\n\`\`\`\n`
   }
@@ -249,8 +273,9 @@ export class NFNodes {
     }
   }
 
-  // ---------------------- 与VueFlow有关接口 ----------------------
+  // ---------------------- 与VueFlow有关接口, use变量缓存 ------------------
 
   // 一些全局存储
   public _useVueFlow: any|null = null
+  public _calcLayout: any|null = null
 }

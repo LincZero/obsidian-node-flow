@@ -11,6 +11,7 @@ import { testData_obcanvas } from '../../../NodeFlow/utils/jsonTool/factoryFlowD
 import { testData_vueflow, testData_vueflow_withoutPos, testData_vueflow_customNode } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_vueflow'
 import { testData_list } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_list'
 import { testData_itemData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData_item'
+import { nextTick } from 'vue';
 const nfData_enum = [
   { 'name': 'listitem-nest', 'type': 'nodeflow-listitem', 'content': testData_listitem },
   { 'name': 'listitem-http-old', 'type': 'nodeflow-listitem', 'content': testData_listitem2 },
@@ -24,13 +25,23 @@ const nfData_enum = [
   { 'name': 'list', 'type': 'nodeflow-list', 'content': testData_list },
   { 'name': 'item-moreType', 'type': 'nodeflow-item', 'content': JSON.stringify(testData_itemData, null, 2) },
 ]
+
 function onSelect(event: any) {
+  if (nfNodes == null) {
+    console.error('find\'t nfNodes')
+    return
+  }
+  
   const index = event.target.value
   nfNodes.nfType.value = nfData_enum[index].type
   nfNodes.nfStr.value = nfData_enum[index].content
+
+  // TODO fix bug: JsonEdtior更换模板时，两个不同的节点图可能存在同id节点位置不变，导致位置不为0，不触发自动布局
 }
 
-if (nfNodes != null) {
+if (nfNodes == null) {
+  console.error('find\'t nfNodes')
+} else {
   // 1.2 节点流数据 - 类型
   nfNodes.nfType.value = "nodeflow-listitem"
 

@@ -71,10 +71,7 @@ import NodeFlow from './NodeFlow.vue'
 import DropdownButton from '../utils/dropdownButton.vue'
 
 // 按钮 - 自动调整顺序
-const RefChild = ref<{
-  refreshLayout: (direction: string, amend: string)=>void,
-}>();
-function fn_autoPos(position: string, amend='none') { RefChild.value?.refreshLayout(position, amend) }
+function fn_autoPos(position: string, amend='none') { props.nfNodes.autoSet_layout(position, amend) }
 
 // #region 按钮 - 是否禁用滚动
 const isAllowScroll = ref(true);
