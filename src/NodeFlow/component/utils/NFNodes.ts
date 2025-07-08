@@ -15,6 +15,10 @@ import { NFNode } from './NFNode';
  * 
  * 一个画布中的数据集，包括多个节点的相关数据
  * 
+ * ## 生命周期
+ * 
+ * - 顺序: nfNodes -> vueflow数据 -> nfNode
+ * 
  * ## 数据
  * 
  * 可以将数据分类为以下几种
@@ -96,7 +100,7 @@ export class NFNodes {
     return nfNodes_
   }
 
-  /// 初始化自动更新相关的工作
+  /** 初始化自动更新相关的工作 */
   private init_auto_update() {
     // #region 自动更新 - 避免双向同步无限循环
     // 更新链：nfStr -> nfData -> nodes/edges，若向上传递，则需要设置syncFlag避免无限循环同步
@@ -165,8 +169,9 @@ export class NFNodes {
 
   // #endregion
 
-  /// 生成一个新的不冲突的节点id
-  /// @param baseId 如果有baseId，生成的新id的前缀为baseId。如果baseId本身不重复，返回baseId
+  /** 生成一个新的不冲突的节点id
+   * @param baseId 如果有baseId，生成的新id的前缀为baseId。如果baseId本身不重复，返回baseId
+   */
   public create_newId(baseId?: string): string {
     let count = 1
 
@@ -194,9 +199,10 @@ export class NFNodes {
     }
   }
 
-  /// 自动布局
-  /// @param calcLayout 通过该方式获取: `import { useLayout } from '../../utils/layout/useLayout'; const { calcLayout } = useLayout();`
-  /// @param isAble 如果为true, 则节点位置(0,0)时才进行自动布局
+  /** 自动布局
+   * @param calcLayout 通过该方式获取: `import { useLayout } from '../../utils/layout/useLayout'; const { calcLayout } = useLayout();`
+   * @param isAble 如果为true, 则节点位置(0,0)时才进行自动布局
+   */
   public autoSet_layout(direction:string='LR', amend:string='center', isAble?: boolean): void {
 
     if (isAble) {
@@ -230,7 +236,7 @@ export class NFNodes {
   public save() {
   }
 
-  // 功能 - 展示json数据
+  /** 功能 - 展示json数据 */
   public fn_printData(type:"mdData"|"rawData"|"jsonData") {
     let data: any
     if (type == "mdData") data = "\n" + this.get_mdData()
@@ -239,7 +245,7 @@ export class NFNodes {
     console.log("Debug json:", data)
   }
 
-  // 功能 - 拷贝到黏贴版
+  /** 功能 - 拷贝到黏贴版 */
   public fn_copyData (type:"mdData"|"rawData"|"jsonData") {
     let data: string
     if (type == "mdData") data = this.get_mdData()
@@ -255,7 +261,7 @@ export class NFNodes {
       console.error('Error: copy fail');
     });
 
-    // 去除json递归 (去除parent字段)
+    /** 去除json递归 (去除parent字段) */
     function removeParentField(oldJson: any): any {
       if (Array.isArray(oldJson)) {
         return oldJson.map(item => removeParentField(item));

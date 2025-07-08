@@ -23,6 +23,12 @@ interface ctx_type {
 
 /** 带控制的节点类
  * 
+ * ## 生命周期
+ * 
+ * - 顺序: nfNodes -> vueflow数据 -> nfNode
+ * - 即必然在vueflow之后，在vueflow中创建节点时，会通过 useFactoryNFNode 自动创建对应的NFNode实例
+ * - 可以通过NFNodes批量创建vueflow节点，或在这里通过 factoryNFNode 创建vueflow节点，从而间接创建该对象
+ * 
  * ## 数据
  * 
  * 可以将数据分类为以下几种
@@ -83,10 +89,6 @@ interface ctx_type {
  * 
  * ## 注意项
  * 
- * TODO: ~~依赖: 可在无 vueflow 依赖的环境下使用 (如非画布上的显示)~~ 无 vueflow 环境下目前的策略是不使用这里
- * 
- * 创建时机：无法手动创建，暂时只能用vueflow api创建节点，然后自动创建NFNode实例
- * 
  * 一致性：仅开始运行时会自动同步一次数据，平时不确保一致性。或者调用update方法自动更新以保证一致性
  * 
  * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
@@ -106,7 +108,7 @@ export class NFNode {
 
   // #region 特殊函数
 
-  /// 获取节点 - 画布中组件使用的版本
+  /** 获取节点 - 画布中组件使用的版本 */
   public static useGetNFNode(id?: string): NFNode|null {
     // 容器一
     if (!id) {
@@ -122,13 +124,13 @@ export class NFNode {
     return nfNode
   }
 
-  /// 获取节点 - 非画布组件中使用的版本
+  /** 获取节点 - 非画布组件中使用的版本 */
   public static getNFNode(id: string, nfNodes: NFNodes): NFNode|null {
     const nfNode =  nfNodes.nfNodes[id] ?? null
     return nfNode
   }
 
-  /// 生成节点 - 画布组件中使用的版本
+  /** 生成节点 - 画布组件中使用的版本 */
   public static useFactoryNFNode(id: string, propData:object) {
     const nfNode = new NFNode(id, propData)
 
@@ -149,8 +151,9 @@ export class NFNode {
     return nfNode
   }
 
-  /// 生成节点 - 非画布组件中使用的版本
-  /// @param type 如果propData是字符串，则需要指定type，如果没有则默认使用nfNodes中的类型
+  /** 生成节点 - 非画布组件中使用的版本
+   * @param type 如果propData是字符串，则需要指定type，如果没有则默认使用nfNodes中的类型
+   */
   public static factoryNFNode(propData:any|string, nfNodes: NFNodes, type?: string): any|null {
     // propData: string -> object
     if (typeof propData == 'string') {
@@ -313,7 +316,7 @@ export class NFNode {
     }
   }
 
-  /// 被调用：主动触发或被动触发
+  /** 被调用：主动触发或被动触发 */
   public async start() {
     let ret: boolean;
 
@@ -333,7 +336,7 @@ export class NFNode {
     await this.start_dealNext()
   }
 
-  /// 清空、准备上下文对象
+  /** 清空、准备上下文对象 */
   private async start_ctxInit() {
     this.ctx = {
       targetValues: {},
@@ -368,8 +371,9 @@ export class NFNode {
     }
   }
 
-  /// 处理上一节点
-  /// 获取上一个节点的值，遍历所有连接线
+  /** 处理上一节点
+   * 获取上一个节点的值，遍历所有连接线
+   */
   private async start_dealLast(): Promise<boolean> {
     for (const connection of this._useSourceConnections.value) {
       const sourceNode = this.findNode(connection.source)
@@ -398,7 +402,7 @@ export class NFNode {
     return true
   }
 
-  /// 处理自身节点
+  /** 处理自身节点 */
   private async start_dealSelf(): Promise<boolean> {
     console.log('this._useNodesData.value.data1', this._useNodesData.value, this.nfData.value) // 这后面存在问题！data没掉了！nfData有问题，少了一层！
     this.nfData.value.runState = 'running'; this.updateNodeData(this.nodeId, this.nfData.value);
@@ -427,10 +431,11 @@ export class NFNode {
     return true
   }
 
-  /// 处理、激发下一个节点
-  /// TODO 不要激发全部的下层节点
-  /// - 可能有failed分支
-  /// - 下个节点要等待所有上游节点才能触发
+  /** 处理、激发下一个节点
+   * TODO 不要激发全部的下层节点
+   * - 可能有failed分支
+   * - 下个节点要等待所有上游节点才能触发
+   */
   private async start_dealNext() {
     if (this._useNodesData.value.data.runState != 'over') {
       console.warn(`#${this.nodeId} 状态 ${this._useNodesData.value.data.runState}，停止向后激发`)
