@@ -17,6 +17,7 @@
       "ES6",
       "ES7",
       "ES2020",
+      "DOM.Iterable",
     ]
   },
   "include": [

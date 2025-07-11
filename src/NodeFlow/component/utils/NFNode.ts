@@ -82,7 +82,7 @@ interface ctx_type {
  * 
  * 1. setup作用域创建实例，自动注册watch
  * 2. 手动启动 start()
- *     1. 清空上下文 | start_ctxInit   | 重初始化 ctx
+ *     1. 清空上下文喵 | start_ctxInit  | 重初始化 ctx
  *     2. 处理上游节点 | start_dealLast | 填充 ctx.sourceValues
  *     3. 处理自身节点 | start_dealSelf | 填充 ctx.targetValues
  *     4. 处理下游节点 | start_dealLast
