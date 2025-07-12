@@ -17,7 +17,7 @@
 -->
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<{
   data: any,
@@ -104,8 +104,27 @@ onMounted(async ()=>{
   await nextTick()
   if (ref_code.value) Prism.highlightElement(ref_code.value)
 })
+
+// #region 自动更新 - 避免双向同步无限循环
+let flag_str2data = false;
+let flag_data2str = false;
+// #endregion
+
+// [auto update] props.data.cacheValue/props.data.value -> input
+watch(writable_value, async () => {
+  if (flag_str2data) { flag_str2data = false; return }
+  flag_data2str = true;
+
+  await nextTick()
+  if (ref_code.value) Prism.highlightElement(ref_code.value)
+})
+
+// [auto update] input -> props.data.cacheValue/props.data.value
 async function handlePreInput(e: Event) { // 这里不用e，假设必为ref_pre、ref_code，简化流程
   if (!ref_code.value) return
+
+  if (flag_data2str) { flag_data2str = false; return }
+  flag_str2data = true
 
   // 光标1 - 保存
   const savedPos = handlePreInput_saveCursorPosition(ref_pre.value)
