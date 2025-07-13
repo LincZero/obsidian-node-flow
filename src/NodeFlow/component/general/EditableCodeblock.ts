@@ -3,6 +3,8 @@
  * 
  * This module previously relied on the `Obsidian` API,
  * but has now been changed to a general module: editable code blocks.
+ * 
+ * TODO: fix textareaPre x-scrool
  */ 
 
 import './EditableCodeblock.css'
@@ -92,7 +94,7 @@ export class EditableCodeblock {
 	} = {
 		theme: 'obsidian-theme',
 		renderMode: 'textarea',
-		renderEngine: 'prismjs', // [!code hl]
+		renderEngine: 'shiki',
 		saveMode: 'onchange'
 	}
 	config: {
@@ -190,19 +192,12 @@ export class EditableCodeblock {
 		// #region textarea - async part - oninput/onchange
 		// refresh/save strategy1: input no save
 		if (this.settings.saveMode == 'onchange') {
-			textarea.oninput = (ev): void => {
-				if (isComposing) return
-
-				const newValue = (ev.target as HTMLTextAreaElement).value
-				this.outerInfo.source = newValue
-				void this.emit_render(span)
-				div.classList.add('is-no-saved');
+			textarea.oninput = (ev): void => {			
+				emit_change((ev.target as HTMLTextAreaElement).value, true, false, false)
 			}
 			// TODO: fix: not emit onchange when no change, and is-no-saved class will not remove. 
 			textarea.onchange = (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
-				const newValue = (ev.target as HTMLTextAreaElement).value
-				this.outerInfo.source = newValue
-				div.classList.remove('is-no-saved'); void this.emit_save(false, true)
+				emit_change((ev.target as HTMLTextAreaElement).value, false, true, false)
 			}
 		}
 		// refresh/save strategy2: cache and rebuild
@@ -217,16 +212,24 @@ export class EditableCodeblock {
 				// return
 			})
 			textarea.oninput = (ev): void => {
-				if (isComposing) return
+				emit_change((ev.target as HTMLTextAreaElement).value, false, true, true) // old: isRender is true
+			}
+		}
 
-				const newValue = (ev.target as HTMLTextAreaElement).value
-				this.outerInfo.source = newValue
+		const emit_change = (newValue: string, isRender: boolean, isSave: boolean, isSavePos: boolean): void => {
+			if (isComposing) return
+			this.outerInfo.source = newValue
+			if (isRender) {
 				void this.emit_render(span)
-
+				div.classList.add('is-no-saved');
+			}
+			if (isSavePos) {
 				global_refresh_cache = {
 					start: textarea.selectionStart,
 					end: textarea.selectionEnd,
 				}
+			}
+			if (isSave) {
 				div.classList.remove('is-no-saved'); void this.emit_save(false, true)
 			}
 		}
@@ -285,6 +288,16 @@ export class EditableCodeblock {
 	/** param this.settings.saveMode onchange/oninput
 	 * 
 	 * onCall: renderMode === 'editablePre'
+	 * 
+	 * ## editable pre or code?
+	 * 
+	 * - (default) editable pre
+	 *   - bug: pre maybe has multiple code el (firefox no, chrome will)
+	 *     fix: (firefox no, chrome will)
+	 * - editable code
+	 *   - bug: focus area for chick more small
+	 *     fix: code display inline->block
+	 *   - bug: cursor in lastline when newLine (progarm bug)
 	 */
 	async renderEditablePre(): Promise<void> {
 		// dom
@@ -300,21 +313,21 @@ export class EditableCodeblock {
 		let pre: HTMLPreElement|null = div.querySelector(':scope>pre')
 		let code: HTMLPreElement|null = div.querySelector(':scope>pre>code')
 		if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 1'); return }
-		code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
+		pre.setAttribute('contenteditable', 'true'); pre.setAttribute('spellcheck', 'false')
 
 		// readmode and markdown reRender not shouldn't change
 		if (this.isReadingMode || this.isMarkdownRendered) {
-			code.setAttribute('readonly', '')
+			pre.setAttribute('readonly', '')
 			return
 		}
 
 		// #region code - async part - composition start/end
 		let isComposing = false; // is in the input method combination stage, can fix chinese input method invalid
-		code.addEventListener('compositionstart', () => {
+		pre.addEventListener('compositionstart', () => {
 			isComposing = true
 		});
 
-		code.addEventListener('compositionend', () => {
+		pre.addEventListener('compositionend', () => {
 			isComposing = false
 			// updateCursorPosition(); // (option)
 		});
@@ -329,13 +342,35 @@ export class EditableCodeblock {
 				this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
 				global_refresh_cache = null
 			})
-			code.oninput = (ev): void => {
-				if (isComposing) return
-				if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 12'); return }
+			pre.oninput = (ev): void => {
+				emit_change((ev.target as HTMLPreElement).innerText, true, false, false) // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
+			}
+			//   pre/code without onchange, use blur event
+			pre.addEventListener('blur', (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
+				emit_change((ev.target as HTMLPreElement).innerText, false, true, false) // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
+			})
+		}
+		// refresh/save strategy2: cache and rebuild
+		else {
+			void Promise.resolve().then(() => {
+				if (!global_refresh_cache) return
+				if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 21'); global_refresh_cache = null; return }
+				this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
+				global_refresh_cache = null
+			})
+			pre.oninput = (ev): void => {
+				emit_change((ev.target as HTMLPreElement).innerText, false, true, true) // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
+				// old save more simple: void this.emit_render(div)
+			}
+		}
 
-				const newValue = (ev.target as HTMLPreElement).innerText // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
-				this.outerInfo.source = newValue
-				
+		const emit_change = (newValue: string, isRender: boolean, isSave: boolean, isSavePos: boolean): void => {
+			if (isComposing) return
+			if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 12'); return }
+
+
+			this.outerInfo.source = newValue // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
+			if (isRender) {
 				void Promise.resolve().then(async () => { // like vue nextTick, ensure that the cursor is behind
 					pre = div.querySelector(':scope>pre')
 					code = div.querySelector(':scope>pre>code')
@@ -349,44 +384,24 @@ export class EditableCodeblock {
 					div.classList.add('is-no-saved');
 
 					// restore pos
-					code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
+					pre.setAttribute('contenteditable', 'true'); pre.setAttribute('spellcheck', 'false')
 
 					if (!global_refresh_cache) return
 					this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
 					global_refresh_cache = null
 				})
 			}
-			//   pre/code without onchange, use blur event
-			code.addEventListener('blur', (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
-				const newValue = (ev.target as HTMLPreElement).innerText // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
-				this.outerInfo.source = newValue // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
-				div.classList.remove('is-no-saved'); void this.emit_save(false, true)
-			})
-		}
-		// refresh/save strategy2: cache and rebuild
-		else {
-			void Promise.resolve().then(() => {
-				if (!global_refresh_cache) return
-				if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 21'); global_refresh_cache = null; return }
-				this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
-				global_refresh_cache = null
-			})
-			code.oninput = (ev): void => {
-				if (isComposing) return
-				if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 22'); return }
-
-				const newValue = (ev.target as HTMLPreElement).innerText // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
-				this.outerInfo.source = newValue
-				void this.emit_render(div)
-
+			if (isSavePos) {
 				global_refresh_cache = this.renderEditablePre_saveCursorPosition(pre)
+			}
+			if (isSave) {
 				div.classList.remove('is-no-saved'); void this.emit_save(false, true)
 			}
 		}
 		// #endregion
 	
 		// #region code - async part - keydown
-		this.enable_editarea_listener(code)
+		this.enable_editarea_listener(pre)
 		// #endregion
 	}
 
@@ -631,7 +646,7 @@ export class EditableCodeblock {
 	 * - targetEl (usually a div)
 	 *   - pre
 	 *     - code
-	 * @param code (option) code element, can reduce the refresh rate, avoid code blur event
+	 * @param code (option) code element, can reduce the refresh rate, avoid code focus/blur event
 	 */
 	async emit_render(targetEl:HTMLElement, code?:HTMLElement): Promise<void> {
 		// source correct.
@@ -689,14 +704,26 @@ export class EditableCodeblock {
 				return
 			}
 
-			if (!code) {
+			if (targetEl.children[0]?.children?.length??0 > 1) { // some time, pre has multiple code el (firefox no, chrome will)
 				targetEl.innerHTML = ''
 				const pre = document.createElement('pre'); targetEl.appendChild(pre);
 				code = document.createElement('code'); pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
-			}
 
-			code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
-			prism.highlightElement(code)
+				code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
+				prism.highlightElement(code)
+
+				code.focus()
+				pre.focus()
+			} else { // 0/1
+				if (!code) {
+					targetEl.innerHTML = ''
+					const pre = document.createElement('pre'); targetEl.appendChild(pre);
+					code = document.createElement('code'); pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
+				}
+
+				code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
+				prism.highlightElement(code)
+			}
 		}
 	}
 

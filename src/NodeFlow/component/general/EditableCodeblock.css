@@ -3,17 +3,19 @@
  * https://shiki.style/packages/transformers#unstyled
  */
 
-/* ----------------------------- adapt obsidian ---------------------- */
+/* ----------------------------- adapt without obsidian ------------ */
 
 /* var(--indent-size)
 var(--code-size)
 var(--font-monospace)
---text-selection*/
+*/
 :root {
 	--font-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	--text-selection: #0078D788;
+	/* #4814ff44; */
 }
 
-/* ----------------------------- adapt vuepress -------------------- */
+/* ----------------------------- adapt without vuepress ------------- */
 
 /* color perset */
 :root {
@@ -144,7 +146,7 @@ var(--font-monospace)
 	--vp-code-tab-active-bar-color: var(--vp-c-brand-1)
 }
 
-/* ----------------------------- line flag --------------------------- */
+/* ----------------------------- line flag -------------------------- */
 
 code>span.line.diff {
 	transition: background-color .5s;
@@ -226,11 +228,13 @@ code>span.line.highlighted.warning {
 	color: currentColor !important
 }
 .editable-codeblock code {
+	display: inline !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	border: 0 !important;
 }
 .editable-codeblock pre, .editable-codeblock textarea {
+	display: block !important;
 	box-sizing: border-box !important;
 	margin: 0 !important;
 	padding: 12px var(--shiki-x-padding) !important;
@@ -295,6 +299,18 @@ code>span.line {
 	background-color: transparent;
 	/* color: transparent; */
 	color: #ffffff22;
+	caret-color: #ffffffdd;
+}
+.editable-codeblock textarea:focus {
+	/* outline: none; */
+	outline: 1px solid #0060DF;
+	border-radius: 4px;
+}
+.editable-codeblock pre:focus {
+	outline: 1px solid #0060DF;
+}
+.editable-codeblock code:focus {
+	outline: none;
 }
 
 .is-no-saved::before {
