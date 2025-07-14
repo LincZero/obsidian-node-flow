@@ -293,11 +293,14 @@ export class EditableCodeblock {
 	 * 
 	 * - (default) editable pre
 	 *   - bug: pre maybe has multiple code el (firefox no, chrome will)
-	 *     fix: (firefox no, chrome will)
+	 *     fix: ??? (There is no solution for the time being)
 	 * - editable code
 	 *   - bug: focus area for chick more small
 	 *     fix: code display inline->block
-	 *   - bug: cursor in lastline when newLine (progarm bug)
+	 *   - bug: cursor in lastline when newLine
+	 *     fix: fix progarm bug
+	 *   - bug: hard to use focus style
+	 *     fix: `:has()` (only support in new version browser)
 	 */
 	async renderEditablePre(): Promise<void> {
 		// dom
@@ -313,21 +316,22 @@ export class EditableCodeblock {
 		let pre: HTMLPreElement|null = div.querySelector(':scope>pre')
 		let code: HTMLPreElement|null = div.querySelector(':scope>pre>code')
 		if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 1'); return }
-		pre.setAttribute('contenteditable', 'true'); pre.setAttribute('spellcheck', 'false')
+		code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
+		this.enable_editarea_listener(code)
 
 		// readmode and markdown reRender not shouldn't change
 		if (this.isReadingMode || this.isMarkdownRendered) {
-			pre.setAttribute('readonly', '')
+			code.setAttribute('readonly', '')
 			return
 		}
 
 		// #region code - async part - composition start/end
 		let isComposing = false; // is in the input method combination stage, can fix chinese input method invalid
-		pre.addEventListener('compositionstart', () => {
+		code.addEventListener('compositionstart', () => {
 			isComposing = true
 		});
 
-		pre.addEventListener('compositionend', () => {
+		code.addEventListener('compositionend', () => {
 			isComposing = false
 			// updateCursorPosition(); // (option)
 		});
@@ -342,11 +346,11 @@ export class EditableCodeblock {
 				this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
 				global_refresh_cache = null
 			})
-			pre.oninput = (ev): void => {
+			code.oninput = (ev): void => {
 				emit_change((ev.target as HTMLPreElement).innerText, true, false, false) // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
 			}
 			//   pre/code without onchange, use blur event
-			pre.addEventListener('blur', (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
+			code.addEventListener('blur', (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
 				emit_change((ev.target as HTMLPreElement).innerText, false, true, false) // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
 			})
 		}
@@ -358,7 +362,7 @@ export class EditableCodeblock {
 				this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
 				global_refresh_cache = null
 			})
-			pre.oninput = (ev): void => {
+			code.oninput = (ev): void => {
 				emit_change((ev.target as HTMLPreElement).innerText, false, true, true) // .textContent more fast, but can't get new line by 'return' (\n yes, br no)
 				// old save more simple: void this.emit_render(div)
 			}
@@ -384,7 +388,8 @@ export class EditableCodeblock {
 					div.classList.add('is-no-saved');
 
 					// restore pos
-					pre.setAttribute('contenteditable', 'true'); pre.setAttribute('spellcheck', 'false')
+					code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
+					this.enable_editarea_listener(code)
 
 					if (!global_refresh_cache) return
 					this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
@@ -398,10 +403,6 @@ export class EditableCodeblock {
 				div.classList.remove('is-no-saved'); void this.emit_save(false, true)
 			}
 		}
-		// #endregion
-	
-		// #region code - async part - keydown
-		this.enable_editarea_listener(pre)
 		// #endregion
 	}
 
@@ -540,11 +541,22 @@ export class EditableCodeblock {
 					}
 				}
 				else { // pre/code
+					let pre: HTMLPreElement
+					let code: HTMLPreElement
+					if (el.tagName === 'CODE') {
+						pre = el.parentElement as HTMLPreElement
+						code = el as HTMLPreElement
+					}
+					else {
+						pre = el as HTMLPreElement
+						code = el.querySelector(':scope>code') as HTMLPreElement
+					}
+
 					const selection = window.getSelection();
 					if (!selection || selection.rangeCount === 0) return
 
-					const nodeText = el.textContent ?? ''
-					const pos = this.renderEditablePre_saveCursorPosition(el)
+					const nodeText = pre.textContent ?? ''
+					const pos = this.renderEditablePre_saveCursorPosition(pre)
 					if (!pos) return
 					const selectionStart: number = pos.start
 					const selectionEnd: number = pos.end
@@ -596,8 +608,7 @@ export class EditableCodeblock {
 							}
 						}
 
-						if (el.tagName === 'PRE') el = el.querySelector(':scope>code') ?? el
-						el.innerText = before + center + after
+						code.innerText = before + center + after
 					}
 					// change - insert
 					else {
@@ -708,6 +719,13 @@ export class EditableCodeblock {
 				targetEl.innerHTML = ''
 				const pre = document.createElement('pre'); targetEl.appendChild(pre);
 				code = document.createElement('code'); pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
+
+
+
+
+				// code or pre
+				code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
+				this.enable_editarea_listener(code)
 
 				code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
 				prism.highlightElement(code)
