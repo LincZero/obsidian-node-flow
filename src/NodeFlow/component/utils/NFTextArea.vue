@@ -39,11 +39,16 @@ const props = withDefaults(defineProps<{
 })
 
 // #region EditableCodeblock
+
+// sync0, avoid circular updates
+let i2o_flag: boolean = false
+
 import { EditableCodeblock, loadPrism2 } from '../general/EditableCodeblock';
 import Prism from "prismjs" // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-json';
 import "prismjs/themes/prism-okaidia.min.css" // 主题, okaidia和tomorrow都是不错黑夜主题
+
 loadPrism2.fn = () => {
   return Prism
 }
@@ -55,9 +60,10 @@ class EditableCodeblockInVue extends EditableCodeblock {
     this.settings.saveMode = 'oninput'
   }
 
-  // sync1 inner -> outer (vue data)
+  // sync1, inner -> outer (vue data)
   override emit_save(isUpdateLanguage: boolean, isUpdateSource: boolean): Promise<void> {
     return new Promise<void>((resolve, reject) => {
+      i2o_flag = true
       props.data.value = this.outerInfo.source ?? this.innerInfo.source_old
     })
   }
@@ -68,20 +74,21 @@ let editableCodeblock: EditableCodeblockInVue|null = null
 onMounted(() => {
   if (!ref_el.value) return
   editableCodeblock = new EditableCodeblockInVue(props.codeType??'', props.data.value, ref_el.value)
-  // editableCodeblock.renderTextareaPre() // 'textarea'
-  editableCodeblock.renderEditablePre() // 'editablePre'
+  // editableCodeblock.renderTextareaPre() // 'textarea' (暂不可选)
+  editableCodeblock.renderEditablePre() // 'editablePre' (可选)
   // editableCodeblock.emit_render(ref_el.value)
 })
-// #endregion
 
-// #region EditableCodeblock sync
-// sync2 outer (vue data) -> inner
+// sync2, outer (vue data) -> inner
 import { watch } from 'vue';
-watch(() => props.data, (newValue: any) => {
+watch(() => props.data.value, (newValue: any) => {
   if (!ref_el.value) return
   if (!editableCodeblock) return
-  editableCodeblock.outerInfo.source = newValue.value
+  if (i2o_flag) { i2o_flag = false; return }
+  editableCodeblock.outerInfo.source = newValue
   editableCodeblock.emit_render(ref_el.value.querySelector('.editable-codeblock'))
+}, {
+  deep: true
 })
 // #endregion
 </script>

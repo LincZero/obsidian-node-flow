@@ -373,8 +373,6 @@ export class EditableCodeblock {
 		const emit_change = (newValue: string, isRender: boolean, isSave: boolean, isSavePos: boolean): void => {
 			if (isComposing) return
 			if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 12'); return }
-			console.log('emit_change mmds', isRender, isSave, isSavePos)
-
 
 			this.outerInfo.source = newValue // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
 			if (isRender) {
