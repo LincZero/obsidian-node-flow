@@ -76,7 +76,10 @@ let global_refresh_cache: null|{start:number, end:number} = null
  * }
  */
 export class EditableCodeblock {
+	// - el: (container)
+	//   - thisEl: .editable-codeblock
 	el: HTMLElement;
+	// thisEl: HTMLElement;
 
 	// 丢弃依赖
 	// plugin: { app: App; settings: Settings };
@@ -147,7 +150,7 @@ export class EditableCodeblock {
 		//   - div.language-edit
 		
 		// div
-		const div = document.createElement('div'); this.el.appendChild(div); div.classList.add('editable-codeblock')
+		const div = document.createElement('div'); this.el.appendChild(div); div.classList.add('editable-codeblock', 'editable-textarea')
 
 		// span
 		const span = document.createElement('span'); div.appendChild(span);
@@ -316,7 +319,6 @@ export class EditableCodeblock {
 		let pre: HTMLPreElement|null = div.querySelector(':scope>pre')
 		let code: HTMLPreElement|null = div.querySelector(':scope>pre>code')
 		if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 1'); return }
-		code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
 		this.enable_editarea_listener(code)
 
 		// readmode and markdown reRender not shouldn't change
@@ -371,6 +373,7 @@ export class EditableCodeblock {
 		const emit_change = (newValue: string, isRender: boolean, isSave: boolean, isSavePos: boolean): void => {
 			if (isComposing) return
 			if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 12'); return }
+			console.log('emit_change mmds', isRender, isSave, isSavePos)
 
 
 			this.outerInfo.source = newValue // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
@@ -384,13 +387,10 @@ export class EditableCodeblock {
 					global_refresh_cache = this.renderEditablePre_saveCursorPosition(pre)
 
 					// pre, code
-					await this.emit_render(div, code)
+					await this.emit_render(div)
 					div.classList.add('is-no-saved');
 
 					// restore pos
-					code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
-					this.enable_editarea_listener(code)
-
 					if (!global_refresh_cache) return
 					this.renderEditablePre_restoreCursorPosition(pre, global_refresh_cache.start, global_refresh_cache.end)
 					global_refresh_cache = null
@@ -657,9 +657,8 @@ export class EditableCodeblock {
 	 * - targetEl (usually a div)
 	 *   - pre
 	 *     - code
-	 * @param code (option) code element, can reduce the refresh rate, avoid code focus/blur event
 	 */
-	async emit_render(targetEl:HTMLElement, code?:HTMLElement): Promise<void> {
+	async emit_render(targetEl:HTMLElement): Promise<void> {
 		// source correct.
 		// When the last line of the source is blank (with no Spaces either),
 		// prismjs and shiki will both ignore the line,
@@ -715,40 +714,41 @@ export class EditableCodeblock {
 				return
 			}
 
-			if (targetEl.children[0]?.children?.length??0 > 1) { // some time, pre has multiple code el (firefox no, chrome will)
+			// sure `targetEl > pre> one code`
+			let pre: HTMLPreElement|null = targetEl.querySelector(':scope>pre')
+			let code: HTMLPreElement|null = targetEl.querySelector(':scope>pre>code')
+			if (!code) {
+				targetEl.innerHTML = ''
+				pre = document.createElement('pre'); targetEl.appendChild(pre);
+				code = document.createElement('code') as HTMLPreElement; pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
+				code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
+			} else if (!pre) {
 				targetEl.innerHTML = ''
 				const pre = document.createElement('pre'); targetEl.appendChild(pre);
-				code = document.createElement('code'); pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
-
-
-
-
-				// code or pre
-				code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
-				this.enable_editarea_listener(code)
-
-				code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
-				prism.highlightElement(code)
-
-				code.focus()
-				pre.focus()
-			} else { // 0/1
-				if (!code) {
-					targetEl.innerHTML = ''
-					const pre = document.createElement('pre'); targetEl.appendChild(pre);
-					code = document.createElement('code'); pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
-				}
-
-				code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
-				prism.highlightElement(code)
+				pre.appendChild(code)
+			} else if (pre.children?.length??0 > 1) {
+				pre.innerHTML = ''
+				pre.appendChild(code)
+			} else {
+				// nothing
 			}
+
+			// why reuse code element?
+			// - reduce the refresh rate
+	        // - avoid rebind event listeners, like focus, blur, input, keydown, etc.
+	        // - avoid re focus
+			//
+			// Otherwise, additional work will be required later on:
+			// - this.enable_editarea_listener(code)
+			// - ... rebind event
+
+			// render
+			code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
+			prism.highlightElement(code)
 		}
 	}
 
 	/** Save textarea text content to codeBlock markdown source
-	 * 
-	 * @deprecated can't save when cursor in codeblock and use short-key switch to source mode.
-	 * You should use `saveContent_safe` version
 	 * 
 	 * Data security (Importance)
 	 * - Make sure `Ctrl+z` is normal: use transaction

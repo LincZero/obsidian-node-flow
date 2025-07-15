@@ -22,7 +22,7 @@
 -->
 
 <template>
-  <div class="nf-textarea-p" ref="ref_el">
+  <div class="nf-textarea-p nodrag nowhell" ref="ref_el" :is-single-line="data.value.split('\n').length < 2">
   </div>
 </template>
 
@@ -48,25 +48,52 @@ loadPrism2.fn = () => {
   return Prism
 }
 
-import { watch } from 'vue';
+class EditableCodeblockInVue extends EditableCodeblock {
+  constructor(codeType: string, data: any, container: HTMLElement) {
+    super(codeType, data, container)
+    this.settings.renderEngine = 'prismjs'
+    this.settings.saveMode = 'oninput'
+  }
+
+  // sync1 inner -> outer (vue data)
+  override emit_save(isUpdateLanguage: boolean, isUpdateSource: boolean): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      props.data.value = this.outerInfo.source ?? this.innerInfo.source_old
+    })
+  }
+}
+
 const ref_el = ref<HTMLElement|null>(null)
+let editableCodeblock: EditableCodeblockInVue|null = null
 onMounted(() => {
   if (!ref_el.value) return
-  const editableCodeblock = new EditableCodeblock(props.codeType??'', props.data.value, ref_el.value)
-  editableCodeblock.renderTextareaPre() // 'textarea'
-  // editableCodeblock.renderEditablePre() // 'editablePre'
+  editableCodeblock = new EditableCodeblockInVue(props.codeType??'', props.data.value, ref_el.value)
+  // editableCodeblock.renderTextareaPre() // 'textarea'
+  editableCodeblock.renderEditablePre() // 'editablePre'
   // editableCodeblock.emit_render(ref_el.value)
 })
 // #endregion
 
 // #region EditableCodeblock sync
-// watch(props.data, (newValue: any) => {
-//   if (!ref_el.value) return
-//   const editableCodeblock = new EditableCodeblock(props.codeType??'', newValue, ref_el.value)
-//   editableCodeblock.emit_render(ref_el.value) // 'editablePre'
-// })
+// sync2 outer (vue data) -> inner
+import { watch } from 'vue';
+watch(() => props.data, (newValue: any) => {
+  if (!ref_el.value) return
+  if (!editableCodeblock) return
+  editableCodeblock.outerInfo.source = newValue.value
+  editableCodeblock.emit_render(ref_el.value.querySelector('.editable-codeblock'))
+})
 // #endregion
 </script>
+
+<style>
+.nf-textarea-p[is-single-line='true'] pre {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background: none !important;
+  outline: none !important;
+}
+</style>
 
 <style scoped>
 .nf-textarea {
