@@ -58,6 +58,8 @@ class EditableCodeblockInVue extends EditableCodeblock {
     super(codeType, data, container)
     this.settings.renderEngine = 'prismjs'
     this.settings.saveMode = 'oninput'
+    this.settings.renderMode = 'textarea' // 'editablePre' 可选
+    // this.settings.renderMode = 'editablePre'
   }
 
   // sync1, inner -> outer (vue data)
@@ -74,9 +76,7 @@ let editableCodeblock: EditableCodeblockInVue|null = null
 onMounted(() => {
   if (!ref_el.value) return
   editableCodeblock = new EditableCodeblockInVue(props.codeType??'', props.data.value, ref_el.value)
-  // editableCodeblock.renderTextareaPre() // 'textarea' (暂不可选)
-  editableCodeblock.renderEditablePre() // 'editablePre' (可选)
-  // editableCodeblock.emit_render(ref_el.value)
+  editableCodeblock.render()
 })
 
 // sync2, outer (vue data) -> inner
@@ -94,7 +94,9 @@ watch(() => props.data.value, (newValue: any) => {
 </script>
 
 <style>
-.nf-textarea-p[is-single-line='true'] pre {
+/* 单行 */
+.nf-textarea-p[is-single-line='true'] pre,
+.nf-textarea-p[is-single-line='true'] textarea {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   background: none !important;

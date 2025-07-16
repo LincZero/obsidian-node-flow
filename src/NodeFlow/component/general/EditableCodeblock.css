@@ -5,14 +5,14 @@
 
 /* ----------------------------- adapt without obsidian ------------ */
 
-/* var(--indent-size)
+/*
+[!code hl]
 var(--code-size)
-var(--font-monospace)
 */
 :root {
 	--font-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 	--text-selection: #0078D788;
-	/* #4814ff44; */
+	--indent-size: 4;
 }
 
 /* ----------------------------- adapt without vuepress ------------- */

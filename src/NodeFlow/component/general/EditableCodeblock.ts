@@ -7,9 +7,9 @@
  * TODO: fix textareaPre x-scrool
  */ 
 
+// [!code hl]
 import './EditableCodeblock.css'
 import { LLOG } from './LLog';
-
 // import {
 // 	transformerNotationDiff,
 // 	transformerNotationHighlight,
@@ -138,11 +138,28 @@ export class EditableCodeblock {
 		}
 	}
 
+	/// first render
+	render(): void {
+		switch (this.settings.renderMode) {
+			case 'textarea':
+				this.renderTextareaPre()
+				break
+			case 'pre':
+				this.emit_render(this.el)
+				break
+			case 'editablePre':
+				this.renderEditablePre()
+				break
+			default:
+				throw new Error('Unreachable')
+		}
+	}
+
 	/** param this.settings.saveMode onchange/oninput
 	 * 
 	 * onCall: renderMode === 'textarea'
 	 */
-	renderTextareaPre(): void {
+	private renderTextareaPre(): void {
 		// dom
 		// - div.editable-codeblock
 		//   - span > pre > code
@@ -166,19 +183,23 @@ export class EditableCodeblock {
 		});
 		textarea.value = this.outerInfo.source ?? this.innerInfo.source_old;
 
+		// [!code hl]
 		// language-edit
-		const editEl = document.createElement('div'); div.appendChild(editEl); editEl.classList.add('language-edit');
-		editEl.setAttribute('align', 'right');
-		const editInput = document.createElement('input'); editEl.appendChild(editInput);
-		editInput.value = this.outerInfo.language_type + this.outerInfo.language_meta
+		let editInput: HTMLInputElement|undefined
+		// const editEl = document.createElement('div'); div.appendChild(editEl); editEl.classList.add('language-edit');
+		// editEl.setAttribute('align', 'right');
+		// editInput = document.createElement('input'); editEl.appendChild(editInput);
+		// editInput.value = this.outerInfo.language_type + this.outerInfo.language_meta
 
 		// readmode and markdown reRender not shouldn't change
 		if (this.isReadingMode || this.isMarkdownRendered) {
 			textarea.setAttribute('readonly', '')
 			textarea.setAttribute('display', '')
-			editInput.setAttribute('readonly', '')
+			if (editInput) { editInput.setAttribute('readonly', '') }
 			return
 		}
+
+		// ---------- is sync --------------
 
 		// #region textarea - async part - composition start/end
 		let isComposing = false; // Is in the input method combination stage. Can fix input method (like chinese) invalid. The v-model in the Vue version also has this problem.
@@ -200,7 +221,7 @@ export class EditableCodeblock {
 			}
 			// TODO: fix: not emit onchange when no change, and is-no-saved class will not remove. 
 			textarea.onchange = (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
-				emit_change((ev.target as HTMLTextAreaElement).value, false, true, false)
+				emit_change((ev.target as HTMLTextAreaElement).value, true, true, false)
 			}
 		}
 		// refresh/save strategy2: cache and rebuild
@@ -215,10 +236,11 @@ export class EditableCodeblock {
 				// return
 			})
 			textarea.oninput = (ev): void => {
-				emit_change((ev.target as HTMLTextAreaElement).value, false, true, true) // old: isRender is true
+				emit_change((ev.target as HTMLTextAreaElement).value, true, true, true) // old: isRender is true
 			}
 		}
 
+		// Note: Saving does not necessarily trigger rendering (this is only the case in environments such as ob)
 		const emit_change = (newValue: string, isRender: boolean, isSave: boolean, isSavePos: boolean): void => {
 			if (isComposing) return
 			this.outerInfo.source = newValue
@@ -238,33 +260,6 @@ export class EditableCodeblock {
 		}
 		// #endregion
 
-		// #region language-edit - async part
-		if (this.settings.saveMode != 'oninput') {
-			// no support
-		}
-		{
-			editInput.oninput = (ev): void => {
-				if (isComposing) return
-
-				const newValue = (ev.target as HTMLInputElement).value
-				const match = /^(\S*)(\s?.*)$/.exec(newValue)
-				if (!match) throw new Error('This is not a regular expression matching that may fail')
-				this.outerInfo.language_type = match[1]
-				this.outerInfo.language_meta = match[2]
-				void this.emit_render(span)
-				div.classList.add('is-no-saved'); 
-			}
-			editInput.onchange = (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
-				const newValue = (ev.target as HTMLInputElement).value
-				const match = /^(\S*)(\s?.*)$/.exec(newValue)
-				if (!match) throw new Error('This is not a regular expression matching that may fail')
-				this.outerInfo.language_type = match[1]
-				this.outerInfo.language_meta = match[2]
-				div.classList.remove('is-no-saved'); void this.emit_save(true, false)
-			}
-		}
-		// #endregion
-
 		// #region textarea - async part - keydown
 		this.enable_editarea_listener(textarea, undefined, undefined, (ev)=>{
 			const selectionEnd: number = textarea.selectionEnd
@@ -278,13 +273,40 @@ export class EditableCodeblock {
 		})
 		// #endregion
 
-		// #region language-edit - async part - keydown
-		this.enable_editarea_listener(editInput, undefined, (ev)=>{
-			ev.preventDefault() // safe: tested: `prevent` can still trigger `onChange
-			const position = textarea.value.length
-			textarea.setSelectionRange(position, position)
-			textarea.focus()
-		}, undefined)
+		// #region language-edit - async part
+		if (editInput) {
+			if (this.settings.saveMode != 'oninput') {
+				// no support
+			}
+			{
+				editInput.oninput = (ev): void => {
+					if (isComposing) return
+
+					const newValue = (ev.target as HTMLInputElement).value
+					const match = /^(\S*)(\s?.*)$/.exec(newValue)
+					if (!match) throw new Error('This is not a regular expression matching that may fail')
+					this.outerInfo.language_type = match[1]
+					this.outerInfo.language_meta = match[2]
+					void this.emit_render(span)
+					div.classList.add('is-no-saved'); 
+				}
+				editInput.onchange = (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
+					const newValue = (ev.target as HTMLInputElement).value
+					const match = /^(\S*)(\s?.*)$/.exec(newValue)
+					if (!match) throw new Error('This is not a regular expression matching that may fail')
+					this.outerInfo.language_type = match[1]
+					this.outerInfo.language_meta = match[2]
+					div.classList.remove('is-no-saved'); void this.emit_save(true, false)
+				}
+			}
+
+			this.enable_editarea_listener(editInput, undefined, (ev)=>{
+				ev.preventDefault() // safe: tested: `prevent` can still trigger `onChange
+				const position = textarea.value.length
+				textarea.setSelectionRange(position, position)
+				textarea.focus()
+			}, undefined)
+		}
 		// #endregion
 	}
 
@@ -305,7 +327,7 @@ export class EditableCodeblock {
 	 *   - bug: hard to use focus style
 	 *     fix: `:has()` (only support in new version browser)
 	 */
-	async renderEditablePre(): Promise<void> {
+	private async renderEditablePre(): Promise<void> {
 		// dom
 		// - div.editable-codeblock.editable-pre
 		//   - pre
@@ -370,6 +392,7 @@ export class EditableCodeblock {
 			}
 		}
 
+		// Note: Saving does not necessarily trigger rendering (this is only the case in environments such as ob).
 		const emit_change = (newValue: string, isRender: boolean, isSave: boolean, isSavePos: boolean): void => {
 			if (isComposing) return
 			if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 12'); return }
@@ -404,7 +427,7 @@ export class EditableCodeblock {
 		// #endregion
 	}
 
-	renderEditablePre_saveCursorPosition(container: Node): null|{start: number, end: number} {
+	private renderEditablePre_saveCursorPosition(container: Node): null|{start: number, end: number} {
 		const selection = window.getSelection()
 		if (!selection || selection.rangeCount === 0) return null
 
@@ -422,7 +445,7 @@ export class EditableCodeblock {
 		}
 	}
 	
-	renderEditablePre_restoreCursorPosition(container: Node, start: number, end: number): void {
+	private renderEditablePre_restoreCursorPosition(container: Node, start: number, end: number): void {
 		// get range
 		const range: Range = document.createRange()
 		let charIndex = 0
@@ -457,7 +480,7 @@ export class EditableCodeblock {
 
 	/// TODO: fix: after edit, can't up/down to root editor
 	/// @param el: HTMLTextAreaElement|HTMLInputElement|HTMLPreElement
-	enable_editarea_listener(el: HTMLElement, cb_tab?: (ev: KeyboardEvent)=>void, cb_up?: (ev: KeyboardEvent)=>void, cb_down?: (ev: KeyboardEvent)=>void): void {
+	protected enable_editarea_listener(el: HTMLElement, cb_tab?: (ev: KeyboardEvent)=>void, cb_up?: (ev: KeyboardEvent)=>void, cb_down?: (ev: KeyboardEvent)=>void): void {
 		if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el.isContentEditable)) return
 
 		el.addEventListener('focus', () => {
@@ -650,6 +673,15 @@ export class EditableCodeblock {
 	 * 
 	 * onCall: renderMode === 'pre'
 	 * 
+	 * why reuse code element?
+	 * - reduce the refresh rate
+	 * - avoid rebind event listeners, like focus, blur, input, keydown, etc.
+	 * - avoid re focus
+	 * 
+	 * Otherwise, additional work will be required later on:
+	 * - this.enable_editarea_listener(code)
+	 * - ... rebind event
+	 * 
 	 * param this.settings.renderEngine shiki/prism
 	 * @param targetEl in which element should the result be rendered
 	 * - targetEl (usually a div)
@@ -666,6 +698,7 @@ export class EditableCodeblock {
 
 		// pre html string - shiki, insert `<pre>...<pre/>`
 		if (this.settings.renderEngine == 'shiki') {
+			// [!code hl]
 			// // check theme, TODO: use more theme
 			// let theme = ''
 			// for (const item of bundledThemesInfo) {
@@ -693,6 +726,7 @@ export class EditableCodeblock {
 			// 	],
 			// })
 
+			// const code: HTMLPreElement|null = targetEl.querySelector(':scope>pre>code')
 			// if (!code) {
 			// 	targetEl.innerHTML = preStr // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
 			// }
@@ -730,15 +764,6 @@ export class EditableCodeblock {
 			} else {
 				// nothing
 			}
-
-			// why reuse code element?
-			// - reduce the refresh rate
-	        // - avoid rebind event listeners, like focus, blur, input, keydown, etc.
-	        // - avoid re focus
-			//
-			// Otherwise, additional work will be required later on:
-			// - this.enable_editarea_listener(code)
-			// - ... rebind event
 
 			// render
 			code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
