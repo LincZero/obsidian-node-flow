@@ -1,33 +1,38 @@
 <!-- 
 文本编辑块 (低依赖的高通用模块)
 
-特性：
+特性 - 通用
 
-- 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
+- Adapt        | 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
 - Style        | 样式： 黑暗主题、普通文本/代码高亮模式、取消拼写检查
   - Hightlight | 代码高亮
-- 缓存显示： **不要直接用props.data**。会根据情况选择显示cacheValue还是defaultValue
-- 节点流: nodrag class 保证聚焦编辑时不会被节点快捷键影响 (ctrl/shift/拖拽等)
-- [ ] Extend sytax | 扩展语法。如多行拼接： 使用 `\` 结尾再换行，可以优化显示
-- Shortcut key | 按键
-  - [ ] Tab键、Shift键
-  - [ ] Ctrl + z
+  - [ ] auto color | 文本反色功能 (用于颜色框)
+- Input        | 输入法： 支持中文输入法
+- Shortcut key | 按键: Tab、Shift Tab、Ctrl + z
+- Options      | 渲染方式、保存方式、代码高亮引擎、缩进风格等
 
-不支持特性:
+特性 - 节点流版本
 
-- TODO pre-code的一些bug
-  - textare支持撤回，但pre-code不支持
-  - 不支持输入法 (输入中文)
-- TODO 最末尾的空白行异常、中文输入异常
+- nodrag class | 保证聚焦编辑时不会被节点快捷键影响 (ctrl/shift/拖拽等)
+- Cache        | 缓存显示： **不要直接用props.data**。会根据情况选择显示cacheValue还是defaultValue
+
+不支持特性 (TODO)
+
+- 撤回：textare支持撤回，但pre-code不支持，缩进等操作也暂不支持撤回
+- 最末尾的空白行异常、中文输入异常
+- Multi cursors| 多光标
+- Extend sytax | 扩展语法。如多行拼接： 使用 `\` 结尾再换行，可以优化显示
 -->
 
 <template>
-  <div class="nf-textarea-p nodrag nowhell" ref="ref_el" :is-single-line="data.value.split('\n').length < 2">
-  </div>
+  <div class="nf-textarea-p nodrag nowhell" ref="ref_el"
+    :is-single-line="showValue.split('\n').length < 2"
+    :is-cache-value="nfNode?.nfData.value.runState != 'none' && props.data.cacheValue?.length > 0"
+  ></div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const props = withDefaults(defineProps<{
   data: any,
@@ -58,8 +63,8 @@ class EditableCodeblockInVue extends EditableCodeblock {
     super(codeType, data, container)
     this.settings.renderEngine = 'prismjs'
     this.settings.saveMode = 'oninput'
-    this.settings.renderMode = 'textarea' // 'editablePre' 可选
-    // this.settings.renderMode = 'editablePre'
+    // this.settings.renderMode = 'textarea' // 'editablePre' 可选
+    this.settings.renderMode = 'editablePre'
   }
 
   // sync1, inner -> outer (vue data)
@@ -81,19 +86,32 @@ onMounted(() => {
 
 // sync2, outer (vue data) -> inner
 import { watch } from 'vue';
-watch(() => props.data.value, (newValue: any) => {
+import { NFNode } from './NFNode';
+const nfNode: NFNode|null = NFNode.useGetNFNode(props.data.parentId)
+const showValue = computed(() => { // value or cacheValue
+  if (nfNode?.nfData.value.runState != 'none' && props.data.cacheValue) {
+    return props.data.cacheValue
+  } else {
+    return props.data.value
+  }
+})
+watch(showValue, (showValue) => {
   if (!ref_el.value) return
   if (!editableCodeblock) return
   if (i2o_flag) { i2o_flag = false; return }
-  editableCodeblock.outerInfo.source = newValue
+  editableCodeblock.outerInfo.source = showValue
   editableCodeblock.emit_render(ref_el.value.querySelector('.editable-codeblock'))
 }, {
-  deep: true
+  // deep: true
 })
 // #endregion
 </script>
 
 <style>
+.nf-textarea-p[is-single-line='false'] {
+  width: 100%;
+}
+
 /* 单行 */
 .nf-textarea-p[is-single-line='true'] pre,
 .nf-textarea-p[is-single-line='true'] textarea {
@@ -102,8 +120,34 @@ watch(() => props.data.value, (newValue: any) => {
   background: none !important;
   outline: none !important;
 }
+
+/* 锁，标注显示为cacheValue而非cache的情况 */
+.nf-textarea-p {
+  position: relative;
+  overflow: visible; /* 这里可显示，再往下要滚动 */
+}
+.nf-textarea-p[is-cache-value='true']::before {
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  background: rgba(31, 139, 139, 0.8);
+  border-radius: 50%;
+  opacity: 0.8;
+  /* content: "L"; */
+  color: white;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='-1 -3 26 26' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='11' x='3' y='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+  text-align: center;
+  /* cursor: pointer; */
+  z-index: 2;
+}
 </style>
 
+<!-- old -->
 <style scoped>
 .nf-textarea {
   /* max-width: 500px; */

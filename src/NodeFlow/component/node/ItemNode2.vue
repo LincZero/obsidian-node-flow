@@ -95,6 +95,7 @@ import { NFNode } from '../utils/NFNode'
 // isFlowEnv: 表示useNodeId失效，当前不在vueflow组件作用域下。即节点不在画布中显示的情况，如NodeEditor
 // isItem: 表示自内嵌的情况。NFNode是严格的容器内元素，子项不定义
 if (!props.isItem && isFlowEnv) {
-  const nfNode:NFNode = NFNode.useFactoryNFNode(id, props.data)
+  const ref_data = computed(() => props.data)
+  const nfNode:NFNode = NFNode.useFactoryNFNode(id, ref_data)
 }
 </script>

@@ -12,6 +12,7 @@ import { ComputedRef, watch, provide, inject, nextTick, ref } from 'vue';
 import { factoryFlowData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData';
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 import { NFNodes } from './NFNodes';
+import { LLOG } from '../general/LLog';
 
 interface ctx_type {
   sourceValues: { [key:string]: any },
@@ -100,7 +101,7 @@ export class NFNode {
   // #region 静态的东西
 
   public readonly nodeId: string // 可 useNodeId()
-  public nfData = ref<any>() // type 同 findNode(selected.value[0]).data
+  public nfData: ComputedRef<any>
   public nfStr = ref<string>('')
   private nfNodes: NFNodes|null = null
 
@@ -131,8 +132,9 @@ export class NFNode {
   }
 
   /** 生成节点 - 画布组件中使用的版本 */
-  public static useFactoryNFNode(id: string, propData:object) {
-    const nfNode = new NFNode(id, propData)
+  public static useFactoryNFNode(id: string, ref_data: ComputedRef<any>) {
+    // const data = nfNodes.findNode(id) // 这个是节点的，不是节点项的
+    const nfNode = new NFNode(id, ref_data)
 
     // 容器处理，必须先处理容器再处理其他
     // 容器一
@@ -180,9 +182,9 @@ export class NFNode {
     return node
   }
 
-  private constructor(nodeId: string, propData: object) {
+  private constructor(nodeId: string, ref_data: ComputedRef<any>) {
     this.nodeId = nodeId
-    this.nfData.value = propData
+    this.nfData = ref_data
     this._useNodesData = useNodesData(this.nodeId)
     this._useSourceConnections = useNodeConnections({ handleType: 'target' })
     this._useTargetConnections = useNodeConnections({ handleType: 'source' })
@@ -404,14 +406,13 @@ export class NFNode {
 
   /** 处理自身节点 */
   private async start_dealSelf(): Promise<boolean> {
-    console.log('this._useNodesData.value.data1', this._useNodesData.value, this.nfData.value) // 这后面存在问题！data没掉了！nfData有问题，少了一层！
     this.nfData.value.runState = 'running'; this.updateNodeData(this.nodeId, this.nfData.value);
-    console.log('this._useNodesData.value.data2', this._useNodesData.value, this.nfData.value)
 
     // 执行自定义代码
     const result = await this.run_node(this.ctx)
     if (!result) {
       this.nfData.value.runState = 'error'; this.updateNodeData(this.nodeId, this.nfData.value);
+      LLOG.error(`节点 #${this.nodeId} 执行失败，运行状态设置为 error`)
       // 不return，出错了也要同步结果回去 (会有错误信息)
     }
 
