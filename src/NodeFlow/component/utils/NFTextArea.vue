@@ -47,6 +47,7 @@ const props = withDefaults(defineProps<{
 
 // sync0, avoid circular updates
 let i2o_flag: boolean = false
+let o2i_flag: boolean = false
 
 import { EditableCodeblock, loadPrism2 } from '../general/EditableCodeblock';
 import Prism from "prismjs" // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
@@ -69,6 +70,7 @@ class EditableCodeblockInVue extends EditableCodeblock {
 
   // sync1, inner -> outer (vue data)
   override emit_save(isUpdateLanguage: boolean, isUpdateSource: boolean): Promise<void> {
+    if (o2i_flag) { o2i_flag = false; return new Promise<void>((resolve, reject) => {}) }
     return new Promise<void>((resolve, reject) => {
       i2o_flag = true
       props.data.value = this.outerInfo.source ?? this.innerInfo.source_old
@@ -99,11 +101,24 @@ watch(showValue, (showValue) => {
   if (!ref_el.value) return
   if (!editableCodeblock) return
   if (i2o_flag) { i2o_flag = false; return }
+  o2i_flag = true
   editableCodeblock.outerInfo.source = showValue
   editableCodeblock.emit_render(ref_el.value.querySelector('.editable-codeblock'))
-}, {
-  // deep: true
 })
+
+// const showValue = ref<string>(props.data.value)
+// showValue分两个更新来源，以便查看i2o_flag和o2i_flag，避免循环更新
+// watch([
+//   () => nfNode?.nfData.value.runState,
+//   () => props.data.cacheValue
+// ], ([runState, cacheValue]) => {
+//   if (!ref_el.value) return
+//   if (!editableCodeblock) return
+//   if (i2o_flag) { i2o_flag = false; return }
+//   o2i_flag = true
+//   editableCodeblock.outerInfo.source = showValue
+//   editableCodeblock.emit_render(ref_el.value.querySelector('.editable-codeblock'))
+// })
 // #endregion
 </script>
 
