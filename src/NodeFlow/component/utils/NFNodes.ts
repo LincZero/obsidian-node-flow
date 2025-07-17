@@ -58,10 +58,10 @@ import { NFNode } from './NFNode';
  * - use类: **必须**在setup作用域下构造 (使用了inject的use组合函数)，完成闭包
  */
 export class NFNodes {
-  public nfType: Ref<string> = ref('') // 节点图类型
+  public jsonType: Ref<string> = ref('') // 节点图类型
   public jsonStr: Ref<string> = ref('')
   public jsonData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]}) // 特点: 大json引用、可转json。通过 VueFlow api 变更时能检测到
-  public nfNodes: Record<string, NFNode> = {} // 特点: 对象集
+  public nfNodes: Record<string, NFNode> = {} // 特点: 对象数据
   // public componentKey: Ref<number> = ref(0) // 用于强制刷新
   // private calcLayout:any // 记录自动布局 const { calcLayout } = useLayout(); this.calcLayout = calcLayout
 
@@ -117,7 +117,7 @@ export class NFNodes {
       console.log("[auto update] [all] string -> data")
 
       // 新数据
-      let result = factoryFlowData(this.nfType.value, this.jsonStr.value)
+      let result = factoryFlowData(this.jsonType.value, this.jsonStr.value)
       if (result.code != 0) {
         result = failedFlowData(result.msg)
       }
@@ -154,7 +154,7 @@ export class NFNodes {
       nextTick(() => { flag_data2str = false; });
       console.log("[auto update] [all] data -> string")
 
-      const result = serializeFlowData(this.nfType.value, this.jsonData.value)
+      const result = serializeFlowData(this.jsonType.value, this.jsonData.value)
       if (result.code != 0) {
         result.data = "无法保存修改:"+result.msg
         return
@@ -225,7 +225,7 @@ export class NFNodes {
   }
 
   public get_mdData(): string {
-    return `\`\`\`${this.nfType.value}\n${this.jsonStr.value}\n\`\`\`\n`
+    return `\`\`\`${this.jsonType.value}\n${this.jsonStr.value}\n\`\`\`\n`
   }
 
   public findNode(id: string): null|any {

@@ -21,7 +21,7 @@ export function factoryVueDom(
   /// 将targetVue挂载到targetEl上
   function mountVue (targetEl:HTMLElement, _isMini:boolean) {
     const nfNodes = NFNodes.useFactoryNFNodes()
-    nfNodes.nfType.value = jsonType
+    nfNodes.jsonType.value = jsonType
     nfNodes.jsonStr.value = mdStr
 
     // 根据新json生成节点流

@@ -132,7 +132,7 @@ async function nodedata_get(isUpdate = true) {
       })
     } else {
       nodedata_content.value = ''
-      // nfNodes.nfStr.value = // 失败则不变更
+      // nfNodes.jsonStr.value = // 失败则不变更
     }
   } catch (error) {
     nodedata_content.value = '[error] ' + error

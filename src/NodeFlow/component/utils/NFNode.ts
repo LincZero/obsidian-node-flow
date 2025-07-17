@@ -103,7 +103,7 @@ export class NFNode {
   public readonly nodeId: string // 可 useNodeId()
   // public nfData: ComputedRef<any> // 弃用，非双向，换用 this._useNodesData.value.data
   public jsonData: any // 特点: 大json引用、可转json
-  public jsonStr = ref<string>('')
+  public jsonStr = ref<string>('') // 特点: 对象数据
   private nfNodes: NFNodes|null = null
 
   // vueflow定义的结构
@@ -166,7 +166,7 @@ export class NFNode {
   public static factoryNFNode(propData:any|string, nfNodes: NFNodes, type?: string): any|null {
     // propData: string -> object
     if (typeof propData == 'string') {
-      let result = factoryFlowData(type??nfNodes.nfType.value, propData)
+      let result = factoryFlowData(type??nfNodes.jsonType.value, propData)
       if (result.code != 0) {
         console.error(`无法创建节点.
 错误原因: ${result.code}, ${result.msg}
@@ -233,7 +233,7 @@ export class NFNode {
       // list = list.map(line => { return '  '+line })
       // const nodeStr = `- nodes\n${list.join('\n')}\n- edges\n` // TODO fix 不一定是这种形式，如有可能是json
       const nodeStr = newVal
-      let result = factoryFlowData(this.nfNodes.nfType.value, nodeStr)
+      let result = factoryFlowData(this.nfNodes.jsonType.value, nodeStr)
       if (result.code != 0) {
         console.error(`输入了错误节点.
 错误原因: ${result.code}, ${result.msg}
@@ -244,14 +244,11 @@ export class NFNode {
 错误原因: 节点是复数: ${result.data.nodes.length}`)
         return
       } else {
-        const node = this.nfNodes.findNode(this.nodeId)
         // 注意点：
-        // 不能直接赋值 (地址复制)，要使用 Object.assign 来复制对象，以触发响应式更新
-        // 同理，vueflow的updateNodeData()方法也不能用
-        // 更新到vueflow库
+        // 要使用 Object.assign 来复制对象，以触发响应式更新
+        // 不能直接赋值 (地址复制)，或使用vueflow的updateNodeData()方法
+        const node = this.jsonData
         Object.assign(node.data, result.data.nodes[0].data)
-        // 更新到data
-        // Object.assign(this.jsonData.value, result.data.nodes[0].data)
       }
     })
     // #endregion
@@ -270,7 +267,7 @@ export class NFNode {
 
   private data2str() {
     // this.nfDate.value 未定义
-    const result = serializeFlowData(this.nfNodes.nfType.value, {nodes: [{id: this.nodeId, data: this._useNodesData.value.data}], edges: []})
+    const result = serializeFlowData(this.nfNodes.jsonType.value, {nodes: [{id: this.nodeId, data: this._useNodesData.value.data}], edges: []})
     if (result.code == 0) {
       this.jsonStr.value = result.data
       // 如果修改头尾和前置空格会导致内换行头部缺失字符

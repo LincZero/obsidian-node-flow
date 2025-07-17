@@ -20,7 +20,7 @@ const props = defineProps<{
 }>()
 import { NFNodes } from '../NodeFlow/component/utils/NFNodes';
 const nfNodes = NFNodes.useFactoryNFNodes()
-nfNodes.nfType.value = props.type??""
+nfNodes.jsonType.value = props.type??""
 nfNodes.jsonStr.value = props.data
 
 // 组件 - 节点流画布

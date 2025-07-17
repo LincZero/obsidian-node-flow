@@ -103,7 +103,7 @@ import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 const saveable = true; // [环境]仅obsidian等可写环境需要，vuepress这种非可写环境不需要
 function fn_saveChange () {
   if (!props.hasOwnProperty("fn_save")) return
-  const result = serializeFlowData(props.nfNodes.nfType.value, props.nfNodes.jsonData.value)
+  const result = serializeFlowData(props.nfNodes.jsonType.value, props.nfNodes.jsonData.value)
   if (result.code == 0) {
     props.nfNodes.jsonStr.value = result.data
     props.fn_save(result.data)
