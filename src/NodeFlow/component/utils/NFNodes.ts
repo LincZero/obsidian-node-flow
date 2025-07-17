@@ -60,8 +60,8 @@ import { NFNode } from './NFNode';
 export class NFNodes {
   public nfType: Ref<string> = ref('') // 节点图类型
   public nfStr: Ref<string> = ref('')
-  public nfData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]}) // 通过 VueFlow api 变更时能检测到
-  public nfNodes: Record<string, NFNode> = {}
+  public jsonData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]}) // 特点: 大json引用、可转json。通过 VueFlow api 变更时能检测到
+  public nfNodes: Record<string, NFNode> = {} // 特点: 对象集
   // public componentKey: Ref<number> = ref(0) // 用于强制刷新
   // private calcLayout:any // 记录自动布局 const { calcLayout } = useLayout(); this.calcLayout = calcLayout
 
@@ -133,7 +133,7 @@ export class NFNodes {
         }
         // 次选nfData的数据 (nfData.nodes[n]中，.data都是对的，但.position等更新会不及时)
         else {
-          for (const node_old of this.nfData.value.nodes) {
+          for (const node_old of this.jsonData.value.nodes) {
             if (node_old.id == node_new.id) {
               node_new.position = node_old.position
               node_new.data.runState = node_old.data.runState
@@ -143,18 +143,18 @@ export class NFNodes {
         }
       }
       // 更新数据
-      Object.assign(this.nfData.value, result.data)
+      Object.assign(this.jsonData.value, result.data)
     }) // , { immediate: true }
     // #endregion
 
     // #region 自动更新 - data -> string
-    watch(this.nfData, (newVal)=>{
+    watch(this.jsonData, (newVal)=>{
       if (flag_str2data) { flag_str2data = false; return }
       flag_data2str = true;
       nextTick(() => { flag_data2str = false; });
       console.log("[auto update] [all] data -> string")
 
-      const result = serializeFlowData(this.nfType.value, this.nfData.value)
+      const result = serializeFlowData(this.nfType.value, this.jsonData.value)
       if (result.code != 0) {
         result.data = "无法保存修改:"+result.msg
         return
@@ -206,20 +206,20 @@ export class NFNodes {
   public autoSet_layout(direction:string='LR', amend:string='center', isAble?: boolean): void {
 
     if (isAble) {
-      if (!(this.nfData.value.nodes.length>1 &&
-        this.nfData.value.nodes[0].position.x == 0 && this.nfData.value.nodes[0].position.y == 0 &&
-        this.nfData.value.nodes[1].position.x == 0 && this.nfData.value.nodes[1].position.y == 0
+      if (!(this.jsonData.value.nodes.length>1 &&
+        this.jsonData.value.nodes[0].position.x == 0 && this.jsonData.value.nodes[0].position.y == 0 &&
+        this.jsonData.value.nodes[1].position.x == 0 && this.jsonData.value.nodes[1].position.y == 0
       )) {
-        console.log('Needn\'t auto set layout', this.nfData.value.nodes.length>1,
-          this.nfData.value.nodes[0].position.x == 0 && this.nfData.value.nodes[0].position.y,
-          this.nfData.value.nodes[1].position.x == 0 && this.nfData.value.nodes[1].position.y == 0
+        console.log('Needn\'t auto set layout', this.jsonData.value.nodes.length>1,
+          this.jsonData.value.nodes[0].position.x == 0 && this.jsonData.value.nodes[0].position.y,
+          this.jsonData.value.nodes[1].position.x == 0 && this.jsonData.value.nodes[1].position.y == 0
         )
         return
       }
     }
 
     const { calcLayout } = this._calcLayout
-    this.nfData.value.nodes = calcLayout(this.nfData.value.nodes, this.nfData.value.edges, direction, amend)
+    this.jsonData.value.nodes = calcLayout(this.jsonData.value.nodes, this.jsonData.value.edges, direction, amend)
     const { fitView } = this._useVueFlow
     nextTick(() => { fitView() })
   }
@@ -229,7 +229,7 @@ export class NFNodes {
   }
 
   public findNode(id: string): null|any {
-    return this.nfData.value.nodes.find((node:any) => node.id === id) || null;
+    return this.jsonData.value.nodes.find((node:any) => node.id === id) || null;
   }
 
   // TODO 分自动存储和手动存储、是否持久化存储
@@ -241,7 +241,7 @@ export class NFNodes {
     let data: any
     if (type == "mdData") data = "\n" + this.get_mdData()
     else if (type == "rawData") data = "\n" + this.nfStr.value
-    else data = this.nfData.value
+    else data = this.jsonData.value
     console.log("Debug json:", data)
   }
 
@@ -251,7 +251,7 @@ export class NFNodes {
     if (type == "mdData") data = this.get_mdData()
     else if (type == "rawData") data = this.nfStr.value
     else {
-      const _rawData = computed(() => JSON.stringify(removeParentField(this.nfData.value), null, 2));
+      const _rawData = computed(() => JSON.stringify(removeParentField(this.jsonData.value), null, 2));
       data = _rawData.value
     }
 

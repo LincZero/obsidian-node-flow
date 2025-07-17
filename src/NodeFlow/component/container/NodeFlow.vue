@@ -8,7 +8,7 @@
   <!-- 主画布 -->
   <VueFlow
     class="nf-node-flow" 
-    :nodes="props.nfNodes.nfData.value.nodes" :edges="props.nfNodes.nfData.value.edges"
+    :nodes="props.nfNodes.jsonData.value.nodes" :edges="props.nfNodes.jsonData.value.edges"
     :prevent-scrolling="true"
     fit-view-on-init
     @nodes-change="onNodeChange"
@@ -203,7 +203,7 @@ function onEdgeChange(changes: EdgeChange[]) {
         "#8000ff", "#cc00ff", "#ff00e6", "#ff0099", "#ff004c"
       ]
       const nameMapAttr = change.item.targetHandle.toLowerCase().charCodeAt(0)%20;
-      props.nfNodes.nfData.value.edges.push({
+      props.nfNodes.jsonData.value.edges.push({
         id: change.item.id,
         style: {
           stroke: colors[nameMapAttr]
@@ -216,7 +216,7 @@ function onEdgeChange(changes: EdgeChange[]) {
     }
     // 删
     else if (change.type == "remove") {
-      props.nfNodes.nfData.value.edges = props.nfNodes.nfData.value.edges.filter((edge:any) => edge.id != change.id); // removeEdges(change.id)
+      props.nfNodes.jsonData.value.edges = props.nfNodes.jsonData.value.edges.filter((edge:any) => edge.id != change.id); // removeEdges(change.id)
     }
     // console.log('onEdgeChange', change, edges.value, props.nfNodes.nfData.value)
   }
@@ -240,7 +240,7 @@ function onNodeChange(changes: NodeChange[]) {
     // 增
     else if (change.type == "add" && change.hasOwnProperty("item")) {
       const data = findNode(change.item.id)
-      props.nfNodes.nfData.value.nodes.push({
+      props.nfNodes.jsonData.value.nodes.push({
         id: data.id,
         data: data.data,
         position: data.position,
@@ -250,7 +250,7 @@ function onNodeChange(changes: NodeChange[]) {
     // 删
     else if (change.type == "remove") {
       // 不能操作嵌套节点，注意删除时要强制将其中被选择节点里删掉
-      props.nfNodes.nfData.value.nodes = props.nfNodes.nfData.value.nodes.filter((node:any) => node.id != change.id); // removeNodes(change.id)
+      props.nfNodes.jsonData.value.nodes = props.nfNodes.jsonData.value.nodes.filter((node:any) => node.id != change.id); // removeNodes(change.id)
       cache_selected.value = cache_selected.value.filter(item => item !== change.id);
     }
   }

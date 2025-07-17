@@ -101,7 +101,8 @@ export class NFNode {
   // #region 静态的东西
 
   public readonly nodeId: string // 可 useNodeId()
-  public nfData: ComputedRef<any>
+  // public nfData: ComputedRef<any> // 弃用，非双向，换用 this._useNodesData.value.data
+  public jsonData: any // 特点: 大json引用、可转json
   public nfStr = ref<string>('')
   private nfNodes: NFNodes|null = null
 
@@ -146,8 +147,8 @@ export class NFNode {
     }
     nfNode.nfNodes.nfNodes[nfNode.nodeId] = nfNode
 
+    nfNode.jsonData = nfNode.nfNodes.findNode(nfNode.nodeId)
     nfNode.data2str()
-
     nfNode.init_auto_update()
 
     return nfNode
@@ -184,13 +185,13 @@ export class NFNode {
 
   private constructor(nodeId: string, ref_data: ComputedRef<any>) {
     this.nodeId = nodeId
-    this.nfData = ref_data
+    // this.nfData = ref_data
     this._useNodesData = useNodesData(this.nodeId)
+
     this._useSourceConnections = useNodeConnections({ handleType: 'target' })
     this._useTargetConnections = useNodeConnections({ handleType: 'source' })
-    const { updateNodeData, findNode } = useVueFlow()
+    const { updateNodeData } = useVueFlow()
     this.updateNodeData = updateNodeData
-    this.findNode = findNode
 
     // 流程控制 - 钩子 (注意修改和监听的都是节点的数据，而不是handle的数据)
     this._useNodesData.value.data['runState'] = 'none'
@@ -244,13 +245,13 @@ export class NFNode {
         // 更新到vueflow库
         Object.assign(node.data, result.data.nodes[0].data)
         // 更新到data
-        Object.assign(this.nfData.value, result.data.nodes[0].data)
+        // Object.assign(this.nfData.value, result.data.nodes[0].data)
       }
     })
     // #endregion
 
     // #region 自动更新 - data -> string
-    watch(this.nfData, (newVal)=>{
+    watch(() => this._useNodesData.value.data, (newVal)=>{
       if (flag_str2data) { flag_str2data = false; return }
       flag_data2str = true;
       nextTick(() => { flag_data2str = false; });
@@ -263,7 +264,7 @@ export class NFNode {
 
   private data2str() {
     // this.nfDate.value 未定义
-    const result = serializeFlowData(this.nfNodes.nfType.value, {nodes: [{id: this.nodeId, data: this.nfData.value}], edges: []})
+    const result = serializeFlowData(this.nfNodes.nfType.value, {nodes: [{id: this.nodeId, data: this._useNodesData.value.data}], edges: []})
     if (result.code == 0) {
       this.nfStr.value = result.data
       // 如果修改头尾和前置空格会导致内换行头部缺失字符
@@ -378,11 +379,13 @@ export class NFNode {
    */
   private async start_dealLast(): Promise<boolean> {
     for (const connection of this._useSourceConnections.value) {
-      const sourceNode = this.findNode(connection.source)
+      const sourceNode = this.nfNodes.findNode(connection.source)
+      // const sourceNode = this.findNode(connection.source)
 
+      // TODO BUG 这里无法更新到 Nodes.nfData 里的 runState
       // 上游节点状态检查
-      if (sourceNode.data.runState != 'over') { // 前面的节点没准备好，等待下一次被激活
-        console.warn(`#${this.nodeId} 前面的 #${connection.source} 没准备好，等待再次被激发`)
+      if (sourceNode.data.runState != 'over') {
+        console.warn(`#${this.nodeId} 前面的 #${connection.source} 为 ${sourceNode.data.runState}，没准备好，等待再次被激发`)
         // TODO 有线程冲突风险，一个方法是加个定时器待会再检查一下
         // 好像不会变回none，好像updateNodeData重复赋值runState同一个值也会触发watch来着
         // thisData.data.runState = 'ready'; updateNodeData(this.id, thisData.data);
@@ -406,12 +409,12 @@ export class NFNode {
 
   /** 处理自身节点 */
   private async start_dealSelf(): Promise<boolean> {
-    this.nfData.value.runState = 'running'; this.updateNodeData(this.nodeId, this.nfData.value);
+    this.jsonData.data.runState = 'running'; this.updateNodeData(this.nodeId, this.jsonData.data);
 
     // 执行自定义代码
     const result = await this.run_node(this.ctx)
     if (!result) {
-      this.nfData.value.runState = 'error'; this.updateNodeData(this.nodeId, this.nfData.value);
+      this.jsonData.data.runState = 'error'; this.updateNodeData(this.nodeId, this.jsonData.data);
       LLOG.error(`节点 #${this.nodeId} 执行失败，运行状态设置为 error`)
       // 不return，出错了也要同步结果回去 (会有错误信息)
     }
@@ -427,8 +430,8 @@ export class NFNode {
       }
     }
 
-    if (this.nfData.value.runState == 'error') return false
-    this.nfData.value.runState = 'over'; this.updateNodeData(this.nodeId, this.nfData.value);
+    if (this._useNodesData.value.data.runState == 'error') return false
+    this.jsonData.data.runState = 'over'; this.updateNodeData(this.nodeId, this.jsonData.data);
     return true
   }
 
@@ -444,7 +447,7 @@ export class NFNode {
     }
     const targetNodesId: string[] = Array.from(new Set(this._useTargetConnections.value.map((connection:any) => connection.target))) // 避免重复
     for (const nodeId of targetNodesId) {
-      const data = this.findNode(nodeId).data // TODO 这里最好能获取到 propsData，不然可能有bug
+      const data = this.nfNodes.findNode(nodeId).data // TODO 这里最好能获取到 propsData，不然可能有bug
       data.runState = 'ready'; this.updateNodeData(nodeId, data); // 能监听到 ready->ready，watch newVal 允许用相等的值重复赋值
     }
     if (targetNodesId.length == 0) {
@@ -456,9 +459,8 @@ export class NFNode {
 
   // vueflow相关
 
-  private _useNodesData: ComputedRef<any>
+  public _useNodesData: ComputedRef<any>
   private _useSourceConnections: ComputedRef<any>
   private _useTargetConnections: ComputedRef<any>
   private readonly updateNodeData
-  private readonly findNode
 }

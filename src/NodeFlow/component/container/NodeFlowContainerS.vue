@@ -12,7 +12,7 @@
     <!-- 主画布 -->
     <!-- TODO 有空捋一下这里，全屏这块有些代码应该抽离复用 -->
     <div :class="_isMini?'nf-shell-mini':'nf-shell-view'">
-      <NodeFlow ref="RefChild" :nfNodes="nfNodes" :jsonData="nfNodes.nfData.value" :isMini="_isMini" :isShowControls="_isShowControls"/>
+      <NodeFlow ref="RefChild" :nfNodes="nfNodes" :jsonData="nfNodes.jsonData.value" :isMini="_isMini" :isShowControls="_isShowControls"/>
     </div>
 
     <!-- 工具栏 -->
@@ -103,7 +103,7 @@ import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 const saveable = true; // [环境]仅obsidian等可写环境需要，vuepress这种非可写环境不需要
 function fn_saveChange () {
   if (!props.hasOwnProperty("fn_save")) return
-  const result = serializeFlowData(props.nfNodes.nfType.value, props.nfNodes.nfData.value)
+  const result = serializeFlowData(props.nfNodes.nfType.value, props.nfNodes.jsonData.value)
   if (result.code == 0) {
     props.nfNodes.nfStr.value = result.data
     props.fn_save(result.data)

@@ -25,10 +25,13 @@
 -->
 
 <template>
-  <div class="nf-textarea-p nodrag nowhell" ref="ref_el"
+  <div class="nf-textarea-p nodrag nowhell"
     :is-single-line="showValue.split('\n').length < 2"
-    :is-cache-value="nfNode?.nfData.value.runState != 'none' && props.data.cacheValue?.length > 0"
-  ></div>
+    :is-cache-value="nfNode?._useNodesData.value.data.runState != 'none' && props.data.cacheValue?.length > 0"
+  >
+    <div class="scroll-able" ref="ref_el">
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -91,7 +94,7 @@ import { watch } from 'vue';
 import { NFNode } from './NFNode';
 const nfNode: NFNode|null = NFNode.useGetNFNode(props.data.parentId)
 const showValue = computed(() => { // value or cacheValue
-  if (nfNode?.nfData.value.runState != 'none' && props.data.cacheValue) {
+  if (nfNode?._useNodesData.value.data.runState != 'none' && props.data.cacheValue) {
     return props.data.cacheValue
   } else {
     return props.data.value
@@ -109,7 +112,7 @@ watch(showValue, (showValue) => {
 // const showValue = ref<string>(props.data.value)
 // showValue分两个更新来源，以便查看i2o_flag和o2i_flag，避免循环更新
 // watch([
-//   () => nfNode?.nfData.value.runState,
+//   () => nfNode?._useNodesData.value.data.runState,
 //   () => props.data.cacheValue
 // ], ([runState, cacheValue]) => {
 //   if (!ref_el.value) return
@@ -123,14 +126,20 @@ watch(showValue, (showValue) => {
 </script>
 
 <style>
+/* 
+- .nf-textarea-p lock标志层
+- .scroll-able 滚动容器
+  - .editable-codeblock 可溢出部分
+ */
 .nf-textarea-p {
   max-height: 700px;
+  width: 100%;
 }
 .nf-textarea-p textarea {
   /* resize: vertical !important; */
 }
 
-.nf-textarea-p[is-single-line='false'] {
+.nf-textarea-p[is-single-line='false'] .scroll-able {
   resize: vertical !important;
   overflow-y: auto;
   width: 100%;
