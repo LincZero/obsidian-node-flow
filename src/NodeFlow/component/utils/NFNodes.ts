@@ -228,7 +228,7 @@ export class NFNodes {
     return `\`\`\`${this.jsonType.value}\n${this.jsonStr.value}\n\`\`\`\n`
   }
 
-  public findNode(id: string): null|any {
+  public findNode(id: string): null|Node {
     return this.jsonData.value.nodes.find((node:any) => node.id === id) || null;
   }
 

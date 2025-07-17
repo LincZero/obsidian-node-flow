@@ -2,6 +2,7 @@
  * NFNode 类独占文件
  */
 
+import type { Node } from '@vue-flow/core' 
 import { useVueFlow } from '@vue-flow/core'
 import {
   useNodesData,          // TheNode
@@ -102,7 +103,7 @@ export class NFNode {
 
   public readonly nodeId: string // 可 useNodeId()
   // public nfData: ComputedRef<any> // 弃用，非双向，换用 this._useNodesData.value.data
-  public jsonData: any // 特点: 大json引用、可转json
+  public jsonData: Node|null // 特点: 大json引用、可转json
   public jsonStr = ref<string>('') // 特点: 对象数据
   private nfNodes: NFNodes|null = null
 
@@ -154,6 +155,9 @@ export class NFNode {
     nfNode.nfNodes.nfNodes[nfNode.nodeId] = nfNode
 
     nfNode.jsonData = nfNode.nfNodes.findNode(nfNode.nodeId)
+    if (nfNode.jsonData == null) {
+      console.error(`无法获取节点数据: ${nfNode.nodeId}`)
+    }
     nfNode.data2str()
     nfNode.init_auto_update()
 

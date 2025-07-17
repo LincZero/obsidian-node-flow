@@ -6,7 +6,7 @@
 <template>
   <div class="node-editor">
     <div v-if="nfNode_current != null" style="margin: 0 0 12px; padding: 0;">
-      <ItemNode2 :id="nfNode_current.nodeId" :data="nfNode_current.jsonData"></ItemNode2>
+      <ItemNode2 :id="nfNode_current.nodeId" :data="nfNode_current.jsonData.data"></ItemNode2>
     </div>
     <textarea v-if="nfNode_current" spellcheck="false" class="item" v-model="nfNode_current.jsonStr"></textarea>
     <textarea v-else class="item" disabled>(未选中，请在画布中选中节点)</textarea>

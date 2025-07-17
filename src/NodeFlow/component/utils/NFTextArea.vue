@@ -133,7 +133,6 @@ watch(showValue, (showValue) => {
  */
 .nf-textarea-p {
   max-height: 700px;
-  width: 100%;
 }
 .nf-textarea-p textarea {
   /* resize: vertical !important; */
