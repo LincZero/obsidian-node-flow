@@ -339,6 +339,7 @@ export class EditableCodeblock {
 		await this.emit_render(div)
 		let pre: HTMLPreElement|null = div.querySelector(':scope>pre')
 		let code: HTMLPreElement|null = div.querySelector(':scope>pre>code')
+		code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
 		if (!pre || !code) { LLOG.error('render failed. can\'t find pre/code 1'); return }
 		this.enable_editarea_listener(code)
 
@@ -752,7 +753,6 @@ export class EditableCodeblock {
 				targetEl.innerHTML = ''
 				pre = document.createElement('pre'); targetEl.appendChild(pre);
 				code = document.createElement('code') as HTMLPreElement; pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
-				code.setAttribute('contenteditable', 'true'); code.setAttribute('spellcheck', 'false')
 			} else if (!pre) {
 				targetEl.innerHTML = ''
 				const pre = document.createElement('pre'); targetEl.appendChild(pre);

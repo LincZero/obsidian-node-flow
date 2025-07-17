@@ -64,8 +64,8 @@ class EditableCodeblockInVue extends EditableCodeblock {
     super(codeType, data, container)
     this.settings.renderEngine = 'prismjs'
     this.settings.saveMode = 'oninput'
-    // this.settings.renderMode = 'textarea' // 'editablePre' 可选
-    this.settings.renderMode = 'editablePre'
+    this.settings.renderMode = 'textarea' // 'editablePre' 可选
+    // this.settings.renderMode = 'editablePre'
   }
 
   // sync1, inner -> outer (vue data)
@@ -123,7 +123,16 @@ watch(showValue, (showValue) => {
 </script>
 
 <style>
+.nf-textarea-p {
+  max-height: 700px;
+}
+.nf-textarea-p textarea {
+  /* resize: vertical !important; */
+}
+
 .nf-textarea-p[is-single-line='false'] {
+  resize: vertical !important;
+  overflow-y: auto;
   width: 100%;
 }
 
@@ -136,10 +145,15 @@ watch(showValue, (showValue) => {
   outline: none !important;
 }
 
+.nf-textarea-p:has(textarea:focus),
+.nf-textarea-p:has(pre:focus),
+.nf-textarea-p:has(pre>code:focus) {
+  outline: 1px double #0060DF;
+}
+
 /* 锁，标注显示为cacheValue而非cache的情况 */
 .nf-textarea-p {
   position: relative;
-  overflow: visible; /* 这里可显示，再往下要滚动 */
 }
 .nf-textarea-p[is-cache-value='true']::before {
   box-sizing: border-box;
@@ -208,10 +222,6 @@ pre.nf-textarea {
 /* 锁，标注显示为cacheValue而非cache的情况 */
 .nf-textarea:disabled, .nf-textarea:read-only, .nf-textarea[is-cache-value='true'] {
   /* color: gray !important; */
-}
-.nf-textarea-p {
-  position: relative;
-  overflow: visible; /* 这里可显示，再往下要滚动 */
 }
 .nf-textarea:disabled::before, .nf-textarea:read-only::before, .nf-textarea[is-cache-value='true']::before {
   box-sizing: border-box;
