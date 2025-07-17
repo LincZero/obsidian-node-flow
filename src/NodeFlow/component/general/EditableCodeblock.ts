@@ -170,7 +170,7 @@ export class EditableCodeblock {
 
 		// span
 		const span = document.createElement('span'); div.appendChild(span);
-		void this.emit_render(span)
+		void this.emit_render(span) // only here use span as arg
 
 		// textarea
 		const textarea = document.createElement('textarea'); div.appendChild(textarea);
@@ -244,7 +244,7 @@ export class EditableCodeblock {
 			if (isComposing) return
 			this.outerInfo.source = newValue
 			if (isRender) {
-				void this.emit_render(span)
+				void this.emit_render(div)
 				div.classList.add('is-no-saved');
 			}
 			if (isSavePos) {
@@ -286,7 +286,7 @@ export class EditableCodeblock {
 					if (!match) throw new Error('This is not a regular expression matching that may fail')
 					this.outerInfo.language_type = match[1]
 					this.outerInfo.language_meta = match[2]
-					void this.emit_render(span)
+					void this.emit_render(div)
 					div.classList.add('is-no-saved'); 
 				}
 				editInput.onchange = (ev): void => { // save must on oninput: avoid: textarea --update--> source update --update--> textarea (lose curosr position)
@@ -671,6 +671,9 @@ export class EditableCodeblock {
 
 	/** Render code to targetEl
 	 * 
+	 * - render version: first render
+	 * - emit_render version: Content has changed. Please reload/re-render.
+	 * 
 	 * onCall: renderMode === 'pre'
 	 * 
 	 * why reuse code element?
@@ -726,7 +729,7 @@ export class EditableCodeblock {
 			// 	],
 			// })
 
-			// const code: HTMLPreElement|null = targetEl.querySelector(':scope>pre>code')
+			// const code: HTMLPreElement|null = targetEl.querySelector('pre>code')
 			// if (!code) {
 			// 	targetEl.innerHTML = preStr // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
 			// }
@@ -747,24 +750,24 @@ export class EditableCodeblock {
 			}
 
 			// sure `targetEl > pre> one code`
-			let pre: HTMLPreElement|null = targetEl.querySelector(':scope>pre')
-			let code: HTMLPreElement|null = targetEl.querySelector(':scope>pre>code')
-			if (!code) {
+			let pre: HTMLPreElement|null = targetEl.querySelector('pre')
+			let code: HTMLPreElement|null = pre?.querySelector(':scope>code')
+			const textarea: HTMLTextAreaElement|null = targetEl.querySelector('textarea')
+
+			if (!pre) { // maybe lose textarea
 				targetEl.innerHTML = ''
 				pre = document.createElement('pre'); targetEl.appendChild(pre);
+			}
+			if (!code) {
 				code = document.createElement('code') as HTMLPreElement; pre.appendChild(code); code.classList.add('language-'+this.outerInfo.language_type);
-			} else if (!pre) {
-				targetEl.innerHTML = ''
-				const pre = document.createElement('pre'); targetEl.appendChild(pre);
-				pre.appendChild(code)
-			} else if (pre.children?.length??0 > 1) {
+			}
+			else if (pre.children?.length??0 > 1) {
 				pre.innerHTML = ''
 				pre.appendChild(code)
-			} else {
-				// nothing
 			}
 
 			// render
+			if (textarea) textarea.value = source // It may not be an update triggered by the change of the textarea (where the value is directly set)
 			code.textContent = source; // prism use textContent and shiki use innerHTML, Their escapes from `</>` are different
 			prism.highlightElement(code)
 		}
