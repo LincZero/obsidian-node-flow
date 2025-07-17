@@ -128,8 +128,8 @@ watch(showValue, (showValue) => {
 <style>
 /* 
 - .nf-textarea-p lock标志层
-- .scroll-able 滚动容器
-  - .editable-codeblock 可溢出部分
+  - .scroll-able 滚动/拉伸容器
+    - .editable-codeblock 可溢出部分
  */
 .nf-textarea-p {
   max-height: 700px;

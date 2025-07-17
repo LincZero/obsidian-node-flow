@@ -9,7 +9,9 @@
     "ob:build2": "cd ./src/NodeFlowObsidian && pnpm build2",    
     "ob:version": "node version-bump.mjs && git add manifest.json versions.json",
     "app:dev": "cd ./src/NodeFlowApp && pnpm dev",
-    "app:build": "cd ./src/NodeFlowApp && pnpm build"
+    "app:build": "cd ./src/NodeFlowApp && pnpm build",
+    "app2:dev": "cd ./src/EditableCodeblockApp && pnpm dev",
+    "app2:build": "cd ./src/EditableCodeblockApp && pnpm build"
   },
   "keywords": [
     "Obsidian",

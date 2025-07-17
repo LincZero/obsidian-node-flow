@@ -344,3 +344,15 @@ code>span.line {
 	
 	/* border-left: solid 2px yellow !important; */
 }
+
+/* ----------------------------- app version use --------------------- */
+
+/* 
+- .nf-textarea-p lock标志层
+  - .editable-codeblock-p.scroll-able 滚动容器
+    - .editable-codeblock 可溢出部分
+ */
+.editable-codeblock-p {
+	max-width: 100%;
+	overflow-x: auto;
+}
