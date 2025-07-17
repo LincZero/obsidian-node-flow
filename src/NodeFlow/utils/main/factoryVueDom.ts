@@ -22,7 +22,7 @@ export function factoryVueDom(
   function mountVue (targetEl:HTMLElement, _isMini:boolean) {
     const nfNodes = NFNodes.useFactoryNFNodes()
     nfNodes.nfType.value = jsonType
-    nfNodes.nfStr.value = mdStr
+    nfNodes.jsonStr.value = mdStr
 
     // 根据新json生成节点流
     const _app = createApp(NodeFlowContainerS, { // `<NodeFlowContainerS>` (检索型注释)

@@ -218,7 +218,7 @@ function onEdgeChange(changes: EdgeChange[]) {
     else if (change.type == "remove") {
       props.nfNodes.jsonData.value.edges = props.nfNodes.jsonData.value.edges.filter((edge:any) => edge.id != change.id); // removeEdges(change.id)
     }
-    // console.log('onEdgeChange', change, edges.value, props.nfNodes.nfData.value)
+    // console.log('onEdgeChange', change, edges.value, props.nfNodes.jsonData.value)
   }
 }
 // #endregion

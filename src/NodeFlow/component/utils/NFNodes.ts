@@ -59,7 +59,7 @@ import { NFNode } from './NFNode';
  */
 export class NFNodes {
   public nfType: Ref<string> = ref('') // 节点图类型
-  public nfStr: Ref<string> = ref('')
+  public jsonStr: Ref<string> = ref('')
   public jsonData: Ref<{nodes:Node[], edges:Edge[]}> = ref({nodes:[], edges:[]}) // 特点: 大json引用、可转json。通过 VueFlow api 变更时能检测到
   public nfNodes: Record<string, NFNode> = {} // 特点: 对象集
   // public componentKey: Ref<number> = ref(0) // 用于强制刷新
@@ -110,14 +110,14 @@ export class NFNodes {
 
     // #region 自动更新 - string -> data
     // TODO 由于触发源是文本框，这里可以加上节流防抖的逻辑
-    watch(this.nfStr, (newVal) => {
+    watch(this.jsonStr, (newVal) => {
       if (flag_data2str) { flag_data2str = false; return }
       flag_str2data = true
       nextTick(() => { flag_str2data = false; });
       console.log("[auto update] [all] string -> data")
 
       // 新数据
-      let result = factoryFlowData(this.nfType.value, this.nfStr.value)
+      let result = factoryFlowData(this.nfType.value, this.jsonStr.value)
       if (result.code != 0) {
         result = failedFlowData(result.msg)
       }
@@ -159,7 +159,7 @@ export class NFNodes {
         result.data = "无法保存修改:"+result.msg
         return
       }
-      this.nfStr.value = result.data;
+      this.jsonStr.value = result.data;
       
       // TODO 可选: 可写环境的持久化保存、手动保存      
       // this.update_nodesAndEdges()
@@ -225,7 +225,7 @@ export class NFNodes {
   }
 
   public get_mdData(): string {
-    return `\`\`\`${this.nfType.value}\n${this.nfStr.value}\n\`\`\`\n`
+    return `\`\`\`${this.nfType.value}\n${this.jsonStr.value}\n\`\`\`\n`
   }
 
   public findNode(id: string): null|any {
@@ -240,7 +240,7 @@ export class NFNodes {
   public fn_printData(type:"mdData"|"rawData"|"jsonData") {
     let data: any
     if (type == "mdData") data = "\n" + this.get_mdData()
-    else if (type == "rawData") data = "\n" + this.nfStr.value
+    else if (type == "rawData") data = "\n" + this.jsonStr.value
     else data = this.jsonData.value
     console.log("Debug json:", data)
   }
@@ -249,7 +249,7 @@ export class NFNodes {
   public fn_copyData (type:"mdData"|"rawData"|"jsonData") {
     let data: string
     if (type == "mdData") data = this.get_mdData()
-    else if (type == "rawData") data = this.nfStr.value
+    else if (type == "rawData") data = this.jsonStr.value
     else {
       const _rawData = computed(() => JSON.stringify(removeParentField(this.jsonData.value), null, 2));
       data = _rawData.value

@@ -36,10 +36,10 @@ function onSelect(event: any) {
 
   // 更新节点集
   // 注意点: JsonEdtior更换模板时，两个不同的节点图可能存在同id节点位置不变，导致位置不为0，不触发自动布局。所以要先清空，并等下一帧
-  nfNodes.nfData.value = { nodes: [], edges: [] }
+  nfNodes.jsonData.value = { nodes: [], edges: [] }
   nextTick(() => {
     nfNodes.nfType.value = nfData_enum[index].type
-    nfNodes.nfStr.value = nfData_enum[index].content
+    nfNodes.jsonStr.value = nfData_enum[index].content
   })
 }
 
@@ -50,7 +50,7 @@ if (nfNodes == null) {
   nfNodes.nfType.value = "nodeflow-listitem"
 
   // 1.3 节点流数据 - 内容
-  nfNodes.nfStr.value = testData_listitem2 // demo
+  nfNodes.jsonStr.value = testData_listitem2 // demo
 }
 </script>
 
@@ -61,7 +61,7 @@ if (nfNodes == null) {
       <option v-for="(item, index) in nfData_enum" :value="index">{{ item.name }}</option>
     </select>
     <input class="item" v-model="nfNodes.nfType.value"></input>
-    <textarea spellcheck="false" class="item" v-model="nfNodes.nfStr.value"></textarea>
+    <textarea spellcheck="false" class="item" v-model="nfNodes.jsonStr.value"></textarea>
     <!-- TODO: pre，shiki、prismjs、highlight.js -->
     <!-- <pre spellcheck="false" class="item">
       <code

@@ -21,7 +21,7 @@ const nfNodes = NFNodes.useFactoryNFNodes()
 
 // 节点流数据 - 保存
 function fn_save (str: string): void {
-  nfNodes.nfStr.value = str
+  nfNodes.jsonStr.value = str
 }
 </script>
 

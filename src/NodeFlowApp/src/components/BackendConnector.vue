@@ -103,7 +103,7 @@ async function nodedata_put() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        "data": nfNodes.nfStr.value
+        "data": nfNodes.jsonStr.value
       })
     })
     if (response.ok) {
@@ -128,7 +128,7 @@ async function nodedata_get(isUpdate = true) {
     if (response.ok) {
       response.json().then((val) => {
         nodedata_content.value = val['data'] // JSON.stringify(val, null, 2)
-        if (isUpdate) nfNodes.nfStr.value = val['data']
+        if (isUpdate) nfNodes.jsonStr.value = val['data']
       })
     } else {
       nodedata_content.value = ''

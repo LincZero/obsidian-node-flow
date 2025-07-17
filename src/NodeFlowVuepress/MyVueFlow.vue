@@ -21,7 +21,7 @@ const props = defineProps<{
 import { NFNodes } from '../NodeFlow/component/utils/NFNodes';
 const nfNodes = NFNodes.useFactoryNFNodes()
 nfNodes.nfType.value = props.type??""
-nfNodes.nfStr.value = props.data
+nfNodes.jsonStr.value = props.data
 
 // 组件 - 节点流画布
 import NodeFlowContainerS from "../NodeFlow/component/container/NodeFlowContainerS.vue"

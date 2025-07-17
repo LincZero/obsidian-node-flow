@@ -4,8 +4,8 @@
 
 import { useVueFlow } from '@vue-flow/core'
 import {
-  useNodeId, useNodesData,          // TheNode
-  useNodeConnections,               // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
+  useNodesData,          // TheNode
+  useNodeConnections,    // Other。注意: useHandleConnections API弃用，用useNodeConnections替代
 } from '@vue-flow/core'
 import { ComputedRef, watch, provide, inject, nextTick, ref } from 'vue';
 
@@ -103,8 +103,14 @@ export class NFNode {
   public readonly nodeId: string // 可 useNodeId()
   // public nfData: ComputedRef<any> // 弃用，非双向，换用 this._useNodesData.value.data
   public jsonData: any // 特点: 大json引用、可转json
-  public nfStr = ref<string>('')
+  public jsonStr = ref<string>('')
   private nfNodes: NFNodes|null = null
+
+  // vueflow定义的结构
+  public _useNodesData: ComputedRef<any>
+  private _useSourceConnections: ComputedRef<any>
+  private _useTargetConnections: ComputedRef<any>
+  private readonly updateNodeData
 
   // #endregion
 
@@ -185,7 +191,7 @@ export class NFNode {
 
   private constructor(nodeId: string, ref_data: ComputedRef<any>) {
     this.nodeId = nodeId
-    // this.nfData = ref_data
+    // this.jsonData = ref_data
     this._useNodesData = useNodesData(this.nodeId)
 
     this._useSourceConnections = useNodeConnections({ handleType: 'target' })
@@ -212,7 +218,7 @@ export class NFNode {
     // #endregion
 
     // #region 自动更新 - string -> data
-    watch(this.nfStr, (newVal) => {
+    watch(this.jsonStr, (newVal) => {
       if (flag_data2str) { flag_data2str = false; return }
       flag_str2data = true
       nextTick(() => { flag_str2data = false; });
@@ -245,7 +251,7 @@ export class NFNode {
         // 更新到vueflow库
         Object.assign(node.data, result.data.nodes[0].data)
         // 更新到data
-        // Object.assign(this.nfData.value, result.data.nodes[0].data)
+        // Object.assign(this.jsonData.value, result.data.nodes[0].data)
       }
     })
     // #endregion
@@ -266,14 +272,14 @@ export class NFNode {
     // this.nfDate.value 未定义
     const result = serializeFlowData(this.nfNodes.nfType.value, {nodes: [{id: this.nodeId, data: this._useNodesData.value.data}], edges: []})
     if (result.code == 0) {
-      this.nfStr.value = result.data
+      this.jsonStr.value = result.data
       // 如果修改头尾和前置空格会导致内换行头部缺失字符
       // let list = result.data.split('\n')
       // list = list.slice(1, -2).map(line => { return line.slice(2) }) // 有尾换行
       // currentContent.value = list.join('\n')
     }
     else {
-      this.nfStr.value = `- error,, [error] +${result.msg}`
+      this.jsonStr.value = `- error,, [error] +${result.msg}`
     }
   }
 
@@ -382,7 +388,7 @@ export class NFNode {
       const sourceNode = this.nfNodes.findNode(connection.source)
       // const sourceNode = this.findNode(connection.source)
 
-      // TODO BUG 这里无法更新到 Nodes.nfData 里的 runState
+      // TODO BUG 这里无法更新到 Nodes.jsonData 里的 runState
       // 上游节点状态检查
       if (sourceNode.data.runState != 'over') {
         console.warn(`#${this.nodeId} 前面的 #${connection.source} 为 ${sourceNode.data.runState}，没准备好，等待再次被激发`)
@@ -456,11 +462,4 @@ export class NFNode {
   }
 
   // #endregion
-
-  // vueflow相关
-
-  public _useNodesData: ComputedRef<any>
-  private _useSourceConnections: ComputedRef<any>
-  private _useTargetConnections: ComputedRef<any>
-  private readonly updateNodeData
 }
