@@ -46,10 +46,18 @@ function render_fence(md: MarkdownIt, options?: Partial<Options>): void {
     }
     const content = (token.content.endsWith('\n')) ? token.content.slice(0, -1) : token.content // 默认总是会有一个尾换行
 
-    // 插件渲染
-    window.setTimeout(() => {
-      // console.log('进入', type, token.content) // 这里的type和content可以通过闭包或属性获取，属性更稳定些
+    const div = document.createElement("div"); div.classList.add("editable-codeblock-ready");
+    div.setAttribute("data-type", type); div.setAttribute("data-content", content); // TODO 可能要编码
+    let ret = div.outerHTML
+    return ret
+  }
+}
 
+// Markdown-it 有一个规则系统，您可以在渲染后添加一个规则
+function on_finish(md: MarkdownIt, options?: Partial<Options>): void {
+  md.core.ruler.push('process-fence-blocks', (state: any) => {
+    // 在整个文档渲染完成后执行
+    window.requestAnimationFrame(() => {
       document.querySelectorAll(".editable-codeblock-ready").forEach(el => {
         const type = el.getAttribute("data-type") || "js"
         const content = el.getAttribute("data-content") || ""
@@ -65,13 +73,9 @@ function render_fence(md: MarkdownIt, options?: Partial<Options>): void {
         // editableCodeblock.settings.renderMode = 'editablePre'
         editableCodeblock.render()
       })
-    }, 200)
-
-    const div = document.createElement("div"); div.classList.add("editable-codeblock-ready");
-    div.setAttribute("data-type", type); div.setAttribute("data-content", content); // TODO 可能要编码
-    let ret = div.outerHTML
-    return ret
-  }
+    });
+    return true;
+  });
 }
 
 export default function ab_mdit(md: MarkdownIt, options?: Partial<Options>): void {
@@ -89,4 +93,5 @@ export default function ab_mdit(md: MarkdownIt, options?: Partial<Options>): voi
   // md.use(abSelector_squareInline)
   // md.use(abSelector_container)
   md.use(render_fence)
+  md.use(on_finish)
 }
