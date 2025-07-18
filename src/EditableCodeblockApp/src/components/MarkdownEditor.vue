@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from 'vue'
-
 const props = defineProps<{
   mdData: any
 }>()

@@ -7,6 +7,10 @@ export const preset_map = {
 
 Editable Codeblock
 
+**bord** *i* ~~delete~~ ==highlight==
+
+## Codeblock
+
 from: https://www.w3schools.com/js/js_examples.asp
 
 \`\`\`js

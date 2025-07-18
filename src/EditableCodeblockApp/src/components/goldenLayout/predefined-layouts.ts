@@ -20,14 +20,21 @@ const miniRowConfig: LayoutConfig = {
 				title: "MdEditor",
 				header: { show: "top", popout: false },
 				componentType: "MdEditor",
-				width: 50
+				width: 30
+			} as ComponentItemConfig,
+			{
+				type: "component",
+				title: "MdCodeMirror",
+				header: { show: "top", popout: false },
+				componentType: "MdCodeMirror",
+				width: 30
 			} as ComponentItemConfig,
 			{
 				type: "component",
 				title: "MdViewer",
 				header: { show: "top", popout: false },
 				componentType: "MdViewer",
-				width: 50
+				width: 30
 			} as ComponentItemConfig,
 			{
 				type: "component",
