@@ -57,7 +57,7 @@ jobs:
         cd ./src/NodeFlowApp/
         pnpm build
         > ./dist/.nojekyll
-    - name: Build - Dist to Website Branch
+    - name: Build - Dist to Website Branch 1
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         # 这是文档部署到的分支名称
@@ -91,7 +91,7 @@ jobs:
     # 两种方法
     # 一是部署到 gh-pages 的指定子目录，记得修改 base 配置
     # (选用) 二是部署到 gh-pages 根目录，修改修改 index.html 文件名
-    - name: Build - Dist to Website Branch
+    - name: Build - Dist to Website Branch 2
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
