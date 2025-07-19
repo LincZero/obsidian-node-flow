@@ -86,15 +86,15 @@ jobs:
         cd ./src/EditableCodeblockApp/
         pnpm build
         > ./dist/.nojekyll
-        # mv ./dist/index.html ./dist/EditableCodeblock.html
+        mv ./dist/index.html ./dist/EditableCodeblock.html
     # 注意和 build-app 都是放在 gh-pages 分支
     # 两种方法
-    # (选用) 一是部署到 gh-pages 的指定子目录，记得修改 base 配置
-    # 二是部署到 gh-pages 根目录，修改修改 index.html 文件名
+    # 一是部署到 gh-pages 的指定子目录，记得修改 base 配置
+    # (选用) 二是部署到 gh-pages 根目录，修改修改 index.html 文件名
     - name: Build - Dist to Website Branch
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
         folder: src/EditableCodeblockApp/dist
-        destination-folder: EditableCodeblock
+        # destination-folder: EditableCodeblock
         clean: false  # 不清理目标目录

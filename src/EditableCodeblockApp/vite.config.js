@@ -15,7 +15,7 @@ export default defineConfig({
       }
     }
   },
-  base: '/obsidian-node-flow/EditableCodeblock/', // [!code] 临时，需要根据你要部署的位置进行修改
+  base: '/obsidian-node-flow/', // [!code] 临时，需要根据你要部署的位置进行修改
   server: {
     host: 'localhost',
     port: 3012,
