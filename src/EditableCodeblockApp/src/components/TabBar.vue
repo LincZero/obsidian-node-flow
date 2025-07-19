@@ -25,7 +25,7 @@
       <div class="menus-2" v-show="clickedMenu==='serialLinks'">
         <div class="menu-2"><a href="https://any-block.github.io/any-block/">AnyBlock</a></div>
         <div class="menu-2"><a href="https://linczero.github.io/obsidian-node-flow/">NodeFlow</a></div>
-        <div class="menu-2"><a href="https://linczero.github.io/obsidian-node-flow/EditableCodeblock.html">EditableCodeblock</a></div>
+        <div class="menu-2"><a href="https://linczero.github.io/obsidian-node-flow/EditableCodeblock/">EditableCodeblock</a></div>
         <div class="menu-2"><a href="https://linczero.github.io/obsidian-chat-view-qq/">ChatView</a></div>
         <div></div>
       </div>
