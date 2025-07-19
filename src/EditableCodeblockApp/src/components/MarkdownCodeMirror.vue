@@ -9,9 +9,9 @@ import { markdown } from "@codemirror/lang-markdown"
 import { DecorationSet, keymap } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 import { oneDark } from "@codemirror/theme-one-dark"
-
-import { EditableCodeblockCm, create_viewPlugin } from "./EditableCodeblockCM"
 import { StateField } from '@codemirror/state'
+
+import { EditableCodeblockCm, create_viewPlugin } from "../index_cm"
 
 const props = defineProps<{
   mdData: any
@@ -39,8 +39,7 @@ function initEditor() {
   ref_editorView.value = view
 
   // 使用 EditableCodeblock 插件
-  const editableCodeblockCm = new EditableCodeblockCm(view, props.mdData, (newStr: string) => {
-    console.log('保存3')
+  const _editableCodeblockCm = new EditableCodeblockCm(view, props.mdData, (newStr: string) => {
     props.mdData.string = newStr
   })
 }

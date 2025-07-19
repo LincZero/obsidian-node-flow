@@ -352,6 +352,9 @@ code>span.line {
   - .editable-codeblock-p.scroll-able 滚动容器
     - .editable-codeblock 可溢出部分
  */
+.cm-content {
+	max-width: 100%;
+}
 .editable-codeblock-p {
 	max-width: 100%;
 	overflow-x: auto;

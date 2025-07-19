@@ -1,3 +1,7 @@
+/**
+ * TODO fix 多个代码块时，编辑非首个代码块后，光标会跳到首个代码块
+ */
+
 import {
   EditorView,
   Decoration,         // 装饰
@@ -17,8 +21,8 @@ import {
 } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 
-// 3. editable-codeblock
-import { EditableCodeblock, loadPrism2 } from '../../../NodeFlow/component/general/EditableCodeblock';
+// #region editable-codeblock
+import { EditableCodeblock, loadPrism2 } from '../../NodeFlow/component/general/EditableCodeblock';
 import Prism from "prismjs" // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-json';
@@ -45,6 +49,7 @@ class EditableCodeblockInCm extends EditableCodeblock {
     })
   }
 }
+// #endregion
 
 /// 自定义CM的装饰器部件
 class CodeblockWidget extends WidgetType {
@@ -77,7 +82,7 @@ class CodeblockWidget extends WidgetType {
 
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement('div');
-    container.className = 'editable-codeblock-container';
+    container.className = 'editable-codeblock-p';
     
     // 创建您的 EditableCodeblock 组件
     const editableCodeblock = new EditableCodeblockInCm(
@@ -131,16 +136,16 @@ function create_decorations(state: EditorState, updateContent_all: (newContent: 
           // 创建自定义组件装饰器
           // // v1
           // const decoration = Decoration.mark({class: "cm-line-yellow"})
-          // decorationRange.push(decoration.range(from, to));
+          // decorationRange.push(decoration.range(from, to))
 
           // // v2
           // const decoration = Decoration.widget({
           //   widget: new CodeblockWidget(content, lang, from, to, (newContent) => {
-          //     updateContent_all(from, to, newContent);
+          //     updateContent_all(from, to, newContent)
           //   }),
           //   side: 1
           // });
-          // decorationRange.push(decoration.range(from)); // 仅from没to，表示插入在from处，而非替换
+          // decorationRange.push(decoration.range(from)) // 仅from没to，表示插入在from处，而非替换
 
           // v3
           const decoration = Decoration.replace({
@@ -148,7 +153,7 @@ function create_decorations(state: EditorState, updateContent_all: (newContent: 
             inclusive: true,
             block: true,
           })
-          decorationRange.push(decoration.range(from, to));
+          decorationRange.push(decoration.range(from, to))
         }
       }
     }
@@ -195,7 +200,7 @@ export class EditableCodeblockCm {
     const codeBlockField = StateField.define<DecorationSet>({
       create: (editorState:EditorState) => Decoration.none,
       update: (decorationSet:DecorationSet, tr:Transaction) => {
-        // 不要用 ，this.view.state，会延后
+        // 不要直接用 this.view.state，会延后，要用 tr.state
         return create_decorations(tr.state, this.updateContent_all)
       },
       provide: (f: StateField<DecorationSet>) => EditorView.decorations.from(f)
