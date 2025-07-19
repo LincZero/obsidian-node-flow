@@ -109,9 +109,9 @@ class CodeblockWidget extends WidgetType {
  * > 当编辑器尝试执行布局测量（如 measureVisibleLineHeights）时，无法找到被替换区域对应的文档视图
  * > 解决方法: 确保进入该函数时，docView 已经完成了。即外部可以用 StateField 而非 ViewPlugin 来实现
  */
-function create_decorations(view: EditorView, updateContent_all: (newContent: string) => void): DecorationSet {
+function create_decorations(state: EditorState, updateContent_all: (newContent: string) => void): DecorationSet {
   const decorationRange: Range<Decoration>[] = []; // 装饰组，区分 type DecorationSet = RangeSet<Decoration>;
-  const state = view.state;
+  // const state = view.state;
   
   // 遍历文档语法树
   syntaxTree(state).iterate({
@@ -195,8 +195,8 @@ export class EditableCodeblockCm {
     const codeBlockField = StateField.define<DecorationSet>({
       create: (editorState:EditorState) => Decoration.none,
       update: (decorationSet:DecorationSet, tr:Transaction) => {
-        // TODO this.view 是错的，没有加上 tr，更新会延后一下
-        return create_decorations(this.view, this.updateContent_all)
+        // 不要用 ，this.view.state，会延后
+        return create_decorations(tr.state, this.updateContent_all)
       },
       provide: (f: StateField<DecorationSet>) => EditorView.decorations.from(f)
     });
@@ -218,17 +218,17 @@ export class EditableCodeblockCm {
  * @deprecated 时机不对，会在 docView 未完成时就尝试替换装饰器，导致 block replace 行为无法正常进行
  * (如果是 mark 或 widget 则可以正常工作，那还是可以用这种方式的)
  */
-export function create_viewPlugin(updateCallback: (from: number, to: number, newContent: string) => void) {
+export function create_viewPlugin(updateContent_all: (newContent: string) => void) {
   return ViewPlugin.fromClass(class {
     decorations: DecorationSet;
 
     constructor(view: EditorView) {
-      this.decorations = create_decorations(view, updateCallback);
+      this.decorations = create_decorations(view.state, updateContent_all);
     }
 
     update(update: ViewUpdate) {
       if (update.docChanged || update.viewportChanged) {
-        this.decorations = create_decorations(update.view, updateCallback);
+        this.decorations = create_decorations(update.view.state, updateContent_all);
       }
     }
   }, {
