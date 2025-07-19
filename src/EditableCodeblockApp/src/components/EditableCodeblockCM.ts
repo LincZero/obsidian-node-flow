@@ -7,8 +7,15 @@ import {
   ViewPlugin,
   ViewUpdate,
 } from '@codemirror/view';
+import {
+  EditorState,
+  Range,
+  RangeSet,
+  StateEffect,
+  StateField,
+  Transaction,
+} from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
-import { EditorState, Range, RangeSet, StateField } from '@codemirror/state';
 
 // 3. editable-codeblock
 import { EditableCodeblock, loadPrism2 } from '../../../NodeFlow/component/general/EditableCodeblock';
@@ -20,9 +27,20 @@ loadPrism2.fn = () => {
   return Prism
 }
 class EditableCodeblockInCm extends EditableCodeblock {
+  updateContent_local: (newContent_local: string) => void;
+
+  constructor(lang: string, content: string, container: HTMLElement, updateContent_local: (newContent_local: string) => void) {
+    super(lang, content, container)
+    this.settings.renderEngine = "prismjs"
+    this.settings.saveMode = 'oninput'
+    this.settings.renderMode = 'textarea'
+
+    this.updateContent_local = updateContent_local
+  }
+
   emit_save(isUpdateLanguage: boolean, isUpdateSource: boolean): Promise<void> {
     return new Promise((resolve) => {
-      
+      this.updateContent_local(this.outerInfo.source)
       resolve();
     })
   }
@@ -30,14 +48,31 @@ class EditableCodeblockInCm extends EditableCodeblock {
 
 /// 自定义CM的装饰器部件
 class CodeblockWidget extends WidgetType {
+  updateContent_all: (newContent: string) => void; // 更新所有
+  updateContent_local: (newContent: string) => void; // 仅更新
+
   constructor(
-    readonly content: string,
+    readonly content_all: string,
+    readonly content_local_sub: string, // 注意: all是全文，local是影响部分，sub是影响部分再去除代码围栏前后缀的部分
     readonly lang: string,
     readonly from: number,
     readonly to: number,
-    readonly updateCallback: (newContent: string) => void
+    updateContent_all: (newContent: string) => void,
   ) {
-    super();
+    super()
+
+    // content_local
+    this.updateContent_all = updateContent_all
+    this.updateContent_local = (newContent_local: string) => {
+      const before = content_all.substring(0, from);
+      const after = content_all.substring(to);
+      const langMatch = content_all.substring(from).match(/^```(\w+)?\n/);
+      const lang = langMatch ? langMatch[1] || '' : '';
+      const newContent_all = `${before}\`\`\`${lang}\n${newContent_local}\n\`\`\`${after}`;
+
+      console.log('保存2', newContent_local, '\n-------\n', content_all, '\n---------\n');
+      this.updateContent_all(newContent_all)
+    }
   }
 
   toDOM(view: EditorView): HTMLElement {
@@ -45,16 +80,12 @@ class CodeblockWidget extends WidgetType {
     container.className = 'editable-codeblock-container';
     
     // 创建您的 EditableCodeblock 组件
-    const editableCodeblock = new EditableCodeblock(
+    const editableCodeblock = new EditableCodeblockInCm(
       this.lang, 
-      this.content, 
-      container
-    );
-    
-    // 配置 EditableCodeblock
-    editableCodeblock.settings.renderEngine = "prismjs";
-    editableCodeblock.settings.saveMode = 'oninput';
-    editableCodeblock.settings.renderMode = 'textarea';
+      this.content_local_sub,
+      container,
+      this.updateContent_local
+    )
     
     // 设置更新回调
     // editableCodeblock.onSave = (newContent: string) => {
@@ -66,8 +97,19 @@ class CodeblockWidget extends WidgetType {
   }
 }
 
-/// 范围选择器 + 装饰集生成器
-function create_decorations(view: EditorView, updateCallback: (from: number, to: number, newContent: string) => void): DecorationSet {
+/** 范围选择器 + 装饰集生成器
+ * 
+ * @details
+ * 注意三种装饰器形式:
+ * - mark
+ * - widget
+ * - replace
+ * 中， replace+块 可能出现bug:
+ * > 原始文本被移除后，CodeMirror 内部依赖的 docView 结构会被破坏。
+ * > 当编辑器尝试执行布局测量（如 measureVisibleLineHeights）时，无法找到被替换区域对应的文档视图
+ * > 解决方法: 确保进入该函数时，docView 已经完成了。即外部可以用 StateField 而非 ViewPlugin 来实现
+ */
+function create_decorations(view: EditorView, updateContent_all: (newContent: string) => void): DecorationSet {
   const decorationRange: Range<Decoration>[] = []; // 装饰组，区分 type DecorationSet = RangeSet<Decoration>;
   const state = view.state;
   
@@ -85,8 +127,6 @@ function create_decorations(view: EditorView, updateCallback: (from: number, to:
         if (match) {
           const lang = match[1] || '';
           const content = match[2];
-
-          console.log('test', from, to)
           
           // 创建自定义组件装饰器
           // // v1
@@ -94,26 +134,21 @@ function create_decorations(view: EditorView, updateCallback: (from: number, to:
           // decorationRange.push(decoration.range(from, to));
 
           // // v2
-          const decoration = Decoration.widget({
-            widget: new CodeblockWidget(content, lang, from, to, (newContent) => {
-              updateCallback(from, to, newContent);
-            }),
-            side: 1
-          });
-          decorationRange.push(decoration.range(from)); // 仅from没to，表示插入在from处，而非替换
-
-          // 注意 replace+块 可能出现bug:
-          // 原始文本被移除后，CodeMirror 内部依赖的 docView 结构会被破坏。当编辑器尝试执行布局测量（如 measureVisibleLineHeights）时，无法找到被替换区域对应的文档视图
+          // const decoration = Decoration.widget({
+          //   widget: new CodeblockWidget(content, lang, from, to, (newContent) => {
+          //     updateContent_all(from, to, newContent);
+          //   }),
+          //   side: 1
+          // });
+          // decorationRange.push(decoration.range(from)); // 仅from没to，表示插入在from处，而非替换
 
           // v3
-          // const decoration = Decoration.replace({
-          //   widget: new CodeblockWidget(content, lang, from, to, (newContent) => {
-          //     updateCallback(from, to, newContent);
-          //   }),
-          //   inclusive: true,
-          //   block: true,
-          // })
-          // decorationRange.push(decoration.range(from, to));
+          const decoration = Decoration.replace({
+            widget: new CodeblockWidget(state.sliceDoc(), content, lang, from, to, updateContent_all),
+            inclusive: true,
+            block: true,
+          })
+          decorationRange.push(decoration.range(from, to));
         }
       }
     }
@@ -123,12 +158,67 @@ function create_decorations(view: EditorView, updateCallback: (from: number, to:
 }
 
 /**
+ * EditableCodeblock 的通用 CodeMirror 插件
+ * 
+ * 使用：一个页面对应一个
+ */
+export class EditableCodeblockCm {
+  view: EditorView;
+  state: EditorState;
+  mdStr: string;
+  updateContent_all: (newContent: string) => void;
+
+  constructor(view: EditorView, mdStr: string, updateContent_all: (newContent: string) => void) {
+    this.view = view
+    this.state = view.state
+    this.mdStr = mdStr
+    this.updateContent_all = updateContent_all
+
+    this.init_stateField()
+  }
+  
+  init_stateField() {
+    /** StateField
+     * @details
+     * 装饰器插件有两个主要实现方式
+     * - 一个是ViewPlugin或其他
+     * - 一个是StateField
+     * 这两都可以传作为 cm 的 extensions 参数，或在外部通过钩子进行使用
+     * 
+     * 一开始我使用前者。DecorationSet.mark 和 DecorationSet.widget 都可以正常工作。
+     * 但在使用 DecorationSet.replace 时，会存在非报错bug。
+     * 因为原文本 (docView) 未完成。想替换时无法确认要被替换的文本范围。
+     * 
+     * 而后者可以。因为其 create 阶段不进行渲染，在update阶段时，docView 已经完成了。
+     * 此时可以正常 replace
+     */
+    const codeBlockField = StateField.define<DecorationSet>({
+      create: (editorState:EditorState) => Decoration.none,
+      update: (decorationSet:DecorationSet, tr:Transaction) => {
+        // TODO this.view 是错的，没有加上 tr，更新会延后一下
+        return create_decorations(this.view, this.updateContent_all)
+      },
+      provide: (f: StateField<DecorationSet>) => EditorView.decorations.from(f)
+    });
+
+    // 用 StateEffect 来添加 StateField
+    let stateEffects: StateEffect<unknown>[] = []
+    if (!this.state.field(codeBlockField, false)) {
+      stateEffects.push(StateEffect.appendConfig.of(
+        [codeBlockField] 
+      ))
+    }
+    this.view.dispatch({effects: stateEffects}) // 派发StateField
+  }
+}
+
+/**
  * ViewPlugin
  * 
  * @deprecated 时机不对，会在 docView 未完成时就尝试替换装饰器，导致 block replace 行为无法正常进行
  * (如果是 mark 或 widget 则可以正常工作，那还是可以用这种方式的)
  */
-export function editableCodeblocks(updateCallback: (from: number, to: number, newContent: string) => void) {
+export function create_viewPlugin(updateCallback: (from: number, to: number, newContent: string) => void) {
   return ViewPlugin.fromClass(class {
     decorations: DecorationSet;
 
@@ -144,48 +234,4 @@ export function editableCodeblocks(updateCallback: (from: number, to: number, ne
   }, {
     decorations: v => v.decorations
   });
-}
-
-/**
- * EditableCodeblock 的通用 CodeMirror 插件
- * 
- * 使用：一个页面对应一个
- */
-export class EditableCodeblockCm {
-  view: EditorView;
-  mdStr: string;
-
-  constructor(view: EditorView, mdStr: string, updateCallback: (newContent: string) => void) {
-    this.view = view
-    this.mdStr = mdStr
-
-    this.init_stateField()
-  }
-  
-  init_stateField() {
-    /**
-     * @details
-     * 装饰器插件有两个主要实现方式
-     * - 一个是ViewPlugin或其他
-     * - 一个是StateField
-     * 这两都可以传作为 cm 的 extensions 参数，或在外部通过钩子进行使用
-     * 
-     * 一开始我使用前者。DecorationSet.mark 和 DecorationSet.widget 都可以正常工作。
-     * 但在使用 DecorationSet.replace 时，会存在非报错bug。
-     * 因为原文本 (docView) 未完成。想替换时无法确认要被替换的文本范围。
-     * 
-     * 而后者可以。因为其 create 阶段不进行渲染，在update阶段时，docView 已经完成了。
-     * 此时可以正常 replace
-     */
-    // const codeBlockField = StateField.define<DecorationSet>({
-    //   create: () => Decoration.none,
-    //   update: (decorations, tr) => {
-    //     return codeBlockDecorations(this.view, (from, to, newContent) => {
-
-    //     })
-    //     // return updateCodeBlockDecorations(decorations, tr, view, updateCallback)
-    //   },
-    //   provide: f => EditorView.decorations.from(f)
-    // });
-  }
 }

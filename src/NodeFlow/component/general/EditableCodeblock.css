@@ -313,7 +313,7 @@ code>span.line {
 	background-color: transparent;
 	/* color: transparent; */
 	color: #ffffff22;
-	caret-color: #ffffffdd;
+	caret-color: #ffffffdd; /* TODO Conflicts with the cm style */
 }
 /* .editable-codeblock:has(textarea:focus) {
 	outline: 1px solid #0060DF;

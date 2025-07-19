@@ -10,7 +10,7 @@ import { DecorationSet, keymap } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 import { oneDark } from "@codemirror/theme-one-dark"
 
-import { EditableCodeblockCm, editableCodeblocks } from "./EditableCodeblockCM"
+import { EditableCodeblockCm, create_viewPlugin } from "./EditableCodeblockCM"
 import { StateField } from '@codemirror/state'
 
 const props = defineProps<{
@@ -32,16 +32,17 @@ function initEditor() {
       markdown(),       // markdown 语言支持
       oneDark,          // 黑暗主题
       extension_update, // 监听更新
-      editableCodeBlock_extension,
+      // editableCodeBlock_viewPlugin,
     ],
     parent: ref_container.value
   })
   ref_editorView.value = view
 
   // 使用 EditableCodeblock 插件
-  // const editableCodeblockCm = new EditableCodeblockCm(view, props.mdData, (newStr: string) => {
-  //   props.mdData.string = newStr
-  // })
+  const editableCodeblockCm = new EditableCodeblockCm(view, props.mdData, (newStr: string) => {
+    console.log('保存3')
+    props.mdData.string = newStr
+  })
 }
 
 // cm -> str
@@ -67,17 +68,21 @@ watch(() => props.mdData.string, (newVal) => {
   }
 })
 
-const editableCodeBlock_extension = editableCodeblocks((from, to, newContent) => {
-  // 更新Markdown中的代码块内容
-  const original = props.mdData.string;
-  const before = original.substring(0, from);
-  const after = original.substring(to);
-  const langMatch = original.substring(from).match(/^```(\w+)?\n/);
-  const lang = langMatch ? langMatch[1] || '' : '';
+// /** ViewPlugin方式
+//  * @deprecated create_viewPlugin 废弃
+//  */
+// const cb = (from: number, to: number, newContent: string) => {
+//   // 更新Markdown中的代码块内容
+//   const original = props.mdData.string;
+//   const before = original.substring(0, from);
+//   const after = original.substring(to);
+//   const langMatch = original.substring(from).match(/^```(\w+)?\n/);
+//   const lang = langMatch ? langMatch[1] || '' : '';
   
-  const updated = `${before}\`\`\`${lang}\n${newContent}\n\`\`\`${after}`;
-  props.mdData.string = updated
-})
+//   const updated = `${before}\`\`\`${lang}\n${newContent}\n\`\`\`${after}`;
+//   props.mdData.string = updated
+// }
+// const editableCodeBlock_viewPlugin = create_viewPlugin(cb)
 
 onMounted(() => {
   initEditor()
