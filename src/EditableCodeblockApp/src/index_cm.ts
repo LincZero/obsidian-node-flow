@@ -182,9 +182,9 @@ class CodeblockWidget extends WidgetType {
   oldView: EditorView;
   fromPos: number; // TODO 未能动态更新
   toPos: number;
-  widget: EditableCodeblockInCm|null = null;
   updateContent_all: (newContent: string) => void; // 更新所有
   updateContent_local: (newContent: string) => void; // 仅更新
+  focusPos: number|null = null; // 是否生成后自动聚焦及聚焦位置。由于toDOM时机后缀，所以用这个来控制
 
   constructor(
     state: EditorState,
@@ -194,12 +194,14 @@ class CodeblockWidget extends WidgetType {
     fromPos: number,
     toPos: number,
     updateContent_all: (newContent: string) => void,
+    focusPos: number|null = null,
   ) {
     super()
     this.state = state;
     this.oldView = oldView;
     this.fromPos = fromPos;
     this.toPos = toPos;
+    this.focusPos = focusPos;
     // 注意: all是全文，local是影响部分，sub是影响部分再去除代码围栏前后缀的部分
     const content_all: string = state.doc.toString();
 
@@ -220,7 +222,7 @@ class CodeblockWidget extends WidgetType {
     container.className = 'editable-codeblock-p';
     
     // 创建您的 EditableCodeblock 组件
-    this.widget = new EditableCodeblockInCm(
+    const editableCodeblock = new EditableCodeblockInCm(
       this.state,
       this.oldView,
       this.fromPos,
@@ -231,8 +233,10 @@ class CodeblockWidget extends WidgetType {
       this.updateContent_local
     )
     
-    this.widget.render();
-    return container;
+    editableCodeblock.render().then(() => {
+      if (this.focusPos) editableCodeblock.focus(this.focusPos ?? undefined)
+    })
+    return container
   }
 }
 
@@ -248,8 +252,6 @@ let is_prev_cursor_in = false
  * > 原始文本被移除后，CodeMirror 内部依赖的 docView 结构会被破坏。
  * > 当编辑器尝试执行布局测量（如 measureVisibleLineHeights）时，无法找到被替换区域对应的文档视图
  * > 解决方法: 确保进入该函数时，docView 已经完成了。即外部可以用 StateField 而非 ViewPlugin 来实现
- * 
- * TODO 优化。这里没有用到旧装饰集和映射，像anyblock obsidian程序那边是用到的，可以减少渲染、加速程序。
  */
 function create_decorations(
   state: EditorState, oldView: EditorView,
@@ -327,11 +329,18 @@ function create_decorations(
       is_current_cursor_in = true
 
       // 策略一：该段使用源码编辑 - 变化
-      const decoration = Decoration.mark({class: "cm-line-yellow"})
-      list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
+      // const decoration = Decoration.mark({class: "cm-line-yellow"})
+      // list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
 
-      // 策略二: 光标 - 不变化
-      // widget_curosr.widget.focus()
+      // 策略二: 光标移入 - 变化
+      // 其实最佳方法是不变化，直接把光标移入widget内。但似乎cm无法从装饰项获取到widget对象
+      // 只能重新生成
+      const decoration = Decoration.replace({
+        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all, 10),
+        inclusive: true,
+        block: true,
+      })
+      list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
     // 光标从内出来
     else if (isCursonIn_last) {

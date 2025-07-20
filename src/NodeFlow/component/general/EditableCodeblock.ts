@@ -138,17 +138,14 @@ export class EditableCodeblock {
 	}
 
 	/// first render
-	render(): void {
+	async render(): Promise<void> {
 		switch (this.settings.renderMode) {
 			case 'textarea':
-				this.renderTextareaPre()
-				break
+				return this.renderTextareaPre()
 			case 'pre':
-				this.emit_render(this.el)
-				break
+				return this.emit_render(this.el)
 			case 'editablePre':
-				this.renderEditablePre()
-				break
+				return this.renderEditablePre()
 			default:
 				throw new Error('Unreachable')
 		}
@@ -814,9 +811,9 @@ export class EditableCodeblock {
 	 * 场景：处理光标从外部(cm)移动到该组件里的情况
 	 * 可能的元素：textarea 或 pre>code[contenteditable="true"]
 	 * 
-	 * @param pos 聚焦并将光标置于指定位置
+	 * @param line 聚焦并将光标置于指定位置
 	 */
-	focus(pos?: number): void {
+	focus(line?: number): void {
 		const textarea: HTMLTextAreaElement|null = this.el.querySelector('textarea')
 		const editableArea: HTMLElement|null = this.el.querySelector('[contenteditable="true"]')
 
