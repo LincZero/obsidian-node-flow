@@ -7,9 +7,7 @@ export const preset_map = {
 
 Editable Codeblock
 
-**bord** *i* ~~delete~~ ==highlight==
-
-## Codeblock
+## Editable Codeblock
 
 from: https://www.w3schools.com/js/js_examples.asp
 
@@ -27,5 +25,57 @@ from: https://www.w3schools.com/js/js_examples.asp
 </body>
 </html>
 \`\`\`
+
+## 基本md语法
+
+标题略
+
+内联: **bord** *i* ~~delete~~ ==highlight== $\frac 12$
+
+列表
+
+- 1
+- 2
+  - 3
+  - 4
+    - 5
+
+引用块
+
+> [!note]
+> This is a note block.
+
+代码块
+
+\`\`\`html
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>What Can JavaScript Do?</h2>
+
+<p id="demo">JavaScript can change HTML content.</p>
+
+<button type="button" onclick='document.getElementById("demo").innerHTML = "Hello JavaScript!"'>Click Me!</button>
+
+</body>
+</html>
+\`\`\`
+
+公式块
+
+$$
+\frac 12
+$$
+
+mermaid块
+
+(略)
+
+表格
+
+| 1 | 2 |
+|---|---|
+| 3 | 4 |
 `,
 }

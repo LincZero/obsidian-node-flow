@@ -60,8 +60,20 @@ html, body, #app {
   color: #c9c9c9;
 }
 
+/* cm */
 .cm-line-yellow {
   text-decoration: underline 1px yellow;
+}
+.editable-codeblock textarea {
+  caret-color: #fffd !important;
+}
+
+/* ixora plugin */
+.ͼx {
+  color: red;
+}
+.ͼy {
+  color: yellow;
 }
 </style>
 

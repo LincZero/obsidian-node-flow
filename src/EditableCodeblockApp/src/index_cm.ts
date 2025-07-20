@@ -74,8 +74,6 @@ class CodeblockWidget extends WidgetType {
       const langMatch = content_all.substring(from).match(/^```(\w+)?\n/);
       const lang = langMatch ? langMatch[1] || '' : '';
       const newContent_all = `${before}\`\`\`${lang}\n${newContent_local}\n\`\`\`${after}`;
-
-      console.log('保存2', newContent_local, '\n-------\n', content_all, '\n---------\n');
       this.updateContent_all(newContent_all)
     }
   }
@@ -132,6 +130,8 @@ function create_decorations(state: EditorState, updateContent_all: (newContent: 
         if (match) {
           const lang = match[1] || '';
           const content = match[2];
+
+          if (lang != 'js') return // TODO 临时，便于查看使用和不使用的区别
           
           // 创建自定义组件装饰器
           // // v1

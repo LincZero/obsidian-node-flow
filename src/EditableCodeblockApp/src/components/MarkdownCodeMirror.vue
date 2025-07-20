@@ -4,12 +4,16 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
+
 import { EditorView, basicSetup } from "codemirror"
 import { markdown } from "@codemirror/lang-markdown"
 import { DecorationSet, keymap } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 import { oneDark } from "@codemirror/theme-one-dark"
-import { StateField } from '@codemirror/state'
+import { EditorState, StateField } from '@codemirror/state'
+
+// import * as HyperMD from 'hypermd'
+import ixora from '@retronav/ixora'; // 可以全部导入或分开导入
 
 import { EditableCodeblockCm, create_viewPlugin } from "../index_cm"
 
@@ -18,9 +22,8 @@ const props = defineProps<{
 }>()
 const ref_container = ref<HTMLElement | null>(null)
 
-const ref_editorView = ref<EditorView | null>(null)
-
 // 初始化 CodeMirror
+const ref_editorView = ref<EditorView | null>(null)
 function initEditor() {
   if (!ref_container.value) return
   
@@ -33,8 +36,10 @@ function initEditor() {
       oneDark,          // 黑暗主题
       extension_update, // 监听更新
       // editableCodeBlock_viewPlugin,
+      ixora,            // 一组扩展 (标题、列表、代码块、引用块、图像、html等)
+      
     ],
-    parent: ref_container.value
+    parent: ref_container.value,
   })
   ref_editorView.value = view
 
@@ -42,6 +47,14 @@ function initEditor() {
   const _editableCodeblockCm = new EditableCodeblockCm(view, props.mdData, (newStr: string) => {
     props.mdData.string = newStr
   })
+
+  // 使用 HyperMD 用法，参考 https://github.com/laobubu/HyperMD/blob/master/docs/zh-CN/quick-start.md
+  // HyperMD.fromTextArea(textareaEl, option) // 仅使用 HyperMD
+  // 将已有的 CodeMirror 转为 HyperMD
+  // HyperMD.fromTextArea(ref_container2.value)
+  // if (ref_editorView.value) {
+  //   HyperMD.switchToHyperMD(ref_editorView.value as any)
+  // }
 }
 
 // cm -> str
