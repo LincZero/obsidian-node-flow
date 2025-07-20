@@ -184,7 +184,7 @@ class CodeblockWidget extends WidgetType {
   toPos: number;
   updateContent_all: (newContent: string) => void; // 更新所有
   updateContent_local: (newContent: string) => void; // 仅更新
-  focusPos: number|null = null; // 是否生成后自动聚焦及聚焦位置。由于toDOM时机后缀，所以用这个来控制
+  focusLine: number|null = null; // 是否生成后自动聚焦及聚焦位置。由于toDOM时机后缀，所以用这个来控制
 
   constructor(
     state: EditorState,
@@ -194,14 +194,14 @@ class CodeblockWidget extends WidgetType {
     fromPos: number,
     toPos: number,
     updateContent_all: (newContent: string) => void,
-    focusPos: number|null = null,
+    focusLine: number|null = null,
   ) {
     super()
     this.state = state;
     this.oldView = oldView;
     this.fromPos = fromPos;
     this.toPos = toPos;
-    this.focusPos = focusPos;
+    this.focusLine = focusLine;
     // 注意: all是全文，local是影响部分，sub是影响部分再去除代码围栏前后缀的部分
     const content_all: string = state.doc.toString();
 
@@ -232,9 +232,9 @@ class CodeblockWidget extends WidgetType {
       container,
       this.updateContent_local
     )
-    
+
     editableCodeblock.render().then(() => {
-      if (this.focusPos) editableCodeblock.focus(this.focusPos ?? undefined)
+      if (this.focusLine != null) editableCodeblock.focus(this.focusLine == null ? undefined : this.focusLine)
     })
     return container
   }
@@ -335,10 +335,13 @@ function create_decorations(
       // 策略二: 光标移入 - 变化
       // 其实最佳方法是不变化，直接把光标移入widget内。但似乎cm无法从装饰项获取到widget对象
       // 只能重新生成
+      let line = 0
+      if (cursorRange.from == rangeSpec.toPos || cursorRange.to == rangeSpec.toPos) {
+        line = -1
+      }
       const decoration = Decoration.replace({
-        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all, 10),
-        inclusive: true,
-        block: true,
+        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all, line),
+        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
@@ -346,8 +349,7 @@ function create_decorations(
     else if (isCursonIn_last) {
       const decoration = Decoration.replace({
         widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all),
-        inclusive: true,
-        block: true,
+        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
@@ -355,8 +357,7 @@ function create_decorations(
     else {
       const decoration = Decoration.replace({
         widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all),
-        inclusive: true,
-        block: true,
+        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
       })
       list_decoration_nochange.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }

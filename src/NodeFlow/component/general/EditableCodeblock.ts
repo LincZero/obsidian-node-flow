@@ -811,7 +811,7 @@ export class EditableCodeblock {
 	 * 场景：处理光标从外部(cm)移动到该组件里的情况
 	 * 可能的元素：textarea 或 pre>code[contenteditable="true"]
 	 * 
-	 * @param line 聚焦并将光标置于指定位置
+	 * @param line 聚焦并将光标置于指定位置，允许负数索引。TODO 目前仅textarea模式支持
 	 */
 	focus(line?: number): void {
 		const textarea: HTMLTextAreaElement|null = this.el.querySelector('textarea')
@@ -819,8 +819,27 @@ export class EditableCodeblock {
 
 		if (textarea) {
 			textarea.focus()
-		} else if (editableArea) {
+
+			if (line == undefined) return
+			// 计算目标行（处理负数索引）
+			const lines = textarea.value.split('\n');
+			const lineCount = lines.length;
+			const targetLine = line < 0 // 目标行
+				? Math.max(0, lineCount + line)  // 负索引转换
+				: Math.min(line, lineCount - 1); // 确保不越界
+			
+			// 计算目标位置
+			let pos = 0;
+			for (let i = 0; i < targetLine; i++) {
+				pos += lines[i].length + 1; // +1为换行符
+			}
+
+			textarea.setSelectionRange(pos, pos);
+			return
+		}
+		else if (editableArea) {
 			editableArea.focus()
+			return
 		}
 	}
 }
