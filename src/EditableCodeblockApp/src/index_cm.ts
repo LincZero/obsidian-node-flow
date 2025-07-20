@@ -43,7 +43,7 @@ class EditableCodeblockInCm extends EditableCodeblock {
   // editor: Editor|null = null; // obsidian依赖
   state: EditorState;
   oldView: EditorView;
-  fromPos: number;
+  fromPos: number; // TODO 未能动态更新
   toPos: number;
   updateContent_local: (newContent_local: string) => void;
 
@@ -180,8 +180,9 @@ class EditableCodeblockInCm extends EditableCodeblock {
 class CodeblockWidget extends WidgetType {
   state: EditorState;
   oldView: EditorView;
-  fromPos: number;
+  fromPos: number; // TODO 未能动态更新
   toPos: number;
+  widget: EditableCodeblockInCm|null = null;
   updateContent_all: (newContent: string) => void; // 更新所有
   updateContent_local: (newContent: string) => void; // 仅更新
 
@@ -219,7 +220,7 @@ class CodeblockWidget extends WidgetType {
     container.className = 'editable-codeblock-p';
     
     // 创建您的 EditableCodeblock 组件
-    const editableCodeblock = new EditableCodeblockInCm(
+    this.widget = new EditableCodeblockInCm(
       this.state,
       this.oldView,
       this.fromPos,
@@ -230,12 +231,7 @@ class CodeblockWidget extends WidgetType {
       this.updateContent_local
     )
     
-    // 设置更新回调
-    // editableCodeblock.onSave = (newContent: string) => {
-    //   this.updateCallback(newContent);
-    // };
-    
-    editableCodeblock.render();
+    this.widget.render();
     return container;
   }
 }
@@ -251,10 +247,19 @@ class CodeblockWidget extends WidgetType {
  * > 原始文本被移除后，CodeMirror 内部依赖的 docView 结构会被破坏。
  * > 当编辑器尝试执行布局测量（如 measureVisibleLineHeights）时，无法找到被替换区域对应的文档视图
  * > 解决方法: 确保进入该函数时，docView 已经完成了。即外部可以用 StateField 而非 ViewPlugin 来实现
+ * 
+ * TODO 优化。这里没有用到旧装饰集和映射，像anyblock obsidian程序那边是用到的，可以减少渲染、加速程序。
  */
-function create_decorations(state: EditorState, view: EditorView, updateContent_all: (newContent: string) => void): DecorationSet {
+function create_decorations(
+  state: EditorState, view: EditorView,
+  updateContent_all: (newContent: string) => void,
+  tr?: Transaction
+): DecorationSet {
   const decorationRange: Range<Decoration>[] = []; // 装饰组，区分 type DecorationSet = RangeSet<Decoration>;
   // const state = view.state;
+
+  const range = tr?.state.selection.main // TODO 目前只支持单光标
+  let widget_curosr: CodeblockWidget | null = null
   
   // 遍历文档语法树
   syntaxTree(state).iterate({
@@ -267,39 +272,66 @@ function create_decorations(state: EditorState, view: EditorView, updateContent_
         
         // 提取代码块内容和语言
         const match = text.match(/^```(\w+)?\n([\s\S]*?)\n```$/);
-        if (match) {
-          const lang = match[1] || '';
-          const content = match[2];
+        if (!match) return
+        const lang = match[1] || '';
+        const content = match[2];
+        if (lang != 'js') return // TODO 临时，便于查看使用和不使用的区别
+        
+        // 创建自定义组件装饰器
+        // // v1
+        // const decoration = Decoration.mark({class: "cm-line-yellow"})
+        // decorationRange.push(decoration.range(from, to))
 
-          if (lang != 'js') return // TODO 临时，便于查看使用和不使用的区别
-          
-          // 创建自定义组件装饰器
-          // // v1
-          // const decoration = Decoration.mark({class: "cm-line-yellow"})
-          // decorationRange.push(decoration.range(from, to))
+        // // v2
+        // const decoration = Decoration.widget({
+        //   widget: new CodeblockWidget(state, lang, from, to, (newContent) => {
+        //     updateContent_all(from, to, newContent)
+        //   }),
+        //   side: 1
+        // });
+        // decorationRange.push(decoration.range(from)) // 仅from没to，表示插入在from处，而非替换
 
-          // // v2
-          // const decoration = Decoration.widget({
-          //   widget: new CodeblockWidget(state, lang, from, to, (newContent) => {
-          //     updateContent_all(from, to, newContent)
-          //   }),
-          //   side: 1
-          // });
-          // decorationRange.push(decoration.range(from)) // 仅from没to，表示插入在from处，而非替换
+        // v3
+        const widget = new CodeblockWidget(state, view, content, lang, from, to, updateContent_all)
+        const decoration = Decoration.replace({
+          widget,
+          inclusive: true,
+          block: true,
+        })
+        decorationRange.push(decoration.range(from, to))
 
-          // v3
-          const decoration = Decoration.replace({
-            widget: new CodeblockWidget(state, view, content, lang, from, to, updateContent_all),
-            inclusive: true,
-            block: true,
-          })
-          decorationRange.push(decoration.range(from, to))
+        // 如果光标在装饰集内
+        if (!tr || !range) return
+        if ((range.from >= from && range.from < to)
+          || (range.to > from && range.to <= to)
+        ) {
+          widget_curosr = widget
         }
       }
     }
   });
   
-  return Decoration.set(decorationRange);
+  // 处理 cm move in custom widget 事件
+  // 注意: 要聚焦的组件不能被刷新，否则获取不到该组件。因为 toDOM 是后执行的，重新渲染的话拿不到对应的组件
+  if (!tr) return Decoration.set(decorationRange)
+  if (!widget_curosr) return Decoration.set(decorationRange)
+  // if(tr.changes.empty) return decorationRange // 如果没有修改就不管了（点击编辑块的按钮除外）
+  for (const decoration of decorationRange) {
+    // 如果光标在装饰集内
+    if ((range.from >= decoration.from && range.from < decoration.to)
+      || (range.to > decoration.from && range.to <= decoration.to)
+    ) {
+      // 策略一：该段使用源码编辑
+      // decorationRange.splice(decorationRange.indexOf(decoration), 1);
+
+      // 策略二：光标进入控件，可进行可视化编辑
+      console.log('进入2', widget_curosr)
+      widget_curosr.widget.focus()
+
+      break
+    }
+  }
+  return Decoration.set(decorationRange)
 }
 
 /**
@@ -341,7 +373,7 @@ export class EditableCodeblockCm {
       create: (editorState:EditorState) => Decoration.none,
       update: (decorationSet:DecorationSet, tr:Transaction) => {
         // 不要直接用 this.view.state，会延后，要用 tr.state
-        return create_decorations(tr.state, this.view, this.updateContent_all)
+        return create_decorations(tr.state, this.view, this.updateContent_all, tr)
       },
       provide: (f: StateField<DecorationSet>) => EditorView.decorations.from(f)
     });
@@ -357,26 +389,26 @@ export class EditableCodeblockCm {
   }
 }
 
-/**
- * ViewPlugin
- * 
- * @deprecated 时机不对，会在 docView 未完成时就尝试替换装饰器，导致 block replace 行为无法正常进行
- * (如果是 mark 或 widget 则可以正常工作，那还是可以用这种方式的)
- */
-export function create_viewPlugin(updateContent_all: (newContent: string) => void) {
-  return ViewPlugin.fromClass(class {
-    decorations: DecorationSet;
+// /**
+//  * ViewPlugin
+//  * 
+//  * @deprecated 时机不对，会在 docView 未完成时就尝试替换装饰器，导致 block replace 行为无法正常进行
+//  * (如果是 mark 或 widget 则可以正常工作，那还是可以用这种方式的)
+//  */
+// export function create_viewPlugin(updateContent_all: (newContent: string) => void) {
+//   return ViewPlugin.fromClass(class {
+//     decorations: DecorationSet;
 
-    constructor(view: EditorView) {
-      this.decorations = create_decorations(view.state, updateContent_all);
-    }
+//     constructor(view: EditorView) {
+//       this.decorations = create_decorations(view.state, updateContent_all);
+//     }
 
-    update(update: ViewUpdate) {
-      if (update.docChanged || update.viewportChanged) {
-        this.decorations = create_decorations(update.view.state, updateContent_all);
-      }
-    }
-  }, {
-    decorations: v => v.decorations
-  });
-}
+//     update(update: ViewUpdate) {
+//       if (update.docChanged || update.viewportChanged) {
+//         this.decorations = create_decorations(update.view.state, updateContent_all);
+//       }
+//     }
+//   }, {
+//     decorations: v => v.decorations
+//   });
+// }

@@ -15,7 +15,7 @@ import { EditorState, StateField } from '@codemirror/state'
 // import * as HyperMD from 'hypermd'
 import ixora from '@retronav/ixora'; // 可以全部导入或分开导入
 
-import { EditableCodeblockCm, create_viewPlugin } from "../index_cm"
+import { EditableCodeblockCm } from "../index_cm"
 
 const props = defineProps<{
   mdData: any

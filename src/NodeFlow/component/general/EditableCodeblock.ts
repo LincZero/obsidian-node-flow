@@ -807,4 +807,23 @@ export class EditableCodeblock {
 	emit_save(isUpdateLanguage: boolean, isUpdateSource: boolean): Promise<void> {
 		return new Promise<void>((resolve, reject) => {})
 	}
+
+	/**
+	 * 聚焦到可编辑区域
+	 * 
+	 * 场景：处理光标从外部(cm)移动到该组件里的情况
+	 * 可能的元素：textarea 或 pre>code[contenteditable="true"]
+	 * 
+	 * @param pos 聚焦并将光标置于指定位置
+	 */
+	focus(pos?: number): void {
+		const textarea: HTMLTextAreaElement|null = this.el.querySelector('textarea')
+		const editableArea: HTMLElement|null = this.el.querySelector('[contenteditable="true"]')
+
+		if (textarea) {
+			textarea.focus()
+		} else if (editableArea) {
+			editableArea.focus()
+		}
+	}
 }
