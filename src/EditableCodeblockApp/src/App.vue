@@ -64,8 +64,8 @@ html, body, #app {
 .cm-line-yellow {
   text-decoration: underline 1px yellow;
 }
-.editable-codeblock textarea {
-  caret-color: #fffd !important;
+.editable-codeblock-p > .editable-codeblock.editable-textarea > textarea {
+  caret-color: #ffffffdd !important; /* 这里优先级不高容易被覆盖 */
 }
 
 /* ixora plugin */

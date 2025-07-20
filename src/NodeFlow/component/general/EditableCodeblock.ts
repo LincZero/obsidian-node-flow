@@ -260,16 +260,20 @@ export class EditableCodeblock {
 		// #endregion
 
 		// #region textarea - async part - keydown
-		this.enable_editarea_listener(textarea, undefined, undefined, (ev)=>{
-			const selectionEnd: number = textarea.selectionEnd
-			const textBefore = textarea.value.substring(0, selectionEnd)
-			const linesBefore = textBefore.split('\n')
-			if (linesBefore.length !== textarea.value.split('\n').length) return
+		if (editInput) {
+			this.enable_editarea_listener(textarea, undefined, undefined, (ev)=>{
+				const selectionEnd: number = textarea.selectionEnd
+				const textBefore = textarea.value.substring(0, selectionEnd)
+				const linesBefore = textBefore.split('\n')
+				if (linesBefore.length !== textarea.value.split('\n').length) return
 
-			ev.preventDefault() // safe: tested: `prevent` can still trigger `onChange
-			editInput.setSelectionRange(0, 0)
-			editInput.focus()
-		})
+				ev.preventDefault() // safe: tested: `prevent` can still trigger `onChange
+				editInput.setSelectionRange(0, 0)
+				editInput.focus()
+			})
+		} else {
+			this.enable_editarea_listener(textarea)
+		}
 		// #endregion
 
 		// #region language-edit - async part
@@ -489,7 +493,6 @@ export class EditableCodeblock {
 
 		// #region textarea - async part - keydown
 		el.addEventListener('keydown', (ev: KeyboardEvent) => { // `tab` key、~~`arrow` key~~
-			// TODO add shift tab
 			// var name: (`[` `]` represents the cursors at both ends)
 			//   ABCD
 			// (2)  AB[(1)CD(3)		// selectionStart, selectionStart_start, selectionStart_end

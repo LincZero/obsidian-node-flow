@@ -1,4 +1,12 @@
-/**
+/** EditableCodeblock 的通用 CodeMirror 插件
+ * 
+ * 逻辑:
+ * 
+ * - App -> 创建CM ->
+ * - 使用EditableCodeblockCm CM插件 ->
+ * - 创建CodeblockWidget部件 ->
+ * - 创建EditableCodeblockInCm 组件
+ * 
  * TODO fix 多个代码块时，编辑非首个代码块后，光标会跳到首个代码块
  */
 
@@ -12,6 +20,7 @@ import {
   ViewUpdate,
 } from '@codemirror/view';
 import {
+  EditorSelection,
   EditorState,
   Range,
   RangeSet,
@@ -31,16 +40,132 @@ loadPrism2.fn = () => {
   return Prism
 }
 class EditableCodeblockInCm extends EditableCodeblock {
+  // editor: Editor|null = null; // obsidian依赖
+  state: EditorState;
+  oldView: EditorView;
+  fromPos: number;
+  toPos: number;
   updateContent_local: (newContent_local: string) => void;
 
-  constructor(lang: string, content: string, container: HTMLElement, updateContent_local: (newContent_local: string) => void) {
+  constructor(
+    state: EditorState, oldView: EditorView, fromPos: number, toPos: number,
+    lang: string, content: string, container: HTMLElement,
+    updateContent_local: (newContent_local: string) => void
+  ) {
     super(lang, content, container)
     this.settings.renderEngine = "prismjs"
     this.settings.saveMode = 'oninput'
     this.settings.renderMode = 'textarea'
 
+    this.state = state
+    this.oldView = oldView
+    this.fromPos = fromPos
+    this.toPos = toPos
     this.updateContent_local = updateContent_local
   }
+
+  /// TODO: fix: after edit, can't up/down to root editor
+	/// @param el: HTMLTextAreaElement|HTMLInputElement|HTMLPreElement
+	override enable_editarea_listener(el: HTMLElement, cb_tab?: (ev: KeyboardEvent)=>void, cb_up?: (ev: KeyboardEvent)=>void, cb_down?: (ev: KeyboardEvent)=>void): void {
+		if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el.isContentEditable)) return
+
+		super.enable_editarea_listener(el, cb_tab, cb_up, cb_down) // `tab`
+
+		// textarea - async part - keydown
+		el.addEventListener('keydown', (ev: KeyboardEvent) => { // ~~`tab` key~~、`arrow` key	
+			if (ev.key == 'ArrowDown') {
+				if (cb_down) { cb_down(ev); return }
+
+				// check is the last line
+				if (el instanceof HTMLInputElement) {
+					// true
+				} else if (el instanceof HTMLTextAreaElement) {
+					const selectionEnd: number = el.selectionEnd
+					const textBefore = el.value.substring(0, selectionEnd)
+					const linesBefore = textBefore.split('\n')
+					if (linesBefore.length !== el.value.split('\n').length) return
+				} else {
+					// TODO
+					return
+				}
+
+				ev.preventDefault() // safe: tested: `prevent` can still trigger `onChange`
+				const targetLine: number = this.state.doc.lineAt(this.toPos).number + 1 // state.doc.line 和 state.doc.lineAt 分别 pos 和 line 转换
+				if (targetLine > this.state.doc.lines - 1) { // when codeblock on the last line
+					// strategy1: only move to end
+					// toLine--
+
+					// strategy2: insert a blank line
+          const changes = this.state.changes({
+            from: this.state.doc.toString().length,
+            to: this.state.doc.toString().length,
+            insert: "\n"
+          })
+          this.state.update({changes})
+				}
+
+        const targetPos = this.state.doc.line(targetLine).from;
+        const selection = EditorSelection.create([
+          EditorSelection.cursor(targetPos)
+        ]);
+        const transaction = this.oldView.state.update({
+          selection,
+          userEvent: "select"
+        });
+        this.oldView.dispatch(transaction);
+        this.oldView.focus()
+				return
+			}
+			else if (ev.key == 'ArrowUp') {
+				if (cb_up) { cb_up(ev); return }
+
+				// check is the first line
+				if (el instanceof HTMLInputElement) {
+					// true
+				} else if (el instanceof HTMLTextAreaElement) {
+					const selectionStart: number = el.selectionStart
+					const textBefore = el.value.substring(0, selectionStart)
+					const linesBefore = textBefore.split('\n')
+					if (linesBefore.length !== 1) return
+				} else {
+					// TODO
+					return
+				}
+
+				ev.preventDefault() // safe: tested: `prevent` can still trigger `onChange`
+				let targetLine: number = this.state.doc.lineAt(this.fromPos).number - 1 // state.doc.line 和 state.doc.lineAt 分别 pos 和 line 转换
+				if (targetLine < 0) { // when codeblock on the frist line
+					// strategy1: only move to start
+					// toLine = 0
+
+					// strategy2: insert a blank line
+					targetLine = 0
+          const changes = this.state.changes({
+            from: 0,
+            to: 0,
+            insert: "\n"
+          })
+          this.state.update({changes})
+				}
+        this.oldView.focus()
+        const targetPos = this.state.doc.line(targetLine).from;
+        const selection = EditorSelection.create([
+          EditorSelection.cursor(targetPos)
+        ]);
+        const transaction = this.oldView.state.update({
+          selection,
+          userEvent: "select"
+        });
+        this.oldView.dispatch(transaction);
+        this.oldView.focus()
+				return
+			}
+			/*else if (ev.key == 'ArrowRight') {
+			}
+			else if (ev.key == 'ArrowLeft') {
+			}*/
+		})
+	}
 
   emit_save(isUpdateLanguage: boolean, isUpdateSource: boolean): Promise<void> {
     return new Promise((resolve) => {
@@ -53,25 +178,36 @@ class EditableCodeblockInCm extends EditableCodeblock {
 
 /// 自定义CM的装饰器部件
 class CodeblockWidget extends WidgetType {
+  state: EditorState;
+  oldView: EditorView;
+  fromPos: number;
+  toPos: number;
   updateContent_all: (newContent: string) => void; // 更新所有
   updateContent_local: (newContent: string) => void; // 仅更新
 
   constructor(
-    readonly content_all: string,
-    readonly content_local_sub: string, // 注意: all是全文，local是影响部分，sub是影响部分再去除代码围栏前后缀的部分
+    state: EditorState,
+    oldView: EditorView,
+    readonly content_local_sub: string,
     readonly lang: string,
-    readonly from: number,
-    readonly to: number,
+    fromPos: number,
+    toPos: number,
     updateContent_all: (newContent: string) => void,
   ) {
     super()
+    this.state = state;
+    this.oldView = oldView;
+    this.fromPos = fromPos;
+    this.toPos = toPos;
+    // 注意: all是全文，local是影响部分，sub是影响部分再去除代码围栏前后缀的部分
+    const content_all: string = state.doc.toString();
 
     // content_local
     this.updateContent_all = updateContent_all
     this.updateContent_local = (newContent_local: string) => {
-      const before = content_all.substring(0, from);
-      const after = content_all.substring(to);
-      const langMatch = content_all.substring(from).match(/^```(\w+)?\n/);
+      const before = content_all.substring(0, fromPos);
+      const after = content_all.substring(toPos);
+      const langMatch = content_all.substring(fromPos).match(/^```(\w+)?\n/);
       const lang = langMatch ? langMatch[1] || '' : '';
       const newContent_all = `${before}\`\`\`${lang}\n${newContent_local}\n\`\`\`${after}`;
       this.updateContent_all(newContent_all)
@@ -84,6 +220,10 @@ class CodeblockWidget extends WidgetType {
     
     // 创建您的 EditableCodeblock 组件
     const editableCodeblock = new EditableCodeblockInCm(
+      this.state,
+      this.oldView,
+      this.fromPos,
+      this.toPos,
       this.lang, 
       this.content_local_sub,
       container,
@@ -112,7 +252,7 @@ class CodeblockWidget extends WidgetType {
  * > 当编辑器尝试执行布局测量（如 measureVisibleLineHeights）时，无法找到被替换区域对应的文档视图
  * > 解决方法: 确保进入该函数时，docView 已经完成了。即外部可以用 StateField 而非 ViewPlugin 来实现
  */
-function create_decorations(state: EditorState, updateContent_all: (newContent: string) => void): DecorationSet {
+function create_decorations(state: EditorState, view: EditorView, updateContent_all: (newContent: string) => void): DecorationSet {
   const decorationRange: Range<Decoration>[] = []; // 装饰组，区分 type DecorationSet = RangeSet<Decoration>;
   // const state = view.state;
   
@@ -140,7 +280,7 @@ function create_decorations(state: EditorState, updateContent_all: (newContent: 
 
           // // v2
           // const decoration = Decoration.widget({
-          //   widget: new CodeblockWidget(content, lang, from, to, (newContent) => {
+          //   widget: new CodeblockWidget(state, lang, from, to, (newContent) => {
           //     updateContent_all(from, to, newContent)
           //   }),
           //   side: 1
@@ -149,7 +289,7 @@ function create_decorations(state: EditorState, updateContent_all: (newContent: 
 
           // v3
           const decoration = Decoration.replace({
-            widget: new CodeblockWidget(state.sliceDoc(), content, lang, from, to, updateContent_all),
+            widget: new CodeblockWidget(state, view, content, lang, from, to, updateContent_all),
             inclusive: true,
             block: true,
           })
@@ -201,7 +341,7 @@ export class EditableCodeblockCm {
       create: (editorState:EditorState) => Decoration.none,
       update: (decorationSet:DecorationSet, tr:Transaction) => {
         // 不要直接用 this.view.state，会延后，要用 tr.state
-        return create_decorations(tr.state, this.updateContent_all)
+        return create_decorations(tr.state, this.view, this.updateContent_all)
       },
       provide: (f: StateField<DecorationSet>) => EditorView.decorations.from(f)
     });
