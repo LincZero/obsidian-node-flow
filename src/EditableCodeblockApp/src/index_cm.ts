@@ -236,6 +236,7 @@ class CodeblockWidget extends WidgetType {
   }
 }
 
+let is_prev_cursor_in = false
 /** 范围选择器 + 装饰集生成器
  * 
  * @details
@@ -251,87 +252,157 @@ class CodeblockWidget extends WidgetType {
  * TODO 优化。这里没有用到旧装饰集和映射，像anyblock obsidian程序那边是用到的，可以减少渲染、加速程序。
  */
 function create_decorations(
-  state: EditorState, view: EditorView,
+  state: EditorState, oldView: EditorView,
   updateContent_all: (newContent: string) => void,
-  tr?: Transaction
+  tr: Transaction, // TODO tr和decorationSet 可以改为可选，如果忽略，则完全重建
+  decorationSet: DecorationSet = Decoration.none,
 ): DecorationSet {
-  const decorationRange: Range<Decoration>[] = []; // 装饰组，区分 type DecorationSet = RangeSet<Decoration>;
-  // const state = view.state;
+  // #region 1. 得到旧装饰集v2 (范围映射 旧装饰集 得到)
+  try {
+    decorationSet = decorationSet.map(tr.changes)
+  } catch (e) {
+    // 如果将tr更新的新旧对象错误混用，会出现这种问题 (之前修复了光标位置延时问题后，触发了这个问题)
+    console.warn('decorationSet map error, maybe paste ab at end', e)
+  }
+  // #endregion
 
-  const range = tr?.state.selection.main // TODO 目前只支持单光标
-  let widget_curosr: CodeblockWidget | null = null
-  
-  // 遍历文档语法树
-  syntaxTree(state).iterate({
+  const list_rangeSpec: {
+    fromPos: number;
+    toPos: number;
+    text: string; // 代码块内容
+    lang: string; // 代码块语言
+  }[] = []
+  // #region 2. 得到新范围集 (更新后)
+  syntaxTree(state).iterate({ // 遍历文档语法树
     enter(node) {
       // 识别Markdown代码块
-      if (node.name === 'FencedCode') {
-        const from = node.from;
-        const to = node.to;
-        const text = state.sliceDoc(from, to);
-        
-        // 提取代码块内容和语言
-        const match = text.match(/^```(\w+)?\n([\s\S]*?)\n```$/);
-        if (!match) return
-        const lang = match[1] || '';
-        const content = match[2];
-        if (lang != 'js') return // TODO 临时，便于查看使用和不使用的区别
-        
-        // 创建自定义组件装饰器
-        // // v1
-        // const decoration = Decoration.mark({class: "cm-line-yellow"})
-        // decorationRange.push(decoration.range(from, to))
+      if (node.name != 'FencedCode') return
 
-        // // v2
-        // const decoration = Decoration.widget({
-        //   widget: new CodeblockWidget(state, lang, from, to, (newContent) => {
-        //     updateContent_all(from, to, newContent)
-        //   }),
-        //   side: 1
-        // });
-        // decorationRange.push(decoration.range(from)) // 仅from没to，表示插入在from处，而非替换
-
-        // v3
-        const widget = new CodeblockWidget(state, view, content, lang, from, to, updateContent_all)
-        const decoration = Decoration.replace({
-          widget,
-          inclusive: true,
-          block: true,
-        })
-        decorationRange.push(decoration.range(from, to))
-
-        // 如果光标在装饰集内
-        if (!tr || !range) return
-        if ((range.from >= from && range.from < to)
-          || (range.to > from && range.to <= to)
-        ) {
-          widget_curosr = widget
-        }
-      }
+      const fromPos = node.from;
+      const toPos = node.to;
+      const text = state.sliceDoc(fromPos, toPos);
+      
+      // 提取代码块内容和语言
+      const match = text.match(/^```(\w+)?\n([\s\S]*?)\n```$/);
+      if (!match) return
+      const lang = match[1] || '';
+      const content = match[2];
+      if (lang != 'js') return // TODO 临时，便于查看使用和不使用的区别
+      
+      list_rangeSpec.push({
+        fromPos,
+        toPos,
+        text: content,
+        lang: lang
+      })
     }
-  });
-  
-  // 处理 cm move in custom widget 事件
-  // 注意: 要聚焦的组件不能被刷新，否则获取不到该组件。因为 toDOM 是后执行的，重新渲染的话拿不到对应的组件
-  if (!tr) return Decoration.set(decorationRange)
-  if (!widget_curosr) return Decoration.set(decorationRange)
-  // if(tr.changes.empty) return decorationRange // 如果没有修改就不管了（点击编辑块的按钮除外）
-  for (const decoration of decorationRange) {
-    // 如果光标在装饰集内
-    if ((range.from >= decoration.from && range.from < decoration.to)
-      || (range.to > decoration.from && range.to <= decoration.to)
+  })
+  // #endregion
+
+  // #region 3. 得到新装饰集、变化集  (范围集 --生成--> 装饰集)
+  // 要判断复用，所以分开范围集和装饰集
+  const cursorRange = tr?.state.selection.main // TODO 目前只支持单光标
+  const cursorRange_last = oldView.state.selection.main
+  let list_decoration_nochange:Range<Decoration>[] = [] // 装饰集 - 无光标变动部分 -> 不会导致刷新
+  let list_decoration_change:Range<Decoration>[] = []   // 装饰集 - 有光标变动部分 -> 会导致刷新
+  let is_current_cursor_in = false // 当前光标是否在装饰集内
+  for (const rangeSpec of list_rangeSpec) {
+    // (1) 判断光标与该范围项的关系
+    let isCursorIn = false // 当前光标是否在装饰集内
+    let isCursonIn_last = false // 旧光标是否在装饰集内
+    if (cursorRange.from >= rangeSpec.fromPos && cursorRange.from <= rangeSpec.toPos
+        || cursorRange.to >= rangeSpec.fromPos && cursorRange.to <= rangeSpec.toPos
     ) {
-      // 策略一：该段使用源码编辑
-      // decorationRange.splice(decorationRange.indexOf(decoration), 1);
+      isCursorIn = true
+    }
+    if (cursorRange_last.from >= rangeSpec.fromPos && cursorRange_last.from <= rangeSpec.toPos
+      || cursorRange_last.to >= rangeSpec.fromPos && cursorRange_last.to <= rangeSpec.toPos
+    ) {
+      isCursonIn_last = true
+    }
 
-      // 策略二：光标进入控件，可进行可视化编辑
-      console.log('进入2', widget_curosr)
-      widget_curosr.widget.focus()
+    // (2) 创建装饰项，并添加到装饰集
+    // 光标在内 (一直在内或从外进入)
+    if (isCursorIn) {
+      is_current_cursor_in = true
 
-      break
+      // 策略一：该段使用源码编辑 - 变化
+      const decoration = Decoration.mark({class: "cm-line-yellow"})
+      list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
+
+      // 策略二: 光标 - 不变化
+      // widget_curosr.widget.focus()
+    }
+    // 光标从内出来
+    else if (isCursonIn_last) {
+      const decoration = Decoration.replace({
+        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all),
+        inclusive: true,
+        block: true,
+      })
+      list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
+    }
+    // 光标一直在外 - 不变化
+    else {
+      const decoration = Decoration.replace({
+        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all),
+        inclusive: true,
+        block: true,
+      })
+      list_decoration_nochange.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
   }
-  return Decoration.set(decorationRange)
+  // #endregion
+
+  // #region 4. 检查变化集
+  // 若没有变化项，可提前返回
+  // 变化项包括: 装饰集变化, 光标进出范围集变化，编辑模式变化
+  if (
+    list_decoration_change.length == 0 &&
+    is_current_cursor_in == is_prev_cursor_in &&
+    (list_decoration_nochange.length > 0 && decorationSet != Decoration.none)
+  ) {
+    return decorationSet
+  }
+  is_prev_cursor_in = is_current_cursor_in
+  // #endregion
+
+  // #region 5. 用变化集 + 新装饰集 + 旧装饰集v2 --> 得到 旧装饰集v3
+  let debug_count1 = 0, debug_count2 = 0, debug_count3 = 0, debug_count4 = 0
+  // (1) 删除变化项
+  decorationSet = decorationSet.update({
+    filter(from, to, value) { // 全部删掉，和不变集相同的则保留
+      for (let i = 0; i < list_decoration_nochange.length; i++) {
+        const item = list_decoration_nochange[i]
+        if (item.from == from && item.to == to) {
+          debug_count1++
+          list_decoration_nochange.splice(i, 1); return true;
+        }
+      }
+      debug_count1++
+      debug_count2++
+      return false
+    },
+  })
+  // (2) 新增变化项1
+  // 测出了存在一个没有光标变化的新ab块 (在黏贴一段ab块文本会出现这种情况)
+  for (const item of list_decoration_nochange) {
+    debug_count3++
+    decorationSet = decorationSet.update({
+      add: [item],
+    })
+  }
+  // (3) 新增变化项2
+  for (const item of list_decoration_change) {
+    debug_count4++
+    decorationSet = decorationSet.update({
+      add: [item],
+    })
+  }
+  console.log(`CodeMirror 装饰集变化: ${debug_count1} -${debug_count2}+${debug_count3}+${debug_count4}`)
+  // #endregion
+
+  return decorationSet
 }
 
 /**
@@ -373,7 +444,7 @@ export class EditableCodeblockCm {
       create: (editorState:EditorState) => Decoration.none,
       update: (decorationSet:DecorationSet, tr:Transaction) => {
         // 不要直接用 this.view.state，会延后，要用 tr.state
-        return create_decorations(tr.state, this.view, this.updateContent_all, tr)
+        return create_decorations(tr.state, this.view, this.updateContent_all, tr, decorationSet)
       },
       provide: (f: StateField<DecorationSet>) => EditorView.decorations.from(f)
     });
