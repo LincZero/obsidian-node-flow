@@ -72,11 +72,14 @@ html, body, #app {
 .editable-codeblock-p > .editable-codeblock.editable-textarea > textarea {
   caret-color: #ffffffdd !important; /* 这里优先级不高容易被覆盖 */
 }
-.editable-codeblock-p {
-  /* block模式下光标上下会跳过区域。
-  在非block模式，会进入，但会有1em的占位 img.cm-widgetBuffer，可减少之。
-  但注意底部如果太小，则光标进入会定位到开头而非尾部
-   */
+/* block模式下光标上下会跳过区域。
+在非block模式，会进入，但会有1em的占位 img.cm-widgetBuffer，可减少之。
+但注意底部如果太小，则光标进入会定位到开头而非尾部
+  */
+.cm-codeblock.cm-line > .editable-codeblock-p {
+  margin: -1em 0 -0.95em 0;
+}
+.cm-blockquote.cm-line > div > .editable-codeblock-quote {
   margin: -1em 0 -0.95em 0;
 }
 
