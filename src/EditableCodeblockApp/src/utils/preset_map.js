@@ -158,4 +158,160 @@ mermaid块
 > 
 > 引用块结尾
 `,
+'English': `\
+EditableBlock Development Phase Quick Testing Platform + Demo
+
+## Plugin Introduction
+
+Purpose: Primarily solves the nested experience of Markdown containers
+
+> Usage Instructions
+> 
+> Note there will be four tabs. You can switch between them or rearrange for comparison:
+> - MdEditor:    Plain text
+> - MdViewer:    Rendered, using markdown-it engine + EditableBlock plugin, non-editable
+> - CodeMirror2: Rendered, using CodeMirror engine, editable
+> - CodeMirror:  Rendered, using CodeMirror engine + EditableBlock plugin, editable
+
+> Comparison
+> - CodeMirror2
+>   - Logic resembles **Obsidian's** Live Preview editing experience.
+>   - Characteristics: No concept of "blocks" or "containers", parsing result is an array of character groups
+>   - Drawbacks: Difficult editing and poor rendering when nesting other content in blockquotes/lists 
+>     (e.g., when nesting code blocks within blockquotes in Obsidian, code blocks fail to render completely)
+> - CodeMirror
+>   - Logic resembles **Typora's** editing experience
+>   - Characteristics: Features "block" and "container" concepts, creating a separate editing space within each block.
+>     This maintains editing experience within blocks without degradation! Even when blocks nest other blocks.
+
+> Currently in development/testing phase with many bugs.
+> Especially blockquotes.
+> TODO:
+> - Support saveMode switching for onInput and onChange
+> - More shortcuts to enhance block-level editing experience
+> - Nested second-level controls cannot save edits
+
+## Plugin Demo
+
+from: https://www.w3schools.com/js/js_examples.asp
+
+\`\`\`js
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>What Can JavaScript Do?</h2>
+
+<p id="demo">JavaScript can change HTML content.</p>
+
+<button
+  type="button"
+  onclick='document.getElementById("demo").innerHTML = "Hello JavaScript!"'
+>Click Me!</button>
+
+</body>
+</html>
+\`\`\`
+
+## Basic Markdown Syntax
+
+Headers (omitted)
+
+Inline: **bold** *italic* ~~strikethrough~~ ==highlight== \`inline code\` $\\frac 12$
+
+Lists
+
+- 1
+- 2
+  - 3
+  - 4
+    - 5
+
+Blockquote
+
+> [!note]
+> This is a note block.
+
+Code block
+
+\`\`\`js
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>What Can JavaScript Do?</h2>
+
+<p id="demo">JavaScript can change HTML content.</p>
+
+<button
+  type="button"
+  onclick='document.getElementById("demo").innerHTML = "Hello JavaScript!"'
+>Click Me!</button>
+
+</body>
+</html>
+\`\`\`
+
+Formula block
+
+$$
+\\frac 12
+$$
+
+Mermaid block
+
+(omitted)
+
+Table
+
+| 1 | 2 |
+|---|---|
+| 3 | 4 |
+
+## Nesting Tests
+
+Blockquote containing simple Markdown
+
+> Start of blockquote
+> 
+> Inline: **bold** *italic* ~~strikethrough~~ ==highlight== \`inline code\` $\\frac 12$
+> 
+> - List item
+> 
+> End of blockquote
+
+Blockquote containing code block
+
+> Start of blockquote
+> 
+> \`\`\`js
+> <!DOCTYPE html>
+> <html>
+> <body>
+> 
+> <h2>What Can JavaScript Do?</h2>
+> 
+> <p id="demo">JavaScript can change HTML content.</p>
+> 
+> <button
+>   type="button"
+>   onclick='document.getElementById("demo").innerHTML = "Hello JavaScript!"'
+> > Click Me!</button>
+> 
+> </body>
+> </html>
+> \`\`\`
+> 
+> End of blockquote
+
+Blockquote containing nested blockquote
+
+> Start of blockquote
+> 
+> > Start of nested blockquote
+> > Nested content
+> > End of nested blockquote
+> 
+> End of blockquote
+`
 }
