@@ -90,13 +90,15 @@ html, body, #app {
 /* plugin */
 .editable-codeblock-quote {
 	position: relative;
+  /* padding-left: 10px; */
+  margin-left: 4px;
 }
 .editable-codeblock-quote::before {
 	content: "";
 	position: absolute;
 	width: 4px;
 	height: 100%;
-	left: -4px;
+	left: -4px; /* 负数在嵌套时有问题 */
 	top: 0;
 	background-color: gray;
 	z-index: 200;

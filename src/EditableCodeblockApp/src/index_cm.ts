@@ -30,25 +30,67 @@ import {
 } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 
-// 扩展
-import { basicSetup } from "codemirror"
+// #region 扩展
+import { basicSetup, minimalSetup } from "codemirror"
 import { markdown } from "@codemirror/lang-markdown"
 import { keymap, lineNumbers } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 import { oneDark } from "@codemirror/theme-one-dark"
+
+import {
+  highlightActiveLine,
+  highlightSpecialChars,
+  drawSelection,
+  dropCursor,
+  rectangularSelection,
+  crosshairCursor,
+  highlightActiveLineGutter,
+  keymap as keymapExt
+} from "@codemirror/view";
+import { history, historyKeymap } from "@codemirror/commands";
+import { indentOnInput } from "@codemirror/language";
+import { indentWithTab } from "@codemirror/commands";
+// import { foldGutter, foldKeymap } from "@codemirror/fold";
+// import { bracketMatching } from "@codemirror/matchbrackets";
+// import { closeBrackets, closeBracketsKeymap } from "@codemirror/closebrackets";
+// import { autocompletion, completionKeymap } from "@codemirror/autocomplete";
+// import { searchKeymap } from "@codemirror/search";
+
 // import * as HyperMD from 'hypermd'
 import ixora from '@retronav/ixora'; // 可以全部导入或分开导入
 const cm_extension: Extension[] = [ // codemirror 扩展
-  basicSetup,       // 基础设置
-  keymap.of(defaultKeymap), // 默认快捷键
+  highlightSpecialChars(),
+  history(),
+  drawSelection(),
+  dropCursor(),
+  EditorState.allowMultipleSelections.of(true),
+  indentOnInput(),
+  // bracketMatching(),
+  // closeBrackets(),
+  // autocompletion(),
+  rectangularSelection(),
+  crosshairCursor(),
+  highlightActiveLine(),
+  highlightActiveLineGutter(),
+  keymapExt.of([
+    ...defaultKeymap,
+    ...historyKeymap,
+    // ...closeBracketsKeymap,
+    // ...searchKeymap,
+    // ...foldKeymap,
+    // ...completionKeymap,
+    indentWithTab // 保留Tab缩进
+  ]),
+
+  // basicSetup,      // 基础设置
+  // keymap.of(defaultKeymap), // 默认快捷键
   markdown(),       // markdown 语言支持
   oneDark,          // 黑暗主题
   // extension_update, // 监听更新
   // editableCodeBlock_viewPlugin,
   ixora,            // 一组扩展 (标题、列表、代码块、引用块、图像、html等)
-
-  // lineNumbers({ display: true }), // TODO 禁用行号
 ]
+// #endregion
 
 // #region editable-codeblock
 import { EditableCodeblock, loadPrism2 } from '../../NodeFlow/component/general/EditableCodeblock';
@@ -336,6 +378,11 @@ class QuoteWidget extends WidgetType {
       // - 顺序上，失焦是先触发外部 cm 的 tr，才触发内部的事件
       // - state是拷贝，不是实时的。而用拷贝去更新会运行时控制台报错
       // this.updateContent_all(newContent_all)
+      // 
+      // TODO 方案一：是 updateContent_all，缺点是太多没必要的也更新，容易丢失光标
+      // 方案二：是直接用 state 更新，缺点是被嵌套两层后（如引用块包引用块），无法编辑
+      // 方案三：后续需要更新到方案三，一直把from、to往上游传输，直到到达root cm编辑器。
+      // 只有在root cm中才有权限进行更新，且以root cm的分块作为最小更新单位！
       if (global_state) {
         this.state = global_state
       }
@@ -584,7 +631,7 @@ function create_decorations(
       }
       const decoration = Decoration.replace({
         widget: create_widget(state, oldView, rangeSpec, updateContent_all, line),
-        inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
+        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
@@ -592,7 +639,7 @@ function create_decorations(
     else if (isCursonIn_last) {
       const decoration = Decoration.replace({
         widget: create_widget(state, oldView, rangeSpec, updateContent_all),
-        inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
+        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
@@ -600,7 +647,7 @@ function create_decorations(
     else {
       const decoration = Decoration.replace({
         widget: create_widget(state, oldView, rangeSpec, updateContent_all),
-        inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
+        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
       })
       list_decoration_nochange.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
