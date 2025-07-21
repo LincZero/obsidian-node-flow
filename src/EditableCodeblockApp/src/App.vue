@@ -80,8 +80,26 @@ html, body, #app {
 .ͼy {
   color: yellow;
 }
-.ͼ1 .cm-codeblock {
+.app-codemirror .ͼ1 .cm-codeblock {
   background: none !important;
+}
+.app-codemirror .ͼ1 .cm-blockquote-border {
+  border: none !important;
+}
+
+/* plugin */
+.editable-codeblock-quote {
+	position: relative;
+}
+.editable-codeblock-quote::before {
+	content: "";
+	position: absolute;
+	width: 4px;
+	height: 100%;
+	left: -4px;
+	top: 0;
+	background-color: gray;
+	z-index: 200;
 }
 </style>
 

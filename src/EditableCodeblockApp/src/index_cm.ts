@@ -294,13 +294,14 @@ class CodeblockWidget extends WidgetType {
 let global_cursor_pos_cache: { fromPos: number, toPos: number }|null = null
 /// 自定义CM的装饰器部件 - 引用块
 class QuoteWidget extends WidgetType {
-  state: EditorState;
+  state: EditorState; // 非即时
   oldView: EditorView;
   fromPos: number; // TODO 未能动态更新
   toPos: number;
   updateContent_all: (newContent: string) => void; // 更新所有
   updateContent_local: (newContent: string) => void; // 仅更新
   focusLine: number|null = null; // 是否生成后自动聚焦及聚焦位置。由于toDOM时机后缀，所以用这个来控制
+  el: HTMLElement|null = null; // toDOM生成的元素
 
   constructor(
     state: EditorState,
@@ -329,13 +330,37 @@ class QuoteWidget extends WidgetType {
       let newContent_local2 = newContent_local.split('\n').map(line => '> ' + line).join('\n')
       const newContent_all = `${before}${newContent_local2}${after}`;
       // console.log('teset', fromPos, toPos, newContent_all)
-      this.updateContent_all(newContent_all)
+      
+      // 更新内容。用cm api代替旧的 updateContent_all。
+      // 注意: 
+      // - 顺序上，失焦是先触发外部 cm 的 tr，才触发内部的事件
+      // - state是拷贝，不是实时的。而用拷贝去更新会运行时控制台报错
+      // this.updateContent_all(newContent_all)
+      if (global_state) {
+        this.state = global_state
+      }
+      else {
+        console.warn('global_state is null')
+        return
+      }
+      const transaction = this.state.update({
+        changes: {
+          from: this.fromPos,
+          to: this.toPos,
+          insert: newContent_local2,
+        },
+        userEvent: "input",
+      })
+      oldView.dispatch(transaction)
+      this.toPos = this.fromPos + newContent_local2.length
+
+      if (this.el) this.el.classList.remove('is-no-saved');
     }
   }
 
   toDOM(view: EditorView): HTMLElement {
     let saveMode: 'oninput'|'onchange' = 'onchange'
-    const container = document.createElement('div');
+    this.el = document.createElement('div');
 
     // 可编辑引用块。附带光标位置恢复逻辑
     // TODO 目前这里只是简单实现，没有 EditableCodeblock 那么完善、快捷键、中文输入等都存在问题
@@ -343,11 +368,9 @@ class QuoteWidget extends WidgetType {
       // 内容变化
       if (update.docChanged) {
         if (true) { // saveMode == 'oninput'
-          container.classList.add('is-no-saved');
+          this.el.classList.add('is-no-saved');
           return
         }
-
-        const newContent = update.state.doc.toString()
 
         // 光标位置存储
         global_cursor_pos_cache = {
@@ -355,24 +378,22 @@ class QuoteWidget extends WidgetType {
           toPos: update.state.selection.main.to,
         }
 
+        const newContent = update.state.doc.toString()
         this.updateContent_local(newContent)
         return
       }
       if (update.focusChanged) { // 焦点进入或离开
         if (update.transactions.length == 0) { // 失焦
-          const newContent = update.state.doc.toString()
-
           global_cursor_pos_cache = null // 失焦不用存位置
 
-          setTimeout(() => {
-            this.updateContent_local(newContent)
-          }, 1000)
+          const newContent = update.state.doc.toString()
+          this.updateContent_local(newContent)
           return
         }
       }
     })
     // const extensions = this.state.facet(EditorState.extensions); // 从现有编辑器的状态中提取扩展，好像是旧api
-    const quote = document.createElement('div'); container.appendChild(quote); quote.className = 'editable-codeblock-quote';
+    const quote = document.createElement('div'); this.el.appendChild(quote); quote.className = 'editable-codeblock-quote';
     const newView = new EditorView({
       doc: this.content_local_sub,
       extensions: [
@@ -416,7 +437,7 @@ class QuoteWidget extends WidgetType {
       global_cursor_pos_cache = null
     }
 
-    return container
+    return this.el
   }
 }
 
@@ -563,7 +584,7 @@ function create_decorations(
       }
       const decoration = Decoration.replace({
         widget: create_widget(state, oldView, rangeSpec, updateContent_all, line),
-        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
+        inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
@@ -571,7 +592,7 @@ function create_decorations(
     else if (isCursonIn_last) {
       const decoration = Decoration.replace({
         widget: create_widget(state, oldView, rangeSpec, updateContent_all),
-        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
+        inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
@@ -579,7 +600,7 @@ function create_decorations(
     else {
       const decoration = Decoration.replace({
         widget: create_widget(state, oldView, rangeSpec, updateContent_all),
-        // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
+        inclusive: true, block: true, // 区别: 光标上下移动会跳过 block，但这个也能自行监听且感觉更合适
       })
       list_decoration_nochange.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
     }
@@ -637,6 +658,7 @@ function create_decorations(
   return decorationSet
 }
 
+let global_state: any|null = null // 只接受根部state，不接受嵌套时的state
 /**
  * EditableCodeblock 的通用 CodeMirror 插件
  * 
@@ -646,13 +668,20 @@ export class EditableCodeblockCm {
   view: EditorView;
   state: EditorState;
   mdStr: string;
+  isRoot: boolean = false; // 是否是根部的cm
+  /** 强制更新全部内容
+   * 除非不得已，尽量不要使用这里传入的 updateContent_all，因为这会导致全部更新、丢失光标位置。
+   * 尽量使用 cm 的tr+dispatch方法进行局部更新
+   */
   updateContent_all: (newContent: string) => void;
 
-  constructor(view: EditorView, mdStr: string, updateContent_all: (newContent: string) => void) {
+  constructor(view: EditorView, mdStr: string, updateContent_all: (newContent: string) => void, isRoot: boolean = false) {
     this.view = view
     this.state = view.state
     this.mdStr = mdStr
     this.updateContent_all = updateContent_all
+    this.isRoot = isRoot
+    if (this.isRoot) global_state = this.state
 
     this.init_stateField()
   }
@@ -675,7 +704,9 @@ export class EditableCodeblockCm {
     const codeBlockField = StateField.define<DecorationSet>({
       create: (editorState:EditorState) => Decoration.none,
       update: (decorationSet:DecorationSet, tr:Transaction) => {
+        if (this.isRoot) global_state = tr.state
         // 不要直接用 this.view.state，会延后，要用 tr.state
+        this.state = tr.state;
         return create_decorations(tr.state, this.view, this.updateContent_all, tr, decorationSet)
       },
       provide: (f: StateField<DecorationSet>) => EditorView.decorations.from(f)

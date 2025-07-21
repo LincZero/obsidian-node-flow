@@ -3,6 +3,9 @@
 export const preset_map = {
 //
 'Normal markdown': `\
+> 1
+> 2
+
 \`^\` 点击编辑区域上面的预设下拉框，可以切换其他demo
 
 Editable Codeblock
@@ -71,7 +74,7 @@ from: https://www.w3schools.com/js/js_examples.asp
 公式块
 
 $$
-\frac 12
+\\frac 12
 $$
 
 mermaid块
@@ -85,6 +88,16 @@ mermaid块
 | 3 | 4 |
 
 ## 嵌套测试
+
+引用块包含简单Markdown
+
+> 引用块开头
+> 
+> 内联: **bord** *i* ~~delete~~ ==highlight== \`inline code\` $\\frac 12$
+> 
+> - 列表项
+> 
+> 引用块结尾
 
 引用块包含代码块
 

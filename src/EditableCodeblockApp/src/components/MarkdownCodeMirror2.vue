@@ -1,7 +1,7 @@
 <!-- 不使用 EditableCodeblock CM plugin 的版本 -->
 
 <template>
-  <div ref="ref_container" class="app-codemirror"></div>
+  <div ref="ref_container" class="app-codemirror2"></div>
 </template>
 
 <script setup lang="ts">
@@ -74,7 +74,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.app-codemirror {
+.app-codemirror2 {
   height: 100%;
 }
 </style>

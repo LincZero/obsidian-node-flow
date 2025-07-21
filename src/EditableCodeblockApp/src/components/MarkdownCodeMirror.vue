@@ -42,7 +42,7 @@ function initEditor() {
   // 使用 EditableCodeblock 插件
   const _editableCodeblockCm = new EditableCodeblockCm(view, props.mdData, (newStr: string) => {
     props.mdData.string = newStr
-  })
+  }, true)
 
   ref_editorView.value = view
 
