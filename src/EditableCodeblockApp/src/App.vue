@@ -102,6 +102,10 @@ html, body, #app {
 	position: relative;
   /* padding-left: 10px; */
   margin-left: 4px;
+  background-color: #88888811;
+}
+.editable-codeblock-quote .cm-editor {
+  background: none !important;
 }
 .editable-codeblock-quote::before {
 	content: "";
@@ -110,7 +114,7 @@ html, body, #app {
 	height: 100%;
 	left: -4px; /* 负数在嵌套时有问题 */
 	top: 0;
-	background-color: gray;
+	background-color: #888;
 	z-index: 200;
 }
 </style>
