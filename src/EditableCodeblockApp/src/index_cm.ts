@@ -119,8 +119,8 @@ class EditableCodeblockInCm extends EditableCodeblock {
     // 如果是oninput saveMode，需要注意:
     // 如果页面有多个codeblock，而其中一个codeblock的编辑导致全部重渲染，会导致光标无法确定要在哪个里
     // 这会存在问题
-    // this.settings.saveMode = 'oninput' // (可切换)
-    this.settings.saveMode = 'onchange'
+    this.settings.saveMode = 'oninput' // (可切换)
+    // this.settings.saveMode = 'onchange'
     this.settings.renderMode = 'textarea'
     // this.settings.renderMode = 'editablePre' // (可切换)
 
