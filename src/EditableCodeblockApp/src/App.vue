@@ -4,6 +4,7 @@ import TabBar from './components/TabBar.vue'
 import MarkdownEditor from './components/MarkdownEditor.vue'
 import MarkdownViewer from './components/MarkdownViewer.vue'
 import MarkdownCodeMirror from './components/MarkdownCodeMirror.vue'
+import MarkdownCodeMirror2 from './components/MarkdownCodeMirror2.vue'
 
 import GoldenLayout from './components/goldenLayout/GoldenLayout.vue'
 import { prefinedLayouts } from './components/goldenLayout/predefined-layouts'
@@ -32,6 +33,10 @@ const mdData = ref<any>({
     
     <template #MdViewer>
       <MarkdownViewer :mdData="mdData"></MarkdownViewer>
+    </template>
+
+    <template #MdCodeMirror2>
+      <MarkdownCodeMirror2 :mdData="mdData"></MarkdownCodeMirror2>
     </template>
 
     <template #MdCodeMirror>
@@ -74,6 +79,9 @@ html, body, #app {
 }
 .ͼy {
   color: yellow;
+}
+.ͼ1 .cm-codeblock {
+  background: none !important;
 }
 </style>
 

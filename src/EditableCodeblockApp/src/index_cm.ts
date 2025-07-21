@@ -15,7 +15,6 @@ import {
   Decoration,         // 装饰
   type DecorationSet, // 装饰集
   WidgetType,         // 装饰器部件
-
   ViewPlugin,
   ViewUpdate,
 } from '@codemirror/view';
@@ -34,12 +33,12 @@ import { syntaxTree } from '@codemirror/language';
 // 扩展
 import { basicSetup } from "codemirror"
 import { markdown } from "@codemirror/lang-markdown"
-import { keymap } from "@codemirror/view"
+import { keymap, lineNumbers } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 import { oneDark } from "@codemirror/theme-one-dark"
 // import * as HyperMD from 'hypermd'
 import ixora from '@retronav/ixora'; // 可以全部导入或分开导入
-const ex: Extension[] = [ // codemirror 扩展
+const cm_extension: Extension[] = [ // codemirror 扩展
   basicSetup,       // 基础设置
   keymap.of(defaultKeymap), // 默认快捷键
   markdown(),       // markdown 语言支持
@@ -47,6 +46,8 @@ const ex: Extension[] = [ // codemirror 扩展
   // extension_update, // 监听更新
   // editableCodeBlock_viewPlugin,
   ixora,            // 一组扩展 (标题、列表、代码块、引用块、图像、html等)
+
+  // lineNumbers({ display: true }), // TODO 禁用行号
 ]
 
 // #region editable-codeblock
@@ -73,8 +74,13 @@ class EditableCodeblockInCm extends EditableCodeblock {
   ) {
     super(lang, content, container)
     this.settings.renderEngine = "prismjs"
-    this.settings.saveMode = 'oninput'
+    // 如果是oninput saveMode，需要注意:
+    // 如果页面有多个codeblock，而其中一个codeblock的编辑导致全部重渲染，会导致光标无法确定要在哪个里
+    // 这会存在问题
+    // this.settings.saveMode = 'oninput' // (可切换)
+    this.settings.saveMode = 'onchange'
     this.settings.renderMode = 'textarea'
+    // this.settings.renderMode = 'editablePre' // (可切换)
 
     this.state = state
     this.oldView = oldView
@@ -267,7 +273,7 @@ class CodeblockWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement('div'); container.className = 'editable-codeblock-p';
     
-    // 创建您的 EditableCodeblock 组件
+    // 创建您的 EditableCodeblock 组件，自带光标位置恢复逻辑
     const editableCodeblock = new EditableCodeblockInCm(
       this.state,
       this.oldView,
@@ -285,6 +291,7 @@ class CodeblockWidget extends WidgetType {
   }
 }
 
+let global_cursor_pos_cache: { fromPos: number, toPos: number }|null = null
 /// 自定义CM的装饰器部件 - 引用块
 class QuoteWidget extends WidgetType {
   state: EditorState;
@@ -327,25 +334,87 @@ class QuoteWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
+    let saveMode: 'oninput'|'onchange' = 'onchange'
     const container = document.createElement('div');
 
+    // 可编辑引用块。附带光标位置恢复逻辑
+    // TODO 目前这里只是简单实现，没有 EditableCodeblock 那么完善、快捷键、中文输入等都存在问题
     const extension_update = EditorView.updateListener.of(update => {
+      // 内容变化
       if (update.docChanged) {
+        if (true) { // saveMode == 'oninput'
+          container.classList.add('is-no-saved');
+          return
+        }
+
         const newContent = update.state.doc.toString()
+
+        // 光标位置存储
+        global_cursor_pos_cache = {
+          fromPos: update.state.selection.main.from,
+          toPos: update.state.selection.main.to,
+        }
+
         this.updateContent_local(newContent)
+        return
+      }
+      if (update.focusChanged) { // 焦点进入或离开
+        if (update.transactions.length == 0) { // 失焦
+          const newContent = update.state.doc.toString()
+
+          global_cursor_pos_cache = null // 失焦不用存位置
+
+          setTimeout(() => {
+            this.updateContent_local(newContent)
+          }, 1000)
+          return
+        }
       }
     })
     // const extensions = this.state.facet(EditorState.extensions); // 从现有编辑器的状态中提取扩展，好像是旧api
     const quote = document.createElement('div'); container.appendChild(quote); quote.className = 'editable-codeblock-quote';
-      const newView = new EditorView({
+    const newView = new EditorView({
       doc: this.content_local_sub,
       extensions: [
-        ex,
+        cm_extension,
         extension_update
       ],
-      // 然后扩展需要传入 this.updateContent_local 回调函数
       parent: quote,
-    });
+    })
+    const _editableCodeblockCm = new EditableCodeblockCm(newView, this.content_local_sub, (newStr: string) => {
+      this.updateContent_local(newStr)
+    })
+
+    // 初始光标
+    if (this.focusLine != null) {
+      const selection = EditorSelection.create([
+          EditorSelection.cursor(this.focusLine == -1 ? this.content_local_sub.length : this.focusLine)
+      ])
+      setTimeout(() => { // TODO 这里依然有问题：滚动条
+        const transaction = newView.state.update({
+          selection,
+          userEvent: "select"
+        })
+        newView.dispatch(transaction)
+        newView.focus()
+      }, 0);
+    }
+    // 光标位置恢复
+    else if (global_cursor_pos_cache) {
+      const selection = EditorSelection.create([
+          EditorSelection.cursor(global_cursor_pos_cache.fromPos)
+      ])
+      setTimeout(() => { // TODO 这里依然有问题：滚动条
+        const transaction = newView.state.update({
+          selection,
+          userEvent: "select"
+        })
+        newView.dispatch(transaction)
+        newView.focus()
+      }, 0);
+
+      global_cursor_pos_cache = null
+    }
 
     return container
   }
@@ -562,7 +631,7 @@ function create_decorations(
       add: [item],
     })
   }
-  console.log(`CodeMirror 装饰集变化: ${debug_count1} -${debug_count2}+${debug_count3}+${debug_count4}`)
+  // console.log(`CodeMirror 装饰集变化: ${debug_count1} -${debug_count2}+${debug_count3}+${debug_count4}`)
   // #endregion
 
   return decorationSet

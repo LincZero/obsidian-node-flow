@@ -331,18 +331,22 @@ code>span.line {
 	outline: none;
 }
 
+.is-no-saved {
+	position: relative;
+}
 .is-no-saved::before {
 	content: "";
 	position: absolute;
-	width: 2px;
+	width: 3px;
 	height: 100%;
 	left: 0;
 	top: 0;
-	background-color: currentColor;
+	background-color: #0060DF;
 	opacity: 0.5;
 	z-index: 10;
 	
-	/* border-left: solid 2px yellow !important; */
+	/* currentColor;
+	border-left: solid 2px yellow !important; */
 }
 
 /* ----------------------------- app version use --------------------- */

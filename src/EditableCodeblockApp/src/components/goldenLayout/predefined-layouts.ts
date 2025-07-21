@@ -38,6 +38,13 @@ const miniRowConfig: LayoutConfig = {
 							} as ComponentItemConfig,
 							{
 								type: ItemType.component,
+								title: "MdCodeMirror2",
+								header: { show: "top", popout: false },
+								componentType: "MdCodeMirror2",
+								width: 50
+							} as ComponentItemConfig,
+							{
+								type: ItemType.component,
 								title: "MdCodeMirror",
 								header: { show: "top", popout: false },
 								componentType: "MdCodeMirror",
