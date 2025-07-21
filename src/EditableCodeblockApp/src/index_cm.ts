@@ -22,6 +22,7 @@ import {
 import {
   EditorSelection,
   EditorState,
+  Extension,
   Range,
   RangeSet,
   StateEffect,
@@ -29,6 +30,24 @@ import {
   Transaction,
 } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
+
+// 扩展
+import { basicSetup } from "codemirror"
+import { markdown } from "@codemirror/lang-markdown"
+import { keymap } from "@codemirror/view"
+import { defaultKeymap } from "@codemirror/commands"
+import { oneDark } from "@codemirror/theme-one-dark"
+// import * as HyperMD from 'hypermd'
+import ixora from '@retronav/ixora'; // 可以全部导入或分开导入
+const ex: Extension[] = [ // codemirror 扩展
+  basicSetup,       // 基础设置
+  keymap.of(defaultKeymap), // 默认快捷键
+  markdown(),       // markdown 语言支持
+  oneDark,          // 黑暗主题
+  // extension_update, // 监听更新
+  // editableCodeBlock_viewPlugin,
+  ixora,            // 一组扩展 (标题、列表、代码块、引用块、图像、html等)
+]
 
 // #region editable-codeblock
 import { EditableCodeblock, loadPrism2 } from '../../NodeFlow/component/general/EditableCodeblock';
@@ -176,7 +195,35 @@ class EditableCodeblockInCm extends EditableCodeblock {
 }
 // #endregion
 
-/// 自定义CM的装饰器部件
+type RangeSpec_Codeblock = {
+  type: 'codeblock';
+  fromPos: number;
+  toPos: number;
+  text_content: string; // 代码块内容
+  text_lang: string; // 代码块语言
+}
+type RangeSpec_Quote = {
+  type: 'quote';
+  fromPos: number;
+  toPos: number;// 不包括尾换行符
+  text_content: string; // 引用块内容，去除引用块前缀
+  text_mark: string; // 引用块标志
+}
+
+/// 自定义CM的装饰器部件。可分发为具体不同类型的部件
+function create_widget (
+  state: EditorState, oldView: EditorView, rangeSpec: RangeSpec_Codeblock | RangeSpec_Quote,
+  updateContent_all: (newContent: string) => void,
+  focusLine: number|null = null,
+): WidgetType {
+  if (rangeSpec.type == 'codeblock') {
+    return new CodeblockWidget(state, oldView, rangeSpec.text_content, rangeSpec.text_lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all, focusLine)
+  } else {
+    return new QuoteWidget(state, oldView, rangeSpec.text_content, rangeSpec.text_mark, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all, focusLine)
+  }
+}
+
+/// 自定义CM的装饰器部件 - 代码块
 class CodeblockWidget extends WidgetType {
   state: EditorState;
   oldView: EditorView;
@@ -207,7 +254,7 @@ class CodeblockWidget extends WidgetType {
 
     // content_local
     this.updateContent_all = updateContent_all
-    this.updateContent_local = (newContent_local: string) => {
+    this.updateContent_local = (newContent_local: string) => { // TODO 这里有bug：codeblock mark 标志可能不是 "```"
       const before = content_all.substring(0, fromPos);
       const after = content_all.substring(toPos);
       const langMatch = content_all.substring(fromPos).match(/^```(\w+)?\n/);
@@ -218,8 +265,7 @@ class CodeblockWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
-    const container = document.createElement('div');
-    container.className = 'editable-codeblock-p';
+    const container = document.createElement('div'); container.className = 'editable-codeblock-p';
     
     // 创建您的 EditableCodeblock 组件
     const editableCodeblock = new EditableCodeblockInCm(
@@ -232,10 +278,75 @@ class CodeblockWidget extends WidgetType {
       container,
       this.updateContent_local
     )
-
     editableCodeblock.render().then(() => {
       if (this.focusLine != null) editableCodeblock.focus(this.focusLine == null ? undefined : this.focusLine)
     })
+    return container
+  }
+}
+
+/// 自定义CM的装饰器部件 - 引用块
+class QuoteWidget extends WidgetType {
+  state: EditorState;
+  oldView: EditorView;
+  fromPos: number; // TODO 未能动态更新
+  toPos: number;
+  updateContent_all: (newContent: string) => void; // 更新所有
+  updateContent_local: (newContent: string) => void; // 仅更新
+  focusLine: number|null = null; // 是否生成后自动聚焦及聚焦位置。由于toDOM时机后缀，所以用这个来控制
+
+  constructor(
+    state: EditorState,
+    oldView: EditorView,
+    readonly content_local_sub: string,
+    readonly lang: string,
+    fromPos: number,
+    toPos: number,
+    updateContent_all: (newContent: string) => void,
+    focusLine: number|null = null,
+  ) {
+    super()
+    this.state = state;
+    this.oldView = oldView;
+    this.fromPos = fromPos;
+    this.toPos = toPos;
+    this.focusLine = focusLine;
+    // 注意: all是全文，local是影响部分，sub是影响部分再去除代码围栏前后缀的部分
+    const content_all: string = state.doc.toString();
+
+    // content_local
+    this.updateContent_all = updateContent_all
+    this.updateContent_local = (newContent_local: string) => { // TODO 应该使用 quote mark 标志
+      const before = content_all.substring(0, fromPos);
+      const after = content_all.substring(toPos);
+      let newContent_local2 = newContent_local.split('\n').map(line => '> ' + line).join('\n')
+      const newContent_all = `${before}${newContent_local2}${after}`;
+      // console.log('teset', fromPos, toPos, newContent_all)
+      this.updateContent_all(newContent_all)
+    }
+  }
+
+  toDOM(view: EditorView): HTMLElement {
+    const container = document.createElement('div');
+
+    const extension_update = EditorView.updateListener.of(update => {
+      if (update.docChanged) {
+        const newContent = update.state.doc.toString()
+        this.updateContent_local(newContent)
+      }
+    })
+    // const extensions = this.state.facet(EditorState.extensions); // 从现有编辑器的状态中提取扩展，好像是旧api
+    const quote = document.createElement('div'); container.appendChild(quote); quote.className = 'editable-codeblock-quote';
+      const newView = new EditorView({
+      doc: this.content_local_sub,
+      extensions: [
+        ex,
+        extension_update
+      ],
+      // 然后扩展需要传入 this.updateContent_local 回调函数
+      parent: quote,
+    });
+
     return container
   }
 }
@@ -268,37 +379,79 @@ function create_decorations(
   }
   // #endregion
 
-  const list_rangeSpec: {
-    fromPos: number;
-    toPos: number;
-    text: string; // 代码块内容
-    lang: string; // 代码块语言
-  }[] = []
+  const list_rangeSpec: (RangeSpec_Codeblock|RangeSpec_Quote)[] = []
+
   // #region 2. 得到新范围集 (更新后)
   syntaxTree(state).iterate({ // 遍历文档语法树
     enter(node) {
-      // 识别Markdown代码块
-      if (node.name != 'FencedCode') return
-
-      const fromPos = node.from;
-      const toPos = node.to;
-      const text = state.sliceDoc(fromPos, toPos);
-      
-      // 提取代码块内容和语言
-      const match = text.match(/^```(\w+)?\n([\s\S]*?)\n```$/);
-      if (!match) return
-      const lang = match[1] || '';
-      const content = match[2];
-      if (lang != 'js') return // TODO 临时，便于查看使用和不使用的区别
-      
-      list_rangeSpec.push({
-        fromPos,
-        toPos,
-        text: content,
-        lang: lang
-      })
+      // 识别Markdown代码块 (自带的只会识别在根部的，不会识别被嵌套的)
+      if (node.name === 'FencedCode') {
+        const fromPos = node.from
+        const toPos = node.to
+        const text = state.sliceDoc(fromPos, toPos)
+        
+        // 提取代码块内容和语言
+        const match = text.match(/^```(\w+)?\n([\s\S]*?)\n```$/)
+        if (!match) return
+        const lang = match[1] || ''
+        const content = match[2]
+        if (lang != 'js') return // TODO 临时，便于查看使用和不使用的区别
+        
+        list_rangeSpec.push({
+          type: 'codeblock',
+          fromPos,
+          toPos,
+          text_content: content,
+          text_lang: lang
+        })
+      }
+      // else if (node.name === 'QuoteMark') {
+      //   console.log('QuoteMark', node.from, node.to, state.sliceDoc(node.from, node.to))
+      // }
+      else {
+        // 注意: 原规则不是基于块的，而是基于字符的。
+        // 并不能很好地选择整个块的范围 (如引用块)，需要自行解析
+        // Document, ATXHeading1, HeaderMark, CodeInfo, CodeText
+        // Paragraph, InlineCode, CodeMark, StrongEmphasis, EmphasisMark, Emphasis
+        // BulletList, ListItem, ListMark, QuoteMark
+        // console.log('node.name', node.name)
+      }
     }
   })
+  // #endregion
+
+  // #region 2. 得到新范围集 (更新后) 2
+  let current_quote: RangeSpec_Quote|null = null
+  let posCount: number = 0 // 记录该行之前的累计字符数
+  for (const line of state.doc.toString().split('\n')) {
+    // 非引用块。只识别在根部的，不会识别被嵌套的
+    if (!line.startsWith('> ')) {
+      if (current_quote) {
+        list_rangeSpec.push(current_quote)
+        current_quote = null
+      }
+      posCount += line.length + 1; continue // +1 for \n
+    }
+    // 引用块
+    if (!current_quote) {
+      current_quote = ({
+        type: 'quote',
+        fromPos: posCount,
+        toPos: posCount + line.length,
+        text_content: line.slice(2),
+        text_mark: '> '
+      })
+    } else {
+      current_quote.toPos = posCount + line.length
+      current_quote.text_content += '\n' + line.slice(2)
+    }
+    posCount += line.length + 1; continue // +1 for \n
+  }
+  // 循环尾检测
+  if (current_quote) {
+    list_rangeSpec.push(current_quote)
+    current_quote = null
+  }
   // #endregion
 
   // #region 3. 得到新装饰集、变化集  (范围集 --生成--> 装饰集)
@@ -340,7 +493,7 @@ function create_decorations(
         line = -1
       }
       const decoration = Decoration.replace({
-        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all, line),
+        widget: create_widget(state, oldView, rangeSpec, updateContent_all, line),
         // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
@@ -348,7 +501,7 @@ function create_decorations(
     // 光标从内出来
     else if (isCursonIn_last) {
       const decoration = Decoration.replace({
-        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all),
+        widget: create_widget(state, oldView, rangeSpec, updateContent_all),
         // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
       })
       list_decoration_change.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))
@@ -356,7 +509,7 @@ function create_decorations(
     // 光标一直在外 - 不变化
     else {
       const decoration = Decoration.replace({
-        widget: new CodeblockWidget(state, oldView, rangeSpec.text, rangeSpec.lang, rangeSpec.fromPos, rangeSpec.toPos, updateContent_all),
+        widget: create_widget(state, oldView, rangeSpec, updateContent_all),
         // inclusive: true, block: true, // 区别: 光标上下移动会跳过 block
       })
       list_decoration_nochange.push(decoration.range(rangeSpec.fromPos, rangeSpec.toPos))

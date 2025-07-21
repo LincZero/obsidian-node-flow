@@ -11,7 +11,6 @@ import { DecorationSet, keymap } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 import { oneDark } from "@codemirror/theme-one-dark"
 import { EditorState, StateField } from '@codemirror/state'
-
 // import * as HyperMD from 'hypermd'
 import ixora from '@retronav/ixora'; // 可以全部导入或分开导入
 
@@ -26,8 +25,8 @@ const ref_container = ref<HTMLElement | null>(null)
 const ref_editorView = ref<EditorView | null>(null)
 function initEditor() {
   if (!ref_container.value) return
-  
-  const view = new EditorView({
+
+  const view = new EditorView({ // 也可以分开创建state和view，方便复用
     doc: props.mdData.string,
     extensions: [       // codemirror 扩展
       basicSetup,       // 基础设置
@@ -37,16 +36,15 @@ function initEditor() {
       extension_update, // 监听更新
       // editableCodeBlock_viewPlugin,
       ixora,            // 一组扩展 (标题、列表、代码块、引用块、图像、html等)
-      
     ],
     parent: ref_container.value,
   })
-  ref_editorView.value = view
-
   // 使用 EditableCodeblock 插件
   const _editableCodeblockCm = new EditableCodeblockCm(view, props.mdData, (newStr: string) => {
     props.mdData.string = newStr
   })
+
+  ref_editorView.value = view
 
   // 使用 HyperMD 用法，参考 https://github.com/laobubu/HyperMD/blob/master/docs/zh-CN/quick-start.md
   // HyperMD.fromTextArea(textareaEl, option) // 仅使用 HyperMD
