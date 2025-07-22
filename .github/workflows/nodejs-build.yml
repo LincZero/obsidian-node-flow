@@ -83,7 +83,7 @@ jobs:
       run: |
         # pnpm run app:build
         pnpm install --frozen-lockfile
-        cd ./src/EditableCodeblockApp/
+        cd ./src/EditableBlockApp/
         pnpm build
         > ./dist/.nojekyll
         mv ./dist/index.html ./dist/EditableCodeblock.html

@@ -5,7 +5,7 @@ import MarkdownIt from "markdown-it"
 // import MarkdownItConstructor from "markdown-it-container";
 
 // 3. editable-codeblock
-import { EditableCodeblock, loadPrism2 } from "../../General/EditableBlock/EditableCodeblock"
+import { EditableCodeblock, loadPrism2 } from "../../General/EditableBlock/EditableBlock"
 import Prism from "prismjs" // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-json';

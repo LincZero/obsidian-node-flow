@@ -54,7 +54,7 @@ const mdData = ref<any>({
 <style src="golden-layout/dist/css/themes/goldenlayout-dark-theme.css"></style>
 
 <style>
-@import "../../NodeFlow/component/general/EditableCodeblock.css";
+@import "../../General/EditableBlock/EditableBlock.css";
 
 html, body, #app {
   height: 100%;
