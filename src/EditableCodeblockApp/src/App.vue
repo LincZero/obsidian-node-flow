@@ -112,7 +112,7 @@ html, body, #app {
 	position: absolute;
 	width: 4px;
 	height: 100%;
-	left: -4px; /* 负数在嵌套时有问题 */
+	left: -4px;
 	top: 0;
 	background-color: #888;
 	z-index: 200;

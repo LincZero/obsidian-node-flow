@@ -13,7 +13,7 @@ import { ComputedRef, watch, provide, inject, nextTick, ref } from 'vue';
 import { factoryFlowData } from '../../../NodeFlow/utils/jsonTool/factoryFlowData';
 import { serializeFlowData } from '../../utils/serializeTool/serializeFlowData'
 import { NFNodes } from './NFNodes';
-import { LLOG } from '../general/LLog';
+import { LLOG } from '../../../General/EditableBlock/LLog';
 
 interface ctx_type {
   sourceValues: { [key:string]: any },

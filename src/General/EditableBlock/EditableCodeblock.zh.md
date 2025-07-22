@@ -1,8 +1,42 @@
-# 更多文档
+# 可编辑块
 
-version: v0.5.1
+## 介绍
 
-## 设置面板文档
+使指定html元素成为一个高级的可编辑块，并支持许多有用特性。
+
+许多特性是普通的 `contenteditable=true` 元素做不到的
+
+### 功能
+
+包括但不限于: (一些在TODO中)
+
+- 基本编辑功能
+  - Input           | 输入法： 支持中文输入法、输入组合
+  - Options         | 渲染方式、保存方式、代码高亮引擎、缩进风格等
+  - Style           | 黑暗模式、取消拼写检查
+  - Adapt           | 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
+  - [] Shortcut     | 快捷键/按键: Tab、Shift Tab、Ctrl + z
+    textare支持撤回，但pre-code不支持，缩进等操作也暂不支持撤回
+- 代码内容
+  - Hightlight      | 代码高亮与编辑，支持Shiki和Prismjs引擎
+- Markdwon内容
+  - Hightlight      | Markdown高亮与编辑，支持CodeMirror引擎
+- 其他内容
+  - [] auto color   | 文本反色功能 (用于颜色框)
+- 高级、嵌套
+  - Nest            | 嵌套: 可编辑器包含编辑器
+  - Save            | 可作为内嵌编辑器，且将修改内容传输到上游
+  - Extends         | 支持扩展
+  - [] Multi cursors| 多光标
+  - [] Extend sytax | 扩展语法。如多行拼接： 使用 `\` 结尾再换行，可以优化显示
+
+### 应用
+
+可编辑代码块、可编辑Markdown块 (codemirror)
+
+或尽一步地作为Markdwon编辑区域中的可编辑引用块、可编辑列表等
+
+## 可编辑代码块 - 设置
 
 ### 渲染引擎
 
@@ -65,7 +99,7 @@ Shiki, PrismJS，CodeMirror
     程序需要手动管理光标位置，手动防抖。
     需要注意输入法问题，输入候选阶段也会触发 `oninput`
 
-## Shiki扩展语法
+### Shiki扩展语法
 
 详见: https://shiki.style/packages/transformers (可切换至中文)
 
@@ -83,3 +117,24 @@ Shiki, PrismJS，CodeMirror
   - word highlight   `/<Word>/` `/Hello/`
 
 示例: see [../README.md](../README.md) or [Shiki document](https://shiki.style/packages/transformers)
+
+---
+
+## 一些开发杂项（不用翻译，仅自己看）
+
+### 调研同类产品避免撞车
+
+- CodeMirror
+  - 官网: https://codemirror.net/
+  - github: cm5开源，cm6不开
+- Monaco Editor (VSCode同款)
+  - 官网/试用: https://microsoft.github.io/monaco-editor/
+  - github: https://github.com/microsoft/monaco-editor ⭐43.3k
+- Tiptap（富文本方向）
+  - 适用于混合内容（文本+代码块）
+
+| 项目            | 核心优势                 | 适用场景                                |
+| ------------- | -------------------- | ----------------------------------- |
+| CodeMirror    | 高度模块化、可定制性强、性能优异     | 需要深度整合和定制的代码编辑功能，作为应用的核心组件。         |
+| Monaco Editor | 功能强大、开箱即用、IDE级体验     | 需要一个完整的、功能丰富的代码编辑器，对体积不敏感。          |
+| Tiptap        | 无头框架、UI完全自定义、富文本体验优秀 | 文档/笔记类应用，需要将代码块作为内容的一部分，对整体编辑体验要求高。 |

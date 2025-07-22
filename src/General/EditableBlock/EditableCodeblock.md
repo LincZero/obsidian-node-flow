@@ -1,8 +1,41 @@
-# More Document
+# EditableBlock
 
-version: v0.5.1
+## Introduction
 
-## SettingPanel Document
+Make the specified HTML element into a sophisticated editable block and support many useful features.
+
+Many features cannot be achieved by ordinary elements with `contenteditable=true` enabled.
+
+### Feat
+
+Including but not limited to: (一些在TODO中)
+
+- 基本编辑功能
+  - Input         | 输入法： 支持中文输入法、输入组合
+  - Options       | 渲染方式、保存方式、代码高亮引擎、缩进风格等
+  - Style         | 黑暗模式、取消拼写检查
+  - Adapt         | 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
+  - [ ] Shortcut key | 按键: Tab、Shift Tab、Ctrl + z
+    textare支持撤回，但pre-code不支持，缩进等操作也暂不支持撤回
+- 代码内容
+  - Hightlight    | 代码高亮与编辑，支持Shiki和Prismjs引擎
+- Markdwon内容
+  - Hightlight    | Markdown高亮与编辑，支持CodeMirror引擎
+- 其他内容
+  - [ ]auto color | 文本反色功能 (用于颜色框)
+- 高级、嵌套
+  - Nest          | 嵌套: 可编辑器包含编辑器
+  - Save          | 可作为内嵌编辑器，且将修改内容传输到上游
+  - Extends       | 支持扩展
+  - [] Multi cursors| 多光标
+  - [] Extend sytax | 扩展语法。如多行拼接： 使用 `\` 结尾再换行，可以优化显示
+
+### Application scenarios
+
+Editable code blocks, editable Markdown blocks (codemirror) 
+Or, further, it can be used as editable reference blocks, editable lists, etc. in the Markdown editing area.
+
+## Editable codeblock - Setting
 
 ### Rendering engine
 
@@ -65,7 +98,7 @@ Shiki, PrismJS, CodeMirror
     The cursor position needs to be handled manually. Debounce manually.
     It is necessary to pay attention to the input method issue. The `oninput` will also be triggered during the input candidate stage
 
-## Shiki Extend Sytax
+### Shiki Extend Sytax
 
 see https://shiki.style/packages/transformers for detail
 
