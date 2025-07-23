@@ -34,6 +34,9 @@ EditableBlock 开发阶段快速测试平台 + 试用Demo
 > - 支持onInput和onChange的saveMode切换
 > - 更多的快捷键支撑起块级编辑的体验
 > - 嵌套后，第二层的控件无法进行编辑保存
+> 
+> TODO：
+> - bug: 如果先编辑外部编辑器，再编辑内部编辑器，内部对应的from,to值不正常，导致向上传有问题
 
 ## 插件Demo
 

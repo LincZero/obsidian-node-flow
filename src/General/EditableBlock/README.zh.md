@@ -15,7 +15,7 @@
   - Options         | 渲染方式、保存方式、代码高亮引擎、缩进风格等
   - Style           | 黑暗模式、取消拼写检查
   - Adapt           | 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
-  - [] Shortcut     | 快捷键/按键: Tab、Shift Tab、Ctrl + z
+  - [] Shortcut     | 快捷键/按键: Tab、Shift Tab、Ctrl + z、方向键切换编辑区
     textare支持撤回，但pre-code不支持，缩进等操作也暂不支持撤回
 - 代码内容
   - Hightlight      | 代码高亮与编辑，支持Shiki和Prismjs引擎
@@ -25,6 +25,7 @@
   - [] auto color   | 文本反色功能 (用于颜色框)
 - 高级、嵌套
   - Nest            | 嵌套: 可编辑器包含编辑器
+  - Multi Block     | 多个编辑器之间光标跳转、选区跨越
   - Save            | 可作为内嵌编辑器，且将修改内容传输到上游
   - Extends         | 支持扩展
   - [] Multi cursors| 多光标
@@ -35,6 +36,26 @@
 可编辑代码块、可编辑Markdown块 (codemirror)
 
 或尽一步地作为Markdwon编辑区域中的可编辑引用块、可编辑列表等
+
+## 使用
+
+
+如需开启XX功能，pnpm isntall ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 可编辑代码块 - 设置
 
