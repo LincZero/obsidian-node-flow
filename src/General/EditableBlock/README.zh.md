@@ -4,7 +4,7 @@
 
 使指定html元素成为一个高级的可编辑块，并支持许多有用特性。
 
-许多特性是普通的 `contenteditable=true` 元素做不到的
+许多特性是普通的 `div[contenteditable=true]` 或 `textarea` 元素做不到的
 
 ### 功能
 
@@ -16,12 +16,13 @@
   - Style           | 黑暗模式、取消拼写检查
   - Adapt           | 自适应： 高宽、换行、无需手动尺寸。自动判断单行/多行模式，使用不同样式，优化
   - [] Shortcut     | 快捷键/按键: Tab、Shift Tab、Ctrl + z、方向键切换编辑区
-    textare支持撤回，但pre-code不支持，缩进等操作也暂不支持撤回
+    [] 历史栈 | textare支持撤回，但pre-code不支持，缩进等操作也暂不支持撤回
 - 代码内容
   - Hightlight      | 代码高亮与编辑，支持Shiki和Prismjs引擎
 - Markdwon内容
   - Hightlight      | Markdown高亮与编辑，支持CodeMirror引擎
 - 其他内容
+  - obsidian editor | 仅当为obsidian环境可用，直接hack ob的内嵌编辑器
   - [] auto color   | 文本反色功能 (用于颜色框)
 - 高级、嵌套
   - Nest            | 嵌套: 可编辑器包含编辑器
@@ -30,6 +31,7 @@
   - Extends         | 支持扩展
   - [] Multi cursors| 多光标
   - [] Extend sytax | 扩展语法。如多行拼接： 使用 `\` 结尾再换行，可以优化显示
+  - 自定义扩展       | 可以通过继承 `EditableBlock`，自定义扩展
 
 ### 应用
 
@@ -41,14 +43,6 @@
 
 
 如需开启XX功能，pnpm isntall ?
-
-
-
-
-
-
-
-
 
 
 
@@ -153,9 +147,18 @@ Shiki, PrismJS，CodeMirror
   - github: https://github.com/microsoft/monaco-editor ⭐43.3k
 - Tiptap（富文本方向）
   - 适用于混合内容（文本+代码块）
+- Prism Editor
+  - 只支持prism
+  - github: https://github.com/mohammed-bahumaish/prisma-editor
+
+比较表
 
 | 项目            | 核心优势                 | 适用场景                                |
 | ------------- | -------------------- | ----------------------------------- |
 | CodeMirror    | 高度模块化、可定制性强、性能优异     | 需要深度整合和定制的代码编辑功能，作为应用的核心组件。         |
 | Monaco Editor | 功能强大、开箱即用、IDE级体验     | 需要一个完整的、功能丰富的代码编辑器，对体积不敏感。          |
 | Tiptap        | 无头框架、UI完全自定义、富文本体验优秀 | 文档/笔记类应用，需要将代码块作为内容的一部分，对整体编辑体验要求高。 |
+
+结论: 我想要支持更多的类型:
+obsidian editor、origin codemirror、txt、prism、shiki、color
+只能自行开发了

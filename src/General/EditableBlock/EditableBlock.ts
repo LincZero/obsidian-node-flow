@@ -119,6 +119,7 @@ export class EditableBlock {
 		}
 	}
 
+	/// TODO 这里不应该能确定 pre/code 元素，而应该当作通用的 contenteditable=true 来处理
 	/// TODO: fix: after edit, can't up/down to root editor
 	/// @param el: HTMLTextAreaElement|HTMLInputElement|HTMLPreElement
 	protected enable_editarea_listener(el: HTMLElement, cb_tab?: (ev: KeyboardEvent)=>void, cb_up?: (ev: KeyboardEvent)=>void, cb_down?: (ev: KeyboardEvent)=>void): void {

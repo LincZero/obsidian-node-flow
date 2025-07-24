@@ -27,3 +27,6 @@ data.json
 
 # src里面的.css后面还得编译一次再压缩，没必要保留min版本
 src/**/*.min.css
+
+/tmp/
+/temp/
