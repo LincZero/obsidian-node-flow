@@ -25,7 +25,16 @@ import {
 } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 
-import { CodeblockWidget, QuoteWidget, global_store } from './widget'
+import { QuoteWidget } from './EditableBlock_Cm_Widget'
+import { CodeblockWidget } from './EditableBlock_Code_Widget'
+
+export let global_store: {
+  pos: { fromPos: number, toPos: number }|null,
+  root_state: EditorState|null // 只接受根部state，不接受嵌套时的state
+} = {
+  pos: null,
+  root_state: null
+}
 
 type RangeSpec_Codeblock = {
   type: 'codeblock';
@@ -85,7 +94,7 @@ function create_decorations(
 
   const list_rangeSpec: (RangeSpec_Codeblock|RangeSpec_Quote)[] = []
 
-  // #region 2. 得到新范围集 (更新后)
+  // #region 2. 得到新范围集 (更新后) 1 (代码块)
   syntaxTree(state).iterate({ // 遍历文档语法树
     enter(node) {
       // 识别Markdown代码块 (自带的只会识别在根部的，不会识别被嵌套的)
@@ -124,7 +133,7 @@ function create_decorations(
   })
   // #endregion
 
-  // #region 2. 得到新范围集 (更新后) 2
+  // #region 2. 得到新范围集 (更新后) 2 (其他，手动识别)
   let current_quote: RangeSpec_Quote|null = null
   let posCount: number = 0 // 记录该行之前的累计字符数
   for (const line of state.doc.toString().split('\n')) {
