@@ -8,7 +8,7 @@ importers:
 
   .: {}
 
-  src/EditableCodeblockApp:
+  src/EditableBlockApp:
     dependencies:
       '@codemirror/commands':
         specifier: ^6.8.1
