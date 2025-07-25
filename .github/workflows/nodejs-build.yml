@@ -95,6 +95,6 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
-        folder: src/EditableCodeblockApp/dist
+        folder: src/EditableBlockApp/dist
         # destination-folder: EditableCodeblock
         clean: false  # 不清理目标目录
