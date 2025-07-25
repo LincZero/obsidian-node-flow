@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<{
 let i2o_flag: boolean = false
 let o2i_flag: boolean = false
 
-import { EditableCodeblock, loadPrism2 } from '.../../../General/EditableBlock/EditableBlock_Code';
+import { EditableCodeblock, loadPrism2 } from '../../../General/EditableBlock/EditableBlock_Code';
 import Prism from "prismjs" // 导入代码高亮插件的core（里面提供了其他官方插件及代码高亮样式主题，你只需要引入即可）
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-json';
